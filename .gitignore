@@ -27,3 +27,7 @@ uv.lock
 .screens/
 __pycache__/
 *.pyc
+
+# Regenerable from papers.json by tools/prefilter.py, and a 1.5MB duplicate of it.
+data/triage/queue.json
+data/triage/digest*.json

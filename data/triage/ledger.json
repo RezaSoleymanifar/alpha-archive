@@ -1,5 +1,119 @@
 {
  "papers": {
+  "2512.23640": {
+   "batch": "result_10.json",
+   "confidence": 0.94,
+   "data_needed": [
+    "daily S&P 500 closes, 1980 to 2025 (Yahoo ^GSPC)"
+   ],
+   "gap": "",
+   "judged_at": "2026-08-06",
+   "method": "Splits the return distribution into gain and loss halves with separate stochastic-volatility parameters, and fits a modified Jones-Faddy skew t-distribution to daily S&P 500 log-returns by Bayesian estimation.",
+   "reason": "One series, one index, forty-five years, and every headline number is a distribution fit to it. Vintage serves ^GSPC daily closes back past 1980, so this is reproducible end to end with no other input.",
+   "reproducible_targets": [
+    "Figure 1 linear fit to log(St/S0) with slope mu_1 = 3.0860e-04 per day over 1980-2025",
+    "Figure 2 detrended series x_t = r_t - mu_1 t, including the 2000 peak near +0.75 and the 2009 trough near -0.78",
+    "Table 1 Bayesian-fitted parameters of the modified Jones-Faddy skew t against the symmetric baselines"
+   ],
+   "verdict": "keep"
+  },
+  "2512.24371": {
+   "batch": "result_10.json",
+   "confidence": 0.96,
+   "data_needed": [],
+   "gap": "other",
+   "judged_at": "2026-08-06",
+   "method": "Utility maximization subject to a pathwise mark-to-market floor valued under model-independent bounds, solved via a max-plus decomposition for supermartingales.",
+   "reason": "Every figure plots a function of the model's own parameters under Black-Scholes-Merton. No market data is touched at any point.",
+   "reproducible_targets": [],
+   "verdict": "drop"
+  },
+  "2512.24526": {
+   "batch": "result_10.json",
+   "confidence": 0.72,
+   "data_needed": [
+    "daily adjusted closes for the S&P 500 sector constituents named in the paper's selection tables (Yahoo)",
+    "the eleven SPDR sector index levels as benchmarks",
+    "the published per-model stock selections, transcribed from Table 1 and Figures 1-2"
+   ],
+   "gap": "",
+   "judged_at": "2026-08-06",
+   "method": "Prompts twelve LLMs to pick and weight stocks inside each of the eleven S&P 500 sector indices, then scores those portfolios against equal-weight, minimum-variance, maximum-return and maximum-Sharpe benchmarks under mean-variance optimization.",
+   "reason": "Regenerating the selections would need the same twelve models, but the paper prints the chosen stocks per sector per model, so the portfolio construction and every performance statistic can be recomputed from the published holdings and free prices. The reproducible half is the half that carries the finding.",
+   "reproducible_targets": [
+    "the mean-variance frontier and Sharpe ratio of each LLM-weighted sector portfolio against its equal-weighted counterpart",
+    "whether the LLM-weighted portfolios beat minimum-variance and maximum-Sharpe optimizations, per sector"
+   ],
+   "verdict": "keep"
+  },
+  "2512.24747": {
+   "batch": "result_10.json",
+   "confidence": 0.92,
+   "data_needed": [
+    "CASdatasets fremotor1prem0304a and pg15training (R package, free)"
+   ],
+   "gap": "other",
+   "judged_at": "2026-08-06",
+   "method": "Multi-objective optimization over group, individual and counterfactual fairness criteria against predictive accuracy in insurance ratemaking, under GLM and XGBoost.",
+   "reason": "Runs on the fremotor1prem0304a and pg15training motor insurance tables. Those are freely available in R's CASdatasets, so this is not a paywall problem, but it is claims ratemaking rather than a market strategy and there is no price series anywhere in it.",
+   "reproducible_targets": [],
+   "verdict": "drop"
+  },
+  "2512.24906": {
+   "batch": "result_10.json",
+   "confidence": 0.88,
+   "data_needed": [],
+   "gap": "synthetic only",
+   "judged_at": "2026-08-06",
+   "method": "Solves robust growth-optimization under drift uncertainty with an ergodicity constraint, in an incomplete market where the asset depends on a multivariate stochastic factor.",
+   "reason": "Pairs trading motivates the setup but no spread is ever taken from a real market. The growth-rate boxplots in Figure 1 are drawn from simulated paths of the assumed model, so matching them tests the simulator rather than the claim.",
+   "reproducible_targets": [],
+   "verdict": "drop"
+  },
+  "2512.25017": {
+   "batch": "result_10.json",
+   "confidence": 0.97,
+   "data_needed": [],
+   "gap": "pure theory",
+   "judged_at": "2026-08-06",
+   "method": "Decomposes the generalization error of deep gradient flow methods for high-dimensional PDEs into approximation and training error, then proves both vanish in the wide-network, long-training limit.",
+   "reason": "A convergence proof. There is no dataset, no empirical claim and no number to reproduce.",
+   "reproducible_targets": [],
+   "verdict": "drop"
+  },
+  "2601.06088": {
+   "batch": "result_10.json",
+   "confidence": 0.8,
+   "data_needed": [
+    "daily OHLCV for 110 US stocks across 11 GICS sectors (Yahoo, available)",
+    "contemporaneous news text per stock (source not fully specified)",
+    "paid API access to twelve frontier LLMs, run inside the original window"
+   ],
+   "gap": "other",
+   "judged_at": "2026-08-06",
+   "method": "A live benchmark scoring twelve large language models on next-move stock prediction across 110 US stocks in 11 sectors, using 249 days of price history plus contemporaneous news text.",
+   "reason": "The prices are ordinary Yahoo data, but the result being claimed is model accuracy under a deliberately uncontaminated live protocol. Rerunning it later means querying paid model APIs against a window those models have since been trained on, which is the one condition the benchmark is built to avoid. The published table cannot be reproduced, only superseded.",
+   "reproducible_targets": [],
+   "verdict": "drop"
+  },
+  "2601.06090": {
+   "batch": "result_10.json",
+   "confidence": 0.9,
+   "data_needed": [
+    "daily adjusted closes for OMXS30, OMXC20 and OMXH25 constituents, January 2006 to September 2025 (Yahoo suffixes .ST, .CO, .HE)",
+    "the three index levels over the same window"
+   ],
+   "gap": "",
+   "judged_at": "2026-08-06",
+   "method": "Tracks the leading eigenvalues of the rolling correlation matrix of daily log-returns across three Nordic indices, and tests whether the eigenstructure dynamics identify regimes usable for portfolio construction.",
+   "reason": "Daily split- and dividend-adjusted closes for listed index constituents over a stated window. The paper pulls them from Google Finance, but OMX Stockholm, Copenhagen and Helsinki names carry .ST, .CO and .HE suffixes on Yahoo, which Vintage already serves.",
+   "reproducible_targets": [
+    "Table 1 descriptive statistics of log-returns for each of the three markets",
+    "Figure 1 time evolution of the four largest correlation-matrix eigenvalues",
+    "Figure 3 dynamics of the largest standardized eigenvalue across the 2008 and 2020 regime shifts"
+   ],
+   "verdict": "keep"
+  },
   "2607.06502": {
    "batch": "result_09.json",
    "confidence": 0.93,
@@ -1587,5 +1701,5 @@
    "verdict": "keep"
   }
  },
- "updated_at": "2026-08-06T18:01:57+00:00"
+ "updated_at": "2026-08-06T18:58:34+00:00"
 }
