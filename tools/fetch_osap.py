@@ -20,6 +20,7 @@ card carries the paper's own t-statistic instead, and says so.
 
 from __future__ import annotations
 
+import argparse
 import csv
 import io
 import json
@@ -80,6 +81,11 @@ def match_openalex(row: dict, client: httpx.Client) -> dict | None:
 
 
 def main() -> None:
+    ap = argparse.ArgumentParser()
+    ap.add_argument("--no-match", action="store_true",
+                    help="skip the OpenAlex citation match (use when its budget is out)")
+    args = ap.parse_args()
+
     print("fetching SignalDoc")
     text = httpx.get(SIGNALDOC, timeout=120, follow_redirects=True).text
     rows = list(csv.DictReader(io.StringIO(text)))
@@ -92,7 +98,7 @@ def main() -> None:
     matched = 0
     with httpx.Client(follow_redirects=True) as client:
         for i, r in enumerate(keep, 1):
-            work = match_openalex(r, client)
+            work = None if args.no_match else match_openalex(r, client)
             if work:
                 matched += 1
             cites = int((work or {}).get("cited_by_count") or 0)
@@ -143,7 +149,7 @@ def main() -> None:
             })
             if i % 25 == 0:
                 print(f"    {i}/{len(keep)}  matched={matched}", flush=True)
-            time.sleep(0.35)
+            time.sleep(0.0 if args.no_match else 0.35)
 
     path = os.path.join(fp.ROOT, "data", "papers", "osap.json")
     with open(path, "w", encoding="utf-8") as fh:
