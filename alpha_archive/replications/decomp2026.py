@@ -221,6 +221,30 @@ def summarise(returns: pd.Series, rf: pd.Series) -> dict[str, float]:
     }
 
 
+def sweep(frame: pd.DataFrame) -> pd.DataFrame:
+    """The same model at every subset size, because k is a choice.
+
+    Reporting one k and calling it the result hides how much the result was
+    that choice. Here the decomposition runs from $104.62 at k=1 to $158.37 at
+    k=6, a fifty per cent range from a single specification decision, and the
+    advantage over plain subset regression grows monotonically from nothing to
+    $113. The paper reports k = 1, 2, 3 and 7 and describes performance as
+    non-monotone in k, which is the same phenomenon stated as a property of the
+    method rather than as a caveat on the headline.
+    """
+    rows = []
+    for k in range(1, len(PREDICTORS) + 1):
+        prob, mu = forecast(frame, k=k)
+        book = trade(frame, prob, mu)
+        csm = summarise(book["net"], book["rf"])
+        csr = summarise(switch_on(frame, subset_regression(frame, k)), book["rf"])
+        rows.append({"k": k,
+                     "decomposition": csm["terminal_wealth"],
+                     "subset_regression": csr["terminal_wealth"],
+                     "gap": round(csm["terminal_wealth"] - csr["terminal_wealth"], 2)})
+    return pd.DataFrame(rows).set_index("k")
+
+
 def main() -> None:
     frame = load()
     print(f"{len(frame)} months usable, forecasting {OOS_START} to {OOS_END}")

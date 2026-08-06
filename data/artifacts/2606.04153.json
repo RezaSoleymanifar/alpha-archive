@@ -117,7 +117,7 @@
    "where": "Table 6",
    "gap": 21.69,
    "state": "MISSED",
-   "note": "Ours BEATS the paper's CSR by 22%. Combined with our CSM falling short, the two methods land within 2% of each other in our hands where the paper shows CSM ahead by 85%. That gap is the paper's central claim and it is what we cannot reproduce.",
+   "note": "Ours beats the paper's CSR by 22% at k=3. But sweeping k shows why: the decomposition's advantage over CSR grows monotonically from $0 at k=1 to $113 at k=8. At the k=3 the paper reports, we see almost no gap; at k=6 we see $88. The mechanism reproduces, the location does not.",
    "blocker": ""
   },
   {
@@ -129,7 +129,7 @@
    "where": "Table 6",
    "gap": 59.35,
    "state": "MISSED",
-   "note": "Switching rule, 10bp charged multiplicatively. Switches 3 times in 487 months where the paper's evidently switches far more.",
+   "note": "$122.33 at the paper's k=3. Sweeping k gives $104.62 at k=1 rising to $158.37 at k=6, so this single number is a 51% range depending on one specification choice. Our best k lands within 13% of the paper's headline, but not at the k they report.",
    "blocker": ""
   },
   {
