@@ -1,0 +1,290 @@
+[
+ {
+  "id": "2512.19986",
+  "tradeable": 12,
+  "evidence": 6,
+  "interest": 6,
+  "buildability": 12,
+  "appeal": 36,
+  "one_liner": "A covariance-aware projection lifts in-sample Sharpe 26% on 100 S&P names, but loses to the plain Euclidean version in two of three walk-forward years."
+ },
+ {
+  "id": "2512.18918",
+  "tradeable": 4,
+  "evidence": 5,
+  "interest": 20,
+  "buildability": 14,
+  "appeal": 43,
+  "one_liner": "Ten years of SEC Form 4 filings build an insider trading network whose coordinated clusters look nothing like shuffled or simulated nulls."
+ },
+ {
+  "id": "2512.05661",
+  "tradeable": 8,
+  "evidence": 15,
+  "interest": 8,
+  "buildability": 14,
+  "appeal": 45,
+  "one_liner": "Across 7,286 rolling 10-day VaR forecasts, Bayesian networks breach on exactly the same three days as plain historical simulation."
+ },
+ {
+  "id": "2606.23492",
+  "tradeable": 8,
+  "evidence": 15,
+  "interest": 8,
+  "buildability": 16,
+  "appeal": 47,
+  "one_liner": "Hidden Markov models with fat-tailed emissions pass distribution tests on SPY but fail out-of-sample on 11 of 30 individual stocks."
+ },
+ {
+  "id": "2512.20460",
+  "tradeable": 20,
+  "evidence": 14,
+  "interest": 18,
+  "buildability": 18,
+  "appeal": 70,
+  "one_liner": "Welch-Goyal predictors only forecast the equity premium when the yield curve was flat or inverted recently; out-of-sample R-squared rises from 2.6% to 4.1%."
+ },
+ {
+  "id": "2606.22615",
+  "tradeable": 6,
+  "evidence": 12,
+  "interest": 8,
+  "buildability": 8,
+  "appeal": 34,
+  "one_liner": "Fitting stochastic volatility in mean models by hidden Markov approximation runs about ten times faster than MCMC on four equity indices."
+ },
+ {
+  "id": "2606.26625",
+  "tradeable": 22,
+  "evidence": 10,
+  "interest": 6,
+  "buildability": 18,
+  "appeal": 56,
+  "one_liner": "Rolling mean-variance and CVaR portfolios of 30 commodity ETFs beat equal weight on Sharpe and cut tail loss, with no trading costs charged."
+ },
+ {
+  "id": "2512.06550",
+  "tradeable": 2,
+  "evidence": 4,
+  "interest": 3,
+  "buildability": 14,
+  "appeal": 23,
+  "one_liner": "Two Japanese bank mergers produced cumulative abnormal returns of 30% and 6%, though the estimate swings by half depending on the market model."
+ },
+ {
+  "id": "2606.08569",
+  "tradeable": 20,
+  "evidence": 6,
+  "interest": 8,
+  "buildability": 10,
+  "appeal": 44,
+  "one_liner": "Ranking stocks by a put premium implied from their own price tree earns 3.7% yearly on the S&P 500, far under buy and hold."
+ },
+ {
+  "id": "2606.31475",
+  "tradeable": 14,
+  "evidence": 13,
+  "interest": 21,
+  "buildability": 15,
+  "appeal": 63,
+  "one_liner": "An eigenvalue indicator from rogue wave physics flagged the 2008 VIX spike 18 trading days early, at 63% to 84% precision across three indices."
+ },
+ {
+  "id": "2512.17225",
+  "tradeable": 6,
+  "evidence": 5,
+  "interest": 13,
+  "buildability": 10,
+  "appeal": 34,
+  "one_liner": "A quantum field theory fit to S&P 500 returns reproduces crisis kurtosis the Ising model misses and beats rolling regression on next-day AAPL error."
+ },
+ {
+  "id": "2607.21826",
+  "tradeable": 14,
+  "evidence": 3,
+  "interest": 4,
+  "buildability": 5,
+  "appeal": 26,
+  "one_liner": "Log-periodic power law fits to Bitcoin and Ether place the 2017-2018 crash dates roughly right, fitted after the fact on a single window."
+ },
+ {
+  "id": "2608.04987",
+  "tradeable": 20,
+  "evidence": 9,
+  "interest": 8,
+  "buildability": 6,
+  "appeal": 43,
+  "one_liner": "Swapping the covariance matrix for a multifractal fluctuation matrix gives the lowest drawdown and expected shortfall across four assets, reported only as figure bands."
+ },
+ {
+  "id": "2606.22719",
+  "tradeable": 20,
+  "evidence": 16,
+  "interest": 21,
+  "buildability": 14,
+  "appeal": 71,
+  "one_liner": "A leakage-controlled LLM ranks equity style factors with rank IC 0.13, not statistically significant, and the traded version loses money after costs."
+ },
+ {
+  "id": "2606.27932",
+  "tradeable": 2,
+  "evidence": 16,
+  "interest": 15,
+  "buildability": 17,
+  "appeal": 50,
+  "one_liner": "A standard self-similarity test rejects 47% of the time instead of 1%; a fractional-derivative version fixes it and puts stock indices near H=0.5."
+ },
+ {
+  "id": "2607.10297",
+  "tradeable": 22,
+  "evidence": 11,
+  "interest": 11,
+  "buildability": 12,
+  "appeal": 56,
+  "one_liner": "Portfolios of the 40 most peripheral stocks in a noise-filtered correlation network earned Sharpe 0.81 against 0.51 for the market, 2010 to 2022."
+ },
+ {
+  "id": "2607.03888",
+  "tradeable": 8,
+  "evidence": 15,
+  "interest": 11,
+  "buildability": 18,
+  "appeal": 52,
+  "one_liner": "An optimal local bandwidth for local Gaussian correlation buys little: adaptive tail estimates match the global ones within 0.01 on SPY, TLT and EEM."
+ },
+ {
+  "id": "2512.21791",
+  "tradeable": 3,
+  "evidence": 7,
+  "interest": 6,
+  "buildability": 12,
+  "appeal": 28,
+  "one_liner": "Scoring three synthetic return generators on fidelity, temporal structure and downstream use puts TimeGAN ahead of a VAE and ARIMA-GARCH on every axis."
+ },
+ {
+  "id": "2607.06908",
+  "tradeable": 6,
+  "evidence": 7,
+  "interest": 12,
+  "buildability": 10,
+  "appeal": 35,
+  "one_liner": "A participation-ratio rule finds a median of seven global factors in daily S&P 500 returns where the standard Onatski test usually finds one."
+ },
+ {
+  "id": "2512.10606",
+  "tradeable": 20,
+  "evidence": 8,
+  "interest": 12,
+  "buildability": 12,
+  "appeal": 52,
+  "one_liner": "Concentrating an equal-weight book in stocks whose signed-correlation balance deviates most from the market beat 1/N on four indices at hand-picked thresholds."
+ },
+ {
+  "id": "2511.21221",
+  "tradeable": 20,
+  "evidence": 7,
+  "interest": 13,
+  "buildability": 12,
+  "appeal": 52,
+  "one_liner": "Weighting other markets by forward validation raises Sharpe for dual-listed A and H share pairs and six US sector baskets, tested on 63 days."
+ },
+ {
+  "id": "2607.27461",
+  "tradeable": 28,
+  "evidence": 18,
+  "interest": 19,
+  "buildability": 12,
+  "appeal": 77,
+  "one_liner": "Three price-only matrices drive a long-short book at Sharpe 1.06 against the market's 0.78, then 1.32 against 1.14 in a live forward test."
+ },
+ {
+  "id": "2606.11962",
+  "tradeable": 8,
+  "evidence": 12,
+  "interest": 9,
+  "buildability": 16,
+  "appeal": 45,
+  "one_liner": "A composite-likelihood Hurst estimator puts log-VIX at 0.42 and beats method of moments on forecast error, by under a tenth of a percent."
+ },
+ {
+  "id": "2607.26188",
+  "tradeable": 22,
+  "evidence": 7,
+  "interest": 20,
+  "buildability": 17,
+  "appeal": 66,
+  "one_liner": "Bitcoin topped 525, 546 and 534 days after the last three halvings while Pi Cycle, Mayer, MVRV and Puell extremes decayed every cycle."
+ },
+ {
+  "id": "2512.01408",
+  "tradeable": 22,
+  "evidence": 10,
+  "interest": 9,
+  "buildability": 6,
+  "appeal": 47,
+  "one_liner": "Putting one Wasserstein ball on the drift prior instead of at every date raises Sharpe from about 0.35 to 0.48 on random 20-stock draws."
+ },
+ {
+  "id": "2607.19279",
+  "tradeable": 24,
+  "evidence": 8,
+  "interest": 15,
+  "buildability": 10,
+  "appeal": 57,
+  "one_liner": "Gaussian boson sampling clusters for statistical arbitrage reach Sharpe 2.25, statistically indistinguishable from ordinary spectral clustering at 2.04."
+ },
+ {
+  "id": "2512.12334",
+  "tradeable": 6,
+  "evidence": 14,
+  "interest": 5,
+  "buildability": 11,
+  "appeal": 36,
+  "one_liner": "Across 7,286 expected shortfall forecasts, EGARCH wins and Bayesian networks tie historical simulation, but every model fails the conditional backtest."
+ },
+ {
+  "id": "2512.23596",
+  "tradeable": 22,
+  "evidence": 14,
+  "interest": 19,
+  "buildability": 13,
+  "appeal": 68,
+  "one_liner": "Choosing training window length and model class by tournament raises out-of-sample R-squared on 17 industry portfolios to 4.9%, double a short fixed window."
+ },
+ {
+  "id": "2607.25189",
+  "tradeable": 6,
+  "evidence": 9,
+  "interest": 4,
+  "buildability": 12,
+  "appeal": 31,
+  "one_liner": "A two-dimensional Markov chain gives GARCH long memory with three parameters, still fitting 13 to 25 log-likelihood points worse than FIGARCH."
+ },
+ {
+  "id": "2607.01377",
+  "tradeable": 18,
+  "evidence": 7,
+  "interest": 9,
+  "buildability": 13,
+  "appeal": 47,
+  "one_liner": "Signed order flow built from daily volume predicts next-month stock returns; the two Kyle lambda estimators explain almost nothing and flip sign."
+ },
+ {
+  "id": "2606.31387",
+  "tradeable": 20,
+  "evidence": 3,
+  "interest": 16,
+  "buildability": 6,
+  "appeal": 45,
+  "one_liner": "Writing execution speed as a signature functional turns path-dependent statistical arbitrage into a concave quadratic program, tested on one pair for two months."
+ },
+ {
+  "id": "2512.19251",
+  "tradeable": 5,
+  "evidence": 5,
+  "interest": 6,
+  "buildability": 8,
+  "appeal": 24,
+  "one_liner": "In a panel of 18 coins, institutionally backed ones absorb about a third less market-wide volatility, with the backing label assigned by hand."
+ }
+]

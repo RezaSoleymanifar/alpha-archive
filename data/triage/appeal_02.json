@@ -1,0 +1,281 @@
+[
+ {
+  "id": "2512.23021",
+  "tradeable": 14,
+  "evidence": 15,
+  "interest": 9,
+  "buildability": 9,
+  "appeal": 47,
+  "one_liner": "A new PSD covariance estimator lifts a 10-asset tangency portfolio's out-of-sample Sharpe to 0.56 versus 0.51 for Gerber and shrinkage rivals."
+ },
+ {
+  "id": "2512.21823",
+  "tradeable": 5,
+  "evidence": 3,
+  "interest": 10,
+  "buildability": 3,
+  "appeal": 21,
+  "one_liner": "Restricted Boltzmann free energy failed to flag the COVID crash on a 19-series cross-asset panel; only the Gaussian variant tracked VIX spikes."
+ },
+ {
+  "id": "2512.12250",
+  "tradeable": 14,
+  "evidence": 7,
+  "interest": 5,
+  "buildability": 16,
+  "appeal": 42,
+  "one_liner": "A stochastic-volatility feed into an LSTM cut 21-day S&P 500 volatility forecast error to 5.3% MAPE, but the trading version only reached Sharpe 0.54."
+ },
+ {
+  "id": "2512.15113",
+  "tradeable": 2,
+  "evidence": 5,
+  "interest": 3,
+  "buildability": 14,
+  "appeal": 24,
+  "one_liner": "A genetic-algorithm-tuned SVR cut one-year-ahead price forecast error on five global indices by 20% versus LSTM, with no trading test."
+ },
+ {
+  "id": "2606.09104",
+  "tradeable": 26,
+  "evidence": 10,
+  "interest": 7,
+  "buildability": 14,
+  "appeal": 57,
+  "one_liner": "Stacking a Bayesian VAR ensemble, Student-t Black-Litterman and a TD3 agent on 29 Dow stocks returned 57% with Sharpe 1.72 over one test window."
+ },
+ {
+  "id": "2512.09224",
+  "tradeable": 20,
+  "evidence": 13,
+  "interest": 12,
+  "buildability": 16,
+  "appeal": 61,
+  "one_liner": "An exploratory mean-variance policy under jump diffusion beat the plain calibrated policy on Sharpe in 12 of 14 rolling S&P 500 test years."
+ },
+ {
+  "id": "2606.08283",
+  "tradeable": 26,
+  "evidence": 13,
+  "interest": 20,
+  "buildability": 19,
+  "appeal": 78,
+  "one_liner": "Hawkish and dovish LLM macro agents beat a deterministic z-score rule on commodity ETFs by 0.04 Sharpe, and survived costs the rule did not."
+ },
+ {
+  "id": "2511.17963",
+  "tradeable": 24,
+  "evidence": 6,
+  "interest": 5,
+  "buildability": 11,
+  "appeal": 46,
+  "one_liner": "An LSTM plus PPO allocator across stocks and crypto reached Sharpe 0.96, but plain PPO without the LSTM scored higher at 1.02."
+ },
+ {
+  "id": "2512.07860",
+  "tradeable": 0,
+  "evidence": 2,
+  "interest": 2,
+  "buildability": 12,
+  "appeal": 16,
+  "one_liner": "An LSTM ensembled with Levy jump-diffusion volatility paths hit R-squared 0.997 forecasting Brent and European index price levels."
+ },
+ {
+  "id": "2512.15739",
+  "tradeable": 8,
+  "evidence": 14,
+  "interest": 6,
+  "buildability": 13,
+  "appeal": 41,
+  "one_liner": "A Bayesian dynamic linear model beat GARCH-t on S&P 500 VaR coverage but still failed the conditional coverage test; the LSTM passed."
+ },
+ {
+  "id": "2606.26815",
+  "tradeable": 24,
+  "evidence": 12,
+  "interest": 16,
+  "buildability": 12,
+  "appeal": 64,
+  "one_liner": "Neural forecasts of the US and euro zero curve hit 56% and 53% directional accuracy, and the duration-managed bond strategy reached Sharpe 1.2."
+ },
+ {
+  "id": "2511.21873",
+  "tradeable": 2,
+  "evidence": 4,
+  "interest": 7,
+  "buildability": 11,
+  "appeal": 24,
+  "one_liner": "A graph attention network forecasting 79 FTSE 100 stocks did best with a 5-day window, and correlation graphs beat fundamental-ratio graphs."
+ },
+ {
+  "id": "2512.12924",
+  "tradeable": 14,
+  "evidence": 22,
+  "interest": 15,
+  "buildability": 11,
+  "appeal": 62,
+  "one_liner": "Five classic microstructure signal families tested over 34 out-of-sample quarters returned 0.55% a year against SPY's 13.2%, with t-statistic 0.96."
+ },
+ {
+  "id": "2606.30037",
+  "tradeable": 6,
+  "evidence": 20,
+  "interest": 22,
+  "buildability": 18,
+  "appeal": 66,
+  "one_liner": "Swapping a point head for a Gaussian mixture head lifted forecast skill more than changing the backbone; classical models still win at short horizons."
+ },
+ {
+  "id": "2606.27670",
+  "tradeable": 27,
+  "evidence": 10,
+  "interest": 20,
+  "buildability": 16,
+  "appeal": 73,
+  "one_liner": "A correlation graph attention model on 66 coins reached Sharpe 3.1 after costs, and time-mixing modules that help stocks hurt crypto."
+ },
+ {
+  "id": "2512.04099",
+  "tradeable": 22,
+  "evidence": 7,
+  "interest": 13,
+  "buildability": 16,
+  "appeal": 58,
+  "one_liner": "The transformer with the lowest crypto forecast error was not the most profitable; on Ethereum every model finished near zero return."
+ },
+ {
+  "id": "2607.12248",
+  "tradeable": 3,
+  "evidence": 20,
+  "interest": 24,
+  "buildability": 15,
+  "appeal": 62,
+  "one_liner": "The 80% directional accuracy claimed for fine-tuned foundation models is just the rising-market base rate; excess accuracy is negative."
+ },
+ {
+  "id": "2606.27100",
+  "tradeable": 2,
+  "evidence": 16,
+  "interest": 15,
+  "buildability": 13,
+  "appeal": 46,
+  "one_liner": "Six pretrained time-series foundation models took 8 of 10 return-forecast wins over trained baselines, but none beat a zero-return random walk significantly."
+ },
+ {
+  "id": "2606.15701",
+  "tradeable": 0,
+  "evidence": 5,
+  "interest": 2,
+  "buildability": 13,
+  "appeal": 20,
+  "one_liner": "A shifted data augmentation scheme cut Transformer index-level forecast error by two thirds and shrank the spread across ten random seeds."
+ },
+ {
+  "id": "2606.05733",
+  "tradeable": 12,
+  "evidence": 3,
+  "interest": 12,
+  "buildability": 15,
+  "appeal": 42,
+  "one_liner": "A streaming neural Hawkes graph over July 2022 news picked next-day extreme movers at 1.5 to 1.8 times the random rate."
+ },
+ {
+  "id": "2512.07867",
+  "tradeable": 6,
+  "evidence": 6,
+  "interest": 12,
+  "buildability": 12,
+  "appeal": 36,
+  "one_liner": "LLM-written macro stress scenarios produced VaR and CVaR roughly 3.7 times the historical bootstrap level for a 60/30/10 ETF portfolio."
+ },
+ {
+  "id": "2607.09820",
+  "tradeable": 24,
+  "evidence": 7,
+  "interest": 14,
+  "buildability": 11,
+  "appeal": 56,
+  "one_liner": "A network that learns a state-dependent Wasserstein radius returned 26% a year with Sharpe 1.30 on 20 S&P 500 names over one test window."
+ },
+ {
+  "id": "2607.15195",
+  "tradeable": 12,
+  "evidence": 6,
+  "interest": 15,
+  "buildability": 15,
+  "appeal": 48,
+  "one_liner": "A physics-informed offline RL policy trading under quadratic impact reached Sharpe 1.49 against 1.07 for equal weight, using a synthetic alpha."
+ },
+ {
+  "id": "2607.23068",
+  "tradeable": 24,
+  "evidence": 9,
+  "interest": 16,
+  "buildability": 11,
+  "appeal": 60,
+  "one_liner": "A compact neural minimum-variance model held Sharpe 1.12 at 3x leverage against 0.88 for hierarchical risk parity, and pushed the liquidation threshold higher."
+ },
+ {
+  "id": "2606.15473",
+  "tradeable": 16,
+  "evidence": 4,
+  "interest": 10,
+  "buildability": 8,
+  "appeal": 38,
+  "one_liner": "Turning daily LLM regime probabilities into a Belief-at-Risk measure produced spikes at the 2025 tariff shock, roughly ten times the calm baseline."
+ },
+ {
+  "id": "2512.02036",
+  "tradeable": 12,
+  "evidence": 4,
+  "interest": 5,
+  "buildability": 10,
+  "appeal": 31,
+  "one_liner": "Feeding 482 LSTM outputs into a random forest raised test AUC from 0.563 to 0.566, a gain well inside the confidence interval."
+ },
+ {
+  "id": "2512.16251",
+  "tradeable": 28,
+  "evidence": 11,
+  "interest": 20,
+  "buildability": 15,
+  "appeal": 74,
+  "one_liner": "Forcing a deep asset pricing model to reproduce nine analyst-consensus variables raised out-of-sample R-squared from 7.6% to 10.5% and long-short Sharpe to 1.44."
+ },
+ {
+  "id": "2608.04832",
+  "tradeable": 8,
+  "evidence": 8,
+  "interest": 16,
+  "buildability": 5,
+  "appeal": 37,
+  "one_liner": "Randomizing volatility so filtering ambiguity stays stationary improved deep hedging risk on 6 of 10 synthetic payoffs versus a standard learned benchmark."
+ },
+ {
+  "id": "2606.17383",
+  "tradeable": 22,
+  "evidence": 6,
+  "interest": 12,
+  "buildability": 12,
+  "appeal": 52,
+  "one_liner": "An LLM regime filter feeding Black-Litterman scored Sharpe 1.68, yet equal weight earned more, and the model's crisis probabilities were badly miscalibrated."
+ },
+ {
+  "id": "2512.01123",
+  "tradeable": 25,
+  "evidence": 3,
+  "interest": 8,
+  "buildability": 10,
+  "appeal": 46,
+  "one_liner": "A backtested options wheel on leveraged ETFs reports 15.3% a year with zero assignments across 1,563 puts, including 2008 and 2022."
+ },
+ {
+  "id": "2607.00475",
+  "tradeable": 27,
+  "evidence": 21,
+  "interest": 23,
+  "buildability": 18,
+  "appeal": 89,
+  "one_liner": "Across sixteen futures, equal weighting matched an LSTM allocator at zero cost and buried it at 10 basis points; only the transformer held up."
+ }
+]

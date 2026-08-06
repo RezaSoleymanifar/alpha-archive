@@ -235,7 +235,9 @@ def card(*, thumb_html: str, title: str, url: str, abstract: str, venue: str,
          actions: list[tuple[str, str]], citations: int = 0, per_month: float = 0.0,
          percentile: float = 0.0, top1: bool = False, influential: int = 0,
          open_access: bool = False, spec_tstat: str = "",
-         body: str = "", spec: str = "", search: str = "") -> str:
+         body: str = "", spec: str = "", confidence: float = 0.0,
+         tier: str = "", digits: int = 0, appeal: int = 0,
+         one_liner: str = "", search: str = "") -> str:
     def e(text: str) -> str:
         return html.escape(html.unescape(str(text)))
 
@@ -270,6 +272,13 @@ def card(*, thumb_html: str, title: str, url: str, abstract: str, venue: str,
            if influential else '')
         + (f'<div class="stat"><b class="hot">t={e(spec_tstat)}</b>'
            f'<span>paper claim</span></div>' if spec_tstat else '')
+        # Effort and how sure we are it is reproducible, on the face rather than
+        # folded away. Without these every card looks equally ready to build.
+        + (f'<div class="stat"><b class="{"hot" if appeal >= 70 else ""}">{appeal}</b>'
+           f'<span>quant appeal</span></div>' if appeal else '')
+        + (f'<div class="stat"><b>{e(tier)}</b><span>effort</span></div>'
+           f'<div class="stat"><b class="{"hot" if confidence >= 0.9 else ""}">'
+           f'{confidence:.2f}</b><span>confidence</span></div>' if tier else '')
         + '</div>')
 
     links = "".join(f'<a class="act" href="{href}">{e(text)}</a>'
@@ -280,12 +289,15 @@ def card(*, thumb_html: str, title: str, url: str, abstract: str, venue: str,
            data-cites="{citations}" data-date="{e(date[:10])}" data-vel="{per_month}"
            data-pct="{percentile}" data-infl="{influential}"
            data-tags="{e(' '.join(tags))}" data-code="{1 if body else 0}"
+           data-conf="{confidence}" data-tier="{e(tier)}" data-digits="{digits}"
+           data-appeal="{appeal}"
            data-oa="{1 if open_access else 0}">
     <a class="fig" href="{url}">{thumb_html}</a>
     <div class="mid">
       <h2><a href="{url}">{e(title)}</a></h2>
       <p class="meta">{e(authors)} <span class="sep">&middot;</span> {e(venue)}
         <span class="sep">&middot;</span> {e(date)}</p>
+      {f'<p class="finding">{e(one_liner)}</p>' if one_liner else ''}
       <p class="abs">{e(abstract)}</p>
       {result}
       <p class="tagrow">{tagrow}{links}</p>
@@ -435,6 +447,11 @@ def render_queued(p: dict) -> str:
         influential=int(p.get("influential") or 0),
         open_access=bool(p.get("thumb")),
         actions=acts,
+        confidence=float(p.get("confidence") or 0.0),
+        appeal=int(p.get("appeal") or 0),
+        one_liner=str(p.get("one_liner") or ""),
+        tier=str(p.get("tier") or ""),
+        digits=int(p.get("digits") or 0),
         search=" ".join([p["title"], p["authors"], p["primary_category"],
                          *p["tags"], label]),
     )
@@ -565,6 +582,10 @@ h1 em{font-style:italic;color:var(--accent)}
 
 /* What a replication has to match. Folded away by default because it is a
    reference, not a pitch — but it is the whole reason the card is here. */
+/* What the paper found, ahead of what it says about itself. An abstract is
+   written to get published; this is written to be skimmed. */
+.finding{margin:8px 0 6px;font-size:14.5px;line-height:1.55;color:var(--ink);
+  border-left:2px solid var(--accent);padding-left:11px}
 details.spec{margin-top:9px}
 details.spec>summary{cursor:pointer;font-size:12px;color:var(--dim);
   font-family:var(--mono);letter-spacing:.02em}
@@ -720,7 +741,8 @@ footer a{margin-right:18px;color:var(--soft)}
 
     <main>
       <div class="bar">
-        <button class="tab on" data-s="pct">impact</button>
+        <button class="tab on" data-s="ready">worth reading</button>
+        <button class="tab" data-s="pct">impact</button>
         <button class="tab" data-s="vel">trending</button>
         <button class="tab" data-s="date">newest</button>
         <button class="tab" data-s="cites">most cited</button>
@@ -767,12 +789,17 @@ var list = document.getElementById('list');
 var cards = [].slice.call(document.querySelectorAll('.card'));
 var q = document.getElementById('q'), count = document.getElementById('count'),
     empty = document.getElementById('empty'), note = document.getElementById('note'),
-    days = 0, sortBy = 'pct', codeOnly = false, oaOnly = false, tagFilter = '';
+    days = 0, sortBy = 'ready', codeOnly = false, oaOnly = false, tagFilter = '';
 var LABEL = {30: 'the last 30 days', 365: 'the last 12 months', 1826: 'the last 5 years',
              3653: 'the last 10 years', 0: 'all time'};
-var HOW = {pct: 'by normalised citation percentile', cites: 'by citations',
-           vel: 'by citations per month', date: 'newest first'};
+var HOW = {ready: 'by what a quant would want to read', pct: 'by normalised citation percentile',
+           cites: 'by citations', vel: 'by citations per month', date: 'newest first'};
 var SORT = {
+  // Confidence that it is reproducible, then how numeric its published targets
+  // are. A paper with exact numbers can be declared right or wrong; one with
+  // prose claims can only be argued about, so it ranks below.
+  ready: function (a, b) { return (+b.dataset.appeal) - (+a.dataset.appeal) ||
+                                  (+b.dataset.conf) - (+a.dataset.conf); },
   pct:   function (a, b) { return (+b.dataset.pct) - (+a.dataset.pct) ||
                                   (+b.dataset.infl) - (+a.dataset.infl) ||
                                   (+b.dataset.cites) - (+a.dataset.cites); },

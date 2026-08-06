@@ -27,6 +27,7 @@ from alpha_archive import taxonomy  # noqa: E402
 LEDGER = os.path.join(ROOT, "data", "triage", "ledger.json")
 PAPERS = os.path.join(ROOT, "data", "papers", "papers.json")
 REPLICATIONS = os.path.join(ROOT, "data", "replications")
+APPEAL = os.path.join(ROOT, "data", "triage", "appeal.json")
 
 # Things that cost real time regardless of how clean the data is.
 TRAINED = re.compile(
@@ -90,8 +91,21 @@ def built() -> set[str]:
     return {o for o in out if o}
 
 
+def appeal_scores() -> dict[str, dict[str, Any]]:
+    """How much a working quant would want to read each one.
+
+    Reproducibility and worth reading are different questions. A paper can be
+    perfectly reproducible and still be the four hundredth GARCH variant, and
+    ordering the shortlist by confidence alone put exactly those at the top.
+    """
+    if not os.path.exists(APPEAL):
+        return {}
+    with open(APPEAL, encoding="utf-8") as fh:
+        return json.load(fh)
+
+
 def load() -> list[dict[str, Any]]:
-    """Every keep, joined and classified, ordered cheapest-first."""
+    """Every keep, joined, classified and scored, best first."""
     with open(LEDGER, encoding="utf-8") as fh:
         judged = json.load(fh)["papers"]
     with open(PAPERS, encoding="utf-8") as fh:
@@ -99,6 +113,7 @@ def load() -> list[dict[str, Any]]:
     rows = index if isinstance(index, list) else index.get("papers", [])
     meta = {norm(p.get("arxiv_id")): p for p in rows}
     done = built()
+    scored = appeal_scores()
 
     out = []
     for key, entry in judged.items():
@@ -135,10 +150,15 @@ def load() -> list[dict[str, Any]]:
             "targets": entry.get("reproducible_targets") or [],
             "digits": numeracy(entry),
             "state": "replicated" if ident in done else "queued",
+            **{k: (scored.get(ident) or {}).get(k, 0)
+               for k in ("appeal", "tradeable", "evidence", "interest", "buildability")},
+            "one_liner": (scored.get(ident) or {}).get("one_liner", ""),
         })
 
+    # Worth reading first, then how sure we are it reproduces, then how cheap.
+    # Effort used to lead, which surfaced trivial papers over interesting ones.
     order = {"S": 0, "M": 1, "L": 2}
-    out.sort(key=lambda k: (order[k["tier"]], -k["confidence"], -k["digits"]))
+    out.sort(key=lambda k: (-k["appeal"], -k["confidence"], order[k["tier"]]))
     return out
 
 

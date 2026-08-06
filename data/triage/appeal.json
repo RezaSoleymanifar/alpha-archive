@@ -1,0 +1,857 @@
+{
+ "2606.19318": {
+  "id": "2606.19318",
+  "tradeable": 0,
+  "evidence": 8,
+  "interest": 6,
+  "buildability": 16,
+  "appeal": 30,
+  "one_liner": "S&P 500 returns summed over 20 to 120 days fit a tempered skew t, with the gain-side power law bending to a finite cutoff."
+ },
+ "2608.01494": {
+  "id": "2608.01494",
+  "tradeable": 28,
+  "evidence": 20,
+  "interest": 18,
+  "buildability": 20,
+  "appeal": 86,
+  "one_liner": "Sizing an ETF portfolio by conformal interval width hit Sharpe 1.34 in development, then only 7 to 8.5 percent in the sealed lockbox."
+ },
+ "2607.06502": {
+  "id": "2607.06502",
+  "tradeable": 10,
+  "evidence": 20,
+  "interest": 25,
+  "buildability": 18,
+  "appeal": 73,
+  "one_liner": "Across 200 published anomalies, the median long-short return outside microcaps after 2005 is 7 bp a month with a t-stat of 0.45."
+ },
+ "2606.22796": {
+  "id": "2606.22796",
+  "tradeable": 5,
+  "evidence": 3,
+  "interest": 8,
+  "buildability": 14,
+  "appeal": 30,
+  "one_liner": "A Levy jump in Black-Scholes volatility yields closed-form ATM implied vol; fitted to VIX it mean-reverts with a 5.6 day half-life."
+ },
+ "2511.16563": {
+  "id": "2511.16563",
+  "tradeable": 10,
+  "evidence": 18,
+  "interest": 6,
+  "buildability": 14,
+  "appeal": 48,
+  "one_liner": "Across 86 ETFs, normal-based 99 percent VaR is off by 20 percent on average; a weighted Student t is off by 3 percent."
+ },
+ "2607.03082": {
+  "id": "2607.03082",
+  "tradeable": 20,
+  "evidence": 8,
+  "interest": 8,
+  "buildability": 18,
+  "appeal": 54,
+  "one_liner": "CVaR-optimized baskets of 30 active ETFs beat mean-variance on Sharpe, but 50 bp costs on 3,000 percent turnover erase most of the gain."
+ },
+ "2601.06090": {
+  "id": "2601.06090",
+  "tradeable": 0,
+  "evidence": 3,
+  "interest": 5,
+  "buildability": 4,
+  "appeal": 12,
+  "one_liner": "The top eigenvalue of the Nordic stock correlation matrix jumps in 2008 and 2020, which the authors read as regime shifts."
+ },
+ "2607.19311": {
+  "id": "2607.19311",
+  "tradeable": 8,
+  "evidence": 4,
+  "interest": 4,
+  "buildability": 16,
+  "appeal": 32,
+  "one_liner": "Adding tempered fractional memory to a GAS volatility model beats plain long memory on AMZN by 68 AIC points, in sample only."
+ },
+ "2608.03925": {
+  "id": "2608.03925",
+  "tradeable": 3,
+  "evidence": 5,
+  "interest": 10,
+  "buildability": 12,
+  "appeal": 30,
+  "one_liner": "Fitting fractional Brownian motion on gamma activity time to a decade of S&P moments gives a Hurst near 0.45. No options tested."
+ },
+ "2607.13112": {
+  "id": "2607.13112",
+  "tradeable": 10,
+  "evidence": 10,
+  "interest": 14,
+  "buildability": 16,
+  "appeal": 50,
+  "one_liner": "Ten components capture 91 percent of joint tail structure across 24 Fama-French portfolios and approximate portfolio VaR to within 1.25 percent."
+ },
+ "2607.18624": {
+  "id": "2607.18624",
+  "tradeable": 12,
+  "evidence": 8,
+  "interest": 18,
+  "buildability": 12,
+  "appeal": 50,
+  "one_liner": "Long-only minimum variance weights flip discontinuously at correlation thresholds, so two nearly identical assets can swap the whole allocation. Structured shrinkage fixes it."
+ },
+ "2512.21798": {
+  "id": "2512.21798",
+  "tradeable": 5,
+  "evidence": 5,
+  "interest": 5,
+  "buildability": 10,
+  "appeal": 25,
+  "one_liner": "TimeGAN and VAE synthetic S&P returns reproduce volatility and VaR within a few percent but give worse portfolio Sharpe than the real series."
+ },
+ "2608.00127": {
+  "id": "2608.00127",
+  "tradeable": 12,
+  "evidence": 4,
+  "interest": 18,
+  "buildability": 18,
+  "appeal": 52,
+  "one_liner": "At Sharpe 1 over three years, expect a median max drawdown of 1.16 annual vols. Long memory multiplies that eightfold."
+ },
+ "2607.20093": {
+  "id": "2607.20093",
+  "tradeable": 8,
+  "evidence": 18,
+  "interest": 22,
+  "buildability": 16,
+  "appeal": 64,
+  "one_liner": "Moving-average crossovers, RSI, MACD, Bollinger and sell-in-May all fail three pre-declared gates after 10 bp costs and multiple-testing control."
+ },
+ "2607.09556": {
+  "id": "2607.09556",
+  "tradeable": 12,
+  "evidence": 12,
+  "interest": 6,
+  "buildability": 12,
+  "appeal": 42,
+  "one_liner": "A robust integer program picks a basket that never rebalances and still tracks the Dow with 0.40 percent out-of-sample error."
+ },
+ "2512.24526": {
+  "id": "2512.24526",
+  "tradeable": 12,
+  "evidence": 5,
+  "interest": 14,
+  "buildability": 4,
+  "appeal": 35,
+  "one_liner": "Twelve LLMs picked and weighted stocks inside each S&P sector; the paper reports how those portfolios stack up against equal weight and max Sharpe."
+ },
+ "2608.02917": {
+  "id": "2608.02917",
+  "tradeable": 12,
+  "evidence": 8,
+  "interest": 18,
+  "buildability": 14,
+  "appeal": 52,
+  "one_liner": "An automated market maker with a 3 to 4 percent fee band tracks a portfolio mandate more tightly than the incumbent index funds."
+ },
+ "2606.26731": {
+  "id": "2606.26731",
+  "tradeable": 6,
+  "evidence": 8,
+  "interest": 12,
+  "buildability": 16,
+  "appeal": 42,
+  "one_liner": "Rolling rank correlation between VIX and SPY illiquidity peaks near 0.37 in stressed windows, setting the stress level for a hedging valuation adjustment."
+ },
+ "2606.14798": {
+  "id": "2606.14798",
+  "tradeable": 10,
+  "evidence": 6,
+  "interest": 16,
+  "buildability": 6,
+  "appeal": 38,
+  "one_liner": "The knob between hierarchical risk parity and minimum variance is the same object as damping in spatial statistics, and it has a closed-form optimum."
+ },
+ "2607.06117": {
+  "id": "2607.06117",
+  "tradeable": 30,
+  "evidence": 16,
+  "interest": 12,
+  "buildability": 20,
+  "appeal": 78,
+  "one_liner": "A gated QQQ versus DIA rotation earns 18.3 percent at Sharpe 0.94 after costs, beating QQQ on Sharpe but not on return."
+ },
+ "2606.09025": {
+  "id": "2606.09025",
+  "tradeable": 30,
+  "evidence": 15,
+  "interest": 14,
+  "buildability": 20,
+  "appeal": 79,
+  "one_liner": "Two cash overlays on a fixed ten-ETF sleeve cut max drawdown from 34 to 18 percent and raised CAGR from 16.6 to 18.8 percent."
+ },
+ "2512.12815": {
+  "id": "2512.12815",
+  "tradeable": 5,
+  "evidence": 5,
+  "interest": 10,
+  "buildability": 16,
+  "appeal": 36,
+  "one_liner": "After the January 2024 spot ETF approval, Bitcoin's link to the dollar and gold broke structurally while its link to the S&P did not."
+ },
+ "2512.22109": {
+  "id": "2512.22109",
+  "tradeable": 18,
+  "evidence": 14,
+  "interest": 20,
+  "buildability": 18,
+  "appeal": 70,
+  "one_liner": "A sparse S&P tracker that mostly holds still runs 5 percent turnover over six years against 500 percent for rivals, costing 3 bp."
+ },
+ "2606.16840": {
+  "id": "2606.16840",
+  "tradeable": 8,
+  "evidence": 16,
+  "interest": 18,
+  "buildability": 12,
+  "appeal": 54,
+  "one_liner": "Across 13 major coins the crash-side dependence graph stays near-complete over five years while the rally-side thins out, so crypto diversification only fails downward."
+ },
+ "2607.03858": {
+  "id": "2607.03858",
+  "tradeable": 3,
+  "evidence": 14,
+  "interest": 12,
+  "buildability": 14,
+  "appeal": 43,
+  "one_liner": "US equity panels split into a persistent factor near Hurst 0.55 and an antipersistent one near 0.22, with the market mode turning cascade-like."
+ },
+ "2512.23640": {
+  "id": "2512.23640",
+  "tradeable": 0,
+  "evidence": 5,
+  "interest": 6,
+  "buildability": 6,
+  "appeal": 17,
+  "one_liner": "Fitting gains and losses in the S&P with separate volatility parameters gives a skew t that captures the asymmetry a symmetric fit misses."
+ },
+ "2606.31251": {
+  "id": "2606.31251",
+  "tradeable": 15,
+  "evidence": 12,
+  "interest": 15,
+  "buildability": 18,
+  "appeal": 60,
+  "one_liner": "Across 146 walk-forward folds, an SVM timing rule beats buy-and-hold only in the worst volatility regimes and loses badly in the best ones."
+ },
+ "2512.02029": {
+  "id": "2512.02029",
+  "tradeable": 15,
+  "evidence": 18,
+  "interest": 22,
+  "buildability": 18,
+  "appeal": 73,
+  "one_liner": "Across 378 coins and 480 million simulated holds, the median two-year crypto position loses 28 percent net of fees while Bitcoin-only medians stay positive."
+ },
+ "2607.19825": {
+  "id": "2607.19825",
+  "tradeable": 14,
+  "evidence": 16,
+  "interest": 14,
+  "buildability": 18,
+  "appeal": 62,
+  "one_liner": "Shrinking a rank-based covariance nonlinearly cuts minimum-variance portfolio volatility from 11.0 to 9.5 percent and turnover by 40 percent, at the same Sharpe."
+ },
+ "2512.02166": {
+  "id": "2512.02166",
+  "tradeable": 10,
+  "evidence": 15,
+  "interest": 12,
+  "buildability": 18,
+  "appeal": 55,
+  "one_liner": "Splitting volatility memory into regime, fractional and clock gates shows fractional memory wins in EURUSD while regime and clock gates win in SPY."
+ },
+ "2606.04153": {
+  "id": "2606.04153",
+  "tradeable": 24,
+  "evidence": 18,
+  "interest": 18,
+  "buildability": 20,
+  "appeal": 80,
+  "one_liner": "Forecasting the sign of monthly S&P returns conditional on their size turns $100 into $182 by 2021 after costs, versus $105 for buy-and-hold."
+ },
+ "2512.02352": {
+  "id": "2512.02352",
+  "tradeable": 5,
+  "evidence": 12,
+  "interest": 20,
+  "buildability": 16,
+  "appeal": 53,
+  "one_liner": "A rank-invariant roughness estimator built from visibility graphs puts the VIX far from independent noise and implies a Hurst near 0.09."
+ },
+ "2512.19986": {
+  "id": "2512.19986",
+  "tradeable": 12,
+  "evidence": 6,
+  "interest": 6,
+  "buildability": 12,
+  "appeal": 36,
+  "one_liner": "A covariance-aware projection lifts in-sample Sharpe 26% on 100 S&P names, but loses to the plain Euclidean version in two of three walk-forward years."
+ },
+ "2512.18918": {
+  "id": "2512.18918",
+  "tradeable": 4,
+  "evidence": 5,
+  "interest": 20,
+  "buildability": 14,
+  "appeal": 43,
+  "one_liner": "Ten years of SEC Form 4 filings build an insider trading network whose coordinated clusters look nothing like shuffled or simulated nulls."
+ },
+ "2512.05661": {
+  "id": "2512.05661",
+  "tradeable": 8,
+  "evidence": 15,
+  "interest": 8,
+  "buildability": 14,
+  "appeal": 45,
+  "one_liner": "Across 7,286 rolling 10-day VaR forecasts, Bayesian networks breach on exactly the same three days as plain historical simulation."
+ },
+ "2606.23492": {
+  "id": "2606.23492",
+  "tradeable": 8,
+  "evidence": 15,
+  "interest": 8,
+  "buildability": 16,
+  "appeal": 47,
+  "one_liner": "Hidden Markov models with fat-tailed emissions pass distribution tests on SPY but fail out-of-sample on 11 of 30 individual stocks."
+ },
+ "2512.20460": {
+  "id": "2512.20460",
+  "tradeable": 20,
+  "evidence": 14,
+  "interest": 18,
+  "buildability": 18,
+  "appeal": 70,
+  "one_liner": "Welch-Goyal predictors only forecast the equity premium when the yield curve was flat or inverted recently; out-of-sample R-squared rises from 2.6% to 4.1%."
+ },
+ "2606.22615": {
+  "id": "2606.22615",
+  "tradeable": 6,
+  "evidence": 12,
+  "interest": 8,
+  "buildability": 8,
+  "appeal": 34,
+  "one_liner": "Fitting stochastic volatility in mean models by hidden Markov approximation runs about ten times faster than MCMC on four equity indices."
+ },
+ "2606.26625": {
+  "id": "2606.26625",
+  "tradeable": 22,
+  "evidence": 10,
+  "interest": 6,
+  "buildability": 18,
+  "appeal": 56,
+  "one_liner": "Rolling mean-variance and CVaR portfolios of 30 commodity ETFs beat equal weight on Sharpe and cut tail loss, with no trading costs charged."
+ },
+ "2512.06550": {
+  "id": "2512.06550",
+  "tradeable": 2,
+  "evidence": 4,
+  "interest": 3,
+  "buildability": 14,
+  "appeal": 23,
+  "one_liner": "Two Japanese bank mergers produced cumulative abnormal returns of 30% and 6%, though the estimate swings by half depending on the market model."
+ },
+ "2606.08569": {
+  "id": "2606.08569",
+  "tradeable": 20,
+  "evidence": 6,
+  "interest": 8,
+  "buildability": 10,
+  "appeal": 44,
+  "one_liner": "Ranking stocks by a put premium implied from their own price tree earns 3.7% yearly on the S&P 500, far under buy and hold."
+ },
+ "2606.31475": {
+  "id": "2606.31475",
+  "tradeable": 14,
+  "evidence": 13,
+  "interest": 21,
+  "buildability": 15,
+  "appeal": 63,
+  "one_liner": "An eigenvalue indicator from rogue wave physics flagged the 2008 VIX spike 18 trading days early, at 63% to 84% precision across three indices."
+ },
+ "2512.17225": {
+  "id": "2512.17225",
+  "tradeable": 6,
+  "evidence": 5,
+  "interest": 13,
+  "buildability": 10,
+  "appeal": 34,
+  "one_liner": "A quantum field theory fit to S&P 500 returns reproduces crisis kurtosis the Ising model misses and beats rolling regression on next-day AAPL error."
+ },
+ "2607.21826": {
+  "id": "2607.21826",
+  "tradeable": 14,
+  "evidence": 3,
+  "interest": 4,
+  "buildability": 5,
+  "appeal": 26,
+  "one_liner": "Log-periodic power law fits to Bitcoin and Ether place the 2017-2018 crash dates roughly right, fitted after the fact on a single window."
+ },
+ "2608.04987": {
+  "id": "2608.04987",
+  "tradeable": 20,
+  "evidence": 9,
+  "interest": 8,
+  "buildability": 6,
+  "appeal": 43,
+  "one_liner": "Swapping the covariance matrix for a multifractal fluctuation matrix gives the lowest drawdown and expected shortfall across four assets, reported only as figure bands."
+ },
+ "2606.22719": {
+  "id": "2606.22719",
+  "tradeable": 20,
+  "evidence": 16,
+  "interest": 21,
+  "buildability": 14,
+  "appeal": 71,
+  "one_liner": "A leakage-controlled LLM ranks equity style factors with rank IC 0.13, not statistically significant, and the traded version loses money after costs."
+ },
+ "2606.27932": {
+  "id": "2606.27932",
+  "tradeable": 2,
+  "evidence": 16,
+  "interest": 15,
+  "buildability": 17,
+  "appeal": 50,
+  "one_liner": "A standard self-similarity test rejects 47% of the time instead of 1%; a fractional-derivative version fixes it and puts stock indices near H=0.5."
+ },
+ "2607.10297": {
+  "id": "2607.10297",
+  "tradeable": 22,
+  "evidence": 11,
+  "interest": 11,
+  "buildability": 12,
+  "appeal": 56,
+  "one_liner": "Portfolios of the 40 most peripheral stocks in a noise-filtered correlation network earned Sharpe 0.81 against 0.51 for the market, 2010 to 2022."
+ },
+ "2607.03888": {
+  "id": "2607.03888",
+  "tradeable": 8,
+  "evidence": 15,
+  "interest": 11,
+  "buildability": 18,
+  "appeal": 52,
+  "one_liner": "An optimal local bandwidth for local Gaussian correlation buys little: adaptive tail estimates match the global ones within 0.01 on SPY, TLT and EEM."
+ },
+ "2512.21791": {
+  "id": "2512.21791",
+  "tradeable": 3,
+  "evidence": 7,
+  "interest": 6,
+  "buildability": 12,
+  "appeal": 28,
+  "one_liner": "Scoring three synthetic return generators on fidelity, temporal structure and downstream use puts TimeGAN ahead of a VAE and ARIMA-GARCH on every axis."
+ },
+ "2607.06908": {
+  "id": "2607.06908",
+  "tradeable": 6,
+  "evidence": 7,
+  "interest": 12,
+  "buildability": 10,
+  "appeal": 35,
+  "one_liner": "A participation-ratio rule finds a median of seven global factors in daily S&P 500 returns where the standard Onatski test usually finds one."
+ },
+ "2512.10606": {
+  "id": "2512.10606",
+  "tradeable": 20,
+  "evidence": 8,
+  "interest": 12,
+  "buildability": 12,
+  "appeal": 52,
+  "one_liner": "Concentrating an equal-weight book in stocks whose signed-correlation balance deviates most from the market beat 1/N on four indices at hand-picked thresholds."
+ },
+ "2511.21221": {
+  "id": "2511.21221",
+  "tradeable": 20,
+  "evidence": 7,
+  "interest": 13,
+  "buildability": 12,
+  "appeal": 52,
+  "one_liner": "Weighting other markets by forward validation raises Sharpe for dual-listed A and H share pairs and six US sector baskets, tested on 63 days."
+ },
+ "2607.27461": {
+  "id": "2607.27461",
+  "tradeable": 28,
+  "evidence": 18,
+  "interest": 19,
+  "buildability": 12,
+  "appeal": 77,
+  "one_liner": "Three price-only matrices drive a long-short book at Sharpe 1.06 against the market's 0.78, then 1.32 against 1.14 in a live forward test."
+ },
+ "2606.11962": {
+  "id": "2606.11962",
+  "tradeable": 8,
+  "evidence": 12,
+  "interest": 9,
+  "buildability": 16,
+  "appeal": 45,
+  "one_liner": "A composite-likelihood Hurst estimator puts log-VIX at 0.42 and beats method of moments on forecast error, by under a tenth of a percent."
+ },
+ "2607.26188": {
+  "id": "2607.26188",
+  "tradeable": 22,
+  "evidence": 7,
+  "interest": 20,
+  "buildability": 17,
+  "appeal": 66,
+  "one_liner": "Bitcoin topped 525, 546 and 534 days after the last three halvings while Pi Cycle, Mayer, MVRV and Puell extremes decayed every cycle."
+ },
+ "2512.01408": {
+  "id": "2512.01408",
+  "tradeable": 22,
+  "evidence": 10,
+  "interest": 9,
+  "buildability": 6,
+  "appeal": 47,
+  "one_liner": "Putting one Wasserstein ball on the drift prior instead of at every date raises Sharpe from about 0.35 to 0.48 on random 20-stock draws."
+ },
+ "2607.19279": {
+  "id": "2607.19279",
+  "tradeable": 24,
+  "evidence": 8,
+  "interest": 15,
+  "buildability": 10,
+  "appeal": 57,
+  "one_liner": "Gaussian boson sampling clusters for statistical arbitrage reach Sharpe 2.25, statistically indistinguishable from ordinary spectral clustering at 2.04."
+ },
+ "2512.12334": {
+  "id": "2512.12334",
+  "tradeable": 6,
+  "evidence": 14,
+  "interest": 5,
+  "buildability": 11,
+  "appeal": 36,
+  "one_liner": "Across 7,286 expected shortfall forecasts, EGARCH wins and Bayesian networks tie historical simulation, but every model fails the conditional backtest."
+ },
+ "2512.23596": {
+  "id": "2512.23596",
+  "tradeable": 22,
+  "evidence": 14,
+  "interest": 19,
+  "buildability": 13,
+  "appeal": 68,
+  "one_liner": "Choosing training window length and model class by tournament raises out-of-sample R-squared on 17 industry portfolios to 4.9%, double a short fixed window."
+ },
+ "2607.25189": {
+  "id": "2607.25189",
+  "tradeable": 6,
+  "evidence": 9,
+  "interest": 4,
+  "buildability": 12,
+  "appeal": 31,
+  "one_liner": "A two-dimensional Markov chain gives GARCH long memory with three parameters, still fitting 13 to 25 log-likelihood points worse than FIGARCH."
+ },
+ "2607.01377": {
+  "id": "2607.01377",
+  "tradeable": 18,
+  "evidence": 7,
+  "interest": 9,
+  "buildability": 13,
+  "appeal": 47,
+  "one_liner": "Signed order flow built from daily volume predicts next-month stock returns; the two Kyle lambda estimators explain almost nothing and flip sign."
+ },
+ "2606.31387": {
+  "id": "2606.31387",
+  "tradeable": 20,
+  "evidence": 3,
+  "interest": 16,
+  "buildability": 6,
+  "appeal": 45,
+  "one_liner": "Writing execution speed as a signature functional turns path-dependent statistical arbitrage into a concave quadratic program, tested on one pair for two months."
+ },
+ "2512.19251": {
+  "id": "2512.19251",
+  "tradeable": 5,
+  "evidence": 5,
+  "interest": 6,
+  "buildability": 8,
+  "appeal": 24,
+  "one_liner": "In a panel of 18 coins, institutionally backed ones absorb about a third less market-wide volatility, with the backing label assigned by hand."
+ },
+ "2512.23021": {
+  "id": "2512.23021",
+  "tradeable": 14,
+  "evidence": 15,
+  "interest": 9,
+  "buildability": 9,
+  "appeal": 47,
+  "one_liner": "A new PSD covariance estimator lifts a 10-asset tangency portfolio's out-of-sample Sharpe to 0.56 versus 0.51 for Gerber and shrinkage rivals."
+ },
+ "2512.21823": {
+  "id": "2512.21823",
+  "tradeable": 5,
+  "evidence": 3,
+  "interest": 10,
+  "buildability": 3,
+  "appeal": 21,
+  "one_liner": "Restricted Boltzmann free energy failed to flag the COVID crash on a 19-series cross-asset panel; only the Gaussian variant tracked VIX spikes."
+ },
+ "2512.12250": {
+  "id": "2512.12250",
+  "tradeable": 14,
+  "evidence": 7,
+  "interest": 5,
+  "buildability": 16,
+  "appeal": 42,
+  "one_liner": "A stochastic-volatility feed into an LSTM cut 21-day S&P 500 volatility forecast error to 5.3% MAPE, but the trading version only reached Sharpe 0.54."
+ },
+ "2512.15113": {
+  "id": "2512.15113",
+  "tradeable": 2,
+  "evidence": 5,
+  "interest": 3,
+  "buildability": 14,
+  "appeal": 24,
+  "one_liner": "A genetic-algorithm-tuned SVR cut one-year-ahead price forecast error on five global indices by 20% versus LSTM, with no trading test."
+ },
+ "2606.09104": {
+  "id": "2606.09104",
+  "tradeable": 26,
+  "evidence": 10,
+  "interest": 7,
+  "buildability": 14,
+  "appeal": 57,
+  "one_liner": "Stacking a Bayesian VAR ensemble, Student-t Black-Litterman and a TD3 agent on 29 Dow stocks returned 57% with Sharpe 1.72 over one test window."
+ },
+ "2512.09224": {
+  "id": "2512.09224",
+  "tradeable": 20,
+  "evidence": 13,
+  "interest": 12,
+  "buildability": 16,
+  "appeal": 61,
+  "one_liner": "An exploratory mean-variance policy under jump diffusion beat the plain calibrated policy on Sharpe in 12 of 14 rolling S&P 500 test years."
+ },
+ "2606.08283": {
+  "id": "2606.08283",
+  "tradeable": 26,
+  "evidence": 13,
+  "interest": 20,
+  "buildability": 19,
+  "appeal": 78,
+  "one_liner": "Hawkish and dovish LLM macro agents beat a deterministic z-score rule on commodity ETFs by 0.04 Sharpe, and survived costs the rule did not."
+ },
+ "2511.17963": {
+  "id": "2511.17963",
+  "tradeable": 24,
+  "evidence": 6,
+  "interest": 5,
+  "buildability": 11,
+  "appeal": 46,
+  "one_liner": "An LSTM plus PPO allocator across stocks and crypto reached Sharpe 0.96, but plain PPO without the LSTM scored higher at 1.02."
+ },
+ "2512.07860": {
+  "id": "2512.07860",
+  "tradeable": 0,
+  "evidence": 2,
+  "interest": 2,
+  "buildability": 12,
+  "appeal": 16,
+  "one_liner": "An LSTM ensembled with Levy jump-diffusion volatility paths hit R-squared 0.997 forecasting Brent and European index price levels."
+ },
+ "2512.15739": {
+  "id": "2512.15739",
+  "tradeable": 8,
+  "evidence": 14,
+  "interest": 6,
+  "buildability": 13,
+  "appeal": 41,
+  "one_liner": "A Bayesian dynamic linear model beat GARCH-t on S&P 500 VaR coverage but still failed the conditional coverage test; the LSTM passed."
+ },
+ "2606.26815": {
+  "id": "2606.26815",
+  "tradeable": 24,
+  "evidence": 12,
+  "interest": 16,
+  "buildability": 12,
+  "appeal": 64,
+  "one_liner": "Neural forecasts of the US and euro zero curve hit 56% and 53% directional accuracy, and the duration-managed bond strategy reached Sharpe 1.2."
+ },
+ "2511.21873": {
+  "id": "2511.21873",
+  "tradeable": 2,
+  "evidence": 4,
+  "interest": 7,
+  "buildability": 11,
+  "appeal": 24,
+  "one_liner": "A graph attention network forecasting 79 FTSE 100 stocks did best with a 5-day window, and correlation graphs beat fundamental-ratio graphs."
+ },
+ "2512.12924": {
+  "id": "2512.12924",
+  "tradeable": 14,
+  "evidence": 22,
+  "interest": 15,
+  "buildability": 11,
+  "appeal": 62,
+  "one_liner": "Five classic microstructure signal families tested over 34 out-of-sample quarters returned 0.55% a year against SPY's 13.2%, with t-statistic 0.96."
+ },
+ "2606.30037": {
+  "id": "2606.30037",
+  "tradeable": 6,
+  "evidence": 20,
+  "interest": 22,
+  "buildability": 18,
+  "appeal": 66,
+  "one_liner": "Swapping a point head for a Gaussian mixture head lifted forecast skill more than changing the backbone; classical models still win at short horizons."
+ },
+ "2606.27670": {
+  "id": "2606.27670",
+  "tradeable": 27,
+  "evidence": 10,
+  "interest": 20,
+  "buildability": 16,
+  "appeal": 73,
+  "one_liner": "A correlation graph attention model on 66 coins reached Sharpe 3.1 after costs, and time-mixing modules that help stocks hurt crypto."
+ },
+ "2512.04099": {
+  "id": "2512.04099",
+  "tradeable": 22,
+  "evidence": 7,
+  "interest": 13,
+  "buildability": 16,
+  "appeal": 58,
+  "one_liner": "The transformer with the lowest crypto forecast error was not the most profitable; on Ethereum every model finished near zero return."
+ },
+ "2607.12248": {
+  "id": "2607.12248",
+  "tradeable": 3,
+  "evidence": 20,
+  "interest": 24,
+  "buildability": 15,
+  "appeal": 62,
+  "one_liner": "The 80% directional accuracy claimed for fine-tuned foundation models is just the rising-market base rate; excess accuracy is negative."
+ },
+ "2606.27100": {
+  "id": "2606.27100",
+  "tradeable": 2,
+  "evidence": 16,
+  "interest": 15,
+  "buildability": 13,
+  "appeal": 46,
+  "one_liner": "Six pretrained time-series foundation models took 8 of 10 return-forecast wins over trained baselines, but none beat a zero-return random walk significantly."
+ },
+ "2606.15701": {
+  "id": "2606.15701",
+  "tradeable": 0,
+  "evidence": 5,
+  "interest": 2,
+  "buildability": 13,
+  "appeal": 20,
+  "one_liner": "A shifted data augmentation scheme cut Transformer index-level forecast error by two thirds and shrank the spread across ten random seeds."
+ },
+ "2606.05733": {
+  "id": "2606.05733",
+  "tradeable": 12,
+  "evidence": 3,
+  "interest": 12,
+  "buildability": 15,
+  "appeal": 42,
+  "one_liner": "A streaming neural Hawkes graph over July 2022 news picked next-day extreme movers at 1.5 to 1.8 times the random rate."
+ },
+ "2512.07867": {
+  "id": "2512.07867",
+  "tradeable": 6,
+  "evidence": 6,
+  "interest": 12,
+  "buildability": 12,
+  "appeal": 36,
+  "one_liner": "LLM-written macro stress scenarios produced VaR and CVaR roughly 3.7 times the historical bootstrap level for a 60/30/10 ETF portfolio."
+ },
+ "2607.09820": {
+  "id": "2607.09820",
+  "tradeable": 24,
+  "evidence": 7,
+  "interest": 14,
+  "buildability": 11,
+  "appeal": 56,
+  "one_liner": "A network that learns a state-dependent Wasserstein radius returned 26% a year with Sharpe 1.30 on 20 S&P 500 names over one test window."
+ },
+ "2607.15195": {
+  "id": "2607.15195",
+  "tradeable": 12,
+  "evidence": 6,
+  "interest": 15,
+  "buildability": 15,
+  "appeal": 48,
+  "one_liner": "A physics-informed offline RL policy trading under quadratic impact reached Sharpe 1.49 against 1.07 for equal weight, using a synthetic alpha."
+ },
+ "2607.23068": {
+  "id": "2607.23068",
+  "tradeable": 24,
+  "evidence": 9,
+  "interest": 16,
+  "buildability": 11,
+  "appeal": 60,
+  "one_liner": "A compact neural minimum-variance model held Sharpe 1.12 at 3x leverage against 0.88 for hierarchical risk parity, and pushed the liquidation threshold higher."
+ },
+ "2606.15473": {
+  "id": "2606.15473",
+  "tradeable": 16,
+  "evidence": 4,
+  "interest": 10,
+  "buildability": 8,
+  "appeal": 38,
+  "one_liner": "Turning daily LLM regime probabilities into a Belief-at-Risk measure produced spikes at the 2025 tariff shock, roughly ten times the calm baseline."
+ },
+ "2512.02036": {
+  "id": "2512.02036",
+  "tradeable": 12,
+  "evidence": 4,
+  "interest": 5,
+  "buildability": 10,
+  "appeal": 31,
+  "one_liner": "Feeding 482 LSTM outputs into a random forest raised test AUC from 0.563 to 0.566, a gain well inside the confidence interval."
+ },
+ "2512.16251": {
+  "id": "2512.16251",
+  "tradeable": 28,
+  "evidence": 11,
+  "interest": 20,
+  "buildability": 15,
+  "appeal": 74,
+  "one_liner": "Forcing a deep asset pricing model to reproduce nine analyst-consensus variables raised out-of-sample R-squared from 7.6% to 10.5% and long-short Sharpe to 1.44."
+ },
+ "2608.04832": {
+  "id": "2608.04832",
+  "tradeable": 8,
+  "evidence": 8,
+  "interest": 16,
+  "buildability": 5,
+  "appeal": 37,
+  "one_liner": "Randomizing volatility so filtering ambiguity stays stationary improved deep hedging risk on 6 of 10 synthetic payoffs versus a standard learned benchmark."
+ },
+ "2606.17383": {
+  "id": "2606.17383",
+  "tradeable": 22,
+  "evidence": 6,
+  "interest": 12,
+  "buildability": 12,
+  "appeal": 52,
+  "one_liner": "An LLM regime filter feeding Black-Litterman scored Sharpe 1.68, yet equal weight earned more, and the model's crisis probabilities were badly miscalibrated."
+ },
+ "2512.01123": {
+  "id": "2512.01123",
+  "tradeable": 25,
+  "evidence": 3,
+  "interest": 8,
+  "buildability": 10,
+  "appeal": 46,
+  "one_liner": "A backtested options wheel on leveraged ETFs reports 15.3% a year with zero assignments across 1,563 puts, including 2008 and 2022."
+ },
+ "2607.00475": {
+  "id": "2607.00475",
+  "tradeable": 27,
+  "evidence": 21,
+  "interest": 23,
+  "buildability": 18,
+  "appeal": 89,
+  "one_liner": "Across sixteen futures, equal weighting matched an LSTM allocator at zero cost and buried it at 10 basis points; only the transformer held up."
+ }
+}

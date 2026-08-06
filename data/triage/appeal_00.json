@@ -1,0 +1,290 @@
+[
+ {
+  "id": "2606.19318",
+  "tradeable": 0,
+  "evidence": 8,
+  "interest": 6,
+  "buildability": 16,
+  "appeal": 30,
+  "one_liner": "S&P 500 returns summed over 20 to 120 days fit a tempered skew t, with the gain-side power law bending to a finite cutoff."
+ },
+ {
+  "id": "2608.01494",
+  "tradeable": 28,
+  "evidence": 20,
+  "interest": 18,
+  "buildability": 20,
+  "appeal": 86,
+  "one_liner": "Sizing an ETF portfolio by conformal interval width hit Sharpe 1.34 in development, then only 7 to 8.5 percent in the sealed lockbox."
+ },
+ {
+  "id": "2607.06502",
+  "tradeable": 10,
+  "evidence": 20,
+  "interest": 25,
+  "buildability": 18,
+  "appeal": 73,
+  "one_liner": "Across 200 published anomalies, the median long-short return outside microcaps after 2005 is 7 bp a month with a t-stat of 0.45."
+ },
+ {
+  "id": "2606.22796",
+  "tradeable": 5,
+  "evidence": 3,
+  "interest": 8,
+  "buildability": 14,
+  "appeal": 30,
+  "one_liner": "A Levy jump in Black-Scholes volatility yields closed-form ATM implied vol; fitted to VIX it mean-reverts with a 5.6 day half-life."
+ },
+ {
+  "id": "2511.16563",
+  "tradeable": 10,
+  "evidence": 18,
+  "interest": 6,
+  "buildability": 14,
+  "appeal": 48,
+  "one_liner": "Across 86 ETFs, normal-based 99 percent VaR is off by 20 percent on average; a weighted Student t is off by 3 percent."
+ },
+ {
+  "id": "2607.03082",
+  "tradeable": 20,
+  "evidence": 8,
+  "interest": 8,
+  "buildability": 18,
+  "appeal": 54,
+  "one_liner": "CVaR-optimized baskets of 30 active ETFs beat mean-variance on Sharpe, but 50 bp costs on 3,000 percent turnover erase most of the gain."
+ },
+ {
+  "id": "2601.06090",
+  "tradeable": 0,
+  "evidence": 3,
+  "interest": 5,
+  "buildability": 4,
+  "appeal": 12,
+  "one_liner": "The top eigenvalue of the Nordic stock correlation matrix jumps in 2008 and 2020, which the authors read as regime shifts."
+ },
+ {
+  "id": "2607.19311",
+  "tradeable": 8,
+  "evidence": 4,
+  "interest": 4,
+  "buildability": 16,
+  "appeal": 32,
+  "one_liner": "Adding tempered fractional memory to a GAS volatility model beats plain long memory on AMZN by 68 AIC points, in sample only."
+ },
+ {
+  "id": "2608.03925",
+  "tradeable": 3,
+  "evidence": 5,
+  "interest": 10,
+  "buildability": 12,
+  "appeal": 30,
+  "one_liner": "Fitting fractional Brownian motion on gamma activity time to a decade of S&P moments gives a Hurst near 0.45. No options tested."
+ },
+ {
+  "id": "2607.13112",
+  "tradeable": 10,
+  "evidence": 10,
+  "interest": 14,
+  "buildability": 16,
+  "appeal": 50,
+  "one_liner": "Ten components capture 91 percent of joint tail structure across 24 Fama-French portfolios and approximate portfolio VaR to within 1.25 percent."
+ },
+ {
+  "id": "2607.18624",
+  "tradeable": 12,
+  "evidence": 8,
+  "interest": 18,
+  "buildability": 12,
+  "appeal": 50,
+  "one_liner": "Long-only minimum variance weights flip discontinuously at correlation thresholds, so two nearly identical assets can swap the whole allocation. Structured shrinkage fixes it."
+ },
+ {
+  "id": "2512.21798",
+  "tradeable": 5,
+  "evidence": 5,
+  "interest": 5,
+  "buildability": 10,
+  "appeal": 25,
+  "one_liner": "TimeGAN and VAE synthetic S&P returns reproduce volatility and VaR within a few percent but give worse portfolio Sharpe than the real series."
+ },
+ {
+  "id": "2608.00127",
+  "tradeable": 12,
+  "evidence": 4,
+  "interest": 18,
+  "buildability": 18,
+  "appeal": 52,
+  "one_liner": "At Sharpe 1 over three years, expect a median max drawdown of 1.16 annual vols. Long memory multiplies that eightfold."
+ },
+ {
+  "id": "2607.20093",
+  "tradeable": 8,
+  "evidence": 18,
+  "interest": 22,
+  "buildability": 16,
+  "appeal": 64,
+  "one_liner": "Moving-average crossovers, RSI, MACD, Bollinger and sell-in-May all fail three pre-declared gates after 10 bp costs and multiple-testing control."
+ },
+ {
+  "id": "2607.09556",
+  "tradeable": 12,
+  "evidence": 12,
+  "interest": 6,
+  "buildability": 12,
+  "appeal": 42,
+  "one_liner": "A robust integer program picks a basket that never rebalances and still tracks the Dow with 0.40 percent out-of-sample error."
+ },
+ {
+  "id": "2512.24526",
+  "tradeable": 12,
+  "evidence": 5,
+  "interest": 14,
+  "buildability": 4,
+  "appeal": 35,
+  "one_liner": "Twelve LLMs picked and weighted stocks inside each S&P sector; the paper reports how those portfolios stack up against equal weight and max Sharpe."
+ },
+ {
+  "id": "2608.02917",
+  "tradeable": 12,
+  "evidence": 8,
+  "interest": 18,
+  "buildability": 14,
+  "appeal": 52,
+  "one_liner": "An automated market maker with a 3 to 4 percent fee band tracks a portfolio mandate more tightly than the incumbent index funds."
+ },
+ {
+  "id": "2606.26731",
+  "tradeable": 6,
+  "evidence": 8,
+  "interest": 12,
+  "buildability": 16,
+  "appeal": 42,
+  "one_liner": "Rolling rank correlation between VIX and SPY illiquidity peaks near 0.37 in stressed windows, setting the stress level for a hedging valuation adjustment."
+ },
+ {
+  "id": "2606.14798",
+  "tradeable": 10,
+  "evidence": 6,
+  "interest": 16,
+  "buildability": 6,
+  "appeal": 38,
+  "one_liner": "The knob between hierarchical risk parity and minimum variance is the same object as damping in spatial statistics, and it has a closed-form optimum."
+ },
+ {
+  "id": "2607.06117",
+  "tradeable": 30,
+  "evidence": 16,
+  "interest": 12,
+  "buildability": 20,
+  "appeal": 78,
+  "one_liner": "A gated QQQ versus DIA rotation earns 18.3 percent at Sharpe 0.94 after costs, beating QQQ on Sharpe but not on return."
+ },
+ {
+  "id": "2606.09025",
+  "tradeable": 30,
+  "evidence": 15,
+  "interest": 14,
+  "buildability": 20,
+  "appeal": 79,
+  "one_liner": "Two cash overlays on a fixed ten-ETF sleeve cut max drawdown from 34 to 18 percent and raised CAGR from 16.6 to 18.8 percent."
+ },
+ {
+  "id": "2512.12815",
+  "tradeable": 5,
+  "evidence": 5,
+  "interest": 10,
+  "buildability": 16,
+  "appeal": 36,
+  "one_liner": "After the January 2024 spot ETF approval, Bitcoin's link to the dollar and gold broke structurally while its link to the S&P did not."
+ },
+ {
+  "id": "2512.22109",
+  "tradeable": 18,
+  "evidence": 14,
+  "interest": 20,
+  "buildability": 18,
+  "appeal": 70,
+  "one_liner": "A sparse S&P tracker that mostly holds still runs 5 percent turnover over six years against 500 percent for rivals, costing 3 bp."
+ },
+ {
+  "id": "2606.16840",
+  "tradeable": 8,
+  "evidence": 16,
+  "interest": 18,
+  "buildability": 12,
+  "appeal": 54,
+  "one_liner": "Across 13 major coins the crash-side dependence graph stays near-complete over five years while the rally-side thins out, so crypto diversification only fails downward."
+ },
+ {
+  "id": "2607.03858",
+  "tradeable": 3,
+  "evidence": 14,
+  "interest": 12,
+  "buildability": 14,
+  "appeal": 43,
+  "one_liner": "US equity panels split into a persistent factor near Hurst 0.55 and an antipersistent one near 0.22, with the market mode turning cascade-like."
+ },
+ {
+  "id": "2512.23640",
+  "tradeable": 0,
+  "evidence": 5,
+  "interest": 6,
+  "buildability": 6,
+  "appeal": 17,
+  "one_liner": "Fitting gains and losses in the S&P with separate volatility parameters gives a skew t that captures the asymmetry a symmetric fit misses."
+ },
+ {
+  "id": "2606.31251",
+  "tradeable": 15,
+  "evidence": 12,
+  "interest": 15,
+  "buildability": 18,
+  "appeal": 60,
+  "one_liner": "Across 146 walk-forward folds, an SVM timing rule beats buy-and-hold only in the worst volatility regimes and loses badly in the best ones."
+ },
+ {
+  "id": "2512.02029",
+  "tradeable": 15,
+  "evidence": 18,
+  "interest": 22,
+  "buildability": 18,
+  "appeal": 73,
+  "one_liner": "Across 378 coins and 480 million simulated holds, the median two-year crypto position loses 28 percent net of fees while Bitcoin-only medians stay positive."
+ },
+ {
+  "id": "2607.19825",
+  "tradeable": 14,
+  "evidence": 16,
+  "interest": 14,
+  "buildability": 18,
+  "appeal": 62,
+  "one_liner": "Shrinking a rank-based covariance nonlinearly cuts minimum-variance portfolio volatility from 11.0 to 9.5 percent and turnover by 40 percent, at the same Sharpe."
+ },
+ {
+  "id": "2512.02166",
+  "tradeable": 10,
+  "evidence": 15,
+  "interest": 12,
+  "buildability": 18,
+  "appeal": 55,
+  "one_liner": "Splitting volatility memory into regime, fractional and clock gates shows fractional memory wins in EURUSD while regime and clock gates win in SPY."
+ },
+ {
+  "id": "2606.04153",
+  "tradeable": 24,
+  "evidence": 18,
+  "interest": 18,
+  "buildability": 20,
+  "appeal": 80,
+  "one_liner": "Forecasting the sign of monthly S&P returns conditional on their size turns $100 into $182 by 2021 after costs, versus $105 for buy-and-hold."
+ },
+ {
+  "id": "2512.02352",
+  "tradeable": 5,
+  "evidence": 12,
+  "interest": 20,
+  "buildability": 16,
+  "appeal": 53,
+  "one_liner": "A rank-invariant roughness estimator built from visibility graphs puts the VIX far from independent noise and implies a Hurst near 0.09."
+ }
+]
