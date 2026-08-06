@@ -1,16 +1,16 @@
 {
  "paper": "2606.04153",
  "title": "A new decomposition approach to modeling financial returns",
- "headline": "6 of 11 published numbers reproduced, 5 not built yet",
+ "headline": "6 of 11 published numbers reproduced, 2 missed, 3 not built yet",
  "fully_reproduced": false,
  "tally": {
   "REPRODUCED": 6,
-  "MISSED": 0,
-  "NOT_ATTEMPTED": 5,
+  "MISSED": 2,
+  "NOT_ATTEMPTED": 3,
   "UNOBTAINABLE": 0
  },
  "notebook": "notebooks/2606.04153_sign_and_magnitude.ipynb",
- "code": "",
+ "code": "alpha_archive/replications/decomp2026.py",
  "artifacts": [
   {
    "name": "Buy-and-hold terminal wealth",
@@ -21,7 +21,7 @@
    "where": "Table 6 benchmark row",
    "gap": 0.01,
    "state": "REPRODUCED",
-   "note": "487 months, June 1981 to December 2021, CRSP value-weighted total return.",
+   "note": "487 months, June 1981 to December 2021.",
    "blocker": ""
   },
   {
@@ -33,7 +33,7 @@
    "where": "Table 6 benchmark row",
    "gap": 0.0,
    "state": "REPRODUCED",
-   "note": "Arithmetic annualisation, mean times twelve.",
+   "note": "Arithmetic annualisation.",
    "blocker": ""
   },
   {
@@ -69,7 +69,7 @@
    "where": "Table 1",
    "gap": 0.002,
    "state": "REPRODUCED",
-   "note": "Largest absolute correlation, as the paper states.",
+   "note": "",
    "blocker": ""
   },
   {
@@ -87,24 +87,24 @@
   {
    "name": "CSM terminal wealth at k=3",
    "published": 181.68,
-   "observed": null,
+   "observed": 122.33,
    "tolerance": 2.0,
    "units": "$",
    "where": "Table 6",
-   "gap": null,
-   "state": "NOT_ATTEMPTED",
-   "note": "Needs the conditional model and the 10bp trading rule.",
+   "gap": 59.35,
+   "state": "MISSED",
+   "note": "Complete subset averaging over all 56 three-predictor subsets, magnitude by OLS on log absolute excess return, sign by logistic on the same predictors plus the fitted magnitude, expanding window, switching rule with 10bp charged multiplicatively on each switch. Beats buy-and-hold and moves the right way, but falls well short. Our sign forecast is almost always positive, so the rule switches three times in 487 months where the paper's evidently switches far more. The gap is in how the sign conditional is parameterised, which the abstract and results sections do not pin down.",
    "blocker": ""
   },
   {
    "name": "CSM Sharpe at k=3",
    "published": 0.21,
-   "observed": null,
+   "observed": 0.18,
    "tolerance": 0.01,
    "units": "",
    "where": "Table 6",
-   "gap": null,
-   "state": "NOT_ATTEMPTED",
+   "gap": 0.03,
+   "state": "MISSED",
    "note": "",
    "blocker": ""
   },
