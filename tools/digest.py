@@ -22,6 +22,7 @@ import json
 import os
 import re
 import sys
+import time
 
 import httpx
 import pypdfium2 as pdfium
@@ -36,6 +37,7 @@ FIGURES = os.path.join(ROOT, "data", "cache", "figures")
 
 UA = {"User-Agent": "alpha-archive (reza@soleymanifar.com)"}
 MAX_PAGES = 40
+THROTTLE = 3.0   # seconds between downloads, per process
 
 # Headings that introduce the sections a verdict turns on.
 WANTED = re.compile(
@@ -80,6 +82,10 @@ def fetch(paper: dict) -> bytes | None:
     url = paper.get("pdf")
     if not url:
         return None
+    # Several of these run at once during a bulk pass. arXiv asks for roughly
+    # one request every three seconds, and a cache hit above costs nothing, so
+    # the wait is only ever paid on a genuine download.
+    time.sleep(THROTTLE)
     try:
         response = httpx.get(url, headers=UA, timeout=120, follow_redirects=True)
         response.raise_for_status()
@@ -101,6 +107,42 @@ def pages_of(raw: bytes) -> list[str]:
         except Exception:
             out.append("")
     return out
+
+
+# A row of a results table: a label followed by two or more numbers. These are
+# the numbers a replication has to land on, and unlike a caption they state the
+# value rather than describing it.
+NUMERIC_ROW = re.compile(
+    r"^\s*\S.{0,60}?\s"                      # a short row label
+    r"(?:[-−(]?\d[\d,]*\.?\d*\*{0,3}\)?%?\s+){2,}"  # two or more numbers
+    r"[-−(]?\d[\d,]*\.?\d*\*{0,3}\)?%?\s*$"
+)
+
+
+def tables(pages: list[str], budget: int = 3000) -> list[str]:
+    """The body of each results table, not just its caption.
+
+    A caption says a table compares Sharpe ratios; the rows say which Sharpe.
+    Only the second one can be checked against a replication, so the numeric
+    rows following each table heading are carried through.
+    """
+    kept: list[str] = []
+    for page in pages:
+        lines = page.splitlines()
+        for i, line in enumerate(lines):
+            match = CAPTION.match(line)
+            if not match or not match.group(1).lower().startswith("tab"):
+                continue
+            rows = [f"[{match.group(1).strip()}]"]
+            for follow in lines[i + 1:i + 26]:
+                flat = " ".join(follow.split())
+                if NUMERIC_ROW.match(follow) and len(flat) > 8:
+                    rows.append(flat[:170])
+            if len(rows) > 1:
+                kept.append("\n".join(rows))
+            if sum(len(k) for k in kept) > budget:
+                return kept
+    return kept
 
 
 def captions(pages: list[str], budget: int = 2600) -> tuple[list[str], list[int]]:
@@ -207,12 +249,13 @@ def main() -> None:
     out, failed = [], 0
     for i, paper in enumerate(batch, 1):
         raw = fetch(paper)
-        body, caps, figs = "", [], []
+        body, caps, figs, tabs = "", [], [], []
         if raw:
             try:
                 pages = pages_of(raw)
                 body = sections(chr(10).join(pages))
                 caps, on_pages = captions(pages)
+                tabs = tables(pages)
                 figs = render(raw, on_pages, paper["arxiv_id"])
             except Exception:
                 body = ""
@@ -225,6 +268,7 @@ def main() -> None:
             "abstract": (paper.get("abstract") or "")[:1200],
             "extract": body or "[pdf text could not be extracted]",
             "captions": caps,
+            "tables": tabs,
             "figure_pages": figs,
         })
         print(f"  {i:>3}/{len(batch)}  {paper['arxiv_id']:<14} "
