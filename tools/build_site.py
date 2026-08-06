@@ -94,12 +94,26 @@ def load_replications() -> list[dict]:
 
 
 def load_queue() -> list[dict]:
-    for name in ("papers.json", "arxiv.json"):
-        path = os.path.join(ROOT, "data", "papers", name)
-        if os.path.exists(path):
-            with open(path, encoding="utf-8") as fh:
-                return json.load(fh).get("papers", [])
-    return []
+    """Only the shortlist now, not the whole indexed corpus.
+
+    Listing 1,114 papers made the site a directory of things nobody had read.
+    Every card here has had its PDF read, its data traced to a free source, and
+    its published numbers written down, which is the difference between a search
+    result and a claim.
+    """
+    sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+    import shortlist
+
+    out = []
+    for p in shortlist.load():
+        out.append({
+            **p,
+            "primary_category": p["area"],
+            "status": p["state"],
+            "citations_per_month": 0.0,
+            "top_1pct": bool(p.get("percentile", 0) and p["percentile"] >= 0.99),
+        })
+    return out
 
 
 def load_osap() -> list[dict]:
@@ -221,7 +235,7 @@ def card(*, thumb_html: str, title: str, url: str, abstract: str, venue: str,
          actions: list[tuple[str, str]], citations: int = 0, per_month: float = 0.0,
          percentile: float = 0.0, top1: bool = False, influential: int = 0,
          open_access: bool = False, spec_tstat: str = "",
-         body: str = "", search: str = "") -> str:
+         body: str = "", spec: str = "", search: str = "") -> str:
     def e(text: str) -> str:
         return html.escape(html.unescape(str(text)))
 
@@ -276,6 +290,7 @@ def card(*, thumb_html: str, title: str, url: str, abstract: str, venue: str,
       {result}
       <p class="tagrow">{tagrow}{links}</p>
       {f'<details><summary>Full result</summary>{body}</details>' if body else ''}
+      {f'<details class="spec"><summary>What a replication must match</summary>{spec}</details>' if spec else ''}
     </div>
     {rail}
   </article>"""
@@ -375,7 +390,8 @@ def placeholder(p: dict) -> str:
 
 
 QUEUE_STATUS = {
-    "queued": ("queued", "queue"),
+    "queued": ("to build", "queue"),
+    "replicated": ("replicated", "ok"),
     "triage": ("triage", "queue"),
     "blocked": ("blocked", "muted"),
 }
@@ -391,9 +407,26 @@ def render_queued(p: dict) -> str:
     acts = [("Paper", p["url"])]
     if p.get("pdf"):
         acts.append(("PDF", p["pdf"]))
+
+    # What a replication has to land on, and what it will cost to try. Both come
+    # from the PDF read, so neither is a guess.
+    spec = ""
+    if p.get("targets") or p.get("data_needed"):
+        rows = "".join(f"<li>{html.escape(html.unescape(t))}</li>"
+                       for t in (p.get("targets") or [])[:6])
+        data = "".join(f"<li>{html.escape(html.unescape(d))}</li>"
+                       for d in (p.get("data_needed") or [])[:5])
+        spec = (
+            "<h4>Must land on</h4><ul>" + (rows or "<li>—</li>") + "</ul>"
+            + ("<h4>Free data it needs</h4><ul>" + data + "</ul>" if data else "")
+            + f"<p class=\"note\">Effort <b>{p['tier']}</b> — {html.escape(p['tier_why'])}."
+              f" Judged reproducible at confidence {p['confidence']:.2f}.</p>"
+        )
+
     return card(
         thumb_html=t, title=p["title"], url=p["url"],
         abstract=p["abstract"],
+        spec=spec,
         venue=p["primary_category"], authors=p["authors"] or "—",
         date=p["published"], tags=p["tags"], status=(label, cls),
         citations=int(p.get("citations") or 0),
@@ -518,6 +551,29 @@ h1 em{font-style:italic;color:var(--accent)}
   font-size:14.5px}
 .side a.row:hover{color:var(--accent);text-decoration:none}
 .side a.row span{font-family:var(--mono);font-size:11.5px;color:var(--dim)}
+
+/* Area headers group the task rows beneath them, the way a Papers With Code
+   sidebar reads: the wing of the building, then the rooms. */
+.side .area{display:flex;align-items:baseline;justify-content:space-between;
+  margin:14px 0 4px;padding-top:9px;border-top:1px solid var(--line)}
+.side .area:first-of-type{border-top:0;padding-top:0;margin-top:2px}
+.side .areaname{font-size:10.5px;letter-spacing:.11em;text-transform:uppercase;
+  color:var(--dim);font-weight:700}
+.side .areacount{font-family:var(--mono);font-size:10.5px;color:var(--dim)}
+.side a.row.task{padding-left:9px;border-left:2px solid transparent}
+.side a.row.task:hover{border-left-color:var(--accent)}
+
+/* What a replication has to match. Folded away by default because it is a
+   reference, not a pitch — but it is the whole reason the card is here. */
+details.spec{margin-top:9px}
+details.spec>summary{cursor:pointer;font-size:12px;color:var(--dim);
+  font-family:var(--mono);letter-spacing:.02em}
+details.spec>summary:hover{color:var(--accent)}
+details.spec h4{margin:12px 0 5px;font-size:10.5px;letter-spacing:.1em;
+  text-transform:uppercase;color:var(--dim)}
+details.spec ul{margin:0;padding-left:17px}
+details.spec li{font-size:12.5px;line-height:1.55;margin-bottom:4px}
+details.spec .note{font-size:12px;color:var(--dim);margin-top:10px}
 .side .more{display:inline-block;margin-top:10px;font-family:var(--serif);
   font-style:italic;font-size:14px;color:var(--soft)}
 @media(max-width:1079px){.side{order:2}}
@@ -818,9 +874,11 @@ def main() -> None:
     done = {REPLICATED[r["paper"]]["title"].lower() for r in reps}
     kept = [p for p in queue if p["title"].lower() not in done]
     specs = load_osap()
+    # The shortlist and what has been built from it. The OSAP predictor specs
+    # are still loaded for the counter, but they are not papers we read and
+    # judged, and mixing them in was what made this a directory again.
     cards = ([render_replication(r, cites) for r in reps]
-             + [render_queued(p) for p in kept]
-             + [render_spec(p) for p in specs])
+             + [render_queued(p) for p in kept])
 
     # Sidebar counts come from the corpus, so they cannot drift from it.
     counts: dict[str, int] = {}
@@ -833,10 +891,22 @@ def main() -> None:
                 recent[t] = recent.get(t, 0) + 1
     total, total_recent = sum(counts.values()) or 1, sum(recent.values()) or 1
 
-    toptags = "".join(
-        f'<a class="row" href="#" data-tag="{html.escape(t)}">{html.escape(t)}'
-        f'<span>{n}</span></a>'
-        for t, n in sorted(counts.items(), key=lambda kv: -kv[1])[:9])
+    # Areas and tasks, in the shape Papers With Code uses. A flat tag list said
+    # "portfolio: 429" and answered nothing; a task is a page with a question on
+    # it, and the count is a promise the page has papers.
+    sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+    from alpha_archive import taxonomy
+
+    toptags = ""
+    for area in taxonomy.tally(kept):
+        toptags += (f'<div class="area"><span class="areaname">'
+                    f'{html.escape(area["area"])}</span>'
+                    f'<span class="areacount">{area["count"]}</span></div>')
+        for t in area["tasks"]:
+            title = f' title="{html.escape(t["blurb"])}"' if t.get("blurb") else ""
+            toptags += (
+                f'<a class="row task" href="#" data-tag="{html.escape(t["task"])}"'
+                f'{title}>{html.escape(t["task"])}<span>{t["count"]}</span></a>')
 
     lift = sorted(((t, (recent.get(t, 0) / total_recent) / (n / total))
                    for t, n in counts.items() if recent.get(t, 0) >= 2),
