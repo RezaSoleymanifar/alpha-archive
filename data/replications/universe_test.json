@@ -1,0 +1,29 @@
+{
+  "test": "universe_size_vs_umd_correlation",
+  "cost_bps": 10.0,
+  "rungs": [
+    {
+      "universe": 80,
+      "correlation": 0.7331,
+      "months": 245,
+      "mean_monthly_pct": -0.1349,
+      "legs": 8
+    },
+    {
+      "universe": 160,
+      "correlation": 0.5105,
+      "months": 245,
+      "mean_monthly_pct": -0.1948,
+      "legs": 16
+    },
+    {
+      "universe": 320,
+      "correlation": 0.3977,
+      "months": 245,
+      "mean_monthly_pct": -0.6886,
+      "legs": 32
+    }
+  ],
+  "verdict": "correlation fell -0.335 as the universe grew. Broader names are noisier here \u2014 worth checking liquidity filtering before trusting either.",
+  "generated_at": "2026-08-06T03:34:11+00:00"
+}

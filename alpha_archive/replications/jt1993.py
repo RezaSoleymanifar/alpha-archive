@@ -36,6 +36,8 @@ import pandas as pd
 
 from vintage.sources import french, openap, yahoo
 
+from ..verification import evaluate, sanity
+
 PAPER = "Mom12m"                    # the OpenAP acronym for JT 12-1 momentum
 LOOKBACK, SKIP = 252, 21            # 12 months, skipping the most recent one
 DECILE = 0.10                       # long the top 10%, short the bottom 10%
@@ -75,7 +77,8 @@ class Result:
 
     umd_correlation: float | None
     umd_months_compared: int
-    implementation_verdict: str
+    verification: dict[str, Any]
+    sanity_check: dict[str, Any] | None
 
     gap_monthly_pct: float | None
     verdict: str
@@ -235,16 +238,13 @@ async def run() -> Result:
     print(f"        correlation with UMD: {corr:.3f} over {len(joined)} months"
           if corr is not None else "        not enough overlap to validate")
 
-    if corr is None:
-        implementation = "unvalidated — not enough overlapping months"
-    elif corr >= 0.6:
-        implementation = "validated — moves with the published factor"
-    elif corr >= 0.3:
-        implementation = ("partially validated — same direction, but our universe is far "
-                          "narrower than French's, which explains part of the gap")
-    else:
-        implementation = ("NOT validated — this looks like an implementation problem, "
-                          "not a finding about the paper")
+    # The criterion is declared in alpha_archive.verification, before any run,
+    # against a fixture we did not produce. Nothing here can move it. The
+    # correlation below is a sanity check and is deliberately not passed to
+    # evaluate() — a check against a differently-constructed factor cannot
+    # verify parity, no matter how high it comes back.
+    verification = evaluate(PAPER, None)
+    sanity_result = sanity(PAPER, corr)
 
     measured_pct = float(ours.mean() * 100)
     tstat = t_stat(ours)
@@ -256,8 +256,9 @@ async def run() -> Result:
     ours_era = eras.get("2006-2026 (our window)", {})
     umd_flat_too = abs(ours_era.get("t_stat", 9)) < 2.0
 
-    if corr is not None and corr < 0.3:
-        verdict = "inconclusive — fix the implementation before judging the paper"
+    if verification["status"] != "VERIFIED":
+        verdict = (f"UNVERIFIED — {verification['reason']} Numbers below are a measurement "
+                   "on our sample, not a replication of the paper.")
     elif umd_flat_too and tstat < 2.0:
         verdict = ("decayed — the published factor is also flat over this window, so this "
                    "agrees with the literature rather than contradicting the paper")
@@ -282,7 +283,8 @@ async def run() -> Result:
         months=len(ours),
         umd_correlation=round(corr, 4) if corr is not None else None,
         umd_months_compared=len(joined),
-        implementation_verdict=implementation,
+        verification=verification,
+        sanity_check=sanity_result,
         gap_monthly_pct=gap,
         verdict=verdict,
         umd_by_era=eras,
@@ -298,6 +300,8 @@ async def run() -> Result:
             f"{prices.shape[1]} names versus all of NYSE/AMEX in the original, so "
             "deciles here are far coarser.",
             f"Costs charged at {COST_BPS:.0f} bps on turnover; the paper reported gross.",
+            "Holding period here is one month. The documented spec is a three-month "
+            "hold with overlapping portfolios, so this is not yet the paper's strategy.",
             "Prices are Yahoo adjusted closes, which are adjusted retroactively.",
         ],
     )
@@ -314,9 +318,14 @@ def report(r: Result) -> None:
     print(f"  gap        {r.gap_monthly_pct:>8}%/mo")
     print(f"  annualised Sharpe: {r.measured_sharpe_annual}")
     print()
-    print(f"  implementation check: UMD correlation {r.umd_correlation} "
-          f"over {r.umd_months_compared} months")
-    print(f"    -> {r.implementation_verdict}")
+    v = r.verification
+    print(f"  VERIFICATION: {v['status']}")
+    print(f"    criterion: {v['criterion']['statistic']} >= {v['criterion']['threshold']}")
+    print(f"    fixture:   {v['criterion']['fixture']}")
+    print(f"    {v['reason']}")
+    if r.sanity_check:
+        print()
+        print(f"  sanity check (does not verify): {r.sanity_check['description']}")
     print()
     if r.umd_by_era:
         print("  Ken French's own UMD, by era — is it us, or did it decay?")

@@ -12,9 +12,28 @@
   "months": 248,
   "umd_correlation": 0.74,
   "umd_months_compared": 245,
-  "implementation_verdict": "validated \u2014 moves with the published factor",
+  "verification": {
+    "status": "FIXTURE_UNAVAILABLE",
+    "reason": "Open Source Asset Pricing's own monthly long-short return series for Mom12m is not fetchable, so this cannot be verified. OpenAP publishes portfolio returns via Google Drive only. Those links return quota-exceeded and virus-scan interstitials rather than the file, and the GitHub releases carry no data assets. Until a stable URL exists, or CRSP is reproduced from free sources, this stays unverified.",
+    "criterion": {
+      "fixture": "Open Source Asset Pricing's own monthly long-short return series for Mom12m",
+      "fixture_source": "Chen & Zimmermann, openassetpricing.com",
+      "statistic": "correlation with the fixture's monthly return series",
+      "threshold": 0.95,
+      "rationale": "Same signal, same equal-weighted decile construction, same holding period. A like-for-like comparison should be near-identical, so the bar is 0.95 rather than something that merely rhymes with the paper.",
+      "like_for_like": true
+    },
+    "what_would_verify_it": "OpenAP publishes portfolio returns via Google Drive only. Those links return quota-exceeded and virus-scan interstitials rather than the file, and the GitHub releases carry no data assets. Until a stable URL exists, or CRSP is reproduced from free sources, this stays unverified."
+  },
+  "sanity_check": {
+    "name": "UMD directional check",
+    "against": "Ken French UMD",
+    "observed": 0.7400314843478708,
+    "description": "correlation vs Ken French UMD: 0.7400. UMD is value-weighted and double-sorted on size with NYSE breakpoints; this spec is an equal-weighted decile. They are different portfolios, so a high correlation is not available even from perfect code. This says whether we built momentum at all. It cannot verify parity.",
+    "verifies": false
+  },
   "gap_monthly_pct": -1.398,
-  "verdict": "decayed \u2014 the published factor is also flat over this window, so this agrees with the literature rather than contradicting the paper",
+  "verdict": "UNVERIFIED \u2014 Open Source Asset Pricing's own monthly long-short return series for Mom12m is not fetchable, so this cannot be verified. OpenAP publishes portfolio returns via Google Drive only. Those links return quota-exceeded and virus-scan interstitials rather than the file, and the GitHub releases carry no data assets. Until a stable URL exists, or CRSP is reproduced from free sources, this stays unverified. Numbers below are a measurement on our sample, not a replication of the paper.",
   "umd_by_era": {
     "1964-1989 (paper sample)": {
       "mean_monthly_pct": 0.8025,
@@ -42,8 +61,9 @@
     "Sample is 2006-02-28..2026-09-30, not the paper's 1964-1989. This is a different experiment, not a refutation.",
     "80 names versus all of NYSE/AMEX in the original, so deciles here are far coarser.",
     "Costs charged at 10 bps on turnover; the paper reported gross.",
+    "Holding period here is one month. The documented spec is a three-month hold with overlapping portfolios, so this is not yet the paper's strategy.",
     "Prices are Yahoo adjusted closes, which are adjusted retroactively."
   ],
   "universe_size": 80,
-  "generated_at": "2026-08-06T02:58:12+00:00"
+  "generated_at": "2026-08-06T03:41:02+00:00"
 }

@@ -110,9 +110,17 @@ td.num.neg{color:var(--red)}
 .scores b.neg{color:var(--red);text-shadow:0 0 12px rgba(255,107,94,.35)}
 .scores i{display:block;color:var(--dim);font-size:10.5px;font-style:normal;margin-top:4px}
 
-.ruling{border-left:3px solid var(--amber);padding:9px 13px;margin:0 0 14px;
-  background:rgba(255,196,107,.05);font-size:14px;line-height:1.5}
-.ruling b{color:var(--amber);letter-spacing:.14em;font-size:11.5px}
+.verify{border:1px solid var(--line);border-left:3px solid var(--dim);padding:12px 14px;
+  margin:0 0 15px;background:rgba(255,255,255,.015)}
+.verify.no{border-left-color:var(--red)}
+.verify.ok{border-left-color:var(--green)}
+.verify b{display:block;color:var(--red);letter-spacing:.2em;font-size:11px;margin-bottom:7px}
+.verify.ok b{color:var(--green)}
+.vreason{margin:0 0 10px;font-size:13px;line-height:1.6;color:var(--ink)}
+.verify dl{margin:0;display:grid;grid-template-columns:1fr;gap:2px 14px;font-size:12px}
+@media(min-width:640px){.verify dl{grid-template-columns:110px 1fr}}
+.verify dt{color:var(--dim);letter-spacing:.12em;font-size:10px;padding-top:3px}
+.verify dd{margin:0 0 6px;color:var(--ink);line-height:1.55}
 
 details{border-top:1px solid var(--line);padding-top:11px;margin-top:11px}
 summary{cursor:pointer;font-size:13px;font-weight:700;color:var(--ink)}
@@ -152,16 +160,20 @@ footer .flinks{display:flex;flex-wrap:wrap;gap:18px;margin-bottom:13px}
     judged.</p>
     <p class="intro">Roughly two thirds of published anomalies fail to replicate. Almost
     nobody re-checks them, and those who do publish once and stop. This runs continuously,
-    shows its working, and states what each sample cannot cover. Every figure below is
-    produced by code in the repository from data anyone can fetch — no private dataset,
-    no local file.</p>
+    shows its working, and states what each sample cannot cover.</p>
+    <p class="intro"><b style="color:var(--green)">A replication is only marked verified when it
+    clears a threshold written down before the run, measured against a fixture we did not
+    produce.</b> If the fixture cannot be fetched, the status is unverified — not a pass with
+    an asterisk. There is no "partially validated" tier, because that is the phrase you reach
+    for when you want credit you have not earned. Every figure below comes from code in the
+    repository, from data anyone can fetch.</p>
   </div>
 
   <h2>Scoreboard</h2>
   <table class="board">
       <thead><tr><th>ID</th><th>SIGNAL</th><th class="num">CLAIMED</th>
-      <th class="num">MEASURED</th><th class="num">VALIDATION</th><th>RESULT</th></tr></thead>
-      <tbody><tr><td class="rk">AA-0001</td><td class="nm"><a href="#mom12m">Mom12m</a><i>Jegadeesh and Titman 1993</i></td><td class="num">1.31%</td><td class="num neg">-0.0877%</td><td class="num">0.74</td><td><span class="verdict amber">DECAYED</span></td></tr></tbody>
+      <th class="num">MEASURED</th><th class="num">SANITY r</th><th>STATUS</th></tr></thead>
+      <tbody><tr><td class="rk">AA-0001</td><td class="nm"><a href="#mom12m">Mom12m</a><i>Jegadeesh and Titman 1993</i></td><td class="num">1.31%</td><td class="num neg">-0.0877%</td><td class="num">0.74</td><td><span class="verdict grey">UNVERIFIED</span></td></tr></tbody>
     </table>
 
   <h2>Replications</h2>
@@ -170,9 +182,9 @@ footer .flinks{display:flex;flex-wrap:wrap;gap:18px;margin-bottom:13px}
     <aside class="ident">
       <span class="aid">AA-0001</span>
       <span class="cls">q-fin.PM</span>
-      <span class="verdict amber big">DECAYED</span>
-      <span class="corr ok">r = 0.74</span>
-      <span class="corrnote">implementation validated</span>
+      <span class="verdict grey big">UNVERIFIED</span>
+      <span class="corr bad">r = 0.74</span>
+      <span class="corrnote">sanity check only &mdash; does not verify parity</span>
     </aside>
 
     <div class="body">
@@ -191,7 +203,16 @@ footer .flinks{display:flex;flex-wrap:wrap;gap:18px;margin-bottom:13px}
           <i>248 months &middot; 80 names</i></div>
       </div>
 
-      <p class="ruling"><b>DECAYED</b> &mdash; the published factor is also flat over this window, so this agrees with the literature rather than contradicting the paper</p>
+      <div class="verify no">
+        <b>VERIFICATION &middot; FIXTURE_UNAVAILABLE</b>
+        <p class="vreason">Open Source Asset Pricing&#x27;s own monthly long-short return series for Mom12m is not fetchable, so this cannot be verified. OpenAP publishes portfolio returns via Google Drive only. Those links return quota-exceeded and virus-scan interstitials rather than the file, and the GitHub releases carry no data assets. Until a stable URL exists, or CRSP is reproduced from free sources, this stays unverified.</p>
+        <dl>
+          <dt>criterion</dt><dd>correlation with the fixture&#x27;s monthly return series &ge; 0.95</dd>
+          <dt>fixture</dt><dd>Open Source Asset Pricing&#x27;s own monthly long-short return series for Mom12m</dd>
+          <dt>declared by</dt><dd>Chen &amp; Zimmermann, openassetpricing.com &mdash; not by us</dd>
+          <dt>why that bar</dt><dd>Same signal, same equal-weighted decile construction, same holding period. A like-for-like comparison should be near-identical, so the bar is 0.95 rather than something that merely rhymes with the paper.</dd>
+        </dl>
+      </div>
 
       <details open>
         <summary>Is it us, or did the effect decay?</summary>
@@ -204,7 +225,7 @@ footer .flinks{display:flex;flex-wrap:wrap;gap:18px;margin-bottom:13px}
 
       <details>
         <summary>What this sample cannot tell you</summary>
-        <ul class="caveats"><li>Universe is survivor-biased: only currently-listed large caps. The delisted losers momentum would have shorted are structurally absent, which biases this test against the paper&#x27;s result.</li><li>Sample is 2006-02-28..2026-09-30, not the paper&#x27;s 1964-1989. This is a different experiment, not a refutation.</li><li>80 names versus all of NYSE/AMEX in the original, so deciles here are far coarser.</li><li>Costs charged at 10 bps on turnover; the paper reported gross.</li><li>Prices are Yahoo adjusted closes, which are adjusted retroactively.</li></ul>
+        <ul class="caveats"><li>Universe is survivor-biased: only currently-listed large caps. The delisted losers momentum would have shorted are structurally absent, which biases this test against the paper&#x27;s result.</li><li>Sample is 2006-02-28..2026-09-30, not the paper&#x27;s 1964-1989. This is a different experiment, not a refutation.</li><li>80 names versus all of NYSE/AMEX in the original, so deciles here are far coarser.</li><li>Costs charged at 10 bps on turnover; the paper reported gross.</li><li>Holding period here is one month. The documented spec is a three-month hold with overlapping portfolios, so this is not yet the paper&#x27;s strategy.</li><li>Prices are Yahoo adjusted closes, which are adjusted retroactively.</li></ul>
       </details>
 
       <p class="links">
@@ -218,10 +239,10 @@ footer .flinks{display:flex;flex-wrap:wrap;gap:18px;margin-bottom:13px}
 
   <h2>How a replication works</h2>
   <div class="how">
-    <div class="step"><b>01 &middot; VALIDATE THE CODE</b><p>The signal is correlated against
-    a published factor first. If that fails, the finding is that we are wrong — not that the
-    paper is. Our first run caught exactly this: a one-month alignment slip that put the
-    correlation at 0.006 and would otherwise have shipped as a failed replication.</p></div>
+    <div class="step"><b>01 &middot; DECLARE THE BAR</b><p>The criterion is written down before
+    the run, against a fixture we did not produce, and frozen. The first version of this failed
+    that test: the bar was set at 0.6 after 0.9 turned out to be unreachable. Moving a threshold
+    to fit a result is the thing this project exists to catch.</p></div>
     <div class="step"><b>02 &middot; SCORE THE CLAIM</b><p>The paper's own numbers come from
     Chen &amp; Zimmermann's Open Source Asset Pricing, not from memory, so the bar is the
     published one and cannot drift to suit the result.</p></div>

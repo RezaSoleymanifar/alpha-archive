@@ -42,6 +42,7 @@ PAPERS = {
 
 # Arcade verdicts. The word people remember is the one in the scoreboard.
 TONES = [
+    ("unverified", "UNVERIFIED", "grey"),
     ("survives", "PASS", "green"),
     ("decayed", "DECAYED", "amber"),
     ("positive", "WEAK", "amber"),
@@ -88,9 +89,33 @@ def scoreboard(results: list[dict]) -> str:
         )
     return f"""<table class="board">
       <thead><tr><th>ID</th><th>SIGNAL</th><th class="num">CLAIMED</th>
-      <th class="num">MEASURED</th><th class="num">VALIDATION</th><th>RESULT</th></tr></thead>
+      <th class="num">MEASURED</th><th class="num">SANITY r</th><th>STATUS</th></tr></thead>
       <tbody>{''.join(rows)}</tbody>
     </table>"""
+
+
+def _verification_block(rec: dict) -> str:
+    """The criterion, and why it has or has not been met.
+
+    Declared before the run in alpha_archive.verification, against a fixture we
+    did not produce. Rendering it here means a visitor can check that the bar
+    was not moved to fit the number.
+    """
+    e = html.escape
+    v = rec.get("verification")
+    if not v:
+        return ""
+    crit = v.get("criterion", {})
+    return f"""<div class="verify {'ok' if v['status'] == 'VERIFIED' else 'no'}">
+        <b>VERIFICATION &middot; {e(v['status'])}</b>
+        <p class="vreason">{e(v['reason'])}</p>
+        <dl>
+          <dt>criterion</dt><dd>{e(str(crit.get('statistic','')))} &ge; {crit.get('threshold','')}</dd>
+          <dt>fixture</dt><dd>{e(str(crit.get('fixture','')))}</dd>
+          <dt>declared by</dt><dd>{e(str(crit.get('fixture_source','')))} &mdash; not by us</dd>
+          <dt>why that bar</dt><dd>{e(str(crit.get('rationale','')))}</dd>
+        </dl>
+      </div>"""
 
 
 def entry(rec: dict) -> str:
@@ -113,8 +138,8 @@ def entry(rec: dict) -> str:
       <span class="aid">{meta['id']}</span>
       <span class="cls">{meta['class']}</span>
       <span class="verdict {cls} big">{label}</span>
-      <span class="corr {'ok' if ok else 'bad'}">r = {corr}</span>
-      <span class="corrnote">{'implementation validated' if ok else 'not validated'}</span>
+      <span class="corr bad">r = {corr}</span>
+      <span class="corrnote">sanity check only &mdash; does not verify parity</span>
     </aside>
 
     <div class="body">
@@ -133,7 +158,7 @@ def entry(rec: dict) -> str:
           <i>{rec['months']} months &middot; {rec['universe_size']} names</i></div>
       </div>
 
-      <p class="ruling"><b>{label}</b> &mdash; {e(rec['verdict'].split('—')[-1].strip())}</p>
+      {_verification_block(rec)}
 
       <details open>
         <summary>Is it us, or did the effect decay?</summary>
@@ -271,9 +296,17 @@ td.num.neg{color:var(--red)}
 .scores b.neg{color:var(--red);text-shadow:0 0 12px rgba(255,107,94,.35)}
 .scores i{display:block;color:var(--dim);font-size:10.5px;font-style:normal;margin-top:4px}
 
-.ruling{border-left:3px solid var(--amber);padding:9px 13px;margin:0 0 14px;
-  background:rgba(255,196,107,.05);font-size:14px;line-height:1.5}
-.ruling b{color:var(--amber);letter-spacing:.14em;font-size:11.5px}
+.verify{border:1px solid var(--line);border-left:3px solid var(--dim);padding:12px 14px;
+  margin:0 0 15px;background:rgba(255,255,255,.015)}
+.verify.no{border-left-color:var(--red)}
+.verify.ok{border-left-color:var(--green)}
+.verify b{display:block;color:var(--red);letter-spacing:.2em;font-size:11px;margin-bottom:7px}
+.verify.ok b{color:var(--green)}
+.vreason{margin:0 0 10px;font-size:13px;line-height:1.6;color:var(--ink)}
+.verify dl{margin:0;display:grid;grid-template-columns:1fr;gap:2px 14px;font-size:12px}
+@media(min-width:640px){.verify dl{grid-template-columns:110px 1fr}}
+.verify dt{color:var(--dim);letter-spacing:.12em;font-size:10px;padding-top:3px}
+.verify dd{margin:0 0 6px;color:var(--ink);line-height:1.55}
 
 details{border-top:1px solid var(--line);padding-top:11px;margin-top:11px}
 summary{cursor:pointer;font-size:13px;font-weight:700;color:var(--ink)}
@@ -313,9 +346,13 @@ footer .flinks{display:flex;flex-wrap:wrap;gap:18px;margin-bottom:13px}
     judged.</p>
     <p class="intro">Roughly two thirds of published anomalies fail to replicate. Almost
     nobody re-checks them, and those who do publish once and stop. This runs continuously,
-    shows its working, and states what each sample cannot cover. Every figure below is
-    produced by code in the repository from data anyone can fetch — no private dataset,
-    no local file.</p>
+    shows its working, and states what each sample cannot cover.</p>
+    <p class="intro"><b style="color:var(--green)">A replication is only marked verified when it
+    clears a threshold written down before the run, measured against a fixture we did not
+    produce.</b> If the fixture cannot be fetched, the status is unverified — not a pass with
+    an asterisk. There is no "partially validated" tier, because that is the phrase you reach
+    for when you want credit you have not earned. Every figure below comes from code in the
+    repository, from data anyone can fetch.</p>
   </div>
 
   <h2>Scoreboard</h2>
@@ -326,10 +363,10 @@ footer .flinks{display:flex;flex-wrap:wrap;gap:18px;margin-bottom:13px}
 
   <h2>How a replication works</h2>
   <div class="how">
-    <div class="step"><b>01 &middot; VALIDATE THE CODE</b><p>The signal is correlated against
-    a published factor first. If that fails, the finding is that we are wrong — not that the
-    paper is. Our first run caught exactly this: a one-month alignment slip that put the
-    correlation at 0.006 and would otherwise have shipped as a failed replication.</p></div>
+    <div class="step"><b>01 &middot; DECLARE THE BAR</b><p>The criterion is written down before
+    the run, against a fixture we did not produce, and frozen. The first version of this failed
+    that test: the bar was set at 0.6 after 0.9 turned out to be unreachable. Moving a threshold
+    to fit a result is the thing this project exists to catch.</p></div>
     <div class="step"><b>02 &middot; SCORE THE CLAIM</b><p>The paper's own numbers come from
     Chen &amp; Zimmermann's Open Source Asset Pricing, not from memory, so the bar is the
     published one and cannot drift to suit the result.</p></div>
