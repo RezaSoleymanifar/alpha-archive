@@ -1,0 +1,236 @@
+[
+ {
+  "title": "Pastor-Stambaugh liquidity beta",
+  "tstat": "2.54",
+  "sample": "1968\u20131999",
+  "definition": "Pastor-Stambaugh liquidity beta. Pastor and Stambaugh (2003) report t = 2.54 over 1968\u20131999, using price data. t=2.54 in VW port sort CAPM alpha"
+ },
+ {
+  "title": "Tail risk beta",
+  "tstat": "2.48",
+  "sample": "1963\u20132010",
+  "definition": "Tail risk beta. Kelly and Jiang (2014) report t = 2.48 over 1963\u20132010, using price data. Tab4A t-stat 2.48"
+ },
+ {
+  "title": "Systematic volatility",
+  "tstat": "3.9",
+  "sample": "1986\u20132000",
+  "definition": "Systematic volatility. Ang et al. (2006) report t = 3.9 over 1986\u20132000, using price data. t=3.9 in port sort"
+ },
+ {
+  "title": "Coskewness using daily returns",
+  "tstat": "2.76",
+  "sample": "1963\u20132001",
+  "definition": "Coskewness using daily returns. Ang, Chen and Xing (2006) report t = 2.76 over 1963\u20132001, using price data. t=2.8 in port sort"
+ },
+ {
+  "title": "Past trading volume",
+  "tstat": "2.86",
+  "sample": "1966\u20131995",
+  "definition": "Past trading volume. Brennan, Chordia, Subra (1998) report t = 2.86 over 1966\u20131995, using trading data. t=2.9 in regression"
+ },
+ {
+  "title": "Firm Age - Momentum",
+  "tstat": "7.21",
+  "sample": "1983\u20132001",
+  "definition": "Firm Age - Momentum. Zhang (2006) report t = 7.21 over 1983\u20132001, using price data. t = 7.21 in long portfolio"
+ },
+ {
+  "title": "Idiosyncratic risk (3 factor)",
+  "tstat": "3.1",
+  "sample": "1963\u20132000",
+  "definition": "Idiosyncratic risk (3 factor). Ang et al. (2006) report t = 3.1 over 1963\u20132000, using price data. t=3.1 in port sort"
+ },
+ {
+  "title": "Idiosyncratic risk (AHT)",
+  "tstat": "2.699",
+  "sample": "1976\u20131997",
+  "definition": "Idiosyncratic risk (AHT). Ali, Hwang, and Trombley (2003) report t = 2.699 over 1976\u20131997, using price data. t = 2.7 in mv reg"
+ },
+ {
+  "title": "Amihud's illiquidity",
+  "tstat": "6.6",
+  "sample": "1964\u20131997",
+  "definition": "Amihud's illiquidity. Amihud (2002) report t = 6.6 over 1964\u20131997, using trading data. t=6.6 in univariate reg"
+ },
+ {
+  "title": "Industry Momentum",
+  "tstat": "4.65",
+  "sample": "1963\u20131995",
+  "definition": "Industry Momentum. Grinblatt and Moskowitz (1999) report t = 4.65 over 1963\u20131995, using price data. t=4.6 in long-short"
+ },
+ {
+  "title": "Industry return of big firms",
+  "tstat": "11.0",
+  "sample": "1972\u20132001",
+  "definition": "Industry return of big firms. Hou (2007) report t = 11.0 over 1972\u20132001, using price data. t=11 in mv reg"
+ },
+ {
+  "title": "Intermediate Momentum",
+  "tstat": "5.79",
+  "sample": "1927\u20132010",
+  "definition": "Intermediate Momentum. Novy-Marx (2012) report t = 5.79 over 1927\u20132010, using price data. Tab2 t-stat 5.79"
+ },
+ {
+  "title": "Long-run reversal",
+  "tstat": "3.29",
+  "sample": "1929\u20131982",
+  "definition": "Long-run reversal. De Bondt and Thaler (1985) report t = 3.29 over 1929\u20131982, using price data. t=3.3 in long-short"
+ },
+ {
+  "title": "Maximum return over month",
+  "tstat": "2.83",
+  "sample": "1962\u20132005",
+  "definition": "Maximum return over month. Bali, Cakici, and Whitelaw (2011) report t = 2.83 over 1962\u20132005, using price data. t=2.8 in port sort"
+ },
+ {
+  "title": "Momentum (12 month)",
+  "tstat": "3.74",
+  "sample": "1964\u20131989",
+  "definition": "Momentum (12 month). Jegadeesh and Titman (1993) report t = 3.74 over 1964\u20131989, using price data. t=3.7 long-short"
+ },
+ {
+  "title": "Momentum without the seasonal part",
+  "tstat": "4.2",
+  "sample": "1965\u20132002",
+  "definition": "Momentum without the seasonal part. Heston and Sadka (2008) report t = 4.2 over 1965\u20132002, using price data. t=4 in port sort"
+ },
+ {
+  "title": "Momentum (6 month)",
+  "tstat": "2.44",
+  "sample": "1964\u20131989",
+  "definition": "Momentum (6 month). Jegadeesh and Titman (1993) report t = 2.44 over 1964\u20131989, using price data. t=2.4 long-short"
+ },
+ {
+  "title": "Junk Stock Momentum",
+  "tstat": "4.29",
+  "sample": "1985\u20132003",
+  "definition": "Junk Stock Momentum. Avramov et al (2007) report t = 4.29 over 1985\u20132003, using price data. t=4.3 in port sort"
+ },
+ {
+  "title": "Off season long-term reversal",
+  "tstat": "5.6",
+  "sample": "1965\u20132002",
+  "definition": "Off season long-term reversal. Heston and Sadka (2008) report t = 5.6 over 1965\u20132002, using price data. t=5.6 in port sort"
+ },
+ {
+  "title": "Off season reversal years 6 to 10",
+  "tstat": "4.62",
+  "sample": "1965\u20132002",
+  "definition": "Off season reversal years 6 to 10. Heston and Sadka (2008) report t = 4.62 over 1965\u20132002, using price data. t=4.6 in port sort"
+ },
+ {
+  "title": "Off season reversal years 16 to 20",
+  "tstat": "3.35",
+  "sample": "1965\u20132002",
+  "definition": "Off season reversal years 16 to 20. Heston and Sadka (2008) report t = 3.35 over 1965\u20132002, using price data. t=3.4 in port sort"
+ },
+ {
+  "title": "Momentum and LT Reversal",
+  "tstat": "4.29",
+  "sample": "1965\u20132001",
+  "definition": "Momentum and LT Reversal. Chan and Ko (2006) report t = 4.29 over 1965\u20132001, using price data. t=4.3 in long-short"
+ },
+ {
+  "title": "Return seasonality years 2 to 5",
+  "tstat": "5.35",
+  "sample": "1965\u20132002",
+  "definition": "Return seasonality years 2 to 5. Heston and Sadka (2008) report t = 5.35 over 1965\u20132002, using price data. t=5 in port sort"
+ },
+ {
+  "title": "Return seasonality years 6 to 10",
+  "tstat": "6.15",
+  "sample": "1965\u20132002",
+  "definition": "Return seasonality years 6 to 10. Heston and Sadka (2008) report t = 6.15 over 1965\u20132002, using price data. t=6.1 in port sort"
+ },
+ {
+  "title": "Return seasonality years 11 to 15",
+  "tstat": "6.43",
+  "sample": "1965\u20132002",
+  "definition": "Return seasonality years 11 to 15. Heston and Sadka (2008) report t = 6.43 over 1965\u20132002, using price data. t=6.4 in port sort"
+ },
+ {
+  "title": "Return seasonality years 16 to 20",
+  "tstat": "4.58",
+  "sample": "1965\u20132002",
+  "definition": "Return seasonality years 16 to 20. Heston and Sadka (2008) report t = 4.58 over 1965\u20132002, using price data. t=4.5 in port sort"
+ },
+ {
+  "title": "Return seasonality last year",
+  "tstat": "7.6",
+  "sample": "1965\u20132002",
+  "definition": "Return seasonality last year. Heston and Sadka (2008) report t = 7.6 over 1965\u20132002, using price data. t=7.6 in port sort"
+ },
+ {
+  "title": "Momentum in high volume stocks",
+  "tstat": "5.78",
+  "sample": "1965\u20131995",
+  "definition": "Momentum in high volume stocks. Lee and Swaminathan (2000) report t = 5.78 over 1965\u20131995, using price data. t=6 in long-short, lots of robustness"
+ },
+ {
+  "title": "Price",
+  "tstat": "2.9",
+  "sample": "1932\u20131971",
+  "definition": "Price. Blume and Husic (1973) report t = 2.9 over 1932\u20131971, using price data. t=3 in regressions"
+ },
+ {
+  "title": "Price delay r square",
+  "tstat": "3.4",
+  "sample": "1964\u20132001",
+  "definition": "Price delay r square. Hou and Moskowitz (2005) report t = 3.4 over 1964\u20132001, using price data. t =3.4 in port sort char adj"
+ },
+ {
+  "title": "Realized (Total) Volatility",
+  "tstat": "2.86",
+  "sample": "1963\u20132000",
+  "definition": "Realized (Total) Volatility. Ang et al. (2006) report t = 2.86 over 1963\u20132000, using price data. t=2.9 in port sort"
+ },
+ {
+  "title": "Momentum based on FF3 residuals",
+  "tstat": "8.218550486",
+  "sample": "1930\u20132009",
+  "definition": "Momentum based on FF3 residuals. Blitz, Huij and Martens (2011) report t = 8.218550486 over 1930\u20132009, using price data. t=8 in long-short ff3+ alpha"
+ },
+ {
+  "title": "Conglomerate return",
+  "tstat": "5.51",
+  "sample": "1977\u20132009",
+  "definition": "Conglomerate return. Cohen and Lou (2012) report t = 5.51 over 1977\u20132009, using price data. t=5.5 in port sort"
+ },
+ {
+  "title": "Return skewness",
+  "tstat": "4.01",
+  "sample": "1963\u20132012",
+  "definition": "Return skewness. Bali, Engle and Murray (2015) report t = 4.01 over 1963\u20132012, using price data. t=4 in port sort"
+ },
+ {
+  "title": "Idiosyncratic skewness (3F model)",
+  "tstat": "4.35",
+  "sample": "1963\u20132012",
+  "definition": "Idiosyncratic skewness (3F model). Bali, Engle and Murray (2015) report t = 4.35 over 1963\u20132012, using price data. t=4.4 in port sort"
+ },
+ {
+  "title": "Share Volume",
+  "tstat": "8.86",
+  "sample": "1962\u20131991",
+  "definition": "Share Volume. Datar, Naik and Radcliffe (1998) report t = 8.86 over 1962\u20131991, using trading data. t=8.9 in univariate reg"
+ },
+ {
+  "title": "Share turnover volatility",
+  "tstat": "3.74",
+  "sample": "1966\u20131995",
+  "definition": "Share turnover volatility. Chordia, Subra, Anshuman (2001) report t = 3.74 over 1966\u20131995, using trading data. t=3.7 in regression"
+ },
+ {
+  "title": "Short term reversal",
+  "tstat": "12.44",
+  "sample": "1934\u20131987",
+  "definition": "Short term reversal. Jegadeesh (1990) report t = 12.44 over 1934\u20131987, using price data. t=12 in port sort"
+ },
+ {
+  "title": "Volume Variance",
+  "tstat": "3.56",
+  "sample": "1966\u20131995",
+  "definition": "Volume Variance. Chordia, Subra, Anshuman (2001) report t = 3.56 over 1966\u20131995, using trading data. t=3.6 in regression"
+ }
+]

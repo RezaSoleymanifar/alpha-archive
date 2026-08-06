@@ -153,6 +153,11 @@ def load() -> list[dict[str, Any]]:
             **{k: (scored.get(ident) or {}).get(k, 0)
                for k in ("appeal", "tradeable", "evidence", "interest", "buildability")},
             "one_liner": (scored.get(ident) or {}).get("one_liner", ""),
+            # Worth reporting on: judged reproducible with confidence, and with
+            # targets numeric enough that a rebuild can be called right or
+            # wrong. Everything else can only be argued about.
+            "worth_building": bool((entry.get("confidence") or 0) >= 0.8
+                                   and numeracy(entry) >= 40),
         })
 
     # Worth reading first, then how sure we are it reproduces, then how cheap.
