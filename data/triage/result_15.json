@@ -1,0 +1,374 @@
+[
+ {
+  "arxiv_id": "2512.05301v2",
+  "verdict": "drop",
+  "confidence": 0.93,
+  "gap": "synthetic only",
+  "method": "Extends Differential ML by replacing biased pathwise differential labels with likelihood-ratio-method and hybrid (delta plus gamma) sensitivities, so neural pricers can be trained on discontinuous payoffs such as digital and barrier options.",
+  "reason": "Every label, price and RMSE in the paper comes from the authors' own Monte Carlo simulator under Black-Scholes and discretised Heston. No market price is ever touched, so reproducing the tables tests the simulator, not a market claim.",
+  "data_needed": [],
+  "reproducible_targets": []
+ },
+ {
+  "arxiv_id": "2606.24019v1",
+  "verdict": "drop",
+  "confidence": 0.97,
+  "gap": "intraday / order book",
+  "method": "Reconstructs metaorders from the anonymous Nasdaq tape for AAPL over 178 days, calibrates the square-root impact law with the exponent fixed at 1/2, and runs sign-shuffle and chronology-scramble falsification tests.",
+  "reason": "The entire study runs on the Databento/Nasdaq TotalView-ITCH market-by-order feed at nanosecond Level-3 granularity (~0.5 billion events). Full book reconstruction is impossible from any free source; daily bars cannot produce metaorders, impact, or the sign autocorrelation.",
+  "data_needed": [],
+  "reproducible_targets": []
+ },
+ {
+  "arxiv_id": "2606.23596v4",
+  "verdict": "drop",
+  "confidence": 0.95,
+  "gap": "vendor data",
+  "method": "Builds an investible U.S. equity universe from daily CRSP, splits it into capitalization-ranked body and tail legs that recombine to the market return, and tests whether FF3, FF5 and q5 price both legs without offsetting alphas at nine split ratios.",
+  "reason": "The test requires daily CRSP individual-stock returns from 1967 with SHROUT, PRC, VOL and delisting returns, plus month-end ADV63 screens on the full NYSE/AMEX/NASDAQ cross-section. Yahoo carries no delisted-name history and no shares-outstanding panel back to 1967, so the universe and cMKT cannot be rebuilt.",
+  "data_needed": [],
+  "reproducible_targets": []
+ },
+ {
+  "arxiv_id": "2512.05011v1",
+  "verdict": "drop",
+  "confidence": 0.98,
+  "gap": "pure theory",
+  "method": "Establishes a Kyle-Back equilibrium with an exponential-utility risk-averse insider and a dynamic stochastic signal, using weak conditioning to build a Schrodinger bridge between the signal and the price process.",
+  "reason": "An existence-and-characterisation proof with closed-form solutions for deterministic and quadratic signal volatilities. No dataset, no figure from data, no number to reproduce.",
+  "data_needed": [],
+  "reproducible_targets": []
+ },
+ {
+  "arxiv_id": "2606.23510v1",
+  "verdict": "drop",
+  "confidence": 0.93,
+  "gap": "pure theory",
+  "method": "Decomposes a few-exercise-date Bermudan swaption into short-dated European swaptions minus a closed-form correction, exploits linearity of the exercise boundary to extend to three exercise dates, and checks the analytic formula against a PDE solver.",
+  "reason": "All numbers are produced from hand-chosen parameters (K=5%, r=3%, sigma=1%, k=1%, T0=5y). Tables 1-5 compare the author's analytic formula to his own PDE, so there is no market dataset and no empirical claim.",
+  "data_needed": [],
+  "reproducible_targets": []
+ },
+ {
+  "arxiv_id": "2606.23492v1",
+  "verdict": "keep",
+  "confidence": 0.88,
+  "gap": "",
+  "method": "Fits four-emission-family continuous hidden Markov models (Gaussian, Student-t, Laplace, GED) to daily equity growth rates by EM, and tests whether a few-state HMM reproduces heavy tails, near-zero return ACF and slow absolute-return ACF decay, plus regime-conditional VaR backtests.",
+  "reason": "The headline evidence is daily SPY closes, a 30-ticker sector-balanced panel of large caps and a six-asset basket, all Yahoo-servable. The paper's own source is Polygon/Alpaca, not a paid feed; only one robustness leg (a CRSP cross-decade transfer) is vendor-bound and the main SPY and 30-ticker results stand without it.",
+  "data_needed": [
+   "daily SPY prices 2014-01-03 to 2024-01-03 in-sample (T=2,516) and 2024-01-04 to 2026-04-20 out-of-sample (T=572), Yahoo Finance",
+   "30-ticker sector-balanced panel, ten GICS sectors x three large caps, including LLY, UNH and NEM, same daily window, Yahoo Finance",
+   "six-asset multi-asset basket for the Student-t copula on CHMM-N marginals, daily closes, Yahoo Finance"
+  ],
+  "reproducible_targets": [
+   "Table 1 observed SPY excess kurtosis 7.68 in-sample and 5.29 out-of-sample",
+   "Table 1 KS pass rate (%) IS/OoS: CHMM-N 91.5/78.0, CHMM-t penalised 91.9/81.4, CHMM-L 80.5/63.6, CHMM-GED 90.3/78.4, ML HSMM-N 98.4/91.0, bootstrap 99.8/91.8, Gaussian iid 0.0/1.5, GARCH(1,1) 27.4/59.6",
+   "Table 1 simulated excess kurtosis: bootstrap 7.55/6.86, Laplace iid 2.96/2.80, GARCH(1,1) 7.59/2.70, CHMM-N 3.83/3.62",
+   "Table 1 ACF-MAE on |G| / raw G: observed-matching bootstrap 0.0628/0.0235, GARCH(1,1)-t 0.0316/0.0173, CHMM-N 0.0462/0.0240",
+   "30-ticker panel: in-sample KS pass median 96.8%, out-of-sample median 69.1%, mean 66.2 +/- 28.2%, 11 of 30 tickers below 60%",
+   "Table 3 regime-conditional VaR backtest on SPY OoS (T=572): CHMM-N K=3 at alpha=0.05 gives 35 violations (6.12%), LR statistics 1.41 / 0.01 / 1.42, p 0.49 and 0.16; at alpha=0.01, 9 violations (1.57%)"
+  ]
+ },
+ {
+  "arxiv_id": "2512.04603v1",
+  "verdict": "drop",
+  "confidence": 0.92,
+  "gap": "synthetic only",
+  "method": "Solves the optimal multi-objective market-making problem for an FX dealer who can also take liquidity from an internal exchange populated by client iceberg, TWAP and full-amount algos, and characterises the inventory region in which filling the internal order is optimal.",
+  "reason": "Tables 1 and 2 are means over 5,000 simulated trajectories with a 0.3 s step and a 300 s horizon under the authors' own model parameters. No real FX tape or internal-exchange book enters the paper, and reproducing the P&L would require both.",
+  "data_needed": [],
+  "reproducible_targets": []
+ },
+ {
+  "arxiv_id": "2606.23367v1",
+  "verdict": "drop",
+  "confidence": 0.9,
+  "gap": "other",
+  "method": "Benchmarks the Asymmetry PRISM CPU/GPU portfolio optimiser against OSQP, Clarabel, SCS and MOSEK on batched account-rebalancing QPs, reporting wall-clock timings, deadline miss rates and feasibility diagnostics on a 481-name S&P 500 universe and a real-calibrated extension.",
+  "reason": "Every headline number is a solver timing on one disclosed workstation, and the PRISM engine itself sits outside the public artifact. The claims are hardware-and-binary-bound engineering measurements, not an empirical market claim, so free prices reproduce nothing here.",
+  "data_needed": [],
+  "reproducible_targets": []
+ },
+ {
+  "arxiv_id": "2512.03709v1",
+  "verdict": "drop",
+  "confidence": 0.9,
+  "gap": "vendor data",
+  "method": "Runs a staggered difference-in-differences on Chinese A-share firm-year panel data 2008-2019, testing whether analysts' relative earnings forecast errors fall after a firm's city gains high-speed-rail connectivity, with a three-year-early placebo.",
+  "reason": "The dependent variable is analyst EPS forecast error and the controls are governance and ownership variables (Mngmhldn, INST_HLD, Top1, Inde_Ratio, Big4), which come from CSMAR or WIND. Neither the analyst forecast panel nor the mandated site-visit records has a free source; Yahoo A-share prices do not supply any of it.",
+  "data_needed": [],
+  "reproducible_targets": []
+ },
+ {
+  "arxiv_id": "2606.23099v1",
+  "verdict": "drop",
+  "confidence": 0.98,
+  "gap": "pure theory",
+  "method": "Extends affine process theory to path-dependent coefficients, characterising processes whose Fourier-Laplace transform is exponentially affine in the past trajectory via generalised Riccati equations, and applies it to path-dependent volatility and delayed Heston models.",
+  "reason": "A characterisation theorem and well-posedness conditions. No dataset, no calibration, no empirical figure.",
+  "data_needed": [],
+  "reproducible_targets": []
+ },
+ {
+  "arxiv_id": "2606.23070v1",
+  "verdict": "drop",
+  "confidence": 0.88,
+  "gap": "synthetic only",
+  "method": "Builds a granular agent-based model of a Uniswap v3 pool against a Heston reference market with block propagation, mempool latency, arbitrageurs, MEV searchers and active LPs, and evaluates volatility- and toxicity-driven dynamic fee schedules on hedged LP PnL (fees minus LVR).",
+  "reason": "The empirical Uniswap work it cites is other people's; its own results are cells of mean +/- sd across simulation runs of a stochastic reference market with assumed block times. Reproducing it means rerunning the simulator, and validating it would need on-chain pool and mempool data.",
+  "data_needed": [],
+  "reproducible_targets": []
+ },
+ {
+  "arxiv_id": "2512.03123v1",
+  "verdict": "drop",
+  "confidence": 0.96,
+  "gap": "pure theory",
+  "method": "Maps round-trip trading onto stochastic thermodynamics, proving a Financial Second Law (non-positive expected round-trip profit under convex impact), a Chernoff-type fluctuation bound on the probability of a profitable cycle, and a Gibbs free-energy decomposition over strategy ensembles.",
+  "reason": "Theorems 4.1 and 5.1 plus analytic calculations for prototypical strategies. The paper only discusses empirical validation protocols; it never runs one, so there is no measured number to land on.",
+  "data_needed": [],
+  "reproducible_targets": []
+ },
+ {
+  "arxiv_id": "2606.22956v2",
+  "verdict": "drop",
+  "confidence": 0.97,
+  "gap": "pure theory",
+  "method": "Introduces inclusive and fair Pareto optimality for centralised risk sharing with endogenous premium functionals, and proves it is equivalent to balanced sequential optimisation, sitting between Geoffrion-proper and classical Pareto optimality.",
+  "reason": "A multiobjective-optimisation equivalence theorem with an Expected Shortfall worked example; all figures are geometric illustrations of sets. No data of any kind.",
+  "data_needed": [],
+  "reproducible_targets": []
+ },
+ {
+  "arxiv_id": "2606.22884v1",
+  "verdict": "drop",
+  "confidence": 0.97,
+  "gap": "pure theory",
+  "method": "Defines universal VaR superadditivity (superadditivity at every probability level) and its weighted version as properties of random vectors, proves preservation under transformations, weak convergence and mixtures, and establishes them for completely subscalable, super-Cauchy and inverted subadditive families.",
+  "reason": "A probability paper. The figures plot VaR of analytically specified infinite-mean distributions, not of any portfolio's realised losses.",
+  "data_needed": [],
+  "reproducible_targets": []
+ },
+ {
+  "arxiv_id": "2512.02352v3",
+  "verdict": "keep",
+  "confidence": 0.91,
+  "gap": "",
+  "method": "Defines the forward visibility horizon on a horizontal visibility graph, proves it equals the first-passage time and has an exact 1/k iid survival law, derives theta(H)=1-H from fBm persistence theory, and estimates theta with a Hill-MLE using Clauset-Shalizi-Newman threshold selection on simulated paths and on the VIX.",
+  "reason": "The Monte Carlo half is synthetic but the paper also applies the estimator to daily CBOE VIX pulled straight from FRED, a listed free source, over 2000-2026, and reports the rolling estimate against an overlapping-window iid null. That empirical leg is fully reproducible.",
+  "data_needed": [
+   "daily CBOE VIX close (FRED series VIXCLS), 2000-01-01 to 2026, the exact series the paper uses",
+   "no other real data; the fBm, rough Bergomi, Heston, GARCH(1,1) and FIGARCH benchmarks are simulated at T=2^16"
+  ],
+  "reproducible_targets": [
+   "VIX rolling estimate theta-hat = 0.91 +/- 0.19 across 45 four-year windows (W=1024 days, step 126 days), 2000-2026",
+   "VIX theta-hat lies far below the overlapping-window iid Monte-Carlo null, p < 0.001",
+   "Table 1 fBm Davies-Harte at T=2^16: H=0.1 gives theta-hat 0.900 (sd 0.013) against the prediction 0.90, bias -0.0003",
+   "Table 2 control processes at T=2^16: iid Gaussian theta-hat 1.024 (sd 0.002), against the exact iid value 1.00",
+   "Table 4 censoring sensitivity for the VIX rolling windows (W=1024, step 126 days)"
+  ]
+ },
+ {
+  "arxiv_id": "2606.22796v1",
+  "verdict": "keep",
+  "confidence": 0.92,
+  "gap": "",
+  "method": "Adds a Levy subordinator to the volatility process in a Black-Scholes-type model, derives a European call price via multidimensional Ito calculus and an exact ATM implied-volatility expression via Malliavin calculus, then calibrates an OU (Stein-Stein) volatility process to a VIX-derived volatility proxy.",
+  "reason": "The only dataset is the daily VIX index, converted to sigma_t = VIX_t/100, over a stated window. VIX is free from CBOE and FRED (VIXCLS), and the exact-transition OU calibration and its four reported parameters can be rerun end to end.",
+  "data_needed": [
+   "daily CBOE VIX index close, 2022-01-03 to 2022-09-14, from FRED (VIXCLS) or CBOE; volatility proxy sigma_t = VIX_t/100",
+   "daily step Delta = 1/252 for the exact discrete-time OU transition"
+  ],
+  "reproducible_targets": [
+   "Table 1 summary statistics: VIX mean 25.63, median 25.58, sd 4.26, min 16.60, max 36.45; sigma_t mean 0.2563, median 0.2558, sd 0.0426, min 0.1660, max 0.3645",
+   "Table 2 OU (Stein-Stein) calibration on sigma_t: mean-reversion speed alpha-hat = 31.0046 per year, long-run mean m-hat = 0.2609, vol-of-vol c-hat = 0.3153, half-life 5.6338 trading days",
+   "Figure 1: model ATM implied-volatility proxy tracks the market proxy sigma_t = VIX_t/100 over the sample"
+  ]
+ },
+ {
+  "arxiv_id": "2606.22719v1",
+  "verdict": "keep",
+  "confidence": 0.84,
+  "gap": "",
+  "method": "Runs a leakage-controlled monthly walk-forward in which a retrieval-augmented Qwen2.5-7B critic-actor pipeline scores seven U.S. equity style factors from decision-time-only inputs (lag-shifted FRED macro, archived Cleveland Fed daily CPI nowcast, FOMC/CPI event summaries), and compares its rank IC against kNN macro-analog and ridge baselines.",
+  "reason": "Every input is free: FRED macro and VIX, the archived Cleveland Fed nowcast (the paper releases its parsed copy frozen 2026-05-13), and factor returns from Ken French plus AQR/Open Source Asset Pricing for BAB and QMJ. The paper also releases the 36 critic rules, so the LLM leg is reproducible from published artifacts, and the kNN and ridge baselines need no LLM at all.",
+  "data_needed": [
+   "FRED monthly CPI level and YoY, UNRATE, 10y minus 3m term spread, and VIXCLS, 1990-04 through 2026-03, with the stated one-month publication lag on CPI and unemployment",
+   "Cleveland Fed daily CPI nowcast archive queried at each month-end (free; the paper's parsed copy is frozen at 2026-05-13)",
+   "monthly factor returns for SMB, HML, RMW, CMA and UMD from the Ken French data library, plus BAB and QMJ from the AQR public factor library or the Chen-Zimmermann Open Source Asset Pricing signals",
+   "MKT_RF from Ken French for the rolling 60-month beta used to build market-adjusted residual factor returns",
+   "test window 2023-04-30 through 2026-03-31, 36 monthly decisions"
+  ],
+  "reproducible_targets": [
+   "Table 1 monthly Spearman rank IC, mean / median: full LLM pipeline +0.131 / +0.154, 95% CI [-0.02, +0.28], permutation p = 0.11",
+   "Table 1 kNN macro analog +0.070 / +0.161, CI [-0.11, +0.24], p = 0.44",
+   "Table 1 nowcast-only ridge +0.045 / +0.125, p = 0.63; macro + nowcast ridge +0.058 / +0.071 (n = 34), p = 0.51",
+   "Table 1 ablation rows: zero-shot CoT +0.007 / +0.027 (p = 0.92), + raw analog retrieval +0.006 / +0.063 (p = 0.94), + critic rule synthesis +0.088 / +0.009 (p = 0.21)",
+   "Table 2 non-overlapping 12-month sub-window mean ICs: +0.111 (2023-04 to 2024-03), +0.165 (2024-04 to 2025-03), +0.117 (2025-04 to 2026-03)",
+   "Table 3 long-top-2 / short-bottom-2 with 5 bps per unit weight change: nowcast-only ridge -0.9% return, Sharpe -0.12, max drawdown -10.6%; macro + nowcast ridge -0.2%, Sharpe -0.01, max drawdown -10.8%"
+  ]
+ },
+ {
+  "arxiv_id": "2512.02166v1",
+  "verdict": "keep",
+  "confidence": 0.92,
+  "gap": "",
+  "method": "Decomposes volatility memory into level, shape and tempo gates (regime-switching, fractional integration, business-time clock), shows GARCH-type models are special cases, and compares gated models against GARCH, EGARCH and GJR on rolling one-step-ahead variance forecasts and 1%/5% VaR-ES for SPY and EURUSD.",
+  "reason": "Daily adjusted closes for SPY and EUR/USD from January 2005 to December 2024, plus VIX and SPY volume for the gate features. The paper itself names Yahoo Finance as the fallback source, and every series (SPY, EURUSD=X, ^VIX) is free there. Estimation is off-the-shelf rugarch plus custom gates.",
+  "data_needed": [
+   "daily adjusted closes for SPY, January 2005 to December 2024, Yahoo Finance",
+   "daily EUR/USD (EURUSD=X on Yahoo, or ECB reference rates), same window, aligned on common trading days",
+   "daily VIX (^VIX on Yahoo or FRED VIXCLS) as the implied-volatility gate input for SPY",
+   "daily SPY trading volume for the 252-day rolling volume quantile feature"
+  ],
+  "reproducible_targets": [
+   "Table 2 SPY out-of-sample (n = 3,684): GARCH(1,1) QLIKE -8.184, RMSE 0.000555, FZ(1%) 0.0068, FZ(5%) 0.0032, VaR(1%) 1.17%, VaR(5%) 4.51%, Kupiec p 0.44",
+   "Table 2 SPY: GJR-GARCH QLIKE -8.173 / RMSE 0.000574; RSM -7.808 / 0.000685; G-Clock -7.644 / 0.000649 with the lowest FZ(5%) of -0.0090; G-FIGARCH QLIKE blows up to 2.24e6 with RMSE 0.000548",
+   "Table 3 SPY DM/Vuong: G-Clock vs GARCH(1,1) on QLIKE DM 1.72 (p 0.086), Vuong 1.95 (p 0.051); G-FIGARCH vs GARCH(1,1) on RMSE DM -2.11 (p 0.035)",
+   "Table 4 EURUSD out-of-sample (n = 4,800): G-FIGARCH best at QLIKE -9.9079, RMSE 0.000041, FZ(1%) 0.000722, VaR(1%) 0.27%, VaR(5%) 2.88%, Kupiec p 0.0005; GARCH(1,1) -9.8492 / 0.000043 / VaR(5%) 3.87% / p 0.4414; RSM worst at -9.5234",
+   "Table 5 EURUSD DM/Vuong: G-FIGARCH vs GARCH(1,1) on QLIKE DM -2.88 (p 0.004), Vuong 2.02 (p 0.043)",
+   "The directional claim: fractional-memory gates win in FX while regime and clock gates win in equities"
+  ]
+ },
+ {
+  "arxiv_id": "2606.22615v1",
+  "verdict": "keep",
+  "confidence": 0.86,
+  "gap": "",
+  "method": "Extends approximate Bayesian estimation of Stochastic Volatility in Mean models to Student-t, slash and variance-gamma errors from the scale-mixture-of-normals family, replacing numerical integration with special functions and a discretised HMM likelihood, then fits the models to four equity index return series and backtests VaR.",
+  "reason": "The empirical application is daily returns on four headline indices, all free on Yahoo (^GSPC, ^GDAXI, ^N225, ^BVSP). Nothing in the estimation needs a paid feed; the simulation tables are a separate calibration exercise and the index fits stand on their own.",
+  "data_needed": [
+   "daily closes for the S&P 500 (^GSPC), DAX 30 (^GDAXI), NIKKEI 225 (^N225) and IBOVESPA (^BVSP), Yahoo Finance, over the paper's stated sample (the digest truncates the exact dates; Table 7 fixes them)",
+   "log returns in percent, the four series aligned on their own trading calendars"
+  ],
+  "reproducible_targets": [
+   "Table 7 summary statistics (mean, sd, skewness, excess kurtosis) of the four index return series",
+   "Table 8 SVM posterior means and 95% credibility intervals for S&P 500 and NIKKEI 225 under HMC versus the HMM-with-importance-sampling machinery; Table 9 the same for DAX 30 and IBOVESPA",
+   "Table 10 model selection: SVM-VG gives the best LPS and DIC for most series, with SVM-S superior for IBOVESPA",
+   "Table 11 elapsed fitting time: the HMM approach is roughly ten times faster than MCMC in every application",
+   "Table 12 Jarque-Bera and Ljung-Box (10 lags) p-values on one-step-ahead forecast pseudo-residuals",
+   "Table 13 empirical VaR violation rates with unconditional-coverage, independence and conditional-coverage backtest p-values",
+   "Figure 1 exp(h_t/2) estimates tracking S&P 500 absolute returns, HMM overlapping MCMC"
+  ]
+ },
+ {
+  "arxiv_id": "2606.22206v1",
+  "verdict": "drop",
+  "confidence": 0.93,
+  "gap": "crypto derivatives",
+  "method": "Tracks transactions per second and median transaction fees for Ethereum Mainnet, its 20 fee-collecting L2s, Solana and Polygon from January 2024 to March 2026, regresses TPS on gas limit and target blob count, and forecasts convergence dates under EIP-7938.",
+  "reason": "Every series is on-chain: per-block gas limits and usage, blob targets and counts, per-transaction fees, and L2 rollup transaction counts. These come from node/indexer sources (Etherscan, Dune, L2Beat, Solana RPC), none of which is on the free list, and no price feed substitutes for them.",
+  "data_needed": [],
+  "reproducible_targets": []
+ },
+ {
+  "arxiv_id": "2512.01623v1",
+  "verdict": "drop",
+  "confidence": 0.92,
+  "gap": "out of scope",
+  "method": "Models monopoly pricing of weather index insurance as a Bowley sequential game, with the farmer choosing a neural-network index payoff to minimise a distortion risk measure and the insurer choosing a premium principle, solved by penalised bilevel programming.",
+  "reason": "Real data, but agricultural rather than market data: county-level Iowa soybean yields from USDA NASS 1940-2023 and 4-km monthly PRISM climate grids. No price series is involved and no free market source is relevant to the claim.",
+  "data_needed": [],
+  "reproducible_targets": []
+ },
+ {
+  "arxiv_id": "2606.22162v2",
+  "verdict": "drop",
+  "confidence": 0.86,
+  "gap": "vendor data",
+  "method": "Fits a dynamic low-rank state-space model to monthly multi-sector default counts, using leading eigenvectors of the sectoral correlation matrix as fixed loadings for persistent AR(1) latent credit states, and studies how effective correlations and posterior-implied copulas change under temporal coarse-graining to annual horizons.",
+  "reason": "The panel is S&P monthly sector-level default counts and issuer bases for thirteen sectors from 1981-01 to 2021-09, which comes from S&P Global Ratings' CreditPro/default-study database. Only aggregate annual figures are published freely; the monthly sector-by-issuer-count panel that the model is fit to is licensed.",
+  "data_needed": [],
+  "reproducible_targets": []
+ },
+ {
+  "arxiv_id": "2606.21539v2",
+  "verdict": "drop",
+  "confidence": 0.9,
+  "gap": "pure theory",
+  "method": "Formalises walk analysis for attributing expected-loss forecast gaps to EAD, SMM, PD and LGD component models, shows it is order dependent, and derives order-independent augmented LMDI and Shapley-value attributions with elementwise and vectorised formulas.",
+  "reason": "A methodology paper. The only numbers are a four-cell price-and-volume toy (actual 1x10, predicted 2x16, attributions 16/6 versus 10/12) and runtime remarks on unspecified internal portfolios. There is no dataset and nothing an outside replication could land on.",
+  "data_needed": [],
+  "reproducible_targets": []
+ },
+ {
+  "arxiv_id": "2512.01408v1",
+  "verdict": "keep",
+  "confidence": 0.71,
+  "gap": "",
+  "method": "Places a single Wasserstein ambiguity set on the drift prior in a Bayesian Merton problem rather than time-rectangular ambiguity, reduces the robust control to optimising a nonlinear functional of the prior, calibrates the radius by a nonlinear Wasserstein projection, and compares the resulting DRBC policy against Bayesian Merton, DRC and myopic DRO-Markowitz.",
+  "reason": "Section 6 is a genuine real-data experiment: daily S&P 500 constituent prices, trading from 2022-01-01, over 100 random 20-stock draws. The authors pull them from WRDS, but daily split- and dividend-adjusted closes for S&P 500 names are free on Yahoo, so the Sharpe-ratio distributions are reproducible up to the unpublished random seed, which only shifts the histograms, not the ordering.",
+  "data_needed": [
+   "daily adjusted closes for S&P 500 constituents, 2017-01-01 to 2024-12-31, Yahoo Finance (5 years of pre-training data plus the 2022-01-01 onward trading period)",
+   "the constituent list over the sample so the 100 random 20-stock draws can be redrawn",
+   "risk-free rate: the paper simplifies to 5% during trading and 4% for evaluation, so no series is strictly required, but FRED DGS3MO reproduces the stated rise from ~0% to 5%"
+  ],
+  "reproducible_targets": [
+   "Figure 2: across 100 random 20-stock S&P 500 draws traded daily from 2022-01-01, DRBC Sharpe ratios concentrate near 0.45-0.50 while Bayesian Merton concentrates near 0.30-0.40, with DRBC's right tail reaching ~1.15",
+   "Figure 3: DRBC dominates DRO-Markowitz with a riskless asset, whose Sharpe distribution peaks at 0.05-0.15 with almost no mass above 0.5",
+   "Figure 4 and Figure 5: DRBC versus DRO-Markowitz without a riskless asset, and versus DRC",
+   "Table 2 (synthetic control, 100 simulations): Bayesian Merton Sharpe 2.1319 (sd 3.1203), DRBC 2.1374 (3.1261), DRMV_no_rf 1.9890 (3.5466), DRMV_rf 2.1037 (3.6072), DRC 1.9778 (3.4019)"
+  ]
+ },
+ {
+  "arxiv_id": "2606.21515v1",
+  "verdict": "drop",
+  "confidence": 0.88,
+  "gap": "vendor data",
+  "method": "Introduces the zero-one censored transformed normal distribution for proportional outcomes with boundary mass, extends it with tree boosting and spatio-temporal Gaussian-process frailties, and benchmarks it against censored beta, censored gamma and zero-one-inflated beta on loss given default for U.S. residential mortgages.",
+  "reason": "The empirical work needs a loan-level U.S. residential mortgage performance database covering defaults from 2000 to 2022 across 874 ZIP3 regions, with realised LGD, loan characteristics and addresses. That is a licensed credit dataset; the BEA covariates and FRED mortgage-rate spread it also uses are free but reproduce nothing on their own.",
+  "data_needed": [],
+  "reproducible_targets": []
+ },
+ {
+  "arxiv_id": "2606.20903v1",
+  "verdict": "drop",
+  "confidence": 0.75,
+  "gap": "synthetic only",
+  "method": "Reformulates risk-sensitive benchmarked asset allocation as an LQG stochastic differential game via free-energy-entropy duality, derives explicit finite- and infinite-horizon saddle points, and implements a continuous-time q-learning actor-critic with affine actors and a reduced gradient critic.",
+  "reason": "Real returns (13 U.S. sector and size ETFs plus Fama-French six factors, 2018-06-20 to 2024-12-31) are only used to fix the model coefficients. Every reported number in Table 1 is a convergence error of the RL algorithm against the analytical policy, measured on paths simulated from those coefficients, so there is no claim tested on realised market outcomes. The ETF returns come from CRSP but are individually free on Yahoo, which is why this is a close call.",
+  "data_needed": [],
+  "reproducible_targets": []
+ },
+ {
+  "arxiv_id": "2512.01354v3",
+  "verdict": "drop",
+  "confidence": 0.83,
+  "gap": "other",
+  "method": "Proposes a prompt-driven framework that decodes human text into 17-dimensional cognitive state vectors and re-encodes them with cognitive perturbation operators, then claims the resulting synthetic data improves an A-share trading strategy during the 2015 crash.",
+  "reason": "The trading claim is inseparable from the CTE text pipeline: the strategy's parameters are calibrated from LLM-generated cognitive text plus double-blind media review and platform traffic data, none of which is published as a reusable artifact. A-share index prices are free, but without the generated selections and drift parameters the 47.4% drawdown reduction cannot be landed on.",
+  "data_needed": [],
+  "reproducible_targets": []
+ },
+ {
+  "arxiv_id": "2606.20420v1",
+  "verdict": "drop",
+  "confidence": 0.9,
+  "gap": "options surface",
+  "method": "Embeds G2++ calibration into non-linear regression theory, shows that minimising RMSRE is a weighted least squares problem, and derives the weighted hat matrix, influence functions and functional-delta confidence intervals as calibration diagnostics, applied daily over 2016-2025.",
+  "reason": "The inputs are daily Euro ATM cap quotes across the maturity ladder for ten years, which is an interest-rate implied-volatility surface sold by Bloomberg or ICAP. The daily leverage, effective-degrees-of-freedom and confidence-interval series cannot be rebuilt from any free source; the Treasury and ECB curves supply discount factors but not the cap vols.",
+  "data_needed": [],
+  "reproducible_targets": []
+ },
+ {
+  "arxiv_id": "2606.20145v1",
+  "verdict": "drop",
+  "confidence": 0.72,
+  "gap": "vendor data",
+  "method": "Regresses next-day variance and next-week correlations on today's trend strength (the t-statistic of the trend) and today's variance or correlation, aggregating across 24 futures markets, 10 trend horizons and 33 years of daily returns, and reads the result as support for a lattice-gas critical-point model of markets.",
+  "reason": "The whole study rests on 33 years of daily continuous futures returns across equity indices, rates, currencies and commodities in three regions. Yahoo's futures tickers carry only front-month quotes with short history and no roll adjustment, so a back-adjusted 24-market panel to the early 1990s needs a commercial futures database. The pooled coefficients and t-statistics cannot be landed on with free data.",
+  "data_needed": [],
+  "reproducible_targets": []
+ },
+ {
+  "arxiv_id": "2512.10971v1",
+  "verdict": "drop",
+  "confidence": 0.91,
+  "gap": "live protocol",
+  "method": "Introduces AI-Trader, a fully automated live benchmark where six LLM agents receive only minimal context, must search and synthesise live market information themselves, and trade U.S. stocks, A-shares and crypto at several frequencies; reports cumulative return, Sharpe, volatility and max drawdown per model per market.",
+  "reason": "The benchmark is explicitly live and data-uncontaminated: its validity depends on the agents not having seen the evaluation window at training time. Rerunning it later necessarily contaminates it, and the agents' live web searches cannot be replayed, so the reported returns are not reproducible even though the underlying prices are free.",
+  "data_needed": [],
+  "reproducible_targets": []
+ }
+]

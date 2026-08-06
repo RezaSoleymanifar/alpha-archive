@@ -1,0 +1,423 @@
+[
+ {
+  "arxiv_id": "2512.23596v1",
+  "verdict": "keep",
+  "confidence": 0.62,
+  "gap": "",
+  "method": "Proposes ATOMS, a tournament model-selection procedure that jointly picks model class (ridge vs random forest) and training-window length under non-stationarity, then forecasts monthly excess returns of Kenneth French's 17 industry portfolios, Sep 1987-Nov 2016.",
+  "reason": "The forecast target (17 industry portfolios) and the Fama-French factors are free from the Ken French library, and the Chen-Pelger-Zhu macro factors are published. The 94 characteristic-sorted long-short predictor portfolios were built from daily CRSP/Compustat, so an exact rebuild needs a free substitute (Open Source Asset Pricing publishes the same signal family), which adds replication noise but does not block the exercise.",
+  "data_needed": [
+   "Ken French data library: 17 Industry Portfolios, monthly and daily value-weighted returns, Sep 1987-Nov 2016",
+   "Ken French data library: daily and monthly Fama-French 3 factors (Mkt-RF, SMB, HML) plus RF, same window",
+   "94 characteristic-sorted long-short decile portfolio returns: Open Source Asset Pricing (Chen-Zimmermann) portfolio returns as the free stand-in for the CRSP/Compustat build of Gu-Kelly-Xiu (2020)",
+   "15 macroeconomic SDF factors from Chen, Pelger and Zhu (2024), published with the paper's replication code",
+   "NBER recession dates (FRED series USREC) to define the 1990, 2001 and 2007-2009 subperiods"
+  ],
+  "reproducible_targets": [
+   "Table 2 / abstract: ATOMS average out-of-sample R2 = 0.049 across the 17 industries over 1990-2016, a 14% improvement over Fixed-val(512) (0.043) and more than double Fixed-val(32) (0.022); Fixed-CV = 0.035",
+   "Table 2, Gulf War recession column: ATOMS R2 = 0.027 (positive) while Fixed-val(32) = 0.009, Fixed-val(512) = -0.031, Fixed-CV = -0.007",
+   "Table 2, 2001 recession: ATOMS R2 = 0.125 vs Fixed-CV 0.071 (540bp gain) and Fixed-val(512) 0.117 (80bp gain)",
+   "Table 2, 2008 crisis column: ATOMS 0.041 vs Fixed-val(32) -0.001, Fixed-val(512) 0.039, Fixed-CV 0.014",
+   "Table 3: average cumulative-wealth excess ratio of ATOMS over baselines 3.38 / 0.48 / 0.31 / 3.54; abstract states a 31% higher cumulative return averaged across industries"
+  ]
+ },
+ {
+  "arxiv_id": "2512.23515v1",
+  "verdict": "drop",
+  "confidence": 0.6,
+  "gap": "other",
+  "method": "Trains Alpha-R1, an 8B reasoning LLM optimized with GRPO, to screen a pool of quantitative alpha factors each day using an LLM-written market-state description built from price data and financial news, then backtests the selected factors on CSI 300 and CSI 1000 in 2025.",
+  "reason": "The selected factors are never published, so the headline performance cannot be recovered from prices alone: it needs the RL-trained 8B checkpoint plus a day-by-day Chinese financial-news stream and macro announcement feed for 2025, neither of which is a free source. Chinese A-share daily prices are obtainable, but they only reproduce the passive baselines, not the paper's claim.",
+  "data_needed": [],
+  "reproducible_targets": []
+ },
+ {
+  "arxiv_id": "2512.23139v4",
+  "verdict": "drop",
+  "confidence": 0.97,
+  "gap": "pure theory",
+  "method": "Defines the Lambda Expected Shortfall as a generalization of ES matching Lambda-VaR, derives an explicit formula, proves it is the smallest quasi-convex law-invariant risk measure dominating Lambda-VaR, and gives its dual representation and related optimization results.",
+  "reason": "A measure-theoretic paper: definitions, theorems and one illustrative figure of the ES-Lambda construction. No dataset of any kind is used, so there is no empirical claim to reproduce.",
+  "data_needed": [],
+  "reproducible_targets": []
+ },
+ {
+  "arxiv_id": "2512.23078v1",
+  "verdict": "drop",
+  "confidence": 0.93,
+  "gap": "vendor data",
+  "method": "Benchmarks hedonic regressions, XGBoost, neural nets and multi-modal ResNet-50 image+tabular models for predicting art auction prices, using a repeated-sales panel of auction transactions plus catalog images, and analyses where visual embeddings help (fresh-to-market lots).",
+  "reason": "The panel is proprietary data licensed from Art Market Consultancy (1970-2024 auction transactions, presale estimates and catalog images from major auction houses). There is no free equivalent, and art auction records are not market data in the sense the archive covers.",
+  "data_needed": [],
+  "reproducible_targets": []
+ },
+ {
+  "arxiv_id": "2512.23021v1",
+  "verdict": "keep",
+  "confidence": 0.45,
+  "gap": "",
+  "method": "Reformulates the Gerber Informational Quality correlation estimator as a convex 'squeezing' combination of PSD atomic channel matrices with a closed-form eigenfloor, giving PSD by construction and analytic eigenvalue/condition-number control, then runs long-only monthly tangency backtests with 10bp costs against shrinkage, random-matrix and Gerber estimators.",
+  "reason": "The backtest is on a 10-asset multi-asset index universe of monthly total returns, Jan 1988-Dec 2024, out-of-sample 2000-2024. Every sleeve has a free proxy (S&P 500 TR, Russell 2000, EAFE/EM ETFs, ICE BofA aggregate and high-yield total-return indices on FRED, listed REITs, gold, GSCI) but the paper never names the exact indices or vendor, so an exact match to a Sharpe reported to two decimals is not guaranteed.",
+  "data_needed": [
+   "Monthly total returns Jan 1988-Dec 2024 for a 10-sleeve universe: US large-cap (^SP500TR, Yahoo), US small-cap (^RUT / IWM, Yahoo), developed ex-US (EFA, Yahoo; MSCI EAFE pre-2001 needs a proxy), emerging markets (EEM, Yahoo), US growth (IWF / ^SP500 Growth, Yahoo)",
+   "Aggregate bond total return: FRED BAMLCC0A0CMTRIV; high-yield total return: FRED BAMLHYH0A0HYM2TRIV",
+   "Listed real estate (VNQ / ^RMZ, Yahoo), gold (GC=F or GLD, Yahoo), broad commodities (^SPGSCI, Yahoo)",
+   "Risk-free / T-bill rate for the tangency objective: FRED DTB3"
+  ],
+  "reproducible_targets": [
+   "Table 4: AIQ1 after-cost out-of-sample Sharpe 0.56 (highest), AIQ2 0.54, LS1 0.54, GS1 0.51, GS* 0.51, GS3 0.50, GS2 0.44, over 2000-2024 with monthly rebalancing and 10bp costs",
+   "Table 4: AIQ1 annualized volatility 7.70% and AIQ2 7.65%, versus LS1 at 11.40%; AIQ drawdowns approximately -28% versus LS1 -36.53%",
+   "Table 5 aggregate rank score (sum of per-metric ranks, lower better): AIQ1 = 34 (best), AIQ2 = 52, GS1 = 63, GS* = 65, LS1 = 69, GS2 = 116 (worst)",
+   "Calibration split: in-sample 1988-1999 for hyperparameters, out-of-sample 2000-2024, lookback tau = 20 months, N = 10"
+  ]
+ },
+ {
+  "arxiv_id": "2512.22858v2",
+  "verdict": "drop",
+  "confidence": 0.88,
+  "gap": "vendor data",
+  "method": "Builds a Continuous Shariah Compliance Index on [0,1] embedding the business-activity and financial-ratio thresholds of six Islamic screening standards, applies it to a US equity panel with lagged accounting inputs and monthly formation, and tests portfolio performance and cross-sectional pricing.",
+  "reason": "The panel is an explicitly survivorship-free CRSP-Compustat merge of US equities 1999-2024 with 661,439 firm-month observations. SEC XBRL only covers roughly 2009 onward and gives no delisting-adjusted returns, so the 1999-2024 accounting ratios and the value-weighted benchmark returns cannot be rebuilt from free sources.",
+  "data_needed": [],
+  "reproducible_targets": []
+ },
+ {
+  "arxiv_id": "2601.05274v1",
+  "verdict": "drop",
+  "confidence": 0.96,
+  "gap": "synthetic only",
+  "method": "Compares feed-forward and LSTM neural networks for individual claims loss reserving, testing whether feeding a claim's full payment history and case-estimate development history as time series beats summarised transactions.",
+  "reason": "Every dataset is simulated in R with the SPLICE package (Avanzi, Taylor and Wang, 2023); the paper trains and evaluates on 50 such synthetic claim datasets and touches no real data. It is also insurance reserving, not market data.",
+  "data_needed": [],
+  "reproducible_targets": []
+ },
+ {
+  "arxiv_id": "2512.22476v2",
+  "verdict": "drop",
+  "confidence": 0.94,
+  "gap": "crypto derivatives",
+  "method": "Presents AutoQuant, a rule-encoded two-stage configuration-selection pipeline (Bayesian search then stability screening across windows and cost scenarios) for tuning trading strategies on crypto perpetual futures under strict execution, funding and cost realism.",
+  "reason": "The whole evaluation runs on 4-hour BTC/USDT, ETH/USDT, SOL/USDT and AVAX/USDT perpetual contracts, and the central methodological point is funding-rate visibility and perpetual-specific execution accounting. Perpetual OHLCV and historical funding rates are exchange derivative data, not available from Coinbase spot or any listed free source.",
+  "data_needed": [],
+  "reproducible_targets": []
+ },
+ {
+  "arxiv_id": "2512.22109v2",
+  "verdict": "keep",
+  "confidence": 0.95,
+  "gap": "",
+  "method": "Separates sparse index-tracker construction from maintenance: builds the initial tracker with a calibrated shrinkage model and posterior support screening, then at each rebalance defaults to holding and only makes self-financing local repairs when realised tracking error deteriorates and posterior directional gates agree.",
+  "reason": "The paper states outright that it uses daily returns freely available from Yahoo Finance for a fixed 397-name S&P 500 universe from 2020-01-03 to 2025-12-31, with the S&P 500 index as benchmark. Every input is free and the universe rule (names present the whole horizon) is fully specified.",
+  "data_needed": [
+   "Yahoo Finance daily adjusted closes for S&P 500 constituents 2020-01-03 to 2025-12-31, filtered to the 397 names present across the whole horizon (fixed universe, no entry/exit)",
+   "Yahoo Finance ^GSPC daily levels over the same window as the tracking benchmark",
+   "Named holdings appear in Tables 4-5 (NVDA, AVGO, CMCSA, GOOG, GL, HOLX, INCY, AMAT, AMD, PWR, HPE, ARE, JNJ, AMT, ORLY) for spot-checking the H11 and H13 recovery trades"
+  ],
+  "reproducible_targets": [
+   "Table 1: mean holding-window tracking error 20.556bp, median 19.409bp, maximum 36.074bp over H1-H16",
+   "Table 1: H1-H8 mean TE 15.131bp versus H9-H16 mean TE 25.981bp; H10-H13 27.587bp; H14-H16 25.680bp",
+   "Table 1: total one-way sequential turnover 5.0%, final portfolio 55 active names, top-10 mass 45.8%, top-25 mass 72.8%",
+   "Table 7: competitor mean TE MM 17.261bp, MSE 17.265bp, TEV 17.374bp, NNEN 25.148bp, NNL 31.321bp, against tracker 20.556bp, with competitor turnover 492.3% / 663.4% / 680.0% / 403.1% / 443.2% versus 5.0%",
+   "Table 6 protocol decomposition: (150,25)-Tracker mean TE 20.556 / median 19.409 / max 36.074 / turnover 5.0%; (130,50) 23.942; static hold 22.704; rolling reconstruction 17.711 at 604.6% turnover",
+   "Table 3: recovery events fire in holds 10, 11, 13, 14, 15, 16 with 1.0% one-way turnover each and 7 to 13 names touched"
+  ]
+ },
+ {
+  "arxiv_id": "2512.22001v1",
+  "verdict": "drop",
+  "confidence": 0.62,
+  "gap": "other",
+  "method": "Scales a Variational Quantum Eigensolver for dynamic portfolio optimization by adding an Ising Sample-based Quantum Configuration Recovery routine and a constrained decomposition, and runs 9-asset and up to 38-asset (full IBEX 35 plus regional assets) QUBO instances on the IBM Fez quantum processor against a CPLEX classical solver.",
+  "reason": "The price inputs (IBEX 35 constituents through 2023) are free on Yahoo with .MC tickers, but the claims being tested are about quantum-hardware solution quality, not about markets. Reproducing Table I, III or V requires access to an IBM Fez QPU and a CPLEX licence; no free-data replication can land on those Sharpe figures.",
+  "data_needed": [],
+  "reproducible_targets": []
+ },
+ {
+  "arxiv_id": "2512.21823v2",
+  "verdict": "keep",
+  "confidence": 0.4,
+  "gap": "",
+  "method": "Trains Conditional Restricted Boltzmann Machines (Bernoulli-Bernoulli on 16-bit discretized returns, and Gaussian-Bernoulli on z-scored returns) with Persistent Contrastive Divergence on a 19-series cross-asset panel, then studies whether the model's free energy works as an unsupervised systemic-risk / regime signal.",
+  "reason": "Most of the universe is free (SPX, VIX, VIX3M, SKEW, MTUM/VLUE/QUAL, 2Y and 10Y Treasury yields and the 10Y-2Y slope, 10Y breakevens, DXY, WTI, gold, and the IG/HY OAS series which exist on FRED as BAMLC0A0CM and BAMLH0A0HYM2). Three inputs are Bloomberg-only: MOVE, the Citi Economic Surprise Index and the Bloomberg US Financial Conditions Index, so a replication needs substitutes (Chicago Fed NFCI for BFCIUS). The paper also publishes almost no numbers, so targets are qualitative and coarse.",
+  "data_needed": [
+   "Yahoo Finance daily: ^GSPC, ^VIX, ^VIX3M, ^SKEW, MTUM, VLUE, QUAL, DX-Y.NYB, CL=F, GC=F, Jan 2013 to Jan 2025",
+   "FRED daily: DGS2, DGS10, T10Y2Y, T10YIE, plus BAMLC0A0CM (IG OAS) and BAMLH0A0HYM2 (HY OAS) as free stand-ins for LUACOAS and LF98TRUU",
+   "Substitutes required for three Bloomberg-only inputs: MOVE (^MOVE on Yahoo is partial), CESIUSD (Citi Economic Surprise, no free source), BFCIUS (use FRED NFCI)",
+   "Train/test split fixed by the paper: train 2013-2019, test 2020-2025"
+  ],
+  "reproducible_targets": [
+   "Figure 3: Bernoulli-Bernoulli free energy over 2013-2025 oscillates in roughly the -98,000 to -108,000 band with no discernible level shift at the COVID-19 crash or the 2022 inflation shock, i.e. the discrete model fails as a regime detector",
+   "Figures 4-5: Gaussian-Bernoulli CRBM reproduces the static cross-asset correlation matrix but the QQ plot of synthetic versus real returns collapses toward Gaussian in the tails",
+   "Figures 6-7: Gaussian free-energy series spikes coincide with VIX spikes over the 2020-2025 test window, with the quadratic (magnitude) and structural (correlation) components separating pure magnitude shocks from regime changes (Figure 8)"
+  ]
+ },
+ {
+  "arxiv_id": "2512.21798v2",
+  "verdict": "keep",
+  "confidence": 0.82,
+  "gap": "",
+  "method": "Trains TimeGAN and a VAE on daily S&P 500 log-returns and evaluates the synthetic series on statistical similarity, temporal structure, and three downstream tasks: mean-variance portfolio weights, VaR/ES risk estimation, and backtested portfolio performance, always against the real series.",
+  "reason": "The real benchmark is daily S&P 500 index closes from January 2000 to June 2024, free from Yahoo Finance as ^GSPC. The paper simulates but validates every claim against real returns, so the real-data side of every table (summary stats, risk metrics, portfolio performance) is directly checkable; only the generative model side carries seed noise.",
+  "data_needed": [
+   "Yahoo Finance ^GSPC daily adjusted close, January 2000 to June 2024, converted to log-returns",
+   "Rolling-window lengths T = 10, 20, 60 days as specified for the robustness checks",
+   "Risk-free rate for the Sharpe computation: FRED DTB3 (paper does not state it explicitly)"
+  ],
+  "reproducible_targets": [
+   "Table 1: real S&P 500 daily log-returns 2000-2024 have mean 0.00041, standard deviation 0.0127, skewness -0.45, kurtosis 7.88 (these four are pure free-data checks)",
+   "Table 3: real-data volatility 1.27, VaR(0.95) -2.11, ES(0.95) -2.88; TimeGAN 1.30 / -2.05 / -2.79; VAE 1.19 / -1.92 / -2.63",
+   "Table 4: portfolio metrics on real training data Sharpe 0.89, return metric 1.31, max drawdown 23.4%; TimeGAN 0.84 / 1.26 / 25.1; VAE 0.78 / 1.14 / 27.6"
+  ]
+ },
+ {
+  "arxiv_id": "2512.21791v1",
+  "verdict": "keep",
+  "confidence": 0.8,
+  "gap": "",
+  "method": "Sets up a multi-criteria evaluation framework (MMD and KS for fidelity, ACF and volatility clustering for temporal structure, mean-variance optimization and volatility forecasting for utility, NNDT for privacy) and applies it to ARIMA-GARCH, VAE and TimeGAN generators trained on daily S&P 500 returns.",
+  "reason": "The reference series is daily S&P 500 index closes from January 2000 to March 2024, free from Yahoo Finance. The real-data rows of every table are directly reproducible, and the downstream volatility-forecasting evaluation is explicitly scored on real returns.",
+  "data_needed": [
+   "Yahoo Finance ^GSPC daily close, January 2000 to March 2024, log-returns, ADF-tested and standardized",
+   "Same series held out for the downstream volatility-forecasting evaluation (models trained on synthetic, evaluated on real returns)"
+  ],
+  "reproducible_targets": [
+   "Table 3: real S&P 500 daily returns have mean 0.12, standard deviation 1.85, skewness -0.41, kurtosis 5.62 (percent units); ARIMA-GARCH 0.11 / 1.79 / -0.32 / 4.85; VAE 0.09 / 1.29 / -0.08 / 3.18; TimeGAN 0.12 / 1.82 / -0.39 / 5.31",
+   "Table 5: portfolio optimization scored against the real-data portfolio - TimeGAN 0.89 / -0.03 / 0.91, VAE 0.85 / -0.07 / 0.82, ARIMA-GARCH 0.81 / -0.11 / 0.73",
+   "Table 6: volatility forecasting on real returns - TimeGAN errors 0.103 / 0.079 with R2 0.63, VAE 0.117 / 0.087 / 0.59, ARIMA-GARCH 0.124 / 0.091 / 0.56"
+  ]
+ },
+ {
+  "arxiv_id": "2512.21149v1",
+  "verdict": "drop",
+  "confidence": 0.97,
+  "gap": "pure theory",
+  "method": "Develops an equilibrium (subgame-perfect) framework for continuous-time portfolio choice when terminal risk aversion is itself a diffusion, characterizes policies through an extended HJB system, and specializes to CRRA with arithmetic Brownian preference dynamics to get a semi-explicit myopic plus preference-hedging decomposition.",
+  "reason": "Stochastic control theory throughout. The only numbers are comparative-statics tables and plots of the equilibrium policy for chosen parameter values; no market data enters at any point.",
+  "data_needed": [],
+  "reproducible_targets": []
+ },
+ {
+  "arxiv_id": "2512.21115v1",
+  "verdict": "drop",
+  "confidence": 0.97,
+  "gap": "pure theory",
+  "method": "Studies asset price bubbles in a discrete-time discrete-state market under Knightian model uncertainty with short-sales prohibitions, defines a fundamental price via superhedging duality, characterizes bubble types by G-supermartingale properties, and applies the results to put-call parity and American call bounds.",
+  "reason": "A theorem-and-proof paper in sublinear-expectation mathematical finance. It contains one schematic figure of the necessary and sufficient conditions and no dataset.",
+  "data_needed": [],
+  "reproducible_targets": []
+ },
+ {
+  "arxiv_id": "2512.20460v2",
+  "verdict": "keep",
+  "confidence": 0.88,
+  "gap": "",
+  "method": "Introduces a state-switching predictive regression for the US equity premium in which the market state is set in real time by whether the 10Y-3M term spread was flat or inverted in the preceding tau months, and compares partial-least-squares, PCA and forecast-combination aggregations of the Welch-Goyal predictor set.",
+  "reason": "Everything is free. The Welch-Goyal predictor file is a public download from Amit Goyal's website, the S&P 500 and dividends come with it, the 3-month T-bill and the 10-year yield are on FRED, and the state indicator is a deterministic function of the term spread. Sample and evaluation windows are fully specified.",
+  "data_needed": [
+   "Welch-Goyal (2008) updated annual/monthly data file from Amit Goyal's website: the 14 standard predictors plus corporate bond premium and lagged equity premium, monthly, Jan 1950-Dec 2017; baseline sample Jan 1960-Dec 2017 (696 observations)",
+   "S&P 500 log return including dividends minus the 3-month T-bill (both contained in the Goyal file; FRED DTB3 as a cross-check)",
+   "FRED DGS10 and DTB3 to build the 10-year minus 3-month term spread state indicator (down state if flat or inverted at any point in the preceding tau = 9 months)",
+   "NBER recession dates (FRED USREC) for the expansion/recession split in Table 2",
+   "Estimation split: 1960-1979 initial window, 1980-2017 out-of-sample evaluation"
+  ],
+  "reproducible_targets": [
+   "Table 1 Panel A (one-state): EP_LS beta 0.05 with t = 4.38, in-sample adjusted R2 = 4.65%, out-of-sample R2 = 2.60%; EP_CA 0.20 (t = 1.96), 0.61%, 0.31%; EF_C 0.13 (t = 0.84), -0.08%, 1.18%",
+   "Table 1 Panel B (state-switching): EP_LS delta = -0.27 (t = -2.51), beta1 = 0.03 (t = 3.46), gamma1 = 0.06 (t = 3.68), in-sample R2 = 5.90%, out-of-sample R2 = 4.12%; EP_CA 1.65% / 1.58%; EF_C 1.02% / 2.64%",
+   "All three state-switching R2_oos values exceed the Campbell-Thompson 0.50% threshold, while in the one-state model only EP_LS does",
+   "Table 2 Panel A: EP_LS out-of-sample R2 of 1.45% during expansions, significant at 5%; Panel B state-switching R2_oos of 1.71% and 11.21% in the corresponding state columns"
+  ]
+ },
+ {
+  "arxiv_id": "2512.20190v1",
+  "verdict": "drop",
+  "confidence": 0.93,
+  "gap": "crypto derivatives",
+  "method": "Estimates a two-regime MS-AR with regime-conditional GJR-GARCH on BTC and ETH returns, prices Black-Scholes benchmark values with the regime-conditional volatility, and regresses the deviation of Hegic on-chain option quotes from that benchmark on order size, strike, maturity, volatility and volume using feasible GLS.",
+  "reason": "The dependent variable is the quote of every wrapped-BTC and ETH option written on the Hegic protocol on Arbitrum, at the transaction timestamp. That is on-chain derivative transaction data pulled from the protocol; without it there is no cross-section of mispricing to explain, and BTC/ETH spot alone reproduces only the volatility model.",
+  "data_needed": [],
+  "reproducible_targets": []
+ },
+ {
+  "arxiv_id": "2512.19986v1",
+  "verdict": "keep",
+  "confidence": 0.9,
+  "gap": "",
+  "method": "Introduces CASP, a two-stage repair operator for cardinality-constrained portfolios: select K assets by volatility-normalized score, then project weights onto the constrained simplex under the covariance-induced (tracking-error) metric rather than the Euclidean one, and drops it into a MOGWO metaheuristic.",
+  "reason": "Explicitly Yahoo Finance: daily adjusted closes for 100 named S&P 500 constituents from 2 January 2020 to 29 November 2024 (1,237 trading days). Even the ESG overlay uses Yahoo's free governance risk fields (auditRisk, boardRisk, compensationRisk, shareHolderRightsRisk, overallRisk). Only the random-candidate seeds add noise.",
+  "data_needed": [
+   "Yahoo Finance daily adjusted close for 100 S&P 500 constituents, 2020-01-02 to 2024-11-29 (1,237 trading days); named members include AAPL, MSFT, NVDA, GOOGL, META, JNJ, UNH, LLY, PFE, JPM, BAC, GS, XOM, CVX",
+   "Yahoo Finance sustainability/governance risk fields for the same tickers (auditRisk, boardRisk, compensationRisk, shareHolderRightsRisk, overallRisk) to rebuild ESG = 0.4*G + 0.6*ES",
+   "Splits as specified: train 2020-01 to 2023-12 (1,006 days), test 2024-01 to 2024-11 (231 days); plus expanding splits train 2020-2021/test 2022 and train 2020-2022/test 2023"
+  ],
+  "reproducible_targets": [
+   "Dataset statistics that are pure free-data checks: annualized return range [-12.3%, 54.1%], annualized volatility range [22.4%, 65.5%], covariance condition number 285.0",
+   "Table 1 (500 random projections): CASP-Basic portfolio variance 0.0442 versus Euclidean baseline, a 15.7% variance reduction with p < 1e-54 (Wilcoxon signed-rank); VolNorm+Euc 0.0449 / 14.3%, MinVar+Euc 0.0399 / 23.9%, Sharpe+Euc 0.0603 / -15.1%, RA-CASP 0.0485 / 7.4%",
+   "Table 2 (train 2020-2023, test 2024): in-sample Sharpe Euclidean 1.306, VolNorm+Euc 1.338, CASP-Basic 1.347, RA-CASP 1.650, Sharpe+Euc 1.533; out-of-sample rank correlations 0.29 / 0.24 / 0.07 / 0.25 / 0.09; RA-CASP is 26.3% above Euclidean (1.650 vs 1.306, p < 0.0001)",
+   "Table 3 walk-forward mean realized Sharpe: test 2022 Euclidean -0.638, CASP-Basic -0.559, RA-CASP -0.918; test 2023 0.879 / 0.474 / 0.593; test 2024 1.306 / 1.347 / 1.650",
+   "Table 5 (15 independent MOGWO runs): best Sharpe Euclidean 0.861, CASP-Basic 0.703, RA-CASP 1.137 (32.0% above Euclidean, p = 0.0001), Sharpe+Euc 1.145; hypervolume 0.0040 / 0.0027 / 0.0142 / 0.0093"
+  ]
+ },
+ {
+  "arxiv_id": "2512.19821v1",
+  "verdict": "drop",
+  "confidence": 0.85,
+  "gap": "options surface",
+  "method": "A literature review of how practitioners choose stochastic volatility parameters (Heston, double Heston, Bates, Schobel-Zhu) for derivative pricing, including the use of stochastic volatility inside stochastic local volatility models, with one illustrative table of calibrated Heston parameters.",
+  "reason": "There is no empirical exercise of its own; the single table is an excerpt of EUR/USD implied volatilities and calibrated Heston parameters as of 16 September 2008 taken from Clark (2011). Anything reproducible here requires a historical FX implied volatility surface, which has no free source.",
+  "data_needed": [],
+  "reproducible_targets": []
+ },
+ {
+  "arxiv_id": "2512.19625v1",
+  "verdict": "drop",
+  "confidence": 0.94,
+  "gap": "options surface",
+  "method": "Part II of a pair of notes showing that different exact interpolations of FX broker quotes (ATM, 25-delta and 10-delta risk reversals and butterflies under the broker convention) imply materially different vanilla implied volatilities at the 10-delta and 25-delta puts and calls.",
+  "reason": "Every counterexample is a dated broker quote set: EUR/HKD 147-day as of 2024-01-25, EUR/TRY 1y and 2y as of 2022-11-29, USD/JPY 1y. Historical FX option broker quotes with the ATM/RR/BF structure and delta conventions are not available from any free source.",
+  "data_needed": [],
+  "reproducible_targets": []
+ },
+ {
+  "arxiv_id": "2512.19621v1",
+  "verdict": "drop",
+  "confidence": 0.94,
+  "gap": "options surface",
+  "method": "Part I of the pair: catalogues cases where popular FX smile interpolations (Malz quadratic in delta, cubic splines, exponential quartic, reduced-delta polynomials, SABR, SVI) break down, producing arbitrage, negative densities or non-monotonic delta, and prices digitals, auto-quantos and variance swaps under each.",
+  "reason": "The counterexamples are specific dated broker quote sets (AUD/NZD 7-day as of 2014-07-02, EUR/CZK 32-day as of 2019-12-16, USD/AED as of 2023-01-24, EUR/TRY as of 2022-11-29, EUR/USD 1m as of 2022-03-11). Those FX vanilla surfaces are broker/vendor data with no free equivalent.",
+  "data_needed": [],
+  "reproducible_targets": []
+ },
+ {
+  "arxiv_id": "2601.00815v1",
+  "verdict": "drop",
+  "confidence": 0.95,
+  "gap": "synthetic only",
+  "method": "Extends the Almost-Exact Simulation scheme (non-central chi-square sampling of the variance process) from European to Bermudan and American options under both the Heston and double Heston models, and benchmarks accuracy and runtime against Euler discretization inside least-squares Monte Carlo.",
+  "reason": "Pure numerical-methods work: prices are computed from simulated paths under assumed parameter sets and compared to reference prices from PDE/analytic benchmarks. No market prices or calibration to observed quotes anywhere.",
+  "data_needed": [],
+  "reproducible_targets": []
+ },
+ {
+  "arxiv_id": "2512.19611v1",
+  "verdict": "drop",
+  "confidence": 0.86,
+  "gap": "options surface",
+  "method": "Derives four estimators of the VVIX implied by a Heston model (two from the known transition density of the variance, one analytical approximation, one from the Heston PDE priced directly off SPX), and tests whether pinning vol-of-vol to the observed VVIX stabilizes calibration.",
+  "reason": "The VVIX and VIX levels are free from CBOE, but every calibration in Tables 1 and 3 is against a set of SPX vanilla option prices on a given date, and the double-replication estimator needs the VIX option strike range. Historical SPX and VIX option chains are not available free, so the calibrated parameter sets and the reported VVIX values cannot be landed on.",
+  "data_needed": [],
+  "reproducible_targets": []
+ },
+ {
+  "arxiv_id": "2512.19251v1",
+  "verdict": "keep",
+  "confidence": 0.45,
+  "gap": "",
+  "method": "Builds a daily panel of 18 major cryptocurrencies (Jan 2020 - Nov 2024) with Parkinson price risk, Amihud illiquidity, log market-cap change, a published decentralization index, Google-Trends attractiveness and a Crypto-50 realized volatility, then estimates panel EGLS (RE, FE, dynamic) testing whether institutionally backed 'HyFi-like' coins are less exposed to market-wide turbulence.",
+  "reason": "Daily OHLC and volume for all 18 coins are free on Yahoo Finance (BTC-USD, ETH-USD, SOL-USD, XRP-USD, ADA-USD, BNB-USD, CRO-USD, OKB-USD, XLM-USD, UNI-USD and the rest) and Google Trends is free, and the decentralization coefficients are printed in Table 4. Two frictions: the paper sourced everything from CoinMarketCap, and daily historical market capitalisation plus the author's Crypto-50 index need reconstruction (price times circulating supply, and a cap-weighted top-50 basket).",
+  "data_needed": [
+   "Yahoo Finance daily OHLCV, 2020-01-01 to 2024-11-24, for the 18 sampled coins listed in Table 3 (BTC, ETH, SOL, XRP, ADA, BNB, CRO, OKB, XLM, UNI and the remaining eight), 1,790 observations each; Coinbase spot as a cross-check on the majors",
+   "Daily market capitalisation for the Size variable - reconstruct as close price times circulating supply, since Yahoo does not carry historical market cap",
+   "Google Trends daily search volume per coin for the Attractiveness proxy",
+   "Decentralization index values are published in the paper's Table 4 (BTC 0.5493, ETH 0.7073, SOL 0.6454, XRP 0.6671, ADA 0.6201, BNB 0.6923, CRO 0.7304, OKB 0.6929, XLM 0.7710, UNI 0.5648) - no data pull needed",
+   "A cap-weighted top-50 crypto index for the 30-day realized market volatility, rebuilt from free per-coin prices"
+  ],
+  "reproducible_targets": [
+   "Table 9 fixed-effects: HyFi x Market Volatility coefficient -0.3422 (s.e. 0.0261, p < 0.01); dynamic FE interaction -0.2778 (0.0285)",
+   "Table 9: HyFi-like main effect -0.0091 (0.0044) in random effects and -0.0102 (0.0004) in dynamic RE; Market Volatility 0.4239 / 0.4797 / 0.3123 / 0.3728 across the four specifications",
+   "Table 9: lagged price-risk persistence phi = 0.3467 (dynamic RE) and 0.2918 (dynamic FE); adjusted R2 0.6460 / 0.6782 / 0.7149 / 0.7458; Hausman 6.4912 [p = 0.3705] static, 3434.2322 [p = 0.0000] dynamic",
+   "Text: long-run attenuation beta_INT/(1-phi) = -0.392; implied short-run slopes 0.3728 non-HyFi versus 0.0950 HyFi, long-run 0.526 versus 0.134",
+   "Table 7 descriptive statistics on 30,923 observations: mean daily price risk 0.063, median 0.049, max 1.436, min 0.003, std 0.054, skew 4.284, kurtosis 47.374"
+  ]
+ },
+ {
+  "arxiv_id": "2601.00810v1",
+  "verdict": "drop",
+  "confidence": 0.7,
+  "gap": "other",
+  "method": "Proposes an LLM-integrated real-options exit model: builds a month-by-month post-IPO information timeline for venture-backed IPO firms, prompts an LLM to recommend sell or hold at each month, and compares the LLM-implied exit dates with realized VC exit dates reconstructed from SEC ownership disclosures.",
+  "reason": "The results section is a placeholder - the paper states outright that 'the complete numerical results will be added later', so there is no return-difference claim to reproduce. It also depends on a proprietary IPO database for the 397-firm sample, and the LLM recommendations are not published. Only Table 1's descriptive exit statistics exist, and those cover just 50 firms.",
+  "data_needed": [],
+  "reproducible_targets": []
+ },
+ {
+  "arxiv_id": "2512.18918v1",
+  "verdict": "keep",
+  "confidence": 0.9,
+  "gap": "",
+  "method": "Builds a weighted network over corporate insiders from SEC Form 4 filings, with edge weights given by a symmetric same-week linear-decay temporal alignment kernel over each pair's trade dates at a shared issuer, then flags coordinated groups via centrality and OddBall egonet anomaly detection against calibrated and shuffled null models.",
+  "reason": "The entire dataset is SEC Form 4 filings pulled from EDGAR, 2014-2024, which is an explicitly free source. Every preprocessing rule is stated (drop LLC/LP/Inc institutional filers, aggregate line items by insider-issuer-direction-day, 7-day linear kernel), so the summary statistics and network topology are directly checkable.",
+  "data_needed": [
+   "SEC EDGAR Form 4 filings, Part 1 non-derivative transactions, 2014-2024 full-index bulk download (roughly 2.9 million reported trades)",
+   "Filter: remove institutional reporting owners (LLC, LP, Inc), keep individual directors, C-suite executives and >10% holders; aggregate line items sharing insider, issuer, direction and calendar day",
+   "No price data required - the method uses trade dates and directions only"
+  ],
+  "reproducible_targets": [
+   "Table 1: 70,941 insiders, 9,426 companies, 2,735,932 trades after filtering, 461,785 after daily aggregation; 1,326,228 purchases and 1,409,704 sales raw (243,640 and 218,145 aggregated); average trades per insider 38.6 raw and 6.51 aggregated",
+   "Figure 1 / text: the resulting network is sparse with 1,313 connected components",
+   "Table 4: distribution of connected components by number of companies - 93.3% span one company, 4.6% two, 0.9% three, 0.5% four, 0.3% five, 0.3% six, 0.1% seven, 0.0% eight, 0.1% nine",
+   "Table 2: observed network topology diverges from both the calibrated generative null and the quarterly constrained-shuffled null across four metrics drawn from 1,000 null replications (Figure 2)"
+  ]
+ },
+ {
+  "arxiv_id": "2512.18648v3",
+  "verdict": "drop",
+  "confidence": 0.6,
+  "gap": "non-US market",
+  "method": "Establishes a matched-filter principle for order-flow normalization (market-cap normalization for capacity-constrained institutions, trading-value normalization for volume-targeting algos), validates it with Monte Carlo, then tests it on Korean daily net-buy flow disaggregated by investor type via Fama-MacBeth cross-sectional and return-prediction regressions.",
+  "reason": "The empirical core is 2,116,122 stock-day observations of Korea Exchange net-buy value split into domestic institutional, foreign and individual investors, across 2,570 stocks 2020-2024. Yahoo carries .KS/.KQ prices but not investor-type order flow; that disclosure lives only on KRX's own portal and is outside the free-source list, so the t = 9.65 and t = 16.35 results cannot be rebuilt.",
+  "data_needed": [],
+  "reproducible_targets": []
+ },
+ {
+  "arxiv_id": "2601.00011v1",
+  "verdict": "drop",
+  "confidence": 0.78,
+  "gap": "non-US market",
+  "method": "Estimates the endogenous ultimate forward rate with Smith-Wilson and de Kort-Vellekoop-type methods plus a new optimal turning-parameter rule, forecasts the UFR with linear and nonlinear machine learning using macroeconomic predictors, and builds a UFR-based ultra-long bond yield forecasting model.",
+  "reason": "Everything is estimated on the Chinese treasury bond term structure and Chinese macroeconomic variables, December 2009 to December 2024. Chinese government bond yield curves come from ChinaBond/Wind; there is no Yahoo, FRED or Treasury source for them, and Chinese CPI/PPI series at the needed granularity are not on the free list either.",
+  "data_needed": [],
+  "reproducible_targets": []
+ },
+ {
+  "arxiv_id": "2512.17225v1",
+  "verdict": "keep",
+  "confidence": 0.85,
+  "gap": "",
+  "method": "Fits a phi^4 scalar quantum field theory with inhomogeneous couplings and explicit symmetry breaking to an ensemble of S&P 500 stock log-return series, compares its reproduction of market mean and kurtosis against a binarized Ising model, extracts finite-size scaling exponents for the learned weights and biases, and forecasts next-day price changes for AAPL, MSFT and NVDA.",
+  "reason": "All inputs are daily closing prices of S&P 500 member stocks, free from Yahoo Finance. Subset sizes (V = 20, 64, and 48/32/16 for scaling), the 250-day moving average, the reference dates and the forecast tickers are all stated, so the statistics and exponents can be recomputed end to end.",
+  "data_needed": [
+   "Yahoo Finance daily adjusted closes for S&P 500 constituents, 20 years back from 2023-01-01 (and a second run back from 2013-01-01), converted to log-returns",
+   "Specific subsets: V = 20 stocks for the market mean/kurtosis comparison spanning the 2008 crisis; V = 64 for the scaling reference, with V' = 48, 32, 16 subsets for finite-size scaling",
+   "Yahoo Finance daily closes for AAPL, MSFT and NVDA for the forecasting section (149-day conditioning window, October 2022 episode for the NVDA/MSFT conditioning experiment)"
+  ],
+  "reproducible_targets": [
+   "Scaling exponents at 01/01/2023: k_wij = -0.96(1) and k_ai = -0.81(1), with RMS of residuals reported alongside (bias RMS 0.84)",
+   "Scaling exponents at 01/01/2013 using 40/40/50 random subsets for V' = 48/32/16: k_wij = -1.11(4) and k_ai = -0.87(3), RMS of residuals 0.47 and 0.86",
+   "AAPL next-trading-day forecasting: mean absolute error 0.019 for the phi^4 result versus 0.023 for the rescaled mean prediction",
+   "Figure 6: the phi^4 MAE is lower than rolling-window linear regression for every window size up to at least 400 days; the phi^4 effective training window is 250 days",
+   "Figure 2: the 250-day moving-average market kurtosis of the real S&P 500 subset is reproduced by phi^4 but not by the binarized Ising model, with the 2008 crisis spike as the reference episode"
+  ]
+ },
+ {
+  "arxiv_id": "2512.16251v5",
+  "verdict": "keep",
+  "confidence": 0.6,
+  "gap": "",
+  "method": "Builds CB-APM, a deep asset pricing model whose hidden layer is forced through a bottleneck that must reproduce nine analyst-consensus variables, trained with a joint loss weighted by lambda, then evaluates annual out-of-sample return R2, decile and long-short portfolios, and GRS pricing tests.",
+  "reason": "Three of the four data sources are explicitly free: the Chen-Zimmermann Open Source Asset Pricing panel (114 predictors plus the nine consensus variables), FRED-MD, and the Welch-Goyal file from Goyal's site. Only stock prices and firm size come from CRSP; those can be substituted with Yahoo adjusted closes plus SEC Form 25 delisting records, at some cost in exactness for delisted names over 1994-2023.",
+  "data_needed": [
+   "Open Source Asset Pricing (Chen-Zimmermann) firm-level signal panel: 114 predictors plus the nine analyst-consensus variables (AnalystRevision, ChangeInRecommendation, ChForecastAccrual, EarningsForecastDisparity, FEPS, ForecastDispersion, REV6, AnalystValue, AOP), monthly, Jan 1994-Dec 2023",
+   "FRED-MD monthly database (115 macro predictors), same window, for the macro autoencoder embedding",
+   "Welch-Goyal file from Goyal's website for the 8 macro variables of Gu-Kelly-Xiu (2020) and the T-bill rate used to form risk premia",
+   "Monthly returns and market cap for the roughly 4,683 NYSE/Amex/Nasdaq firms: Yahoo Finance adjusted closes plus SEC Form 25 delisting filings as the free stand-in for CRSP (605,722 firm-month observations in the merged panel)",
+   "Ken French factor returns for the GRS pricing tests against canonical factor models"
+  ],
+  "reproducible_targets": [
+   "Table 1: out-of-sample annual return R2 peaks at 10.46% at lambda = 0.3 versus the lambda = 0 deep-learning benchmark at 7.63%, a 37% increase; at lambda = 1.0 it is still 9.37%",
+   "Average out-of-sample R2 of 24.21% for approximating the analyst-consensus variables; the consensus-only specification (lambda to infinity) reaches R2 = 30.30%",
+   "Long-short portfolios: mean monthly log return rises from 1.53% at lambda = 0 to 2.20% at lambda = 0.3, with annualized Sharpe going from 1.10 to 1.44",
+   "Table 3: monotonic decile spreads with high-minus-low approaching 2.3% per month for the regularized specification",
+   "Table 5: GRS tests increasingly reject canonical factor models as the consensus bottleneck tightens, i.e. the CB-APM decile portfolios are not spanned by standard factors"
+  ]
+ }
+]

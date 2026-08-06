@@ -1,0 +1,377 @@
+[
+ {
+  "arxiv_id": "2606.20079v1",
+  "verdict": "drop",
+  "confidence": 0.95,
+  "gap": "vendor data",
+  "method": "Builds EQAF, a layered unsupervised outlier-detection ensemble (robust z-score, ECDF, Hampel, rolling z, isolation forest, LOF) to flag corrupted risk-engine outputs, evaluated with an eight-scenario synthetic anomaly-injection protocol.",
+  "reason": "The entire empirical base is proprietary daily credit-derivative risk output (183 trades x 129 trading days: PV, credit deltas, P&L slices) from an unnamed global investment bank. No free source exists for internal bank risk-engine valuations.",
+  "data_needed": [],
+  "reproducible_targets": []
+ },
+ {
+  "arxiv_id": "2512.01123v1",
+  "verdict": "keep",
+  "confidence": 0.55,
+  "gap": "",
+  "method": "An LLM builds a context-specific Bayesian network per trade decision for an options 'wheel' strategy (sell puts 10% OTM, hold assignment, sell calls), populating CPTs from an 8,919-trade historical archive; backtested 2007-2025 on leveraged ETFs and mega-cap tech.",
+  "reason": "The paper states all data were sourced exclusively from the Yahoo Finance API, and every underlying (TQQQ, SOXL, UPRO, TECL, FAS, NVDA, GOOGL, AMZN, TSLA) plus every benchmark (QQQ, QYLD, PUTW) is free on Yahoo. Risk: the 8,919 option premiums are not published and Yahoo carries no historical option chains, so premiums must be reconstructed from the stated rules (10% OTM puts, 11.15% average premium rate) rather than pulled - this is the main threat to landing the exact numbers.",
+  "data_needed": [
+   "Yahoo Finance daily adjusted OHLC for TQQQ, SOXL, UPRO, TECL, FAS, NVDA, GOOGL, AMZN, TSLA, Jan 2007 - Sep 2025",
+   "Yahoo Finance daily adjusted close for QQQ, QYLD, PUTW, Jan 2020 - Sep 2025 (benchmark leg)",
+   "Option premiums reconstructed via Black-Scholes on realized vol from the same Yahoo price history (no free historical chain exists); commissions $0.65/contract + $0.10 exchange fee, min $1.00; slippage 0.15% puts / 0.12% calls"
+  ],
+  "reproducible_targets": [
+   "Table 4: average annual return 15.3% gross / 15.0% net of costs; final portfolio value $1,447,985 from $100,000 initial; total premium collected $1,915,748; 8,919 trades (475.7/yr); average premium/trade $214.79; average premium rate 11.15%; average monthly return 1.19%; 19/19 winning years",
+   "Table 4: 1,563 puts sold, 1,553 (99.4%) expired worthless, 5,803 rolled, 0 assigned",
+   "Table 7 / QQQ baseline: our Sharpe 1.08 vs QQQ 0.62; Sortino 1.45 vs 0.78; max drawdown -8.2% vs -60.0%; QQQ annual return 17.53%; certainty-equivalent return 12.8-14.1% vs QQQ 8.2-11.3%",
+   "Table 8 (2020-2025): QYLD 6.61% return, Sharpe 0.45, Sortino 0.46, max DD -24.75%; PUTW 9.03%, Sharpe 0.65, Sortino 0.66, max DD -28.40%",
+   "Table 5 crisis years: 2008 +18.6% (SPX -36.2%, QQQ -40.8%); 2018 +24.1%; 2022 +27.4% (SPX -18.2%, QQQ -32.6%)",
+   "Table 12 ablation: LLM-generated 15.3% return / Sharpe 1.08 / -8.2% DD vs random structure 9.2% / 0.67 / -18.7% vs fixed template 11.5% / 0.82 / -14.2%",
+   "Table 10: our method vs QQQ return difference -0.19%, t = -1.45, p = 0.147"
+  ]
+ },
+ {
+  "arxiv_id": "2606.19550v1",
+  "verdict": "drop",
+  "confidence": 0.97,
+  "gap": "vendor data",
+  "method": "Forms characteristic-unsorted random portfolios from a screened CRSP universe (varying selection ratio, initial weighting, holding and rebalancing), then ranks FF3/FF5/FF6/q5 by pricing error and max Sharpe across construction designs.",
+  "reason": "Requires the full daily CRSP stock file (PRC, SHROUT, VOL, delisting returns) for NYSE/AMEX/NASDAQ common stocks 1967-2024 to build the investable universe and 500 random portfolios per design. CRSP is a paid WRDS product with no free substitute at that history and survivorship quality.",
+  "data_needed": [],
+  "reproducible_targets": []
+ },
+ {
+  "arxiv_id": "2606.19517v1",
+  "verdict": "drop",
+  "confidence": 0.9,
+  "gap": "crypto derivatives",
+  "method": "Matches Polymarket BTC threshold contracts to same-strike/same-maturity listed Binance BTC calls, inverts Black-Scholes implied vol on the option mid, converts to a discounted cash-or-nothing benchmark, and tests the hourly gap between prediction-market price and option-implied probability.",
+  "reason": "Needs hourly Binance Options EOHSummary bid/ask archives for specific contracts (BTC-230929-27000-C, BTC-230901-28000-C, BTC-230901-26000-C) plus Polymarket transaction-level trade data. Neither exchange-derivative source is in the free set, and the Binance EOH archive was later discontinued.",
+  "data_needed": [],
+  "reproducible_targets": []
+ },
+ {
+  "arxiv_id": "2512.07886v1",
+  "verdict": "drop",
+  "confidence": 0.92,
+  "gap": "crypto derivatives",
+  "method": "Builds a Transaction Cost Index from Bitcoin on-chain fee data and estimates a Caner-Hansen instrumental-variable threshold regression of 30-day change in on-chain monetary velocity (L1 volume / realized cap) on network friction, 2016-2025 daily.",
+  "reason": "Every construct is on-chain: daily aggregate transaction volume, total fees, UTXO count, MVRV, realized cap, hash rate and mempool size from Blockchain.com plus Lightning node/channel data from Bitcoin Visuals. Coinbase spot price cannot substitute for on-chain network metrics.",
+  "data_needed": [],
+  "reproducible_targets": []
+ },
+ {
+  "arxiv_id": "2606.19501v2",
+  "verdict": "drop",
+  "confidence": 0.93,
+  "gap": "crypto derivatives",
+  "method": "Routes an LLM supervisory agent through a graph time-series forecaster of weekly DeFi exposure networks plus deterministic monitors and confidence gates, then scores its supervisory tickets on a six-axis benchmark against a regulator-aligned loss ground truth.",
+  "reason": "Trained and evaluated on five years of weekly DeFi protocol exposure graphs (on-chain lending/protocol linkages), which is on-chain data outside the free set. The benchmark also depends on frozen LLM decision models (Claude Opus 4.7 decisions, Opus 4.8 judge), so ticket F1 and false-intervention rates are not rerunnable as published.",
+  "data_needed": [],
+  "reproducible_targets": []
+ },
+ {
+  "arxiv_id": "2606.19318v1",
+  "verdict": "keep",
+  "confidence": 0.93,
+  "gap": "",
+  "method": "Fits a tempered modified-Jones-Faddy Skew-t distribution (derived from a capped inverse-gamma stationary variance) to empirical distributions of S&P 500 returns accumulated over tau = 20, 30, ..., 120 trading days, 1980-2025.",
+  "reason": "Uses nothing but the daily S&P 500 price series, which is free as ^GSPC on Yahoo Finance back to 1927. Every reported number is a fit statistic or empirical moment computable from that one series.",
+  "data_needed": [
+   "Yahoo Finance ^GSPC daily close, 1980-01-01 to 2025 (log returns accumulated over tau = 20,30,...,120 trading days, overlapping windows)"
+  ],
+  "reproducible_targets": [
+   "Table 1 fitted parameters, tau=20: beta_l 1.658, beta_g 2.229, alpha 9.079e-5, kappa_1 0.009273, mu 0.01565",
+   "Table 1 fitted parameters, tau=120: beta_l 1.670, beta_g 2.539, alpha 9.270e-5, kappa_1 0.008374, mu 0.05405",
+   "Table 1: beta_l stays near 1.52-1.68 and beta_g rises from ~2.23 to ~2.54 as tau goes 20 -> 120",
+   "Table 3 empirical vs fitted mean m1: tau=20 0.000772 vs 0.00116; tau=60 0.00240 vs 0.00217; tau=120 0.00488 vs 0.00460",
+   "Table 3 empirical vs fitted variance m2: tau=20 0.00206 vs 0.00228; tau=60 0.00570 vs 0.00666; tau=120 0.0115 vs 0.0136 (near-linear in tau)",
+   "Table 4 first Pearson skewness zeta_1 (data vs fit): tau=20 -0.2565 vs -0.1551; tau=60 -0.1392 vs -0.2068; tau=120 -0.1468 vs -0.2080",
+   "Table 4 Fisher-Pearson skewness for the fitted distribution: -4.20 (tau=20) to -4.95 (tau=120), with -12.29 at tau=50",
+   "Figure 2/3: gain-side CCDF shows power-law behaviour that bends (tempers) toward a finite tail cut-off as tau increases"
+  ]
+ },
+ {
+  "arxiv_id": "2512.00916v1",
+  "verdict": "drop",
+  "confidence": 0.9,
+  "gap": "out of scope",
+  "method": "Derives a family of rare-event-stable (RES) classification metrics whose optimal thresholds stay interior as prevalence goes to zero, then contrasts them against F1/MCC/balanced accuracy in simulations (prevalence 1e-2 to 1e-6) and one credit-default application.",
+  "reason": "Real data is used, but it is the Kaggle 'Give Me Some Credit' consumer-credit dataset (45,000 obs, 2,986 defaults, prevalence 6.64%), not market data. The rest of the evidence is pure simulation. Free to obtain, but out of the archive's market-data scope.",
+  "data_needed": [],
+  "reproducible_targets": []
+ },
+ {
+  "arxiv_id": "2606.19052v1",
+  "verdict": "drop",
+  "confidence": 0.96,
+  "gap": "synthetic only",
+  "method": "Couples a loan-production simulator (volume, principal, interest rate, term distributions) with a four-state multistate credit-risk model (performing/default/settled/write-off) to forecast portfolio default and loss rates under Monte Carlo stress scenarios.",
+  "reason": "The authors state explicitly that the illustration is simulation-based; every loan, transition matrix and stress parameter is drawn from assumed distributions. No real portfolio is used anywhere in the paper.",
+  "data_needed": [],
+  "reproducible_targets": []
+ },
+ {
+  "arxiv_id": "2606.19038v1",
+  "verdict": "drop",
+  "confidence": 0.98,
+  "gap": "pure theory",
+  "method": "Extends collective pricing-hedging duality to the case where admissible risk exchanges form a finitely generated convex cone: proves a collective First FTAP, a closedness result for the aggregate feasibility cone, openness of the no-collective-arbitrage price set, and an enhanced collective Second FTAP.",
+  "reason": "A theorem paper in discrete-time mathematical finance. The only figure is a stylised binomial-style stock tree used in a worked example; no dataset of any kind.",
+  "data_needed": [],
+  "reproducible_targets": []
+ },
+ {
+  "arxiv_id": "2512.00830v3",
+  "verdict": "drop",
+  "confidence": 0.98,
+  "gap": "pure theory",
+  "method": "Characterises in closed form all deterministic intra-personal equilibrium strategies for continuous-time portfolio selection under a general random-risk-aversion distribution, establishes existence/uniqueness of the initial-time-optimal equilibrium, and gives comparative statics via two-point counterexamples.",
+  "reason": "Entirely analytical: Black-Scholes market, assumed RRA distributions, and two figures plotting closed-form solutions. No dataset.",
+  "data_needed": [],
+  "reproducible_targets": []
+ },
+ {
+  "arxiv_id": "2606.18545v1",
+  "verdict": "drop",
+  "confidence": 0.88,
+  "gap": "synthetic only",
+  "method": "Identifies the cumulative accuracy profile slope as Bayes' theorem in cumulative coordinates, deriving the standardized PD, weight of evidence, Somers' D and a calibration decomposition from it, then illustrates with a five-band example and a KDE limit check.",
+  "reason": "Both illustrations are invented: a 115-borrower / 20-defaulter running example and a simulated draw of n = 8,000 scores with logistic truth (beta0 = -1.3, beta1 = 1.1). No real dataset, and no market data at all.",
+  "data_needed": [],
+  "reproducible_targets": []
+ },
+ {
+  "arxiv_id": "2606.17545v1",
+  "verdict": "drop",
+  "confidence": 0.96,
+  "gap": "synthetic only",
+  "method": "Introduces CARLOS, a reinforcement-learning optimal-stopping solver that aggregates time-discretized stopping rules into one deep network and progressively halves the exercise step, benchmarked against LSMC and PDE prices on seven Bermudan/American contracts.",
+  "reason": "All seven benchmark contracts (1-D put, basket put, max call) are priced on simulated GBM paths with specified parameters; the comparison targets are PDE and Monte Carlo reference prices, not market quotes. No real price series enters the paper.",
+  "data_needed": [],
+  "reproducible_targets": []
+ },
+ {
+  "arxiv_id": "2512.00448v2",
+  "verdict": "drop",
+  "confidence": 0.95,
+  "gap": "synthetic only",
+  "method": "Proposes a modified-sum-of-exponentials Monte Carlo scheme for the rough Bergomi model with linear online complexity, and a Wasserstein-1 distributional-matching calibration compared against MSE calibration on implied-vol surfaces and barrier options.",
+  "reason": "Calibration is evaluated against a known ground-truth parameter set theta_true with model-generated surfaces, and accuracy is measured against Cholesky-exact simulation. The 'market-implied' surfaces are synthetic; no real option chain is used.",
+  "data_needed": [],
+  "reproducible_targets": []
+ },
+ {
+  "arxiv_id": "2606.17383v1",
+  "verdict": "keep",
+  "confidence": 0.55,
+  "gap": "",
+  "method": "Casts an agentic AI portfolio manager as a POMDP: an LLM acts as an approximate Bayesian filter inferring five latent market regimes (AI Boom, Soft Landing, Inflation Shock, Recession, Crisis) from market and macro information, feeding belief-conditioned views into a Black-Litterman long-only monthly-rebalanced portfolio, validated by performance, calibration, coverage, ablation and sensitivity tests.",
+  "reason": "The underlying data is free: liquid US ETFs (SPY and TLT are named explicitly for the 60/40 benchmark, with a tech-heavy equity sleeve) plus macro series from FRED, over roughly Jan 2025 - Jun 2026. Blocker risk is that the LLM-inferred posterior beliefs are not published as a series, so the POMDP rows can only be approximately reproduced; the Equal Weight, Risk Parity, 60/40 and Max Sharpe benchmark rows are exactly reproducible from free prices.",
+  "data_needed": [
+   "Yahoo Finance daily adjusted close for the ETF sleeve including SPY and TLT (plus the tech-equity sleeve implied by the text), Jan 2024 - Jun 2026 (252-day lookback before a Jan 2025 start)",
+   "FRED macro series used as agent observations (rates, inflation, credit spreads) over the same window",
+   "An LLM to regenerate the five-regime posterior probability vectors; beliefs are shown only as a plot (Figure 1), not tabulated"
+  ],
+  "reproducible_targets": [
+   "Table 2: Forecasting POMDP CAGR 0.1587, vol 0.1092, Sharpe 1.6811, Sortino 1.3514, max DD -0.0782, Calmar 2.0296, terminal wealth 1.2320",
+   "Table 2: POMDP Utility CAGR 0.1818, vol 0.1234, Sharpe 1.4977, Sortino 1.7901, max DD -0.1011, Calmar 1.7993, terminal wealth 1.2670",
+   "Table 2 benchmarks (exactly reproducible from free prices): Equal Weight and Risk Parity both CAGR 0.2307, vol 0.1754, Sharpe 1.2587, Sortino 2.4743, max DD -0.1180, Calmar 1.9545, terminal wealth 1.3419; 60/40 SPY/TLT CAGR 0.1145, vol 0.1380, Sharpe 0.9494, max DD -0.1065; Max Sharpe CAGR 0.1013, vol 0.1512, Sharpe 0.8698, max DD -0.1389",
+   "Table 1 parameters: 252-day lookback, 21-day holding, monthly rebalance, risk aversion 3.50, max asset weight 0.35, prior shrinkage 0.25, view weight 0.65, long-only fully invested",
+   "Table 6 sensitivity: base Sharpe 1.681; risk aversion 2.0 -> 1.749, 5.0 -> 1.643; view weight 0.40 -> 1.582, 0.80 -> 1.743; prior shrinkage 0.10 -> 1.692, 0.50 -> 1.663",
+   "Table 4 belief calibration (mean posterior vs realized): AI Boom 0.074 vs 0.278; Soft Landing 0.075 vs 0.222; Inflation Shock 0.165 vs 0.167; Recession 0.136 vs 0.000; Crisis 0.550 vs 0.333",
+   "Figure 1: Crisis-state posterior peaks near 0.95 around May 2025 (tariff uncertainty) and falls to ~0.20-0.45 by mid-2026"
+  ]
+ },
+ {
+  "arxiv_id": "2606.17032v1",
+  "verdict": "drop",
+  "confidence": 0.7,
+  "gap": "pure theory",
+  "method": "Derives explicit closed-form optimal weights for option portfolios that maximize the Sharpe ratio and the return-to-VaR ratio when the underlying returns follow a skew-elliptical t-distribution, using a delta-gamma approximation to the portfolio return distribution.",
+  "reason": "The contribution is analytic formulas; the paper reports only 'numerical experiments' under assumed distribution parameters, with no tables, figure pages or data section extracted. There is no indication any real price or option series is used.",
+  "data_needed": [],
+  "reproducible_targets": []
+ },
+ {
+  "arxiv_id": "2512.00299v2",
+  "verdict": "drop",
+  "confidence": 0.9,
+  "gap": "synthetic only",
+  "method": "Solves S-shaped (non-concave) utility maximization under first-order stochastic-dominance constraints in closed form, proposes a Poor-Performance-Region algorithm for the second-order case, and adds an algorithm-guided piecewise neural network to learn SSD solutions.",
+  "reason": "All evaluation is on constructed pricing-kernel and benchmark-quantile settings with tabulated parameter values (Tables 1, 3, 5-9); the benchmark wealth distribution Q0 is specified, not estimated from data. No market series anywhere.",
+  "data_needed": [],
+  "reproducible_targets": []
+ },
+ {
+  "arxiv_id": "2606.16961v1",
+  "verdict": "drop",
+  "confidence": 0.94,
+  "gap": "options surface",
+  "method": "Trains a convolutional VAE on 6,034 fully-filled hourly Binance BTC/ETH implied-vol surfaces gridded to 6 tenors x 7 deltas, and pairs it with a quadratic smile re-fit via a per-tenor routing rule for surface completion under random and structured masking.",
+  "reason": "Requires the Binance Options end-of-hour summary archive (full option chains with bid/ask, OI, venue IVs) for 18 May - 23 Oct 2023. That is historical option-chain / IV-surface data, is not in the free set, and the publisher discontinued the archive after October 2023.",
+  "data_needed": [],
+  "reproducible_targets": []
+ },
+ {
+  "arxiv_id": "2606.16840v1",
+  "verdict": "keep",
+  "confidence": 0.95,
+  "gap": "",
+  "method": "Filters daily log returns of the thirteen largest cryptocurrencies with AR(1)-GJR-GARCH(1,1)-t, transforms residuals to Pareto margins, and fits Husler-Reiss graphical extremes models separately to the lower and upper tails over 89 overlapping 750-day windows (15-day steps), benchmarked against a Bayesian Gaussian graphical model.",
+  "reason": "The paper states outright that all daily price series are publicly available from Yahoo Finance, and publishes the code at github.com/manueleleonelli/HR_crypto. All thirteen tickers (BTC-USD, ETH-USD, LTC-USD, DOGE-USD, SOL-USD, ADA-USD, AVAX-USD, XRP-USD, XLM-USD, TRX-USD, BNB-USD, LINK-USD, DOT-USD) are free.",
+  "data_needed": [
+   "Yahoo Finance daily adjusted close for BTC-USD, LTC-USD, DOGE-USD, ETH-USD, SOL-USD, ADA-USD, AVAX-USD, XRP-USD, XLM-USD, TRX-USD, BNB-USD, LINK-USD, DOT-USD, 2020-10-01 to 2026-06-14",
+   "Coinbase spot as a cross-check for the same thirteen pairs over the same window"
+  ],
+  "reproducible_targets": [
+   "Section 4.1: both extremal graphs have edge density close to 0.87; the average asset is directly linked to between ten and eleven of the other twelve in either tail; global transitivity near 0.87; graph diameter equals 2 in every one of the 89 windows",
+   "Design constants a replication must hit: 89 overlapping windows of 750 days advanced in 15-day steps, exceedance threshold p = 0.20, mid-points spanning late 2021 to 2025",
+   "Figure 1 (lower tail): Bitcoin's pairwise extremal correlation chi-hat with ETH runs ~0.78-0.81, with DOGE ~0.70-0.75, and with SOL falls from ~0.75 (2022) to ~0.60 (2025)",
+   "Figure 1 (upper tail): Bitcoin-ETH chi-hat ~0.66-0.76, and BTC-DOGE rises from ~0.60 (2022) to ~0.71 (2025) while BTC-TRX falls to ~0.54, i.e. the upper tail thins while the lower tail stays near-complete",
+   "Robustness: the structural findings hold at thresholds p = 0.10 and 0.15 and at window lengths 500, 750 and 1000 days"
+  ]
+ },
+ {
+  "arxiv_id": "2512.00280v2",
+  "verdict": "drop",
+  "confidence": 0.95,
+  "gap": "vendor data",
+  "method": "Splits StockTwits retail activity (2010-2021) into long- and short-horizon cohorts using self-reported holding periods, then measures differential immediate reactions and post-earnings-announcement drift, plus a zero-cost long-horizon-minus-short-horizon strategy.",
+  "reason": "Earnings surprises are built from I/B/E/S actuals and consensus forecasts, and returns, market cap, volume and the value-weighted market index all come from CRSP; controls include institutional ownership and abnormal short interest. I/B/E/S and CRSP are paid WRDS feeds, and the StockTwits self-reported-horizon panel is not public either.",
+  "data_needed": [],
+  "reproducible_targets": []
+ },
+ {
+  "arxiv_id": "2606.16493v1",
+  "verdict": "drop",
+  "confidence": 0.97,
+  "gap": "pure theory",
+  "method": "Solves a continuous-time CARA principal-agent model in which a risk-averse producer facing demand and production risk chooses between in-house production and delegation under moral hazard while hedging output with a rational market maker, jointly characterizing production, compensation and static hedging in equilibrium.",
+  "reason": "Analytical model with comparative statics; the numerical section only plots closed-form equilibrium quantities against the agent's risk-aversion parameter for a table of assumed parameter values. No dataset.",
+  "data_needed": [],
+  "reproducible_targets": []
+ },
+ {
+  "arxiv_id": "2511.22782v1",
+  "verdict": "drop",
+  "confidence": 0.6,
+  "gap": "other",
+  "method": "Estimates ARDL and error-correction models of weekly log prices for Bitcoin, Ethereum, Dash, Litecoin and Monero (2010-2018) on a self-built market-cap-weighted Crypto 50 index (price, volume, high-low volatility), Google-search attractiveness, and controls for S&P 500, EUR/USD, US rates and gold.",
+  "reason": "Three of the required inputs fall outside the free set: the CRX50 index needs historical market caps, volumes and high-low prices for the top 50 coins from CoinMarketCap; the attractiveness regressor needs Google Trends; and pre-2014 Bitcoin/Litecoin weekly prices come from BitInfoCharts, before Yahoo's BTC-USD (Sept 2014) and Coinbase history begin. Only S&P 500, EUR/USD and gold are directly available free, so the reported long-run and short-run coefficients cannot be landed.",
+  "data_needed": [],
+  "reproducible_targets": []
+ },
+ {
+  "arxiv_id": "2606.15701v1",
+  "verdict": "keep",
+  "confidence": 0.78,
+  "gap": "",
+  "method": "Modifies a Transformer encoder-decoder for one-step-ahead daily index forecasting, adds cosine-annealing-with-warmup scheduling and a Shifted Data Augmentation scheme, and sweeps dropout, heads/dimensions, sequence length and activation on VN30 and S&P 500 daily closes 2009-2025 with an 85/15 chronological split.",
+  "reason": "The S&P 500 half is fully reproducible from ^GSPC on Yahoo Finance with a z-scored 85/15 chronological split and a sliding window. VN30 is the weaker leg: Yahoo's Vietnamese index coverage is patchy, so the VN30 tables may need an alternative free feed, but the entire S&P 500 experiment set (Tables 3, 5, 7, 9, 10, 11) stands on its own.",
+  "data_needed": [
+   "Yahoo Finance ^GSPC daily close, 2009-01-01 to 2025-12-31, z-scored on the first 85% of observations",
+   "VN30 index daily close over the same window (Ho Chi Minh Stock Exchange; free coverage uncertain on Yahoo, so this leg may be partially blocked)"
+  ],
+  "reproducible_targets": [
+   "Table 7 (S&P 500, modified Transformer + cosine annealing + SDA, best row): MAE 122.2 (21.5), RMSE 189.4 (35.6), MAPE 2.00% (0.33) at dropout/SDA parameter 0.9; ReLU variant MAE 181.6, RMSE 272.1, MAPE 2.96%",
+   "Table 6 (VN30, same configuration): MAE 17.45 (2.31), RMSE 24.18 (2.75), MAPE 1.23% (0.16); ReLU variant MAE 30.74, RMSE 48.01, MAPE 2.00%",
+   "Table 3 (S&P 500 baseline Transformer): best MAE 422.5 (41.1), RMSE 600.9 (56.2), MAPE 6.87% (0.65)",
+   "Table 2 (VN30 baseline Transformer): best MAE 42.24 (3.74), RMSE 78.70 (6.33), MAPE 2.55% (0.26)",
+   "Table 5 (S&P 500 modified Transformer, no SDA): MAE 230.1 (35.8), RMSE 315.2 (48.0), MAPE 3.76% (0.58) at 16 heads / d=8",
+   "Table 4 (VN30 modified Transformer, no SDA): MAE 22.13 (1.66), RMSE 39.24 (3.74), MAPE 1.37% (0.09) at 16 heads / d=8",
+   "Ordering claims: cosine annealing beats the generalized inverse-power scheduler on both datasets, and SDA cuts both the error and the across-seed standard deviation over 10 independent runs"
+  ]
+ },
+ {
+  "arxiv_id": "2606.15502v1",
+  "verdict": "drop",
+  "confidence": 0.96,
+  "gap": "synthetic only",
+  "method": "Trains a Mixture Density Network to map GJR-GARCH parameters and maturity to the terminal return density as a Gaussian mixture, so prices and Greeks follow in closed form, with a CDF-matching loss and a distribution-free Monte Carlo noise floor sqrt(1/(6N)) that decomposes out-of-sample error into four terms.",
+  "reason": "Training targets are Monte Carlo CDFs generated from the GJR-GARCH model itself over a Sobol-sampled parameter space; the accuracy claim (out-of-sample CDF error 1.4e-4, within 10% of the noise floor) is measured against simulation, not market prices. No real data.",
+  "data_needed": [],
+  "reproducible_targets": []
+ },
+ {
+  "arxiv_id": "2511.22766v1",
+  "verdict": "drop",
+  "confidence": 0.92,
+  "gap": "synthetic only",
+  "method": "Models market-maker delta-neutral hedging with beta-normalized shock perception, derives a stability condition for the onset of a gamma squeeze, and simulates recursive price trajectories under deterministic shocks, stochastic feedback with cumulative decay, and synthetic option-arrival processes.",
+  "reason": "GameStop and AMC are cited only as motivation. Every figure is a simulated trajectory from the model's own recursion with assumed parameters (Figure 7 explicitly uses synthetic option arrivals). No real price, option or dealer-positioning series is analysed.",
+  "data_needed": [],
+  "reproducible_targets": []
+ },
+ {
+  "arxiv_id": "2606.15473v1",
+  "verdict": "keep",
+  "confidence": 0.68,
+  "gap": "",
+  "method": "Represents an agentic AI system as a POMDP in which an LLM returns a schema-constrained probability vector over four latent regimes (Risk-on, Neutral, Risk-off, Crisis), tempered by eta and passed through a Bayesian filter; posterior entropy, belief drift and rolling 95% CVaR combine into a Belief-at-Risk measure, and beliefs map to portfolio exposures of +1 / +0.5 / -0.5 / -1.",
+  "reason": "Table 1 names the entire universe: AAPL, MSFT, GOOGL, AMZN, JPM and SPY, daily adjusted close, 2021-01-01 to 2025-12-31. Massive.com is only the API wrapper - these are standard split/dividend-adjusted closes, free on Yahoo. Risk: the LLM regime probability series is not published, so Table 2 posterior statistics and the BaR path require regenerating LLM outputs; the CVaR and exposure mechanics are deterministic given beliefs.",
+  "data_needed": [
+   "Yahoo Finance daily adjusted close for AAPL, MSFT, GOOGL, AMZN, JPM, SPY, 2021-01-01 to 2025-12-31",
+   "An LLM returning a 4-simplex regime probability vector per day (Risk-on / Neutral / Risk-off / Crisis) with tempering parameter eta; transition prior P diagonally dominant, b0 = (0.25, 0.25, 0.25, 0.25), filter floor 1e-12"
+  ],
+  "reproducible_targets": [
+   "Table 1 specification: K = 4 regimes, rolling CVaR window W = 60 trading days, alpha = 95%, exposures w(RO)=1, w(N)=0.5, w(RF)=-0.5, w(C)=-1",
+   "Table 2: Neutral posterior mean 0.748, sd 0.271, min 0.0674, max 0.948, occupancy frequency 0.84; Risk-off mean 0.089, sd 0.162, min 0.000431, max 0.688, frequency 0.0781",
+   "Figure 3: Belief-at-Risk peaks at roughly 0.030-0.032 during the March-June 2025 tariff/trade shock, against a baseline of about 0.003-0.005 in late 2024 and again after September 2025",
+   "Figure 3 event alignment: local BaR spikes at the yen carry unwind, US election, tariff/trade policy shock, Israel-Iran escalation, FOMC caution and the US trade window",
+   "Table 3: out-of-sample performance diagnostics for the belief-state portfolio over 2021-2025 (CVaR-based downside consequence of acting on the inferred belief state)"
+  ]
+ },
+ {
+  "arxiv_id": "2606.15452v1",
+  "verdict": "drop",
+  "confidence": 0.85,
+  "gap": "other",
+  "method": "PHINN, a flow-matching generative model for rare-event time series conditioned on dynamic Betti curves with a persistence-landscape loss, evaluated on 157 labelled rare events across finance, shipping AIS, enterprise ERP and epidemiology against jump-diffusion, EVT-GARCH, diffusion and topology baselines.",
+  "reason": "The headline Table 2 pools 54 financial events with 103 multi-modal events, of which the ERP-Disruption subset (62 events) is anonymised Fortune-500 data held under NDA. The 54 financial events are never enumerated (equity crashes, crypto flash crashes, FX shocks, fixed-income dislocations), and the operational study rests on a six-person expert panel that cannot be rerun. The published numbers are therefore unreachable even though free equity and FX prices exist.",
+  "data_needed": [],
+  "reproducible_targets": []
+ },
+ {
+  "arxiv_id": "2511.21873v1",
+  "verdict": "keep",
+  "confidence": 0.82,
+  "gap": "",
+  "method": "Applies an A3T-GCN (attention temporal graph convolutional network) to forecast next-day closing prices of 79 FTSE 100 constituents, with node features RSI, MACD, normalized and log returns and annualized log returns over 1W/2W/1M/2M windows, and graphs built from sector classification plus Pearson correlation of returns.",
+  "reason": "Everything needed is free: FTSE 100 constituent daily OHLCV is on Yahoo Finance under .L tickers, and the winning graph construction is Pearson correlation of returns, so the fundamental-ratio route (which would need financial statements) is not on the critical path. Risk is only the exact 79-name constituent list and the 375,329-observation panel alignment.",
+  "data_needed": [
+   "Yahoo Finance daily OHLCV for 79 FTSE 100 constituents (.L tickers), 2007-2024, approx. 375,329 observations / 4,751 daily observations per name",
+   "London Stock Exchange 25-industry sector classification for the sector-based graph edges (free from LSE / Yahoo profile sector fields)",
+   "Derived node features computed from the same prices: RSI, MACD, normalized returns, log returns, ALR1W, ALR2W, ALR1M, ALR2M"
+  ],
+  "reproducible_targets": [
+   "Table 4 Primary (5-day sequence, 1-day horizon): MAE 0.0441, MSE 0.0044, RMSE 0.0660, MRE 3.46%",
+   "Table 4 Version 4 (5SL8D): MAE 0.1227, MSE 0.0288, RMSE 0.1698, MRE 11.67% - roughly triple the 1-day MAE/RMSE and nine times the MSE",
+   "Table 4 Version 5 (30SL1D): MAE 0.0512, MSE 0.0051, RMSE 0.0712, MRE 4.86%, i.e. worse than the 5-day sequence at the 1-day horizon",
+   "Table 4 Version 8 (30SL8D): MAE 0.0850, MSE 0.0139, RMSE 0.1179, MRE 8.09%; the 30-length model overtakes the 5-length model from a 3-day horizon onward",
+   "Table 3 one-sample t-test, Pearson-on-returns graph vs Spearman-on-fundamental-ratios graph: mean squared-error difference -0.0008468, t = -18.5332, p = 1.110e-76, 95% CI [-0.0009364, -0.0007573]",
+   "Ablation: removing the ALR features destroys the 5-day sequence's advantage over the 30-day sequence; ALR adds ~3:03 min compute vs ~6:48 min for extending the sequence to 30"
+  ]
+ },
+ {
+  "arxiv_id": "2606.14386v1",
+  "verdict": "drop",
+  "confidence": 0.6,
+  "gap": "non-US market",
+  "method": "Poses a Search Compression Hypothesis for LLM-hybrid discovery - non-local proposals help only under spectral compression, orthogonal escape and residual signal alignment - proves each condition necessary, and tests it on synthetic compression sweeps, an A-share factor archive, and LLM-SRBench symbolic regression.",
+  "reason": "The only real-market evidence is a factor archive over 5,647 Chinese A-share stocks 2010-2026, including volume-centric factors, ICIR rankings and risk-neutralized OOS 2022-2026 performance. A survivorship-complete A-share cross-section of that size with point-in-time volume and fundamentals has no free source; Yahoo's .SS/.SZ coverage is partial and drops delisted names. The remaining evidence is synthetic sweeps and an LLM benchmark.",
+  "data_needed": [],
+  "reproducible_targets": []
+ },
+ {
+  "arxiv_id": "2606.13992v1",
+  "verdict": "drop",
+  "confidence": 0.97,
+  "gap": "pure theory",
+  "method": "Constructs a lifted local Lie groupoid with an R+-central extension for the Heston model, showing that the coordinate representation yields the Heston pricing operator while the momentum representation with a higher polarization yields the Riccati transport behind the affine transform, plus a Mellin pricing representation.",
+  "reason": "A differential-geometry paper that explicitly says it does not propose a new pricing formula. The only numerical content is a consistency check of the Mellin representation against the standard semi-analytic Heston formula at assumed parameters. No market data.",
+  "data_needed": [],
+  "reproducible_targets": []
+ }
+]

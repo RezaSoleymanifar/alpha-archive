@@ -88,7 +88,13 @@ def main() -> None:
                     "confidence": r.get("confidence"),
                     "method": r.get("method"),
                     "reason": r.get("reason"),
-                    "gap": classify(r.get("reason", "")) if r.get("verdict") == "drop" else "",
+                    # The judgement states its own gap. Re-deriving one from the
+                    # prose overwrote it, and collapsed every reason the regex
+                    # had no pattern for — "out of scope", "live protocol" —
+                    # into "other". classify() is only the fallback now, for the
+                    # first ten batches which predate the field.
+                    "gap": (r.get("gap") or classify(r.get("reason", "")))
+                    if r.get("verdict") == "drop" else "",
                     "data_needed": r.get("data_needed", []),
                     "reproducible_targets": r.get("reproducible_targets", []),
                     "judged_at": datetime.now(timezone.utc).strftime("%Y-%m-%d"),
