@@ -32,17 +32,16 @@ a:hover{text-decoration:underline}
 /* ------------------------------------------------------------------- nav */
 .topbar{background:var(--nav);border-bottom:1px solid var(--line)}
 .topbar .wrap{display:flex;align-items:center;gap:26px;height:66px}
-.brand{display:flex;align-items:center;gap:10px;font-family:var(--serif);
+.brand{display:flex;align-items:baseline;gap:3px;font-family:var(--serif);
   font-size:21px;font-weight:500;white-space:nowrap}
 .brand:hover{text-decoration:none}
-.brand .mark{width:22px;height:22px;border:2px solid var(--ink);border-radius:3px;
-  display:flex;align-items:center;justify-content:center}
-.brand .mark i{width:8px;height:8px;background:var(--ink);border-radius:1px;font-style:normal}
-.brand .a{color:var(--alpha);font-style:italic;animation:pulse 3.4s ease-in-out infinite;
-  text-shadow:0 0 14px var(--alphaglow)}
+.brand .a{color:var(--alpha);font-style:italic;font-size:1.95em;line-height:.7;
+  animation:pulse 3.4s ease-in-out infinite;
+  text-shadow:0 0 18px var(--alphaglow),0 0 44px var(--alphaglow)}
 @keyframes pulse{
-  0%,100%{opacity:1;text-shadow:0 0 16px var(--alphaglow),0 0 34px var(--alphaglow)}
-  50%{opacity:.6;text-shadow:0 0 4px transparent}}
+  0%,100%{text-shadow:0 0 20px var(--alphaglow),0 0 46px var(--alphaglow),
+                      0 0 78px var(--alphaglow)}
+  50%{text-shadow:0 0 10px var(--alphaglow),0 0 22px var(--alphaglow)}}
 @media (prefers-reduced-motion:reduce){.brand .a{animation:none}}
 .nlinks{display:flex;gap:24px;font-size:14px}
 .nlinks a{color:var(--soft);padding:4px 0}
@@ -210,8 +209,7 @@ footer a{margin-right:18px;color:var(--soft)}
 
 <nav class="topbar">
   <div class="wrap">
-    <a class="brand" href="./"><span class="mark"><i></i></span>
-      <span class="a">&alpha;</span>-Archive</a>
+    <a class="brand" href="./"><span class="a">&alpha;</span>-Archive</a>
     <div class="nlinks">
       <a class="on" href="./">Trending</a>
       <a href="https://github.com/RezaSoleymanifar/alpha-archive/blob/main/docs/selection.md">Selection</a>
@@ -233,7 +231,6 @@ footer a{margin-right:18px;color:var(--soft)}
   </div>
 </nav>
 
-<div class="strip"><b>2 of 96 rebuilt so far.</b> Every paper here has been read in full and its data traced to a free source. Nothing else has been run yet, and the scores below are judgements about what is reproducible, not results &mdash; <a href="https://github.com/RezaSoleymanifar/alpha-archive/blob/main/docs/selection.md">how they were chosen</a></div>
 
 <div class="wrap">
   <div class="head">
