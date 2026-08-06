@@ -1,4 +1,8 @@
-"""Generate docs/index.html — an index of finance papers, replicated where we can.
+"""Generate docs/index.html — a citation leaderboard for quant finance research.
+
+Papers are ranked by citations inside a publication-date window: 30 days, 12
+months, 5 years, all time. Every window ships in the page, so switching one is
+a filter in the DOM rather than a request.
 
 Layout follows the reference (huggingface.co/papers, successor to Papers With
 Code): first-page thumbnail flush on the left, title and truncated abstract in
@@ -6,9 +10,11 @@ the middle, stacked actions on the right. Dark and light both supported —
 the reference follows the reader's system theme, and rendering light against
 its dark is most of why a copy reads as a copy.
 
-Two sources feed it. data/replications/*.json are papers we have actually run
-and carry results. data/papers/arxiv.json is the recent q-fin listing: those
-are queued, carry no results, and every card says so.
+Two sources feed it. data/papers/papers.json is the indexed universe — arXiv
+q-fin on one side, the journals, SSRN and NBER on the other, with citation
+counts from OpenAlex. data/replications/*.json are the few we have actually
+run; those carry a result and a Code link, and everything else says plainly
+that it has neither.
 
     uv run python tools/build_site.py
 """
@@ -19,7 +25,9 @@ import glob
 import html
 import json
 import os
+import re
 import sys
+from datetime import datetime, timedelta, timezone
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 
@@ -85,11 +93,43 @@ def load_replications() -> list[dict]:
 
 
 def load_queue() -> list[dict]:
-    path = os.path.join(ROOT, "data", "papers", "arxiv.json")
+    for name in ("papers.json", "arxiv.json"):
+        path = os.path.join(ROOT, "data", "papers", name)
+        if os.path.exists(path):
+            with open(path, encoding="utf-8") as fh:
+                return json.load(fh).get("papers", [])
+    return []
+
+
+def load_osap() -> list[dict]:
+    """OSAP predictors: the canon, as implementable specs rather than PDFs."""
+    path = os.path.join(ROOT, "data", "papers", "osap.json")
     if not os.path.exists(path):
         return []
     with open(path, encoding="utf-8") as fh:
-        return json.load(fh).get("papers", [])
+        return json.load(fh).get("predictors", [])
+
+
+def load_citations() -> dict[str, int]:
+    """Citation counts for the replicated papers, refreshed by fetch_papers."""
+    path = os.path.join(ROOT, "data", "papers", "citations.json")
+    if not os.path.exists(path):
+        return {}
+    with open(path, encoding="utf-8") as fh:
+        return json.load(fh).get("citations", {})
+
+
+def per_month(citations: int, published: str) -> float:
+    """Citations a month since publication — the only fair way to compare a
+    paper from last quarter with one from 1993."""
+    from datetime import datetime, timezone
+    text = published if len(published) >= 10 else f"{published[:4]}-01-01"
+    try:
+        when = datetime.strptime(text[:10], "%Y-%m-%d").replace(tzinfo=timezone.utc)
+    except ValueError:
+        return 0.0
+    months = max((datetime.now(timezone.utc) - when).days / 30.44, 1.0)
+    return round(citations / months, 2)
 
 
 def status_of(rec: dict) -> tuple[str, str]:
@@ -169,44 +209,148 @@ def detail(rec: dict) -> str:
             f"<h4>Sample limits</h4><ul>{caveats}</ul>")
 
 
+def tag_class(tag: str) -> str:
+    """Stable colour per tag, so a reader learns the palette."""
+    palette = ["t-green", "t-blue", "t-pink", "t-purple", "t-amber", "t-teal"]
+    return palette[sum(ord(c) for c in tag) % len(palette)]
+
+
 def card(*, thumb_html: str, title: str, url: str, abstract: str, venue: str,
          authors: str, date: str, tags: list[str], status: tuple[str, str],
-         actions: list[tuple[str, str]], body: str = "", search: str = "") -> str:
-    e = html.escape
+         actions: list[tuple[str, str]], citations: int = 0, per_month: float = 0.0,
+         percentile: float = 0.0, top1: bool = False, influential: int = 0,
+         open_access: bool = False, spec_tstat: str = "",
+         body: str = "", search: str = "") -> str:
+    def e(text: str) -> str:
+        return html.escape(html.unescape(str(text)))
+
     label, cls = status
-    tagrow = "".join(f'<a class="tag" href="#" data-tag="{e(t)}">{e(t)}</a>' for t in tags)
-    acts = "".join(
-        f'<a class="act" href="{href}">{e(text)}</a>' if href
-        else f'<span class="act st {cls}">{e(text)}</span>'
-        for text, href in actions)
+    tagrow = "".join(
+        f'<a class="tag {tag_class(t)}" href="#" data-tag="{e(t)}">'
+        f'<span class="dotm"></span>{e(t)}</a>' for t in tags)
+
+    # Their SOTA line, ours: what we actually ran and where it landed.
+    result = ""
+    if body:
+        result = (f'<p class="sota"><span class="badge">REPLICATED</span> '
+                  f'<span class="on">on</span> '
+                  f'<span class="bench">{e(label)}</span> '
+                  f'<span class="sep">&middot;</span> '
+                  f'<a href="#" class="expand">full result</a></p>')
+
+    # "top 0.02%" reads; "0.0%" does not. Keep a digit that means something.
+    top_pct = max(0.01, (1 - percentile) * 100)
+    pct_txt = ("—" if not percentile else
+               f"{top_pct:.0f}%" if top_pct >= 10 else
+               f"{top_pct:.1f}%" if top_pct >= 1 else
+               f"{top_pct:.2f}%")
+    rail = (
+        f'<div class="rail">'
+        f'<div class="stat"><svg viewBox="0 0 24 24" width="15" height="15" fill="none" '
+        f'stroke="currentColor" stroke-width="1.8"><path d="M3 20h18M6 16l4-6 4 3 5-8"/></svg>'
+        f'<b>{"\u2191" if citations else ""}{citations:,}</b><span>citations</span></div>'
+        f'<div class="stat"><b class="{"hot" if top1 else ""}">{pct_txt}</b>'
+        f'<span>top percentile</span></div>'
+        + (f'<div class="stat"><b>{influential:,}</b><span>influential</span></div>'
+           if influential else '')
+        + (f'<div class="stat"><b class="hot">t={e(spec_tstat)}</b>'
+           f'<span>paper claim</span></div>' if spec_tstat else '')
+        + '</div>')
+
+    links = "".join(f'<a class="act" href="{href}">{e(text)}</a>'
+                    for text, href in actions if href)
+
     return f"""
-  <article class="card" data-status="{cls}" data-search="{e(search.lower())}">
+  <article class="card" data-status="{cls}" data-search="{e(search.lower())}"
+           data-cites="{citations}" data-date="{e(date[:10])}" data-vel="{per_month}"
+           data-pct="{percentile}" data-infl="{influential}"
+           data-tags="{e(' '.join(tags))}" data-code="{1 if body else 0}"
+           data-oa="{1 if open_access else 0}">
     <a class="fig" href="{url}">{thumb_html}</a>
     <div class="mid">
       <h2><a href="{url}">{e(title)}</a></h2>
+      <p class="meta">{e(authors)} <span class="sep">&middot;</span> {e(venue)}
+        <span class="sep">&middot;</span> {e(date)}</p>
       <p class="abs">{e(abstract)}</p>
-      <p class="meta"><span class="org">{e(venue)}</span><span class="dot">&middot;</span>
-        {e(authors)}<span class="dot">&middot;</span>Published {e(date)}</p>
-      <p class="tagrow">{tagrow}</p>
+      {result}
+      <p class="tagrow">{tagrow}{links}</p>
       {f'<details><summary>Full result</summary>{body}</details>' if body else ''}
     </div>
-    <div class="acts">{acts}</div>
+    {rail}
   </article>"""
 
 
-def render_replication(rec: dict) -> str:
+def render_replication(rec: dict, cites: dict[str, int]) -> str:
     m = REPLICATED[rec["paper"]]
     label, cls = status_of(rec)
-    t = (f'<img src="{m["thumb"]}" alt="First page" loading="lazy">'
+    n = int(cites.get(rec["paper"], 0))
+    t = (f'<img src="{m["thumb"]}" alt="First page of the paper" loading="lazy" '
+         f'decoding="async" width="320" height="414">'
          if m["thumb"] else f'<div class="gen">{thumb.for_record(rec)}</div>')
     return card(
         thumb_html=t, title=m["title"], url=m["paper_url"], abstract=m["abstract"],
         venue=m["venue"], authors=m["authors"], date=m["date"], tags=m["tags"],
-        status=(label, cls),
+        status=(label, cls), citations=n, per_month=per_month(n, m["date"]),
         actions=[(label, ""), ("Code", m["impl_url"]), ("Paper", m["paper_url"])],
         body=detail(rec),
         search=" ".join([m["title"], m["authors"], m["venue"], *m["tags"], label]),
     )
+
+
+def placeholder(p: dict) -> str:
+    """No open PDF exists for most journal papers — Unpaywall confirms it, not
+    a fetch failure. Draw the title page instead of apologising for it, so the
+    card still reads as a paper."""
+    e = html.escape
+
+    def wrap(text: str, width: int, limit: int) -> list[str]:
+        words, lines, cur = text.split(), [], ""
+        for w in words:
+            if len(cur) + len(w) + 1 > width:
+                lines.append(cur)
+                cur = w
+                if len(lines) == limit:
+                    return lines
+            else:
+                cur = f"{cur} {w}".strip()
+        if cur and len(lines) < limit:
+            lines.append(cur)
+        return lines
+
+    title = wrap(html.unescape(p.get("title") or ""), 26, 4)
+    authors = (p.get("authors") or "").split(",")[0].strip()
+    venue = (p.get("primary_category") or "")[:30]
+    year = str(p.get("published") or "")[:4]
+
+    y = 52
+    body = []
+    for line in title:
+        body.append(f'<text x="106" y="{y}" text-anchor="middle" font-size="10.5" '
+                    f'font-family="Georgia,serif" fill="#1a1814">{e(line)}</text>')
+        y += 15
+    y += 6
+    if authors:
+        body.append(f'<text x="106" y="{y}" text-anchor="middle" font-size="7.5" '
+                    f'font-family="Georgia,serif" fill="#55504a">{e(authors)}</text>')
+        y += 12
+    if venue:
+        body.append(f'<text x="106" y="{y}" text-anchor="middle" font-size="6.5" '
+                    f'font-family="Georgia,serif" fill="#8a847c">{e(venue)} {e(year)}</text>')
+        y += 16
+
+    # a paragraph of grey rules, the shape a first page makes from across a room
+    for i in range(14):
+        w = 150 if i % 5 != 4 else 96
+        body.append(f'<rect x="31" y="{y}" width="{w}" height="2.4" rx="1" '
+                    f'fill="#1a1814" opacity="0.12"/>')
+        y += 8
+        if y > 232:
+            break
+
+    return ('<div class="gen ph"><svg viewBox="0 0 212 246" '
+            'xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Title page">'
+            '<rect width="212" height="246" fill="#f7f5f0"/>'
+            + "".join(body) + '</svg></div>')
 
 
 QUEUE_STATUS = {
@@ -218,16 +362,49 @@ QUEUE_STATUS = {
 
 def render_queued(p: dict) -> str:
     label, cls = QUEUE_STATUS.get(p["status"], ("triage", "queue"))
-    t = (f'<img src="{p["thumb"]}" alt="First page" loading="lazy">'
-         if p.get("thumb") else '<div class="gen noimg">no preview</div>')
+    t = (f'<img src="{p["thumb"]}" alt="First page of the paper" loading="lazy" '
+         f'decoding="async" width="320" height="414">'
+         if p.get("thumb") else placeholder(p))
+    # No status pill on a paper we have not run. A leaderboard that labels
+    # Sharpe "blocked" is describing our backlog, not the paper.
+    acts = [("Paper", p["url"])]
+    if p.get("pdf"):
+        acts.append(("PDF", p["pdf"]))
     return card(
         thumb_html=t, title=p["title"], url=p["url"],
         abstract=p["abstract"],
         venue=p["primary_category"], authors=p["authors"] or "—",
         date=p["published"], tags=p["tags"], status=(label, cls),
-        actions=[(label, ""), ("Paper", p["url"]), ("PDF", p["pdf"])],
+        citations=int(p.get("citations") or 0),
+        per_month=float(p.get("citations_per_month") or 0.0),
+        percentile=float(p.get("percentile") or 0.0), top1=bool(p.get("top_1pct")),
+        influential=int(p.get("influential") or 0),
+        open_access=bool(p.get("thumb")),
+        actions=acts,
         search=" ".join([p["title"], p["authors"], p["primary_category"],
                          *p["tags"], label]),
+    )
+
+
+def render_spec(p: dict) -> str:
+    """An OSAP entry is a claim plus a definition. The card says so, and puts
+    the paper's own t-statistic where a citation count would go."""
+    e = html.escape
+    t = placeholder(p)
+    acts = [("Definition", p["url"]),
+            ("Vintage", "https://github.com/RezaSoleymanifar/vintage"
+                        "/blob/main/COVERAGE.md")]
+    return card(
+        thumb_html=t, title=p["title"], url=p["url"], abstract=p["abstract"],
+        venue=p["primary_category"], authors=p["authors"] or "—",
+        date=p["published"], tags=p["tags"], status=("spec", "queue"),
+        citations=int(p.get("citations") or 0),
+        per_month=float(p.get("citations_per_month") or 0.0),
+        percentile=float(p.get("percentile") or 0.0), top1=bool(p.get("top_1pct")),
+        influential=0, open_access=True, spec_tstat=str(p.get("tstat") or ""),
+        actions=acts,
+        search=" ".join([p["title"], p["authors"], p["primary_category"], *p["tags"],
+                         "osap spec replicable"]),
     )
 
 
@@ -236,183 +413,376 @@ PAGE = """<!doctype html>
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Alpha Archive — finance papers with code, actually run</title>
-<meta name="description" content="An index of quantitative finance papers, re-implemented and re-run on point-in-time data. What the paper claimed, what we measured, and whether it reproduced.">
-<meta property="og:title" content="Alpha Archive">
-<meta property="og:description" content="Finance papers with code, actually run.">
-<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='5' fill='%23111'/><path d='M8 23 L16 9 L24 23' stroke='%23fff' stroke-width='2.6' fill='none' stroke-linecap='round' stroke-linejoin='round'/><path d='M11.6 18.4 H20.4' stroke='%23fff' stroke-width='2.6' stroke-linecap='round'/></svg>">
+<title>α-Archive — trending quantitative finance research</title>
+<meta name="description" content="Curated trending quantitative finance papers from arXiv q-fin, SSRN, NBER and the journals. Only work a desk can code, ranked by field-normalised citation impact.">
+<meta property="og:title" content="α-Archive">
+<meta property="og:description" content="Curated trending quantitative finance papers.">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='6' fill='%230d0d0d'/><text x='16' y='23' font-size='20' font-family='Georgia,serif' fill='%233ddc84' text-anchor='middle'>&#945;</text></svg>">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;0,6..72,600;1,6..72,400;1,6..72,500&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
 :root{
-  --page:#fff; --card:#fff; --ink:#12181f; --soft:#65758a; --line:#e6e9ef; --chip:#f2f4f7;
-  --ok:#0f7a45; --okbg:#e8f6ee; --okbd:#bfe3ce;
-  --warn:#8a5b00; --warnbg:#fdf5e6; --warnbd:#eddcb6;
-  --bad:#a5231a; --badbg:#fdeeec; --badbd:#eec7c2;
-  --accent:#e06c2b;
-  --sans:-apple-system,BlinkMacSystemFont,"Segoe UI",Inter,Roboto,Helvetica,Arial,sans-serif;
-  --mono:ui-monospace,"SF Mono","Cascadia Mono",Menlo,Consolas,monospace}
-@media (prefers-color-scheme: dark){:root{
-  --page:#0b0f14; --card:#11161d; --ink:#e8edf3; --soft:#8b9bb0; --line:#212a35; --chip:#1a222c;
-  --ok:#4ade8a; --okbg:#12241b; --okbd:#20452f;
-  --warn:#e3a94a; --warnbg:#241d10; --warnbd:#463a1c;
-  --bad:#f2837a; --badbg:#251413; --badbd:#4a2320;
-  --accent:#ff9a5c}}
+  --page:#0d0d0d; --nav:#000; --card:#121212; --chip:#1a1a1a; --line:#262523;
+  --ink:#f2ede3; --soft:#8f8a80; --dim:#6b665e;
+  --accent:#7ea9dd; --alpha:#3ddc84; --alphaglow:rgba(61,220,132,.55);
+  --ok:#7fd6a2; --warn:#e3b35c; --bad:#e08b80;
+  --sans:Inter,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+  --serif:Newsreader,Georgia,"Times New Roman",serif;
+  --mono:"JetBrains Mono",ui-monospace,Menlo,Consolas,monospace;
+}
 *{box-sizing:border-box}
-body{margin:0;background:var(--page);color:var(--ink);font-family:var(--sans);font-size:15px;
-  line-height:1.55;-webkit-font-smoothing:antialiased}
+body{margin:0;background:var(--page);color:var(--ink);font-family:var(--sans);
+  font-size:14px;line-height:1.55;-webkit-font-smoothing:antialiased}
 a{color:inherit;text-decoration:none}
 a:hover{text-decoration:underline}
-.wrap{max-width:1560px;margin:0 auto;padding:0 32px}
+.wrap{max-width:1500px;margin:0 auto;padding:0 42px}
+@media(max-width:900px){.wrap{padding:0 18px}}
 
-.hero{padding:34px 0 18px}
-.heroTop{display:flex;align-items:flex-start;gap:28px;flex-wrap:wrap}
-h1{font-size:34px;font-weight:800;letter-spacing:-.02em;margin:0}
-.tagline{color:var(--soft);font-size:15px;margin:5px 0 0}
-.tagline b{color:var(--ink);font-weight:600}
-.searchWrap{flex:1;min-width:280px;max-width:520px;margin-top:4px}
-#q{width:100%;font:inherit;font-size:15px;padding:11px 16px;border:1px solid var(--line);
-  border-radius:999px;background:var(--card);color:var(--ink)}
-#q::placeholder{color:var(--soft)}
-#q:focus{outline:none;border-color:var(--soft)}
-.tabs{display:flex;gap:4px;align-items:center;margin-top:6px;flex-wrap:wrap}
-.tab{font-size:14px;padding:7px 14px;border-radius:999px;border:1px solid transparent;
-  background:transparent;color:var(--soft);cursor:pointer;font-weight:500;font-family:inherit}
+/* ------------------------------------------------------------------- nav */
+.topbar{background:var(--nav);border-bottom:1px solid var(--line)}
+.topbar .wrap{display:flex;align-items:center;gap:26px;height:66px}
+.brand{display:flex;align-items:center;gap:10px;font-family:var(--serif);
+  font-size:21px;font-weight:500;white-space:nowrap}
+.brand:hover{text-decoration:none}
+.brand .mark{width:22px;height:22px;border:2px solid var(--ink);border-radius:3px;
+  display:flex;align-items:center;justify-content:center}
+.brand .mark i{width:8px;height:8px;background:var(--ink);border-radius:1px;font-style:normal}
+.brand .a{color:var(--alpha);font-style:italic;animation:pulse 3.4s ease-in-out infinite;
+  text-shadow:0 0 14px var(--alphaglow)}
+@keyframes pulse{
+  0%,100%{opacity:1;text-shadow:0 0 16px var(--alphaglow),0 0 34px var(--alphaglow)}
+  50%{opacity:.6;text-shadow:0 0 4px transparent}}
+@media (prefers-reduced-motion:reduce){.brand .a{animation:none}}
+.nlinks{display:flex;gap:24px;font-size:14px}
+.nlinks a{color:var(--soft);padding:4px 0}
+.nlinks a:hover{color:var(--ink);text-decoration:none}
+.nlinks a.on{color:var(--ink);border-bottom:1.5px solid var(--ink)}
+.navright{display:flex;align-items:center;gap:12px;margin-left:auto}
+.pill{border:1px solid var(--line);border-radius:8px;padding:9px 16px;font-size:13.5px;
+  font-weight:500;white-space:nowrap;background:var(--card)}
+.pill:hover{background:var(--chip);text-decoration:none}
+.searchbox{display:flex;align-items:center;gap:9px;border:1px solid var(--line);
+  border-radius:9px;padding:8px 12px;background:var(--card);min-width:250px}
+.searchbox svg{color:var(--dim);flex:none}
+#q{border:0;background:none;color:var(--ink);font:inherit;font-size:13.5px;width:100%;outline:none}
+#q::placeholder{color:var(--dim)}
+.kbd{font-family:var(--mono);font-size:10px;color:var(--dim);border:1px solid var(--line);
+  border-radius:4px;padding:2px 5px;line-height:1.25;text-align:center;white-space:nowrap}
+.signin{display:flex;align-items:center;gap:8px;border:1px solid var(--line);
+  border-radius:8px;padding:8px 15px;font-size:13.5px;font-weight:500;background:var(--card)}
+.signin:hover{background:var(--chip);text-decoration:none}
+@media(max-width:1180px){.nlinks{display:none}}
+@media(max-width:760px){.searchbox{display:none}}
+
+.strip{background:#151412;border-bottom:1px solid var(--line);text-align:center;
+  padding:9px 0;font-size:13px;color:var(--soft)}
+.strip a{color:var(--ink);text-decoration:underline;text-underline-offset:3px}
+
+/* ------------------------------------------------------------------ head */
+.head{padding:34px 0 4px}
+h1{font-family:var(--serif);font-size:clamp(32px,4.2vw,46px);font-weight:500;
+  letter-spacing:-.01em;margin:0;line-height:1.1}
+h1 em{font-style:italic;color:var(--accent)}
+.sub{font-family:var(--serif);font-style:italic;font-size:15.5px;color:var(--soft);
+  margin:8px 0 0}
+
+/* ---------------------------------------------------------------- layout */
+.cols{display:grid;grid-template-columns:1fr;gap:34px;padding:20px 0 60px}
+@media(min-width:1080px){.cols{grid-template-columns:236px 1fr}}
+.side h3{font-family:var(--mono);font-size:10.5px;letter-spacing:.13em;
+  text-transform:uppercase;color:var(--dim);font-weight:400;margin:0 0 14px}
+.side .grp{margin-bottom:34px}
+.side a.row{display:flex;align-items:baseline;gap:8px;padding:5px 0;color:var(--ink);
+  font-size:14.5px}
+.side a.row:hover{color:var(--accent);text-decoration:none}
+.side a.row span{font-family:var(--mono);font-size:11.5px;color:var(--dim)}
+.side .more{display:inline-block;margin-top:10px;font-family:var(--serif);
+  font-style:italic;font-size:14px;color:var(--soft)}
+@media(max-width:1079px){.side{order:2}}
+
+/* -------------------------------------------------------------------- bar */
+.bar{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:6px}
+.tab{font-family:var(--mono);font-size:12.5px;color:var(--soft);background:none;
+  border:0;border-radius:7px;padding:8px 13px;cursor:pointer}
 .tab:hover{color:var(--ink)}
-.tab.on{background:var(--chip);color:var(--ink);font-weight:600}
-.tab.cta{background:var(--warnbg);color:var(--accent);border-color:var(--warnbd);
-  font-weight:700;cursor:default}
+.tab.on{background:#e9e4da;color:#14130f;font-weight:500}
+.tab.bd{border:1px solid var(--line);display:inline-flex;align-items:center;gap:7px}
+.tab.bd.on{border-color:#e9e4da}
+.bar .right{margin-left:auto;display:flex;gap:4px;flex-wrap:wrap}
+.bar .right .tab{font-family:var(--sans);font-size:13px}
 
-.count{color:var(--soft);font-size:14px;padding:4px 0 14px}
+.count{color:var(--dim);font-size:12.5px;font-family:var(--mono);padding:16px 0 4px}
+.note{color:var(--warn);font-size:13px;margin:0 0 12px}
+.note[hidden],.card[hidden]{display:none}
 
-.card{display:grid;grid-template-columns:1fr;border:1px solid var(--line);border-radius:10px;
-  background:var(--card);margin-bottom:14px;overflow:hidden}
-@media(min-width:900px){.card{grid-template-columns:212px 1fr 176px}}
-.fig{display:block;background:var(--chip);overflow:hidden;line-height:0}
-.fig img{width:100%;height:100%;max-height:246px;object-fit:cover;object-position:top center;
-  display:block}
-.gen{padding:10px;background:var(--chip);color:var(--ink);height:100%;display:flex;align-items:center}
-.gen svg{width:100%;height:auto}
-.noimg{display:flex;align-items:center;justify-content:center;min-height:150px;
-  color:var(--soft);font-size:12px;background:var(--chip)}
-.mid{padding:18px 22px;min-width:0}
-.card h2{font-size:19px;line-height:1.33;margin:0 0 7px;font-weight:700;letter-spacing:-.01em}
-.abs{margin:0 0 10px;font-size:14px;line-height:1.55;color:var(--soft);
-  display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
-.meta{margin:0 0 9px;font-size:13px;color:var(--soft);display:flex;align-items:center;
-  gap:7px;flex-wrap:wrap}
-.org{background:var(--chip);border-radius:6px;padding:3px 9px;font-size:12px;font-weight:600;
-  color:var(--ink)}
-.dot{color:var(--line)}
-.tagrow{margin:0;display:flex;gap:6px;flex-wrap:wrap}
-.tag{font-size:11.5px;color:var(--soft);background:var(--chip);border-radius:5px;padding:3px 9px}
-.tag:hover{color:var(--ink);text-decoration:none}
-.acts{display:flex;flex-direction:column;gap:8px;padding:18px 18px 18px 0;align-self:start}
-@media(max-width:899px){.acts{padding:0 22px 18px}}
-.act{display:flex;align-items:center;justify-content:center;font-size:13.5px;font-weight:600;
-  border:1px solid var(--line);border-radius:8px;padding:8px 12px;background:var(--card);
-  white-space:nowrap}
-a.act:hover{background:var(--chip);text-decoration:none}
-.act.st{cursor:default}
-.act.st.ok{color:var(--ok);background:var(--okbg);border-color:var(--okbd)}
-.act.st.warn{color:var(--warn);background:var(--warnbg);border-color:var(--warnbd)}
-.act.st.bad{color:var(--bad);background:var(--badbg);border-color:var(--badbd)}
-.act.st.queue{color:var(--soft);background:var(--chip)}
-.act.st.muted{color:var(--soft);background:transparent;border-style:dashed}
+/* ------------------------------------------------------------------ card */
+.card{display:grid;grid-template-columns:1fr;gap:22px;padding:26px 0;
+  border-bottom:1px solid var(--line)}
+@media(min-width:820px){.card{grid-template-columns:200px minmax(0,1fr) 122px}}
+.fig{display:block;line-height:0;align-self:start}
+.fig img{width:100%;height:auto;aspect-ratio:320/414;object-fit:cover;
+  object-position:top center;border:1px solid var(--line);border-radius:2px;
+  display:block;background:#fff}
+.gen{border:1px solid var(--line);border-radius:2px;background:var(--card);
+  color:var(--ink);display:block}
+.gen svg{width:100%;height:auto;display:block}
+.mid{min-width:0}
+.card h2{font-family:var(--serif);font-size:22px;font-weight:500;line-height:1.28;
+  margin:0 0 8px;letter-spacing:-.005em}
+.card h2 a:hover{color:var(--accent);text-decoration:none}
+.meta{margin:0 0 10px;font-size:13.5px;color:var(--soft)}
+.meta .sep{color:var(--dim);margin:0 3px}
+.abs{font-family:var(--serif);font-size:15.5px;line-height:1.55;color:var(--soft);
+  margin:0 0 12px;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;
+  overflow:hidden}
+.sota{font-family:var(--mono);font-size:12.5px;margin:0 0 12px;color:var(--soft)}
+.sota .badge{color:var(--warn);font-weight:500}
+.sota .bench{color:var(--accent)}
+.sota .sep{color:var(--dim)}
+.sota .expand{color:var(--soft);text-decoration:underline;text-underline-offset:3px}
+.tagrow{margin:0;display:flex;gap:7px;flex-wrap:wrap;align-items:center}
+.tag{font-family:var(--mono);font-size:11.5px;border:1px solid var(--line);
+  border-radius:6px;padding:4px 10px;color:var(--ink);display:inline-flex;
+  align-items:center;gap:6px;background:var(--card)}
+.tag:hover{text-decoration:none;border-color:var(--soft)}
+.dotm{width:5px;height:5px;border-radius:50%;background:currentColor;display:block}
+.t-green{color:#7fd6a2}.t-blue{color:#8fb8ea}.t-pink{color:#e79ab8}
+.t-purple{color:#b9a2e8}.t-amber{color:#e3b35c}.t-teal{color:#77cfc9}
+.tag.t-green,.tag.t-blue,.tag.t-pink,.tag.t-purple,.tag.t-amber,.tag.t-teal{
+  border-color:currentColor;background:rgba(255,255,255,.02)}
+.act{font-family:var(--mono);font-size:11.5px;border:1px solid var(--line);
+  border-radius:6px;padding:4px 10px;color:var(--soft);background:var(--card)}
+.act:hover{color:var(--ink);text-decoration:none}
 
-details{margin-top:12px;border-top:1px solid var(--line);padding-top:11px}
-summary{cursor:pointer;font-size:13.5px;font-weight:600;color:var(--accent)}
-details h4{font-size:11.5px;letter-spacing:.06em;text-transform:uppercase;color:var(--soft);
-  margin:16px 0 7px;font-weight:700}
-details p{font-size:13.5px;margin:0 0 8px}
+.rail{display:flex;flex-direction:row;gap:22px;align-self:start}
+@media(min-width:820px){.rail{flex-direction:column;gap:18px;border-left:1px solid var(--line);
+  padding-left:20px;height:100%}}
+.stat{text-align:center;color:var(--soft)}
+.stat svg{margin:0 auto 4px;display:block;color:var(--dim)}
+.stat b{display:block;font-family:var(--mono);font-size:15px;font-weight:500;color:var(--ink)}
+.stat b.hot{color:var(--ok)}
+.stat span{display:block;font-family:var(--mono);font-size:9.5px;letter-spacing:.1em;
+  text-transform:uppercase;color:var(--dim);margin-top:3px}
+
+details{margin-top:14px;border-top:1px solid var(--line);padding-top:12px}
+summary{cursor:pointer;font-size:13px;font-weight:500;color:var(--accent);
+  font-family:var(--mono)}
+details h4{font-family:var(--mono);font-size:10.5px;letter-spacing:.08em;
+  text-transform:uppercase;color:var(--dim);margin:16px 0 7px;font-weight:400}
+details p{font-size:13.5px;margin:0 0 8px;color:var(--soft)}
 details ul{margin:0;padding-left:18px;font-size:13px;color:var(--soft);line-height:1.65}
-.fine{color:var(--soft);font-size:12.5px}
+.fine{color:var(--dim);font-size:12.5px}
 table{width:100%;border-collapse:collapse;font-size:13px;margin:4px 0 0}
-th{color:var(--soft);font-size:10.5px;letter-spacing:.06em;text-transform:uppercase;
-  font-weight:700;text-align:left;padding:6px 8px;border-bottom:1px solid var(--soft)}
-td{padding:8px;border-bottom:1px solid var(--line);vertical-align:top}
+th{color:var(--dim);font-size:10.5px;letter-spacing:.06em;text-transform:uppercase;
+  font-weight:400;text-align:left;padding:6px 8px;border-bottom:1px solid var(--line);
+  font-family:var(--mono)}
+td{padding:8px;border-bottom:1px solid var(--line);vertical-align:top;color:var(--soft)}
 table.plain th,table.plain td{border:none;padding:5px 8px}
-.n{text-align:right;font-family:var(--mono);white-space:nowrap}
+.n{text-align:right;font-family:var(--mono);white-space:nowrap;color:var(--ink)}
 th.n{text-align:right}
-.sub{color:var(--soft);font-size:11.5px;font-weight:400}
-code{font-family:var(--mono)}
-.empty{padding:44px 0;color:var(--soft);text-align:center}
-footer{color:var(--soft);font-size:12.5px;padding:30px 0 60px;line-height:1.7;
-  border-top:1px solid var(--line);margin-top:26px}
+.sub2{color:var(--dim);font-size:11.5px}
+code{font-family:var(--mono);color:var(--ink)}
+.empty{padding:54px 0;color:var(--dim);text-align:center}
+footer{border-top:1px solid var(--line);color:var(--dim);font-size:12.5px;
+  padding:26px 0 60px;line-height:1.75}
 footer a{margin-right:18px;color:var(--soft)}
 </style>
 </head>
 <body>
-<div class="wrap">
 
-  <div class="hero">
-    <div class="heroTop">
-      <div>
-        <h1>Alpha Archive</h1>
-        <p class="tagline">Finance papers with code &mdash; and we <b>run</b> the code.</p>
-      </div>
-      <div class="searchWrap">
-        <input id="q" type="search" placeholder="Search papers, authors, tags&hellip;"
+<nav class="topbar">
+  <div class="wrap">
+    <a class="brand" href="./"><span class="mark"><i></i></span>
+      <span class="a">&alpha;</span>-Archive</a>
+    <div class="nlinks">
+      <a class="on" href="./">Trending</a>
+      <a href="__REPO__/blob/main/docs/selection.md">Selection</a>
+      <a href="__REPO__/blob/main/docs/sources.md">Sources</a>
+      <a href="__REPO__/blob/main/docs/methodology.md">Methodology</a>
+      <a href="__REPO__/issues/new">Submit</a>
+    </div>
+    <div class="navright">
+      <a class="pill" href="__REPO__/issues/new">Submit feedback</a>
+      <div class="searchbox">
+        <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor"
+             stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg>
+        <input id="q" type="search" placeholder="Search papers, authors, tags..."
                autocomplete="off">
+        <span class="kbd">Ctrl K</span>
       </div>
-      <div class="tabs">
-        <button class="tab on" data-f="all">All</button>
-        <button class="tab" data-f="done">Replicated</button>
-        <button class="tab" data-f="queue">Queued</button>
-        <button class="tab" data-f="muted">Blocked</button>
-        <span class="tab cta">__DONE__ replicated</span>
-      </div>
+      <a class="signin" href="__REPO__">Sign in</a>
     </div>
   </div>
+</nav>
 
-  <p class="count" id="count"></p>
-  <div id="list">__CARDS__</div>
-  <p class="empty" id="empty" hidden>No papers match.</p>
+<div class="strip">__NPAPERS__ papers &mdash; refreshed weekly from arXiv q-fin, ranked monthly on citations. __NSPEC__ classic predictors carry a published spec, __NCODE__ have been rerun here &mdash; <a href="__REPO__/blob/main/docs/selection.md">how they were chosen</a></div>
+
+<div class="wrap">
+  <div class="head">
+    <h1>Trending <em>Quant Research</em></h1>
+    <p class="sub">Curated trending quantitative finance papers.</p>
+  </div>
+
+  <div class="cols">
+    <aside class="side">
+      <div class="grp">
+        <h3>Top topics</h3>
+        __TOPTAGS__
+        <a class="more" href="#" data-tag="">all topics &rarr;</a>
+      </div>
+      <div class="grp">
+        <h3>Trending topics</h3>
+        __TRENDTAGS__
+      </div>
+      <div class="grp">
+        <h3>Sources</h3>
+        __SOURCES__
+      </div>
+    </aside>
+
+    <main>
+      <div class="bar">
+        <button class="tab on" data-s="pct">impact</button>
+        <button class="tab" data-s="vel">trending</button>
+        <button class="tab" data-s="date">newest</button>
+        <button class="tab" data-s="cites">most cited</button>
+        <button class="tab bd" data-c="1">
+          <svg viewBox="0 0 16 16" width="13" height="13" fill="currentColor"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.01 8.01 0 0 0 16 8c0-4.42-3.58-8-8-8Z"/></svg>
+          Has code</button>
+        <button class="tab bd" data-oa="1">
+          <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor"
+               stroke-width="1.9"><rect x="4" y="10" width="16" height="10" rx="2"/><path d="M8 10V7a4 4 0 0 1 7.6-1.8"/></svg>
+          Open access</button>
+        <div class="right">
+          <button class="tab" data-w="30">30 Days</button>
+          <button class="tab" data-w="365">12 Months</button>
+          <button class="tab" data-w="1826">5 Years</button>
+          <button class="tab" data-w="3653">10 Years</button>
+          <button class="tab on" data-w="0">All Time</button>
+        </div>
+      </div>
+
+      <p class="count" id="count"></p>
+      <p class="note" id="note" hidden></p>
+      <div id="list">__CARDS__</div>
+      <p class="empty" id="empty" hidden>No papers match.</p>
+    </main>
+  </div>
 
   <footer>
     <a href="__REPO__">GitHub</a>
+    <a href="__REPO__/blob/main/docs/selection.md">Selection</a>
+    <a href="__REPO__/blob/main/docs/sources.md">Sources</a>
     <a href="__REPO__/blob/main/docs/methodology.md">Methodology</a>
+    <a href="__REPO__/blob/main/docs/audit.md">Audit</a>
     <a href="https://github.com/RezaSoleymanifar/vintage">Vintage</a>
-    <a href="https://www.openassetpricing.com/">Open Source Asset Pricing</a>
-    <p>Queued papers come from the arXiv q-fin feed and carry no results yet &mdash; the
-    status on each card says so. Thumbnails are the paper's own first page, rendered from
-    the openly distributed arXiv PDF. MIT licensed. No data redistributed. Not affiliated
-    with arXiv, Hugging Face, Papers with Code, or any cited author. Not investment advice.</p>
+    <p>Metadata and citation counts from OpenAlex; influential-citation counts from
+    Semantic Scholar. Thumbnails are each paper's own first page, rendered from an
+    openly distributed PDF. A result appears only where we have run the paper.
+    MIT licensed. No data redistributed. Not affiliated with arXiv, OpenAlex, SSRN,
+    NBER, Papers with Code, or any cited author. Not investment advice.</p>
   </footer>
 </div>
 
 <script>
+var list = document.getElementById('list');
 var cards = [].slice.call(document.querySelectorAll('.card'));
 var q = document.getElementById('q'), count = document.getElementById('count'),
-    empty = document.getElementById('empty'), filter = 'all';
-var DONE = {ok: 1, warn: 1, bad: 1};
+    empty = document.getElementById('empty'), note = document.getElementById('note'),
+    days = 0, sortBy = 'pct', codeOnly = false, oaOnly = false, tagFilter = '';
+var LABEL = {30: 'the last 30 days', 365: 'the last 12 months', 1826: 'the last 5 years',
+             3653: 'the last 10 years', 0: 'all time'};
+var HOW = {pct: 'by normalised citation percentile', cites: 'by citations',
+           vel: 'by citations per month', date: 'newest first'};
+var SORT = {
+  pct:   function (a, b) { return (+b.dataset.pct) - (+a.dataset.pct) ||
+                                  (+b.dataset.infl) - (+a.dataset.infl) ||
+                                  (+b.dataset.cites) - (+a.dataset.cites); },
+  cites: function (a, b) { return (+b.dataset.cites) - (+a.dataset.cites); },
+  vel:   function (a, b) { return (+b.dataset.vel) - (+a.dataset.vel); },
+  date:  function (a, b) { return b.dataset.date > a.dataset.date ? 1 : -1; }
+};
+
+function reorder() {
+  var frag = document.createDocumentFragment();
+  cards.slice().sort(function (a, b) {
+    return SORT[sortBy](a, b) || (b.dataset.date > a.dataset.date ? 1 : -1);
+  }).forEach(function (c) { frag.appendChild(c); });
+  list.appendChild(frag);
+}
+
+function cutoff(n) {
+  if (!n) return '0000-00-00';
+  return new Date(Date.now() - n * 86400000).toISOString().slice(0, 10);
+}
 
 function apply() {
-  var term = q.value.trim().toLowerCase(), shown = 0;
+  var term = q.value.trim().toLowerCase(), since = cutoff(days), shown = 0, cited = 0;
   cards.forEach(function (c) {
-    var s = c.dataset.status, pass;
-    if (filter === 'all') pass = true;
-    else if (filter === 'done') pass = !!DONE[s];
-    else pass = s === filter;
+    var pass = c.dataset.date >= since && (!codeOnly || c.dataset.code === '1') &&
+               (!oaOnly || c.dataset.oa === '1') &&
+               (!tagFilter || c.dataset.tags.indexOf(tagFilter) !== -1);
     var hit = !term || c.dataset.search.indexOf(term) !== -1;
     c.hidden = !(pass && hit);
-    if (!c.hidden) shown++;
+    if (!c.hidden) { shown++; if (+c.dataset.cites > 0) cited++; }
   });
-  count.textContent = shown + (shown === 1 ? ' paper' : ' papers');
+  count.textContent = shown + (shown === 1 ? ' paper' : ' papers') + ' from ' +
+    LABEL[days] + ', ranked ' + HOW[sortBy] + (codeOnly ? ', with code' : '') +
+    (oaOnly ? ', open access' : '') +
+    (tagFilter ? ', tagged ' + tagFilter : '');
   empty.hidden = shown > 0;
+  note.hidden = !(shown > 0 && cited === 0 && sortBy !== 'date');
+  if (!note.hidden) {
+    note.textContent = 'Nothing published in this window has been cited yet — ' +
+      'citations take a year or more to accrue, so these are ordered by date.';
+  }
 }
+
 q.addEventListener('input', apply);
-document.querySelectorAll('.tab[data-f]').forEach(function (b) {
+document.addEventListener('keydown', function (ev) {
+  if ((ev.ctrlKey || ev.metaKey) && ev.key === 'k') { ev.preventDefault(); q.focus(); }
+});
+document.querySelectorAll('.tab[data-w]').forEach(function (b) {
   b.addEventListener('click', function () {
-    document.querySelectorAll('.tab[data-f]').forEach(function (x) {
-      x.classList.remove('on');
+    document.querySelectorAll('.tab[data-w]').forEach(function (x) { x.classList.remove('on'); });
+    b.classList.add('on'); days = +b.dataset.w; apply();
+  });
+});
+document.querySelectorAll('.tab[data-s]').forEach(function (b) {
+  b.addEventListener('click', function () {
+    document.querySelectorAll('.tab[data-s]').forEach(function (x) { x.classList.remove('on'); });
+    b.classList.add('on'); sortBy = b.dataset.s; reorder(); apply();
+  });
+});
+document.querySelectorAll('.tab[data-c]').forEach(function (b) {
+  b.addEventListener('click', function () {
+    codeOnly = !codeOnly; b.classList.toggle('on', codeOnly); apply();
+  });
+});
+document.querySelectorAll('.tab[data-oa]').forEach(function (b) {
+  b.addEventListener('click', function () {
+    oaOnly = !oaOnly; b.classList.toggle('on', oaOnly); apply();
+  });
+});
+document.querySelectorAll('[data-tag]').forEach(function (t) {
+  t.addEventListener('click', function (ev) {
+    ev.preventDefault();
+    tagFilter = (tagFilter === t.dataset.tag) ? '' : t.dataset.tag;
+    document.querySelectorAll('.side a.row').forEach(function (r) {
+      r.style.color = (r.dataset.tag && r.dataset.tag === tagFilter) ? 'var(--accent)' : '';
     });
-    b.classList.add('on'); filter = b.dataset.f; apply();
+    apply();
   });
 });
-document.querySelectorAll('.tag').forEach(function (t) {
-  t.addEventListener('click', function (e) {
-    e.preventDefault(); q.value = t.dataset.tag; apply();
+document.querySelectorAll('.expand').forEach(function (a) {
+  a.addEventListener('click', function (ev) {
+    ev.preventDefault();
+    var d = a.closest('.card').querySelector('details');
+    if (d) { d.open = !d.open; d.scrollIntoView({block: 'nearest'}); }
   });
 });
+reorder();
 apply();
 </script>
 </body>
@@ -423,16 +793,60 @@ apply();
 def main() -> None:
     reps = load_replications()
     queue = load_queue()
-    cards = [render_replication(r) for r in reps] + [render_queued(p) for p in queue]
-    page = (PAGE.replace("__CARDS__", "\n".join(cards))
-                .replace("__DONE__", str(len(reps)))
+    cites = load_citations()
+    done = {REPLICATED[r["paper"]]["title"].lower() for r in reps}
+    kept = [p for p in queue if p["title"].lower() not in done]
+    specs = load_osap()
+    cards = ([render_replication(r, cites) for r in reps]
+             + [render_queued(p) for p in kept]
+             + [render_spec(p) for p in specs])
+
+    # Sidebar counts come from the corpus, so they cannot drift from it.
+    counts: dict[str, int] = {}
+    recent: dict[str, int] = {}
+    cutoff = (datetime.now(timezone.utc) - timedelta(days=365)).strftime("%Y-%m-%d")
+    for p in kept:
+        for t in p["tags"]:
+            counts[t] = counts.get(t, 0) + 1
+            if (p.get("published") or "") >= cutoff:
+                recent[t] = recent.get(t, 0) + 1
+    total, total_recent = sum(counts.values()) or 1, sum(recent.values()) or 1
+
+    toptags = "".join(
+        f'<a class="row" href="#" data-tag="{html.escape(t)}">{html.escape(t)}'
+        f'<span>{n}</span></a>'
+        for t, n in sorted(counts.items(), key=lambda kv: -kv[1])[:9])
+
+    lift = sorted(((t, (recent.get(t, 0) / total_recent) / (n / total))
+                   for t, n in counts.items() if recent.get(t, 0) >= 2),
+                  key=lambda kv: -kv[1])[:7]
+    trendtags = "".join(
+        f'<a class="row" href="#" data-tag="{html.escape(t)}">{html.escape(t)}'
+        f'<span>{x:.1f}x</span></a>' for t, x in lift)
+
+    srcs: dict[str, int] = {}
+    for p in kept:
+        key = p.get("source") or "other"
+        srcs[key] = srcs.get(key, 0) + 1
+    names = {"arxiv": "arXiv q-fin", "journal": "Journals, SSRN, NBER"}
+    sources = "".join(
+        f'<a class="row" href="{REPO}/blob/main/docs/sources.md">{names.get(k, k)}'
+        f'<span>{n}</span></a>' for k, n in sorted(srcs.items(), key=lambda kv: -kv[1]))
+
+    page = (PAGE.replace("__CARDS__", chr(10).join(cards))
+                .replace("__TOPTAGS__", toptags)
+                .replace("__TRENDTAGS__", trendtags)
+                .replace("__SOURCES__", sources)
+                .replace("__NPAPERS__", f"{len(cards):,}")
+                .replace("__NSPEC__", f"{len(specs):,}")
+                .replace("__NCODE__", str(len(reps)))
                 .replace("__REPO__", REPO))
     out_dir = os.path.join(ROOT, "docs")
     os.makedirs(out_dir, exist_ok=True)
     with open(os.path.join(out_dir, "index.html"), "w", encoding="utf-8", newline="\n") as fh:
         fh.write(page)
     print(f"wrote docs/index.html ({len(page):,} bytes) — "
-          f"{len(reps)} replicated, {len(queue)} queued")
+          f"{len(cards)} cards, {len(reps)} with results")
 
 
 if __name__ == "__main__":
