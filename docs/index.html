@@ -3,286 +3,211 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Alpha Archive — finance papers, with code that we actually run</title>
-<meta name="description" content="Papers with code, for finance. Published trading signals re-implemented on point-in-time data with costs charged, judged against a bar declared before the run.">
-<meta property="og:title" content="Alpha Archive — finance papers, with code that we actually run">
-<meta property="og:description" content="Papers with code, for finance. We run the code and report whether the claim survives.">
-<meta property="og:type" content="website">
+<title>Alpha Archive — finance papers with code, actually run</title>
+<meta name="description" content="An index of finance papers re-implemented and re-run on point-in-time data. Each entry shows what the paper claimed, what we measured, and whether it reproduced.">
+<meta property="og:title" content="Alpha Archive">
+<meta property="og:description" content="Finance papers with code, actually run.">
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='5' fill='%23111'/><path d='M8 23 L16 9 L24 23' stroke='%23fff' stroke-width='2.6' fill='none' stroke-linecap='round' stroke-linejoin='round'/><path d='M11.6 18.4 H20.4' stroke='%23fff' stroke-width='2.6' stroke-linecap='round'/></svg>">
 <style>
-:root{
-  --page:#f7f7f5; --card:#ffffff; --ink:#16191d; --soft:#5b6570; --rule:#e0e2e0;
-  --hair:#c9ccc9; --ok:#136f42; --warn:#8a5a00; --bad:#a02219; --link:#0b4f9e;
-  --serif:"Iowan Old Style","Palatino Linotype",Palatino,Georgia,"Times New Roman",serif;
-  --sans:-apple-system,BlinkMacSystemFont,"Segoe UI",Inter,Helvetica,Arial,sans-serif;
-  --mono:ui-monospace,"SF Mono","Cascadia Mono",Menlo,Consolas,monospace;
-}
+:root{--bg:#f6f7f9;--card:#fff;--ink:#111418;--soft:#61707e;--line:#e3e7eb;
+  --ok:#0f7a45;--okbg:#e8f6ee;--warn:#8a5b00;--warnbg:#fdf5e6;--bad:#a5231a;--badbg:#fdeeec;
+  --link:#0b5fd0;
+  --sans:-apple-system,BlinkMacSystemFont,"Segoe UI",Inter,Roboto,Helvetica,Arial,sans-serif;
+  --mono:ui-monospace,"SF Mono","Cascadia Mono",Menlo,Consolas,monospace}
 *{box-sizing:border-box}
-body{margin:0;background:var(--page);color:var(--ink);font-family:var(--sans);
-  font-size:16px;line-height:1.6;-webkit-font-smoothing:antialiased}
-.wrap{max-width:940px;margin:0 auto;padding:0 22px}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--sans);font-size:15px;
+  line-height:1.55;-webkit-font-smoothing:antialiased}
 a{color:var(--link);text-decoration:none}
 a:hover{text-decoration:underline}
+.wrap{max-width:1000px;margin:0 auto;padding:0 20px}
 
-.masthead{border-bottom:1px solid var(--hair);padding:44px 0 26px}
-h1{font-family:var(--serif);font-size:clamp(30px,5vw,44px);margin:0 0 4px;
-  letter-spacing:-.01em;font-weight:600}
-.kicker{font-size:11px;letter-spacing:.22em;text-transform:uppercase;color:var(--soft);
-  margin:0 0 14px}
-.lede{font-family:var(--serif);font-size:clamp(17px,2.5vw,21px);line-height:1.5;
-  margin:0 0 14px;max-width:36em}
-.sub{color:var(--soft);font-size:14.5px;max-width:44em;margin:0 0 8px;line-height:1.68}
+header.site{background:var(--card);border-bottom:1px solid var(--line);position:sticky;top:0;z-index:5}
+.bar{display:flex;align-items:center;gap:16px;padding:13px 0;flex-wrap:wrap}
+.logo{font-weight:700;font-size:17px;letter-spacing:-.01em;color:var(--ink);white-space:nowrap}
+.logo span{color:var(--soft);font-weight:400;font-size:13px;margin-left:8px}
+#q{flex:1;min-width:180px;font:inherit;font-size:14px;padding:7px 12px;border:1px solid var(--line);
+  border-radius:6px;background:#fbfcfd}
+#q:focus{outline:2px solid #cfe0f8;border-color:#8fb6ec}
+.filters{display:flex;gap:6px;flex-wrap:wrap}
+.f{font-size:12.5px;padding:5px 11px;border:1px solid var(--line);border-radius:20px;
+  background:#fbfcfd;color:var(--soft);cursor:pointer}
+.f.on{background:var(--ink);border-color:var(--ink);color:#fff}
 
-h2{font-size:11px;letter-spacing:.22em;text-transform:uppercase;color:var(--soft);
-  margin:44px 0 14px;font-weight:600;padding-bottom:7px;border-bottom:1px solid var(--rule)}
+.count{color:var(--soft);font-size:13px;padding:16px 0 4px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:8px;padding:18px 20px;
+  margin-bottom:12px}
+.top{display:flex;gap:14px;align-items:flex-start;justify-content:space-between}
+.card h2{font-size:17px;line-height:1.35;margin:0 0 4px;font-weight:650}
+.card h2 a{color:var(--ink)}
+.by{color:var(--soft);font-size:13px;margin:0}
+.badge{font-size:11px;font-weight:700;letter-spacing:.04em;padding:4px 10px;border-radius:20px;
+  white-space:nowrap}
+.badge.ok{color:var(--ok);background:var(--okbg)}
+.badge.warn{color:var(--warn);background:var(--warnbg)}
+.badge.bad{color:var(--bad);background:var(--badbg)}
+.claim{margin:11px 0 13px;font-size:14.5px}
 
-.paper{background:var(--card);border:1px solid var(--rule);border-radius:6px;
-  padding:26px 28px;margin-bottom:20px}
-.pmeta{display:flex;align-items:center;gap:11px;flex-wrap:wrap;margin-bottom:11px}
-.pid{font-family:var(--mono);font-size:11.5px;color:var(--soft);letter-spacing:.06em}
-.status{font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;font-weight:700;
-  padding:3px 9px;border-radius:3px;border:1px solid}
-.status.ok{color:var(--ok);border-color:#b7dcc7;background:#eef7f2}
-.status.warn{color:var(--warn);border-color:#e6d3a8;background:#fdf7ea}
-.status.bad{color:var(--bad);border-color:#e8c0bb;background:#fdf0ee}
-.count{font-size:12px;color:var(--soft)}
-.paper h3{font-family:var(--serif);font-size:clamp(19px,2.7vw,24px);line-height:1.3;
-  margin:0 0 6px;font-weight:600}
-.paper h3 a{color:var(--ink)}
-.authors{font-family:var(--serif);font-size:16px;margin:0 0 2px}
-.venue{color:var(--soft);font-size:13.5px;margin:0 0 12px}
-.claim{font-family:var(--serif);font-size:16.5px;line-height:1.58;margin:0 0 12px;
-  padding:11px 14px;background:#f4f6f8;border-left:3px solid var(--hair);max-width:56em}
-.claim b{font-family:var(--sans);font-size:10.5px;letter-spacing:.14em;
-  text-transform:uppercase;color:var(--soft);display:block;margin-bottom:4px}
-.summary{font-family:var(--serif);font-size:16px;line-height:1.62;margin:0 0 13px;max-width:56em}
-.tags{margin:0 0 14px;display:flex;gap:7px;flex-wrap:wrap}
-.tag{font-size:11px;color:var(--soft);border:1px solid var(--rule);border-radius:3px;
-  padding:2px 8px;background:#fafaf8}
-.actions{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin:0 0 4px}
-.btn{font-size:13px;font-weight:600;border:1px solid var(--hair);border-radius:4px;
-  padding:5px 13px;color:var(--ink);background:#fafaf8}
-.btn:hover{background:#f0f0ec;text-decoration:none}
-.actions code{font-family:var(--mono);font-size:12px;color:var(--soft)}
+.metrics{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:13px}
+.m{border:1px solid var(--line);border-radius:6px;padding:8px 12px;background:#fbfcfd;min-width:132px}
+.m .k{display:block;color:var(--soft);font-size:10.5px;letter-spacing:.06em;text-transform:uppercase}
+.m .v{display:block;font-family:var(--mono);font-size:16px;font-weight:600;margin-top:2px}
+.m .v.neg{color:var(--bad)}
+.m .s{display:block;color:var(--soft);font-size:11.5px;font-family:var(--mono);margin-top:1px}
+.m .s.ok{color:var(--ok)}
+.m .s.bad{color:var(--bad)}
 
-table.results{width:100%;border-collapse:collapse;font-size:14px;margin:18px 0 0}
-table.results caption{caption-side:top;text-align:left;color:var(--soft);font-size:12.5px;
-  line-height:1.65;padding:0 0 14px;max-width:60em}
-table.results caption b{color:var(--ink)}
-table.results thead th{font-size:11px;letter-spacing:.1em;text-transform:uppercase;
-  color:var(--soft);font-weight:600;text-align:left;padding:0 10px 7px;
-  border-bottom:1px solid var(--ink)}
-table.results tbody td{padding:10px;border-bottom:1px solid var(--rule);vertical-align:top}
-table.results tbody tr:last-child td{border-bottom:1px solid var(--ink)}
-.n{text-align:right;font-family:var(--mono);font-size:13px;white-space:nowrap}
+.row{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.spacer{flex:1}
+.btn{font-size:13px;font-weight:600;border:1px solid var(--line);border-radius:6px;padding:5px 12px;
+  color:var(--ink);background:#fbfcfd}
+.btn:hover{background:#eef1f4;text-decoration:none}
+.row code{font-family:var(--mono);font-size:11.5px;color:var(--soft)}
+.tag{font-size:11.5px;color:var(--soft);background:#eef1f4;border-radius:4px;padding:3px 8px}
+.tag:hover{background:#e2e7ec;text-decoration:none}
+
+details{margin-top:14px;border-top:1px solid var(--line);padding-top:12px}
+summary{cursor:pointer;font-size:13.5px;font-weight:600;color:var(--link)}
+details h4{font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:var(--soft);
+  margin:18px 0 8px;font-weight:600}
+details p{font-size:13.5px;margin:0 0 8px}
+details ul{margin:0;padding-left:18px;font-size:13px;color:var(--soft);line-height:1.65}
+.fine{color:var(--soft);font-size:12.5px;line-height:1.6}
+table{width:100%;border-collapse:collapse;font-size:13px;margin:4px 0 0}
+th{color:var(--soft);font-size:10.5px;letter-spacing:.06em;text-transform:uppercase;font-weight:600;
+  text-align:left;padding:6px 8px;border-bottom:1px solid var(--ink)}
+td{padding:8px;border-bottom:1px solid var(--line);vertical-align:top}
+table.plain th,table.plain td{border:none;padding:5px 8px}
+.n{text-align:right;font-family:var(--mono);white-space:nowrap}
 th.n{text-align:right}
-.muted{color:var(--soft);font-weight:400;font-size:12px}
-.neg{color:var(--bad)}
-
-.verify{border:1px solid var(--rule);border-left:3px solid var(--hair);border-radius:4px;
-  padding:14px 16px;margin-top:18px;background:#fbfbf9}
-.verify.warn{border-left-color:#d9b96a}
-.verify.bad{border-left-color:#c98079}
-.verify.ok{border-left-color:#79b795}
-.verify b{display:block;font-size:11px;letter-spacing:.14em;text-transform:uppercase;
-  color:var(--soft);margin-bottom:7px}
-.verify p{margin:0 0 11px;font-size:13.5px;line-height:1.6}
-.verify dl{margin:0;display:grid;grid-template-columns:1fr;gap:1px 16px;font-size:12.5px}
-@media(min-width:640px){.verify dl{grid-template-columns:96px 1fr}}
-.verify dt{color:var(--soft);font-weight:600}
-.verify dd{margin:0 0 6px;line-height:1.55}
-
-details{margin-top:16px;border-top:1px solid var(--rule);padding-top:12px}
-summary{cursor:pointer;font-size:13.5px;font-weight:600}
-.note{color:var(--soft);font-size:13px;line-height:1.65;margin:10px 0 0;max-width:58em}
-.caveats{margin:10px 0 0;padding-left:19px;color:var(--soft);font-size:13px;line-height:1.7}
-
-.how{display:grid;grid-template-columns:1fr;gap:14px}
-@media(min-width:720px){.how{grid-template-columns:1fr 1fr 1fr}}
-.step{background:var(--card);border:1px solid var(--rule);border-radius:6px;padding:18px}
-.step b{display:block;font-size:14px;margin-bottom:7px;font-family:var(--serif)}
-.step p{margin:0;color:var(--soft);font-size:13.5px;line-height:1.65}
-footer{padding:44px 0 64px;color:var(--soft);font-size:13px;line-height:1.75;
-  border-top:1px solid var(--rule);margin-top:44px}
-footer .flinks{display:flex;gap:18px;flex-wrap:wrap;margin-bottom:12px}
+.sub{color:var(--soft);font-size:11.5px;font-weight:400}
+code{font-family:var(--mono)}
+.empty{padding:36px 0;color:var(--soft);text-align:center}
+footer{color:var(--soft);font-size:12.5px;padding:26px 0 56px;line-height:1.7}
+footer a{margin-right:16px}
 </style>
 </head>
 <body>
+
+<header class="site"><div class="wrap"><div class="bar">
+  <span class="logo">Alpha Archive<span>finance papers with code, actually run</span></span>
+  <input id="q" type="search" placeholder="Search papers, authors, tags…" autocomplete="off">
+  <div class="filters">
+    <button class="f on" data-f="all">All</button>
+    <button class="f" data-f="ok">Reproduced</button>
+    <button class="f" data-f="warn">Unresolved</button>
+    <button class="f" data-f="bad">Differs</button>
+  </div>
+</div></div></header>
+
 <div class="wrap">
-
-  <div class="masthead">
-    <p class="kicker">Alpha Archive</p>
-    <h1>Finance papers, with code that we actually run.</h1>
-    <p class="lede">Papers With Code indexes a paper and links its repository. We take the
-    next step: re-implement the signal, run it on point-in-time data with costs charged, and
-    report whether the claim survives.</p>
-    <p class="sub">Roughly two thirds of published anomalies fail to replicate, and almost
-    nobody re-checks them. A replication is marked verified only when it clears a threshold
-    written down before the run, measured against something we did not produce. If that
-    reference cannot be obtained, the status is unverified — not a pass with an asterisk, and
-    never a "partially validated" tier. Every figure below is produced by code in the
-    repository from data anyone can fetch.</p>
-  </div>
-
-  <h2>Replications</h2>
-  
-  <article class="paper" id="mom12m">
-    
-    <header class="phead">
-      <div class="pmeta">
-        <span class="pid">AA-0001</span>
-        <span class="status warn">fixture unavailable</span>
-        
+  <p class="count" id="count"></p>
+  <div id="list">
+  <article class="card" data-status="warn" data-search="returns to buying winners and selling losers: implications for stock market efficiency jegadeesh, titman journal of finance momentum cross-sectional equities unverified" id="mom12m">
+    <div class="top">
+      <div>
+        <h2><a href="https://doi.org/10.1111/j.1540-6261.1993.tb04702.x">Returns to Buying Winners and Selling Losers: Implications for Stock Market Efficiency</a></h2>
+        <p class="by">Jegadeesh, Titman · Journal of Finance · 1993</p>
       </div>
-      <h3><a href="https://doi.org/10.1111/j.1540-6261.1993.tb04702.x">Returns to Buying Winners and Selling Losers: Implications for Stock Market Efficiency</a></h3>
-      <p class="authors">Narasimhan Jegadeesh, Sheridan Titman</p>
-      <p class="venue">The Journal of Finance, 48(1), 65–91</p>
-      <p class="claim"><b>The claim.</b> Buying past winners and selling past losers earns about 1.3% a month, and the effect is large enough that markets cannot be fully efficient.</p>
-      <p class="summary">Rank stocks on the return from twelve months ago to one month ago, buy the top decile and sell the bottom, hold three months. Reported about 1.3% per month over 1964–1989 and became one of the most cited results in finance.</p>
-      <p class="tags"><span class="tag">cross-sectional</span><span class="tag">momentum</span><span class="tag">equities</span></p>
-      <p class="actions">
-        <a class="btn" href="https://doi.org/10.1111/j.1540-6261.1993.tb04702.x">Paper</a>
-        <a class="btn" href="https://github.com/RezaSoleymanifar/alpha-archive/blob/main/alpha_archive/replications/jt1993.py">Code</a>
-        <code>uv run python -m alpha_archive.replications.jt1993</code>
-      </p>
-    </header>
-    <table class="results">
-      <thead><tr><th>Quantity</th><th class="n">Paper</th><th class="n">Ours</th>
-      <th class="n">Difference</th></tr></thead>
-      <tbody>
-        <tr><td>Mean monthly return</td>
-          <td class="n">1.31%</td>
-          <td class="n">-0.1164%</td>
-          <td class="n neg">-1.426%</td></tr>
-        <tr><td><i>t</i>-statistic</td>
-          <td class="n">3.74</td>
-          <td class="n">-0.47</td><td class="n muted">—</td></tr>
-        <tr><td>Sample</td>
-          <td class="n">1964-1989</td>
-          <td class="n">2006-02-28..2026-09-30</td>
-          <td class="n muted">248 mo</td></tr>
-      </tbody>
-    </table>
-
-    <div class="verify warn">
-      <b>Verification — FIXTURE_UNAVAILABLE</b>
+      <span class="badge warn">unverified</span>
+    </div>
+    <p class="claim">Past winners keep winning: about 1.3% a month, 1964–1989.</p>
+    <div class="metrics"><div class="m"><span class="k">paper</span><span class="v">1.31%/mo</span><span class="s">t 3.74</span></div><div class="m"><span class="k">ours</span><span class="v neg">-0.1164%/mo</span><span class="s">t -0.47</span></div><div class="m"><span class="k">sample</span><span class="v">248 mo</span><span class="s">80 names</span></div></div>
+    <div class="row">
+      <a class="btn" href="https://doi.org/10.1111/j.1540-6261.1993.tb04702.x">Paper</a>
+      <a class="btn" href="https://github.com/RezaSoleymanifar/alpha-archive/blob/main/alpha_archive/replications/jt1993.py">Code</a>
+      <code>python -m alpha_archive.replications.jt1993</code>
+      <span class="spacer"></span><a class="tag" href="#" data-tag="momentum">momentum</a><a class="tag" href="#" data-tag="cross-sectional">cross-sectional</a><a class="tag" href="#" data-tag="equities">equities</a>
+    </div>
+    <details><summary>Full result</summary>
+      <h4>Verification — fixture unavailable</h4>
       <p>Open Source Asset Pricing&#x27;s own monthly long-short return series for Mom12m is not fetchable, so this cannot be verified. OpenAP publishes portfolio returns via Google Drive only. Those links return quota-exceeded and virus-scan interstitials rather than the file, and the GitHub releases carry no data assets. Until a stable URL exists, or CRSP is reproduced from free sources, this stays unverified.</p>
-      <dl>
-        <dt>Criterion</dt><dd>correlation with the fixture&#x27;s monthly return series ≥ 0.95</dd>
-        <dt>Fixture</dt><dd>Open Source Asset Pricing&#x27;s own monthly long-short return series for Mom12m</dd>
-        <dt>Declared by</dt><dd>Chen &amp; Zimmermann, openassetpricing.com, not by us</dd>
-      </dl>
-    </div>
-
-    <details><summary>Is it us, or did the effect decay?</summary>
-      <p class="note">Before blaming a paper, check whether the published factor still works.
-      If the reference factor is flat over the same window, a weak result here agrees with the
-      literature rather than refuting the paper.</p>
-      <table class="results"><thead><tr><th>Ken French UMD</th><th class="n">Mean</th>
-      <th class="n"><i>t</i></th><th class="n">Months</th></tr></thead>
-      <tbody><tr><td>1964-1989 (paper sample)</td><td class='n'>+0.802%</td><td class='n'>+4.08</td><td class='n muted'>312</td></tr><tr><td>1990-2005 (post-publication)</td><td class='n'>+0.908%</td><td class='n'>+2.60</td><td class='n muted'>192</td></tr><tr><td>2006-2026 (our window)</td><td class='n'>+0.154%</td><td class='n'>+0.54</td><td class='n muted'>246</td></tr><tr><td>1927-2026 (full)</td><td class='n'>+0.627%</td><td class='n'>+4.63</td><td class='n muted'>1194</td></tr></tbody></table>
-    </details>
-    <details><summary>What this sample cannot tell you</summary>
-      <ul class="caveats"><li>Universe is survivor-biased: only currently-listed large caps. The delisted losers momentum would have shorted are structurally absent, which biases this test against the paper&#x27;s result.</li><li>Sample is 2006-02-28..2026-09-30, not the paper&#x27;s 1964-1989. This is a different experiment, not a refutation.</li><li>80 names versus all of NYSE/AMEX in the original, so deciles here are far coarser.</li><li>Costs charged at 10 bps on turnover; the paper reported gross.</li><li>Holding period is 3 months with overlapping cohorts, matching the documented spec. Names below $5 nominal are screened out at formation.</li><li>Prices are Yahoo adjusted closes, which are adjusted retroactively.</li></ul></details>
+      <p class="fine">Bar: correlation with the fixture&#x27;s monthly return series ≥ 0.95,
+      against Open Source Asset Pricing&#x27;s own monthly long-short return series for Mom12m — declared by
+      Chen &amp; Zimmermann, openassetpricing.com, not by us.</p>
+      <h4>Reference factor by era</h4>
+      <table><thead><tr><th>Ken French UMD</th><th class="n">mean</th><th class="n">t</th>
+      <th class="n">months</th></tr></thead><tbody><tr><td>1964-1989 (paper sample)</td><td class='n'>+0.802%</td><td class='n'>+4.08</td><td class='n sub'>312</td></tr><tr><td>1990-2005 (post-publication)</td><td class='n'>+0.908%</td><td class='n'>+2.60</td><td class='n sub'>192</td></tr><tr><td>2006-2026 (our window)</td><td class='n'>+0.154%</td><td class='n'>+0.54</td><td class='n sub'>246</td></tr><tr><td>1927-2026 (full)</td><td class='n'>+0.627%</td><td class='n'>+4.63</td><td class='n sub'>1194</td></tr></tbody></table>
+      <h4>Sample limits</h4><ul><li>Universe is survivor-biased: only currently-listed large caps. The delisted losers momentum would have shorted are structurally absent, which biases this test against the paper&#x27;s result.</li><li>Sample is 2006-02-28..2026-09-30, not the paper&#x27;s 1964-1989. This is a different experiment, not a refutation.</li><li>80 names versus all of NYSE/AMEX in the original, so deciles here are far coarser.</li><li>Costs charged at 10 bps on turnover; the paper reported gross.</li><li>Holding period is 3 months with overlapping cohorts, matching the documented spec. Names below $5 nominal are screened out at formation.</li><li>Prices are Yahoo adjusted closes, which are adjusted retroactively.</li></ul></details>
   </article>
 
-  <article class="paper" id="darmanin2026">
-    
-    <header class="phead">
-      <div class="pmeta">
-        <span class="pid">AA-0002</span>
-        <span class="status warn">partial</span>
-        <span class="count">1/2 families reproduced</span>
+  <article class="card" data-status="warn" data-search="retail trader&#x27;s ruin: an anatomy of popular signal failure darmanin arxiv:2607.20093 technical-analysis market-timing multiple-testing partial" id="darmanin2026">
+    <div class="top">
+      <div>
+        <h2><a href="https://arxiv.org/abs/2607.20093">Retail Trader&#x27;s Ruin: An Anatomy of Popular Signal Failure</a></h2>
+        <p class="by">Darmanin · arXiv:2607.20093 · 2026</p>
       </div>
-      <h3><a href="https://arxiv.org/abs/2607.20093">Retail Trader&#x27;s Ruin: An Anatomy of Popular Signal Failure</a></h3>
-      <p class="authors">Adam Darmanin</p>
-      <p class="venue">arXiv:2607.20093 [q-fin.ST]</p>
-      <p class="claim"><b>The claim.</b> None of the five most popular retail trading signals delivers a usable edge. Moving-average crosses, RSI, candlestick patterns, volume indicators and Sell-in-May: four are refuted outright, two cannot be resolved, and not one is supported once costs and multiple testing are accounted for.</p>
-      <p class="summary">Tests five widely promoted retail signal families against three predeclared gates: statistical edge after multiplicity correction, economic viability after costs, and survival under leverage. Reports four refuted, two inconclusive, none supported.</p>
-      <p class="tags"><span class="tag">technical-analysis</span><span class="tag">market-timing</span><span class="tag">multiple-testing</span></p>
-      <p class="actions">
-        <a class="btn" href="https://arxiv.org/abs/2607.20093">Paper</a>
-        <a class="btn" href="https://github.com/RezaSoleymanifar/alpha-archive/blob/main/alpha_archive/replications/darmanin2026.py">Code</a>
-        <code>uv run python -m alpha_archive.replications.darmanin2026</code>
-      </p>
-    </header>
-    <table class="results">
-      <caption><b>Two separate questions.</b> The middle columns show the paper's
-      <i>statistical</i> gate and ours. That answers <i>does the rule work</i>, where
-      "inconclusive" is a legitimate finding rather than a failure. The last column answers
-      <i>did we reproduce their answer</i>, and reproducing an inconclusive result counts as
-      a success.<br><br>
-      <b>Why ranges rather than numbers.</b> Neither side reports a single figure. Each
-      reports an interval the true value probably sits in. A family counts as reproduced
-      only when the verdicts match <i>and</i> the intervals share ground, on both the
-      statistical and the economic gate. Two people can reach the same verdict from
-      different numbers; if the intervals never touch, we computed different things and the
-      agreement was luck.</caption>
-      <thead><tr><th>Family</th><th class="n">Paper, statistical gate</th>
-      <th class="n">Ours</th><th class="n">Both gates reproduced?</th></tr></thead>
-      <tbody><tr><td>Sell-in-May<br><span class='muted'>SPY, 8,435 obs (paper 8,358)</span></td><td class='n'>[-0.618, 0.000]<br><span class='muted'>REFUTED</span></td><td class='n'>[-0.313, 0.154]<br><span class='muted'>REFUTED</span></td><td class='n'><span class='status bad'>differs</span><br><span class='muted'>on the economic gate</span></td></tr><tr><td>Golden/death cross (50/200)<br><span class='muted'>^NDX, 10,289 obs (paper 10,331)</span></td><td class='n'>[-0.234, 0.265]<br><span class='muted'>INCONCLUSIVE</span></td><td class='n'>[-0.172, 0.269]<br><span class='muted'>INCONCLUSIVE</span></td><td class='n'><span class='status ok'>reproduced</span></td></tr></tbody>
-    </table>
-    <p class="note">Thresholds are the paper's own: a family is refuted when the interval's
-    upper bound falls below δ<sub>S</sub> = 0.2, never on bare
-    non-significance. Costs are 5.0 bps per leg. Intervals come from a
-    stationary bootstrap, 2,000 draws, mean block
-    20 days.</p>
-
-    <details open><summary>Did the authors' parameter choices carry the result?</summary>
-      <p class="note">Every rule embeds free choices. Re-running across them shows whether a
-      finding lives only at the parameters that were reported.</p>
-      <table class="results"><tbody><tr><td>Sell-in-May</td><td><code>Nov-Apr</code> -0.091, <code>Oct-Apr</code> -0.032, <code>Nov-May</code> -0.054, <code>Dec-Mar</code> -0.367</td></tr><tr><td>Golden/death cross (50/200)</td><td><code>20/100</code> -0.028, <code>50/200</code> +0.044, <code>100/300</code> +0.019, <code>10/50</code> -0.096</td></tr></tbody></table></details>
-
-    <details><summary>Placebo: the same machinery on coin flips</summary>
-      <p class="note">Random signals pushed through the identical pipeline. Whatever appears
-      here is manufactured by the method, not found in the market.</p>
-      <table class="results"><thead><tr><th>Family</th><th class="n">Mean gap</th>
-      <th class="n">Max |gap|</th><th class="n">Runs</th></tr></thead>
-      <tbody><tr><td>Sell-in-May</td><td class='n'>-0.671</td><td class='n'>0.886</td><td class='n muted'>12</td></tr><tr><td>Golden/death cross (50/200)</td><td class='n'>-0.538</td><td class='n'>0.655</td><td class='n muted'>12</td></tr></tbody></table></details>
-
-    <details><summary>Not attempted</summary><ul class="caveats"><li>Oscillator (RSI) — NASDAQ-100, reproducible in principle, not yet run</li><li>Volume (OBV) — needs Russell 3000 point-in-time membership</li><li>Candlestick — needs Russell 3000 point-in-time membership</li><li>Momentum calibration — needs S&amp;P 500 point-in-time membership</li></ul></details>
-  </article>
-
-  <h2>Method</h2>
-  <div class="how">
-    <div class="step"><b>Declare the bar first</b><p>The criterion is written down before the
-    run and frozen. An earlier version of this failed that test: the threshold was set at 0.6
-    after 0.9 proved unreachable. Moving a bar to fit a result is the thing this project
-    exists to catch.</p></div>
-    <div class="step"><b>Perturb what the authors chose</b><p>Every rule embeds free choices —
-    lookback, holding period, breakpoints. Re-running across them shows whether a finding lives
-    only at the reported parameters. This needs no external reference, which is why it works
-    for papers nobody has replicated.</p></div>
-    <div class="step"><b>Say what the sample cannot cover</b><p>Free data means survivor-biased
-    universes and short accounting history. Those limits are printed with every result, because
-    a gap against a claim is often evidence about our sample rather than about the paper.</p></div>
-  </div>
-
-  <h2>Built on</h2>
-  <div class="how">
-    <div class="step"><b>Vintage</b><p>The data layer. Point-in-time prices, filings and factors
-    from the SEC, the St. Louis Fed and Dartmouth, each value carrying the date it became public.
-    <a href="https://github.com/RezaSoleymanifar/vintage">Repository</a> ·
-    <a href="https://rezasoleymanifar.github.io/vintage/">Site</a></p></div>
-    <div class="step"><b>Open Source Asset Pricing</b><p>Chen &amp; Zimmermann's documented
-    scoreboard of 331 published predictors, with the claimed return and t-statistic for each.
-    <a href="https://www.openassetpricing.com/">openassetpricing.com</a></p></div>
-    <div class="step"><b>Ken French Data Library</b><p>Dartmouth's published factors, used as a
-    reference series when a like-for-like construction exists.</p></div>
-  </div>
-
-  <footer>
-    <div class="flinks">
-      <a href="https://github.com/RezaSoleymanifar/alpha-archive">GitHub</a>
-      <a href="https://github.com/RezaSoleymanifar/alpha-archive/blob/main/docs/methodology.md">Methodology</a>
-      <a href="https://github.com/RezaSoleymanifar/vintage">Vintage</a>
+      <span class="badge warn">partial</span>
     </div>
-    <p>MIT licensed. Alpha Archive redistributes no data and reproduces no paper text — it
-    links to originals and publishes its own code and results. Not affiliated with arXiv,
-    Cornell University, Papers With Code, or any cited author. Nothing here is investment
-    advice.</p>
+    <p class="claim">None of the five most popular retail signals beats buy-and-hold.</p>
+    <div class="metrics"><div class="m"><span class="k">Sell-in-May</span><span class="v">refuted</span><span class="s bad">differs</span></div><div class="m"><span class="k">Golden/death cross (50/200)</span><span class="v">inconclusive</span><span class="s ok">matched</span></div></div>
+    <div class="row">
+      <a class="btn" href="https://arxiv.org/abs/2607.20093">Paper</a>
+      <a class="btn" href="https://github.com/RezaSoleymanifar/alpha-archive/blob/main/alpha_archive/replications/darmanin2026.py">Code</a>
+      <code>python -m alpha_archive.replications.darmanin2026</code>
+      <span class="spacer"></span><a class="tag" href="#" data-tag="technical-analysis">technical-analysis</a><a class="tag" href="#" data-tag="market-timing">market-timing</a><a class="tag" href="#" data-tag="multiple-testing">multiple-testing</a>
+    </div>
+    <details><summary>Full result</summary>
+      <table><thead><tr><th rowspan="2">Family</th>
+        <th colspan="2" class="n">Sharpe gap, 95% CI</th>
+        <th colspan="2" class="n">CAGR gap, 95% CI</th></tr>
+        <tr><th class="n">paper</th><th class="n">ours</th>
+            <th class="n">paper</th><th class="n">ours</th></tr></thead>
+        <tbody><tr><td>Sell-in-May<div class='sub'>SPY · 8,435 obs (paper 8,358)</div></td><td class='n'>[-0.618, 0.000]<div class='sub'>refuted</div></td><td class='n'>[-0.313, 0.154]<div class='sub'>refuted</div></td><td class='n'>[-0.131, -0.026]</td><td class='n'>[-0.016, 0.040]</td></tr><tr><td>Golden/death cross (50/200)<div class='sub'>^NDX · 10,289 obs (paper 10,331)</div></td><td class='n'>[-0.234, 0.265]<div class='sub'>inconclusive</div></td><td class='n'>[-0.172, 0.269]<div class='sub'>inconclusive</div></td><td class='n'>[-0.081, 0.024]</td><td class='n'>[-0.030, 0.056]</td></tr></tbody></table>
+      <p class="fine">Reproduced means the verdict matches <em>and</em> the intervals overlap,
+      on both gates. Thresholds are the paper's: δ<sub>S</sub>=0.2,
+      δ<sub>R</sub>=0.01. Costs 5.0bps/leg. Stationary
+      bootstrap, 2,000 draws, mean block 20.</p>
+      <h4>Parameter sensitivity</h4>
+      <table class="plain"><tbody><tr><td>Sell-in-May</td><td><code>Nov-Apr</code> -0.091 · <code>Oct-Apr</code> -0.032 · <code>Nov-May</code> -0.054 · <code>Dec-Mar</code> -0.367</td></tr><tr><td>Golden/death cross (50/200)</td><td><code>20/100</code> -0.028 · <code>50/200</code> +0.044 · <code>100/300</code> +0.019 · <code>10/50</code> -0.096</td></tr></tbody></table>
+      <h4>Where we differ</h4><ul><li>Table 1 describes this family as &#x27;Sell-in-May (best of battery, Bonferroni + BY)&#x27;. The paper searches a battery of calendar rules and reports the best after multiplicity correction. We run the single canonical November-April rule, so a disagreement on the economic gate is a specification difference before it is a replication failure.</li><li>Our sample carries 78 more or fewer observations than the paper&#x27;s, and the bootstrap block length is our choice rather than theirs, so intervals are not expected to match to the digit.</li></ul>
+      <h4>Not attempted</h4><ul><li>Oscillator (RSI) — NASDAQ-100, reproducible in principle, not yet run</li><li>Volume (OBV) — needs Russell 3000 point-in-time membership</li><li>Candlestick — needs Russell 3000 point-in-time membership</li><li>Momentum calibration — needs S&amp;P 500 point-in-time membership</li></ul></details>
+  </article></div>
+  <p class="empty" id="empty" hidden>No papers match.</p>
+  <footer>
+    <a href="https://github.com/RezaSoleymanifar/alpha-archive">GitHub</a>
+    <a href="https://github.com/RezaSoleymanifar/alpha-archive/blob/main/docs/methodology.md">Methodology</a>
+    <a href="https://github.com/RezaSoleymanifar/vintage">Vintage</a>
+    <a href="https://www.openassetpricing.com/">Open Source Asset Pricing</a>
+    <p>MIT licensed. No data redistributed, no paper text reproduced. Not affiliated with
+    arXiv, Papers with Code, or any cited author. Not investment advice.</p>
   </footer>
-
 </div>
+
+<script>
+var cards = [].slice.call(document.querySelectorAll('.card'));
+var q = document.getElementById('q'), count = document.getElementById('count'),
+    empty = document.getElementById('empty'), filter = 'all';
+
+function apply() {
+  var term = q.value.trim().toLowerCase(), shown = 0;
+  cards.forEach(function (c) {
+    var okStatus = filter === 'all' || c.dataset.status === filter;
+    var okTerm = !term || c.dataset.search.indexOf(term) !== -1;
+    var show = okStatus && okTerm;
+    c.hidden = !show;
+    if (show) shown++;
+  });
+  count.textContent = shown + (shown === 1 ? ' paper' : ' papers');
+  empty.hidden = shown > 0;
+}
+
+q.addEventListener('input', apply);
+document.querySelectorAll('.f').forEach(function (b) {
+  b.addEventListener('click', function () {
+    document.querySelectorAll('.f').forEach(function (x) { x.classList.remove('on'); });
+    b.classList.add('on');
+    filter = b.dataset.f;
+    apply();
+  });
+});
+document.querySelectorAll('.tag').forEach(function (t) {
+  t.addEventListener('click', function (e) {
+    e.preventDefault();
+    q.value = t.dataset.tag;
+    apply();
+  });
+});
+apply();
+</script>
 </body>
 </html>
