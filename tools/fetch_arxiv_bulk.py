@@ -38,10 +38,22 @@ PAGE = 100          # arXiv's practical maximum per call
 PAUSE = 3.1         # what arXiv asks for between calls
 
 
+def judged_already() -> dict[str, str]:
+    """Papers an agent has already read. A drop cost a full PDF read once; it
+    should not cost one again every harvest."""
+    path = os.path.join(fp.ROOT, "data", "triage", "ledger.json")
+    if not os.path.exists(path):
+        return {}
+    with open(path, encoding="utf-8") as fh:
+        return {k: v.get("verdict", "") for k, v in json.load(fh).get("papers", {}).items()}
+
+
 def harvest(target: int, client: httpx.Client) -> list[dict]:
     """Walk the q-fin listing newest-first, keeping what passes the gates."""
     kept: list[dict] = []
     seen: set[str] = set()
+    ledger = judged_already()
+    rejudged = 0
     start, scanned, empty = 0, 0, 0
     while len(kept) < target and start < 30000 and empty < 3:
         r = client.get(API, params={
@@ -62,6 +74,9 @@ def harvest(target: int, client: httpx.Client) -> list[dict]:
             if base in seen:
                 continue
             seen.add(base)
+            if ledger.get(base) == "drop":
+                rejudged += 1
+                continue                    # already read, already rejected
             title = re.sub(r"\s+", " ", e.title).strip()
             summary = re.sub(r"\s+", " ", e.summary).strip()
             names = [a.name for a in getattr(e, "authors", [])]
@@ -90,7 +105,8 @@ def harvest(target: int, client: httpx.Client) -> list[dict]:
                 kept.append(rec)
                 if len(kept) >= target:
                     break
-        print(f"    scanned {scanned}, kept {len(kept)}", flush=True)
+        print(f"    scanned {scanned}, kept {len(kept)}, "
+              f"skipped {rejudged} already-rejected", flush=True)
         start += PAGE
         time.sleep(PAUSE)
     return kept
