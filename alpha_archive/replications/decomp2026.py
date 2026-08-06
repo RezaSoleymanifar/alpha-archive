@@ -212,13 +212,64 @@ def switch_on(frame: pd.DataFrame, signal: pd.Series) -> pd.Series:
 
 
 def summarise(returns: pd.Series, rf: pd.Series) -> dict[str, float]:
+    """The five columns Table 6 reports for every strategy."""
     excess = returns - rf
+    wealth = (1 + returns).cumprod()
+    drawdown = wealth / wealth.cummax() - 1
     return {
-        "terminal_wealth": round(float((1 + returns).prod()), 2),
+        "TW": round(float(wealth.iloc[-1]), 2),
+        "AV": round(float(returns.mean() * 12 * 100), 2),
+        "SD": round(float(returns.std() * np.sqrt(12) * 100), 2),
+        "SR": round(float(excess.mean() / excess.std()), 3),
+        "MDD": round(float(drawdown.min() * 100), 2),
+        # kept under the old names so nothing downstream breaks
+        "terminal_wealth": round(float(wealth.iloc[-1]), 2),
         "ann_return_pct": round(float(returns.mean() * 12 * 100), 2),
         "ann_sd_pct": round(float(returns.std() * np.sqrt(12) * 100), 2),
         "sharpe_monthly": round(float(excess.mean() / excess.std()), 3),
     }
+
+
+def table6(frame: pd.DataFrame, k: int = SUBSET_K) -> pd.DataFrame:
+    """Reproduce the paper's Table 6, one row per strategy.
+
+    Same rows, same five columns, so it can be read straight against the
+    printed table rather than translated first.
+    """
+    prob, mu = forecast(frame, k=k)
+    book = trade(frame, prob, mu)
+    rf = book["rf"]
+
+    rows = {
+        "Buy-and-hold": summarise(book["market"], rf),
+        f"CSM (Baseline), k={k}": summarise(book["net"], rf),
+        f"CSR, k={k}": summarise(switch_on(frame, subset_regression(frame, k)), rf),
+        "Momentum 3m": summarise(momentum_switch(frame, 3), rf),
+        "Momentum 6m": summarise(momentum_switch(frame, 6), rf),
+        "Momentum 12m": summarise(momentum_switch(frame, 12), rf),
+    }
+    return pd.DataFrame(rows).T[["TW", "AV", "SD", "SR", "MDD"]]
+
+
+# What the paper prints, for the same rows. Transcribed, not computed.
+TABLE6_PAPER = {
+    "Buy-and-hold": {"TW": 104.63, "AV": 12.65, "SD": 15.00, "SR": 0.17},
+    "CSM (Baseline), k=3": {"TW": 181.68, "SR": 0.21},
+    "CSR, k=3": {"TW": 98.22},
+    "Momentum 12m": {"TW": 100.21, "SR": 0.20},
+}
+
+
+def wealth_paths(frame: pd.DataFrame, k: int = SUBSET_K) -> pd.DataFrame:
+    """Figure 4: terminal wealth through time, per strategy."""
+    prob, mu = forecast(frame, k=k)
+    book = trade(frame, prob, mu)
+    return pd.DataFrame({
+        "Buy-and-hold": (1 + book["market"]).cumprod(),
+        f"CSM (Baseline), k={k}": (1 + book["net"]).cumprod(),
+        f"CSR, k={k}": (1 + switch_on(frame, subset_regression(frame, k))).cumprod(),
+        "Momentum 12m": (1 + momentum_switch(frame, 12)).cumprod(),
+    })
 
 
 def sweep(frame: pd.DataFrame) -> pd.DataFrame:
