@@ -17,6 +17,11 @@ import glob
 import html
 import json
 import os
+import sys
+
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+
+import thumb
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 REPO = "https://github.com/RezaSoleymanifar/alpha-archive"
@@ -30,7 +35,10 @@ PAPERS = {
         "venue": "Journal of Finance",
         "year": 1993,
         "tags": ["momentum", "cross-sectional", "equities"],
-        "claim": "Past winners keep winning: about 1.3% a month, 1964–1989.",
+        "claim": "Past winners keep winning: about 1.3% a month over 1964–1989.",
+        "finding": "We measure −0.12%/mo on currently-listed large caps since 2006, but the "
+                   "reference factor is flat over that window too, so this is decay rather "
+                   "than refutation. Not verified — the parity fixture is unobtainable.",
         "paper_url": "https://doi.org/10.1111/j.1540-6261.1993.tb04702.x",
         "impl_url": f"{REPO}/blob/main/alpha_archive/replications/jt1993.py",
         "run_cmd": "python -m alpha_archive.replications.jt1993",
@@ -43,6 +51,9 @@ PAPERS = {
         "year": 2026,
         "tags": ["technical-analysis", "market-timing", "multiple-testing"],
         "claim": "None of the five most popular retail signals beats buy-and-hold.",
+        "finding": "We reproduce the golden/death cross result exactly. Sell-in-May matches on "
+                   "the statistical gate and differs on the economic one, where the paper "
+                   "searches a battery of calendar rules and we run the canonical one.",
         "paper_url": "https://arxiv.org/abs/2607.20093",
         "impl_url": f"{REPO}/blob/main/alpha_archive/replications/darmanin2026.py",
         "run_cmd": "python -m alpha_archive.replications.darmanin2026",
@@ -175,22 +186,25 @@ def card(rec: dict) -> str:
 
     return f"""
   <article class="card" data-status="{cls}" data-search="{e(search)}" id="{e(rec['paper'].lower())}">
-    <div class="top">
-      <div>
-        <h2><a href="{m['paper_url']}">{e(m['title'])}</a></h2>
-        <p class="by">{e(m['authors'])} · {e(m['venue'])} · {m['year']}</p>
-      </div>
-      <span class="badge {cls}">{e(label)}</span>
+    <div class="fig">{thumb.for_record(rec)}</div>
+
+    <div class="mid">
+      <h2><a href="{m['paper_url']}">{e(m['title'])}</a></h2>
+      <p class="abs">{e(m['claim'])} {e(m['finding'])}</p>
+      <p class="meta">
+        <span class="org">{e(m['venue'])}</span>
+        <span class="dot">·</span>{e(m['authors'])}
+        <span class="dot">·</span>Published {m['year']}
+      </p>
+      <p class="tagrow">{tags}</p>
+      <details><summary>Full result</summary>{detail(rec)}</details>
     </div>
-    <p class="claim">{e(m['claim'])}</p>
-    <div class="metrics">{metrics(rec)}</div>
-    <div class="row">
-      <a class="btn" href="{m['paper_url']}">Paper</a>
-      <a class="btn" href="{m['impl_url']}">Code</a>
-      <code>{e(m['run_cmd'])}</code>
-      <span class="spacer"></span>{tags}
+
+    <div class="acts">
+      <span class="act status {cls}">{e(label)}</span>
+      <a class="act" href="{m['impl_url']}">Code</a>
+      <a class="act" href="{m['paper_url']}">Paper</a>
     </div>
-    <details><summary>Full result</summary>{detail(rec)}</details>
   </article>"""
 
 
@@ -229,54 +243,39 @@ header.site{background:var(--card);border-bottom:1px solid var(--line);position:
   background:#fbfcfd;color:var(--soft);cursor:pointer}
 .f.on{background:var(--ink);border-color:var(--ink);color:#fff}
 
-.count{color:var(--soft);font-size:13px;padding:16px 0 4px}
-.card{background:var(--card);border:1px solid var(--line);border-radius:8px;padding:18px 20px;
-  margin-bottom:12px}
-.top{display:flex;gap:14px;align-items:flex-start;justify-content:space-between}
-.card h2{font-size:17px;line-height:1.35;margin:0 0 4px;font-weight:650}
+.count{color:var(--soft);font-size:13px;padding:18px 0 10px}
+
+/* Card: figure left, text centre, actions right — the reference layout. */
+.card{background:var(--card);border:1px solid var(--line);border-radius:10px;
+  padding:16px;margin-bottom:14px;display:grid;gap:18px;grid-template-columns:1fr}
+@media(min-width:760px){.card{grid-template-columns:240px 1fr 152px}}
+.fig{border:1px solid var(--line);border-radius:6px;overflow:hidden;background:#fff;
+  align-self:start;line-height:0}
+.fig svg{width:100%;height:auto;display:block}
+
+.mid{min-width:0}
+.card h2{font-size:19px;line-height:1.32;margin:0 0 8px;font-weight:650;letter-spacing:-.01em}
 .card h2 a{color:var(--ink)}
-.by{color:var(--soft);font-size:13px;margin:0}
-.badge{font-size:11px;font-weight:700;letter-spacing:.04em;padding:4px 10px;border-radius:20px;
-  white-space:nowrap}
-.badge.ok{color:var(--ok);background:var(--okbg)}
-.badge.warn{color:var(--warn);background:var(--warnbg)}
-.badge.bad{color:var(--bad);background:var(--badbg)}
-.claim{margin:11px 0 13px;font-size:14.5px}
-
-.metrics{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:13px}
-.m{border:1px solid var(--line);border-radius:6px;padding:8px 12px;background:#fbfcfd;min-width:132px}
-.m .k{display:block;color:var(--soft);font-size:10.5px;letter-spacing:.06em;text-transform:uppercase}
-.m .v{display:block;font-family:var(--mono);font-size:16px;font-weight:600;margin-top:2px}
-.m .v.neg{color:var(--bad)}
-.m .s{display:block;color:var(--soft);font-size:11.5px;font-family:var(--mono);margin-top:1px}
-.m .s.ok{color:var(--ok)}
-.m .s.bad{color:var(--bad)}
-
-.row{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
-.spacer{flex:1}
-.btn{font-size:13px;font-weight:600;border:1px solid var(--line);border-radius:6px;padding:5px 12px;
-  color:var(--ink);background:#fbfcfd}
-.btn:hover{background:#eef1f4;text-decoration:none}
-.row code{font-family:var(--mono);font-size:11.5px;color:var(--soft)}
+.abs{margin:0 0 10px;font-size:14.5px;line-height:1.55;color:#3d4750}
+.meta{margin:0 0 10px;font-size:13px;color:var(--soft);display:flex;align-items:center;
+  gap:7px;flex-wrap:wrap}
+.org{background:#eef1f4;border-radius:5px;padding:2px 8px;font-size:12px;
+  font-weight:600;color:#3d4750}
+.dot{color:#c3ccd4}
+.tagrow{margin:0;display:flex;gap:6px;flex-wrap:wrap}
 .tag{font-size:11.5px;color:var(--soft);background:#eef1f4;border-radius:4px;padding:3px 8px}
 .tag:hover{background:#e2e7ec;text-decoration:none}
 
-details{margin-top:14px;border-top:1px solid var(--line);padding-top:12px}
-summary{cursor:pointer;font-size:13.5px;font-weight:600;color:var(--link)}
-details h4{font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:var(--soft);
-  margin:18px 0 8px;font-weight:600}
-details p{font-size:13.5px;margin:0 0 8px}
-details ul{margin:0;padding-left:18px;font-size:13px;color:var(--soft);line-height:1.65}
-.fine{color:var(--soft);font-size:12.5px;line-height:1.6}
-table{width:100%;border-collapse:collapse;font-size:13px;margin:4px 0 0}
-th{color:var(--soft);font-size:10.5px;letter-spacing:.06em;text-transform:uppercase;font-weight:600;
-  text-align:left;padding:6px 8px;border-bottom:1px solid var(--ink)}
-td{padding:8px;border-bottom:1px solid var(--line);vertical-align:top}
-table.plain th,table.plain td{border:none;padding:5px 8px}
-.n{text-align:right;font-family:var(--mono);white-space:nowrap}
-th.n{text-align:right}
-.sub{color:var(--soft);font-size:11.5px;font-weight:400}
-code{font-family:var(--mono)}
+.acts{display:flex;flex-direction:column;gap:8px;align-self:start}
+.act{display:flex;align-items:center;justify-content:center;gap:6px;font-size:13px;
+  font-weight:600;border:1px solid var(--line);border-radius:7px;padding:7px 12px;
+  color:var(--ink);background:#fff;white-space:nowrap}
+a.act:hover{background:#f2f5f8;text-decoration:none}
+.act.status{cursor:default}
+.act.status.ok{color:var(--ok);background:var(--okbg);border-color:#bfe3ce}
+.act.status.warn{color:var(--warn);background:var(--warnbg);border-color:#eddcb6}
+.act.status.bad{color:var(--bad);background:var(--badbg);border-color:#eec7c2}
+
 .empty{padding:36px 0;color:var(--soft);text-align:center}
 footer{color:var(--soft);font-size:12.5px;padding:26px 0 56px;line-height:1.7}
 footer a{margin-right:16px}

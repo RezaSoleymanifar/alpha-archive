@@ -33,54 +33,39 @@ header.site{background:var(--card);border-bottom:1px solid var(--line);position:
   background:#fbfcfd;color:var(--soft);cursor:pointer}
 .f.on{background:var(--ink);border-color:var(--ink);color:#fff}
 
-.count{color:var(--soft);font-size:13px;padding:16px 0 4px}
-.card{background:var(--card);border:1px solid var(--line);border-radius:8px;padding:18px 20px;
-  margin-bottom:12px}
-.top{display:flex;gap:14px;align-items:flex-start;justify-content:space-between}
-.card h2{font-size:17px;line-height:1.35;margin:0 0 4px;font-weight:650}
+.count{color:var(--soft);font-size:13px;padding:18px 0 10px}
+
+/* Card: figure left, text centre, actions right — the reference layout. */
+.card{background:var(--card);border:1px solid var(--line);border-radius:10px;
+  padding:16px;margin-bottom:14px;display:grid;gap:18px;grid-template-columns:1fr}
+@media(min-width:760px){.card{grid-template-columns:240px 1fr 152px}}
+.fig{border:1px solid var(--line);border-radius:6px;overflow:hidden;background:#fff;
+  align-self:start;line-height:0}
+.fig svg{width:100%;height:auto;display:block}
+
+.mid{min-width:0}
+.card h2{font-size:19px;line-height:1.32;margin:0 0 8px;font-weight:650;letter-spacing:-.01em}
 .card h2 a{color:var(--ink)}
-.by{color:var(--soft);font-size:13px;margin:0}
-.badge{font-size:11px;font-weight:700;letter-spacing:.04em;padding:4px 10px;border-radius:20px;
-  white-space:nowrap}
-.badge.ok{color:var(--ok);background:var(--okbg)}
-.badge.warn{color:var(--warn);background:var(--warnbg)}
-.badge.bad{color:var(--bad);background:var(--badbg)}
-.claim{margin:11px 0 13px;font-size:14.5px}
-
-.metrics{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:13px}
-.m{border:1px solid var(--line);border-radius:6px;padding:8px 12px;background:#fbfcfd;min-width:132px}
-.m .k{display:block;color:var(--soft);font-size:10.5px;letter-spacing:.06em;text-transform:uppercase}
-.m .v{display:block;font-family:var(--mono);font-size:16px;font-weight:600;margin-top:2px}
-.m .v.neg{color:var(--bad)}
-.m .s{display:block;color:var(--soft);font-size:11.5px;font-family:var(--mono);margin-top:1px}
-.m .s.ok{color:var(--ok)}
-.m .s.bad{color:var(--bad)}
-
-.row{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
-.spacer{flex:1}
-.btn{font-size:13px;font-weight:600;border:1px solid var(--line);border-radius:6px;padding:5px 12px;
-  color:var(--ink);background:#fbfcfd}
-.btn:hover{background:#eef1f4;text-decoration:none}
-.row code{font-family:var(--mono);font-size:11.5px;color:var(--soft)}
+.abs{margin:0 0 10px;font-size:14.5px;line-height:1.55;color:#3d4750}
+.meta{margin:0 0 10px;font-size:13px;color:var(--soft);display:flex;align-items:center;
+  gap:7px;flex-wrap:wrap}
+.org{background:#eef1f4;border-radius:5px;padding:2px 8px;font-size:12px;
+  font-weight:600;color:#3d4750}
+.dot{color:#c3ccd4}
+.tagrow{margin:0;display:flex;gap:6px;flex-wrap:wrap}
 .tag{font-size:11.5px;color:var(--soft);background:#eef1f4;border-radius:4px;padding:3px 8px}
 .tag:hover{background:#e2e7ec;text-decoration:none}
 
-details{margin-top:14px;border-top:1px solid var(--line);padding-top:12px}
-summary{cursor:pointer;font-size:13.5px;font-weight:600;color:var(--link)}
-details h4{font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:var(--soft);
-  margin:18px 0 8px;font-weight:600}
-details p{font-size:13.5px;margin:0 0 8px}
-details ul{margin:0;padding-left:18px;font-size:13px;color:var(--soft);line-height:1.65}
-.fine{color:var(--soft);font-size:12.5px;line-height:1.6}
-table{width:100%;border-collapse:collapse;font-size:13px;margin:4px 0 0}
-th{color:var(--soft);font-size:10.5px;letter-spacing:.06em;text-transform:uppercase;font-weight:600;
-  text-align:left;padding:6px 8px;border-bottom:1px solid var(--ink)}
-td{padding:8px;border-bottom:1px solid var(--line);vertical-align:top}
-table.plain th,table.plain td{border:none;padding:5px 8px}
-.n{text-align:right;font-family:var(--mono);white-space:nowrap}
-th.n{text-align:right}
-.sub{color:var(--soft);font-size:11.5px;font-weight:400}
-code{font-family:var(--mono)}
+.acts{display:flex;flex-direction:column;gap:8px;align-self:start}
+.act{display:flex;align-items:center;justify-content:center;gap:6px;font-size:13px;
+  font-weight:600;border:1px solid var(--line);border-radius:7px;padding:7px 12px;
+  color:var(--ink);background:#fff;white-space:nowrap}
+a.act:hover{background:#f2f5f8;text-decoration:none}
+.act.status{cursor:default}
+.act.status.ok{color:var(--ok);background:var(--okbg);border-color:#bfe3ce}
+.act.status.warn{color:var(--warn);background:var(--warnbg);border-color:#eddcb6}
+.act.status.bad{color:var(--bad);background:var(--badbg);border-color:#eec7c2}
+
 .empty{padding:36px 0;color:var(--soft);text-align:center}
 footer{color:var(--soft);font-size:12.5px;padding:26px 0 56px;line-height:1.7}
 footer a{margin-right:16px}
@@ -103,22 +88,18 @@ footer a{margin-right:16px}
   <p class="count" id="count"></p>
   <div id="list">
   <article class="card" data-status="warn" data-search="returns to buying winners and selling losers: implications for stock market efficiency jegadeesh, titman journal of finance momentum cross-sectional equities unverified" id="mom12m">
-    <div class="top">
-      <div>
-        <h2><a href="https://doi.org/10.1111/j.1540-6261.1993.tb04702.x">Returns to Buying Winners and Selling Losers: Implications for Stock Market Efficiency</a></h2>
-        <p class="by">Jegadeesh, Titman · Journal of Finance · 1993</p>
-      </div>
-      <span class="badge warn">unverified</span>
-    </div>
-    <p class="claim">Past winners keep winning: about 1.3% a month, 1964–1989.</p>
-    <div class="metrics"><div class="m"><span class="k">paper</span><span class="v">1.31%/mo</span><span class="s">t 3.74</span></div><div class="m"><span class="k">ours</span><span class="v neg">-0.1164%/mo</span><span class="s">t -0.47</span></div><div class="m"><span class="k">sample</span><span class="v">248 mo</span><span class="s">80 names</span></div></div>
-    <div class="row">
-      <a class="btn" href="https://doi.org/10.1111/j.1540-6261.1993.tb04702.x">Paper</a>
-      <a class="btn" href="https://github.com/RezaSoleymanifar/alpha-archive/blob/main/alpha_archive/replications/jt1993.py">Code</a>
-      <code>python -m alpha_archive.replications.jt1993</code>
-      <span class="spacer"></span><a class="tag" href="#" data-tag="momentum">momentum</a><a class="tag" href="#" data-tag="cross-sectional">cross-sectional</a><a class="tag" href="#" data-tag="equities">equities</a>
-    </div>
-    <details><summary>Full result</summary>
+    <div class="fig"><svg viewBox="0 0 240 168" width="240" height="168" role="img" aria-label="paper 1.31, measured -0.1164" preserveAspectRatio="xMidYMid meet"><rect width="240" height="168" fill="#fff"/><text x="14" y="22" font-size="8.5" fill="#61707e" text-anchor="start" font-weight="700" font-family="ui-monospace,Menlo,Consolas,monospace">CLAIM VS MEASURED</text><line x1="114.0" y1="36" x2="114.0" y2="96" stroke="#e3e7eb" stroke-width="1"/><text x="14" y="55" font-size="9" fill="#61707e" text-anchor="start" font-weight="400" font-family="ui-monospace,Menlo,Consolas,monospace">paper</text><rect x="114.0" y="46" width="50.0" height="12" rx="2" fill="#0f7a45" opacity="0.85"/><text x="226" y="55" font-size="8.5" fill="#0f7a45" text-anchor="end" font-weight="700" font-family="ui-monospace,Menlo,Consolas,monospace">+1.31%/mo</text><text x="14" y="89" font-size="9" fill="#61707e" text-anchor="start" font-weight="400" font-family="ui-monospace,Menlo,Consolas,monospace">ours</text><rect x="109.6" y="80" width="4.4" height="12" rx="2" fill="#a5231a" opacity="0.85"/><text x="226" y="89" font-size="8.5" fill="#a5231a" text-anchor="end" font-weight="700" font-family="ui-monospace,Menlo,Consolas,monospace">-0.12%/mo</text><text x="14" y="154" font-size="7.5" fill="#aab4bd" text-anchor="start" font-weight="400" font-family="ui-monospace,Menlo,Consolas,monospace">zero marked; bars share a scale</text></svg></div>
+
+    <div class="mid">
+      <h2><a href="https://doi.org/10.1111/j.1540-6261.1993.tb04702.x">Returns to Buying Winners and Selling Losers: Implications for Stock Market Efficiency</a></h2>
+      <p class="abs">Past winners keep winning: about 1.3% a month over 1964–1989. We measure −0.12%/mo on currently-listed large caps since 2006, but the reference factor is flat over that window too, so this is decay rather than refutation. Not verified — the parity fixture is unobtainable.</p>
+      <p class="meta">
+        <span class="org">Journal of Finance</span>
+        <span class="dot">·</span>Jegadeesh, Titman
+        <span class="dot">·</span>Published 1993
+      </p>
+      <p class="tagrow"><a class="tag" href="#" data-tag="momentum">momentum</a><a class="tag" href="#" data-tag="cross-sectional">cross-sectional</a><a class="tag" href="#" data-tag="equities">equities</a></p>
+      <details><summary>Full result</summary>
       <h4>Verification — fixture unavailable</h4>
       <p>Open Source Asset Pricing&#x27;s own monthly long-short return series for Mom12m is not fetchable, so this cannot be verified. OpenAP publishes portfolio returns via Google Drive only. Those links return quota-exceeded and virus-scan interstitials rather than the file, and the GitHub releases carry no data assets. Until a stable URL exists, or CRSP is reproduced from free sources, this stays unverified.</p>
       <p class="fine">Bar: correlation with the fixture&#x27;s monthly return series ≥ 0.95,
@@ -128,25 +109,28 @@ footer a{margin-right:16px}
       <table><thead><tr><th>Ken French UMD</th><th class="n">mean</th><th class="n">t</th>
       <th class="n">months</th></tr></thead><tbody><tr><td>1964-1989 (paper sample)</td><td class='n'>+0.802%</td><td class='n'>+4.08</td><td class='n sub'>312</td></tr><tr><td>1990-2005 (post-publication)</td><td class='n'>+0.908%</td><td class='n'>+2.60</td><td class='n sub'>192</td></tr><tr><td>2006-2026 (our window)</td><td class='n'>+0.154%</td><td class='n'>+0.54</td><td class='n sub'>246</td></tr><tr><td>1927-2026 (full)</td><td class='n'>+0.627%</td><td class='n'>+4.63</td><td class='n sub'>1194</td></tr></tbody></table>
       <h4>Sample limits</h4><ul><li>Universe is survivor-biased: only currently-listed large caps. The delisted losers momentum would have shorted are structurally absent, which biases this test against the paper&#x27;s result.</li><li>Sample is 2006-02-28..2026-09-30, not the paper&#x27;s 1964-1989. This is a different experiment, not a refutation.</li><li>80 names versus all of NYSE/AMEX in the original, so deciles here are far coarser.</li><li>Costs charged at 10 bps on turnover; the paper reported gross.</li><li>Holding period is 3 months with overlapping cohorts, matching the documented spec. Names below $5 nominal are screened out at formation.</li><li>Prices are Yahoo adjusted closes, which are adjusted retroactively.</li></ul></details>
+    </div>
+
+    <div class="acts">
+      <span class="act status warn">unverified</span>
+      <a class="act" href="https://github.com/RezaSoleymanifar/alpha-archive/blob/main/alpha_archive/replications/jt1993.py">Code</a>
+      <a class="act" href="https://doi.org/10.1111/j.1540-6261.1993.tb04702.x">Paper</a>
+    </div>
   </article>
 
   <article class="card" data-status="warn" data-search="retail trader&#x27;s ruin: an anatomy of popular signal failure darmanin arxiv:2607.20093 technical-analysis market-timing multiple-testing partial" id="darmanin2026">
-    <div class="top">
-      <div>
-        <h2><a href="https://arxiv.org/abs/2607.20093">Retail Trader&#x27;s Ruin: An Anatomy of Popular Signal Failure</a></h2>
-        <p class="by">Darmanin · arXiv:2607.20093 · 2026</p>
-      </div>
-      <span class="badge warn">partial</span>
-    </div>
-    <p class="claim">None of the five most popular retail signals beats buy-and-hold.</p>
-    <div class="metrics"><div class="m"><span class="k">Sell-in-May</span><span class="v">refuted</span><span class="s bad">differs</span></div><div class="m"><span class="k">Golden/death cross (50/200)</span><span class="v">inconclusive</span><span class="s ok">matched</span></div></div>
-    <div class="row">
-      <a class="btn" href="https://arxiv.org/abs/2607.20093">Paper</a>
-      <a class="btn" href="https://github.com/RezaSoleymanifar/alpha-archive/blob/main/alpha_archive/replications/darmanin2026.py">Code</a>
-      <code>python -m alpha_archive.replications.darmanin2026</code>
-      <span class="spacer"></span><a class="tag" href="#" data-tag="technical-analysis">technical-analysis</a><a class="tag" href="#" data-tag="market-timing">market-timing</a><a class="tag" href="#" data-tag="multiple-testing">multiple-testing</a>
-    </div>
-    <details><summary>Full result</summary>
+    <div class="fig"><svg viewBox="0 0 240 168" width="240" height="168" role="img" aria-label="confidence intervals, paper against ours" preserveAspectRatio="xMidYMid meet"><rect width="240" height="168" fill="#fff"/><text x="14" y="20" font-size="8.5" fill="#61707e" text-anchor="start" font-weight="700" font-family="ui-monospace,Menlo,Consolas,monospace">95% INTERVALS</text><line x1="152.3" y1="28" x2="152.3" y2="142" stroke="#e3e7eb" stroke-width="1"/><text x="14" y="36" font-size="8" fill="#111418" text-anchor="start" font-weight="700" font-family="ui-monospace,Menlo,Consolas,monospace">Sell-in-May</text><line x1="37.7" y1="45" x2="152.3" y2="45" stroke="#61707e" stroke-width="3" stroke-linecap="round"/><line x1="37.7" y1="42" x2="37.7" y2="48" stroke="#61707e" stroke-width="1"/><line x1="152.3" y1="42" x2="152.3" y2="48" stroke="#61707e" stroke-width="1"/><line x1="94.2" y1="56" x2="180.9" y2="56" stroke="#0b5fd0" stroke-width="3" stroke-linecap="round"/><line x1="94.2" y1="53" x2="94.2" y2="59" stroke="#0b5fd0" stroke-width="1"/><line x1="180.9" y1="53" x2="180.9" y2="59" stroke="#0b5fd0" stroke-width="1"/><text x="14" y="73" font-size="8" fill="#111418" text-anchor="start" font-weight="700" font-family="ui-monospace,Menlo,Consolas,monospace">Golden/death cross…</text><line x1="108.9" y1="82" x2="201.5" y2="82" stroke="#61707e" stroke-width="3" stroke-linecap="round"/><line x1="108.9" y1="79" x2="108.9" y2="85" stroke="#61707e" stroke-width="1"/><line x1="201.5" y1="79" x2="201.5" y2="85" stroke="#61707e" stroke-width="1"/><line x1="120.5" y1="93" x2="202.3" y2="93" stroke="#0b5fd0" stroke-width="3" stroke-linecap="round"/><line x1="120.5" y1="90" x2="120.5" y2="96" stroke="#0b5fd0" stroke-width="1"/><line x1="202.3" y1="90" x2="202.3" y2="96" stroke="#0b5fd0" stroke-width="1"/><line x1="18" y1="148" x2="222" y2="148" stroke="#e3e7eb"/><text x="18" y="158" font-size="7.5" fill="#aab4bd" text-anchor="start" font-weight="400" font-family="ui-monospace,Menlo,Consolas,monospace">-0.72</text><text x="222" y="158" font-size="7.5" fill="#aab4bd" text-anchor="end" font-weight="400" font-family="ui-monospace,Menlo,Consolas,monospace">+0.38</text><text x="120" y="30" font-size="7.5" fill="#aab4bd" text-anchor="middle" font-weight="400" font-family="ui-monospace,Menlo,Consolas,monospace">grey = paper   blue = ours</text></svg></div>
+
+    <div class="mid">
+      <h2><a href="https://arxiv.org/abs/2607.20093">Retail Trader&#x27;s Ruin: An Anatomy of Popular Signal Failure</a></h2>
+      <p class="abs">None of the five most popular retail signals beats buy-and-hold. We reproduce the golden/death cross result exactly. Sell-in-May matches on the statistical gate and differs on the economic one, where the paper searches a battery of calendar rules and we run the canonical one.</p>
+      <p class="meta">
+        <span class="org">arXiv:2607.20093</span>
+        <span class="dot">·</span>Darmanin
+        <span class="dot">·</span>Published 2026
+      </p>
+      <p class="tagrow"><a class="tag" href="#" data-tag="technical-analysis">technical-analysis</a><a class="tag" href="#" data-tag="market-timing">market-timing</a><a class="tag" href="#" data-tag="multiple-testing">multiple-testing</a></p>
+      <details><summary>Full result</summary>
       <table><thead><tr><th rowspan="2">Family</th>
         <th colspan="2" class="n">Sharpe gap, 95% CI</th>
         <th colspan="2" class="n">CAGR gap, 95% CI</th></tr>
@@ -161,6 +145,13 @@ footer a{margin-right:16px}
       <table class="plain"><tbody><tr><td>Sell-in-May</td><td><code>Nov-Apr</code> -0.091 · <code>Oct-Apr</code> -0.032 · <code>Nov-May</code> -0.054 · <code>Dec-Mar</code> -0.367</td></tr><tr><td>Golden/death cross (50/200)</td><td><code>20/100</code> -0.028 · <code>50/200</code> +0.044 · <code>100/300</code> +0.019 · <code>10/50</code> -0.096</td></tr></tbody></table>
       <h4>Where we differ</h4><ul><li>Table 1 describes this family as &#x27;Sell-in-May (best of battery, Bonferroni + BY)&#x27;. The paper searches a battery of calendar rules and reports the best after multiplicity correction. We run the single canonical November-April rule, so a disagreement on the economic gate is a specification difference before it is a replication failure.</li><li>Our sample carries 78 more or fewer observations than the paper&#x27;s, and the bootstrap block length is our choice rather than theirs, so intervals are not expected to match to the digit.</li></ul>
       <h4>Not attempted</h4><ul><li>Oscillator (RSI) — NASDAQ-100, reproducible in principle, not yet run</li><li>Volume (OBV) — needs Russell 3000 point-in-time membership</li><li>Candlestick — needs Russell 3000 point-in-time membership</li><li>Momentum calibration — needs S&amp;P 500 point-in-time membership</li></ul></details>
+    </div>
+
+    <div class="acts">
+      <span class="act status warn">partial</span>
+      <a class="act" href="https://github.com/RezaSoleymanifar/alpha-archive/blob/main/alpha_archive/replications/darmanin2026.py">Code</a>
+      <a class="act" href="https://arxiv.org/abs/2607.20093">Paper</a>
+    </div>
   </article></div>
   <p class="empty" id="empty" hidden>No papers match.</p>
   <footer>
