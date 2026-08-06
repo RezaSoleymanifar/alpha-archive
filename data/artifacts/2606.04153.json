@@ -1,0 +1,148 @@
+{
+ "paper": "2606.04153",
+ "title": "A new decomposition approach to modeling financial returns",
+ "headline": "6 of 11 published numbers reproduced, 5 not built yet",
+ "fully_reproduced": false,
+ "tally": {
+  "REPRODUCED": 6,
+  "MISSED": 0,
+  "NOT_ATTEMPTED": 5,
+  "UNOBTAINABLE": 0
+ },
+ "notebook": "notebooks/2606.04153_sign_and_magnitude.ipynb",
+ "code": "",
+ "artifacts": [
+  {
+   "name": "Buy-and-hold terminal wealth",
+   "published": 104.63,
+   "observed": 104.62,
+   "tolerance": 0.1,
+   "units": "$",
+   "where": "Table 6 benchmark row",
+   "gap": 0.01,
+   "state": "REPRODUCED",
+   "note": "487 months, June 1981 to December 2021, CRSP value-weighted total return.",
+   "blocker": ""
+  },
+  {
+   "name": "Buy-and-hold annualised return",
+   "published": 12.65,
+   "observed": 12.65,
+   "tolerance": 0.05,
+   "units": "%",
+   "where": "Table 6 benchmark row",
+   "gap": 0.0,
+   "state": "REPRODUCED",
+   "note": "Arithmetic annualisation, mean times twelve.",
+   "blocker": ""
+  },
+  {
+   "name": "Buy-and-hold annualised sd",
+   "published": 15.0,
+   "observed": 15.0,
+   "tolerance": 0.05,
+   "units": "%",
+   "where": "Table 6 benchmark row",
+   "gap": 0.0,
+   "state": "REPRODUCED",
+   "note": "",
+   "blocker": ""
+  },
+  {
+   "name": "Buy-and-hold monthly Sharpe",
+   "published": 0.17,
+   "observed": 0.172,
+   "tolerance": 0.005,
+   "units": "",
+   "where": "Table 6 benchmark row",
+   "gap": 0.002,
+   "state": "REPRODUCED",
+   "note": "",
+   "blocker": ""
+  },
+  {
+   "name": "tbl correlation with return",
+   "published": -0.097,
+   "observed": -0.099,
+   "tolerance": 0.005,
+   "units": "",
+   "where": "Table 1",
+   "gap": 0.002,
+   "state": "REPRODUCED",
+   "note": "Largest absolute correlation, as the paper states.",
+   "blocker": ""
+  },
+  {
+   "name": "tbl correlation with sign",
+   "published": -0.143,
+   "observed": -0.145,
+   "tolerance": 0.005,
+   "units": "",
+   "where": "Table 1",
+   "gap": 0.002,
+   "state": "REPRODUCED",
+   "note": "",
+   "blocker": ""
+  },
+  {
+   "name": "CSM terminal wealth at k=3",
+   "published": 181.68,
+   "observed": null,
+   "tolerance": 2.0,
+   "units": "$",
+   "where": "Table 6",
+   "gap": null,
+   "state": "NOT_ATTEMPTED",
+   "note": "Needs the conditional model and the 10bp trading rule.",
+   "blocker": ""
+  },
+  {
+   "name": "CSM Sharpe at k=3",
+   "published": 0.21,
+   "observed": null,
+   "tolerance": 0.01,
+   "units": "",
+   "where": "Table 6",
+   "gap": null,
+   "state": "NOT_ATTEMPTED",
+   "note": "",
+   "blocker": ""
+  },
+  {
+   "name": "Copula strategies terminal wealth",
+   "published": 165.23,
+   "observed": null,
+   "tolerance": 3.0,
+   "units": "$",
+   "where": "Table 6",
+   "gap": null,
+   "state": "NOT_ATTEMPTED",
+   "note": "",
+   "blocker": ""
+  },
+  {
+   "name": "CSR terminal wealth",
+   "published": 98.22,
+   "observed": null,
+   "tolerance": 2.0,
+   "units": "$",
+   "where": "Table 6",
+   "gap": null,
+   "state": "NOT_ATTEMPTED",
+   "note": "",
+   "blocker": ""
+  },
+  {
+   "name": "12-month momentum benchmark",
+   "published": 100.21,
+   "observed": null,
+   "tolerance": 2.0,
+   "units": "$",
+   "where": "Table 6",
+   "gap": null,
+   "state": "NOT_ATTEMPTED",
+   "note": "",
+   "blocker": ""
+  }
+ ]
+}

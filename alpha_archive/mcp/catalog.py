@@ -120,6 +120,24 @@ def find_run(executed: dict[str, dict[str, Any]], *keys: str) -> dict[str, Any] 
     return None
 
 
+def artifact_status(ident: str) -> tuple[str, str] | None:
+    """Per-artifact counts, where they exist, in preference to an adjective.
+
+    "ATTEMPTED" for a paper whose benchmark reproduced to the cent credits
+    nothing and reads as failure. Reproduction is a fact about each published
+    number, so the headline is arithmetic: six of eleven, and which six.
+    """
+    from ..artifacts import load_all
+    for rec in load_all():
+        if norm(rec.get("paper")) != norm(ident):
+            continue
+        if rec.get("fully_reproduced"):
+            return VERIFIED, rec["headline"]
+        got = (rec.get("tally") or {}).get("REPRODUCED", 0)
+        return (ATTEMPTED if got else CATALOGUED), rec["headline"]
+    return None
+
+
 def status_of(rec: dict[str, Any] | None) -> tuple[str, str]:
     """Proven, attempted, or catalogued, and the sentence that justifies it.
 
@@ -193,7 +211,7 @@ def load() -> list[dict[str, Any]]:
         ident = norm(key)
         paper = meta.get(ident, {})
         rec = find_run(executed, ident, paper.get("title") or "")
-        state, why = status_of(rec)
+        state, why = artifact_status(ident) or status_of(rec)
         scored = appeal.get(ident) or {}
         out.append({
             "id": ident,
