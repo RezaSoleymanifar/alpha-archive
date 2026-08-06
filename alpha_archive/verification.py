@@ -87,6 +87,45 @@ class SanityCheck:
         return f"{self.statistic} vs {self.against}: {value}. {self.note}"
 
 
+@dataclass(frozen=True)
+class ScalarTarget:
+    """A single number the paper printed, and how close counts as matching.
+
+    `Criterion` asks whether a correlation clears a bar, which fits a
+    replication scored against someone else's return series. A strategy paper
+    is scored differently: it prints a CAGR, a Sharpe, a drawdown, and the
+    question is whether the rebuild lands on them.
+
+    The tolerance is the whole argument, so it is stated with its reason and
+    frozen. Tolerances differ per statistic on purpose — turnover moves with
+    the rebalance calendar far more than a Sharpe moves with anything — and a
+    tolerance wide enough to pass whatever comes back is not a criterion.
+    """
+    name: str
+    published: float
+    tolerance: float
+    units: str
+    table: str
+    rationale: str
+
+    def judge(self, observed: float | None) -> tuple[Status, str]:
+        if observed is None:
+            return Status.NOT_VERIFIED, f"{self.name} was not computed."
+        gap = abs(observed - self.published)
+        if gap <= self.tolerance:
+            return Status.VERIFIED, (
+                f"{self.name}: {observed:.4g}{self.units} against a published "
+                f"{self.published:.4g}{self.units} ({self.table}), off by "
+                f"{gap:.4g}, inside the {self.tolerance:.4g} tolerance."
+            )
+        return Status.NOT_VERIFIED, (
+            f"{self.name}: {observed:.4g}{self.units} against a published "
+            f"{self.published:.4g}{self.units} ({self.table}), off by {gap:.4g}, "
+            f"outside the {self.tolerance:.4g} tolerance. The implementation "
+            "must change, not the tolerance."
+        )
+
+
 # --------------------------------------------------------------- the registry
 
 # Declared here, away from any run, so a result cannot reach back and edit one.
