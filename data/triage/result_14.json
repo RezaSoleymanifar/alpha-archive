@@ -1,0 +1,203 @@
+[
+ {
+  "arxiv_id": "2606.30193v1",
+  "verdict": "drop",
+  "confidence": 0.88,
+  "gap": "pure theory",
+  "method": "Introduces 'hidden dependence' for random vectors and proves that small probability-distance perturbations of a reference joint law (marginals fixed) attain the same unconstrained worst-case bounds for gamma-tail risk measures; illustrates with a stylised credit-loan portfolio.",
+  "reason": "All numerics are analytic illustrations on assumed homogeneous credit portfolios (n=500 or 50,000, p=0.01, rho=0.10) with a Gaussian reference copula. No dataset of any kind is used, so there is nothing measured on real market data to replicate.",
+  "data_needed": [],
+  "reproducible_targets": []
+ },
+ {
+  "arxiv_id": "2512.07555v1",
+  "verdict": "drop",
+  "confidence": 0.97,
+  "gap": "pure theory",
+  "method": "Characterises the full set of increasing profits (a strong arbitrage) in a one-dimensional general-diffusion market with a constant-rate bank account, in terms of an auxiliary signed measure nu and a canonical strategy theta built from the scale function and speed measure.",
+  "reason": "Entirely a mathematical-finance proof paper: no tables, no figures, no data. Nothing empirical to reproduce.",
+  "data_needed": [],
+  "reproducible_targets": []
+ },
+ {
+  "arxiv_id": "2606.30037v1",
+  "verdict": "keep",
+  "confidence": 0.82,
+  "gap": "",
+  "method": "Crosses four deep forecasting backbones (TimesNet, DLinear, N-BEATS, iTransformer) with three output heads (point/Huber, single-Gaussian NLL, K=4 Gaussian-mixture NLL) on S&P 500 monthly log-returns 1871-2023, under 5 anchored walk-forward folds x 3 seeds, scoring CRPS-skill, pinball, coverage, Diebold-Mariano and Model Confidence Set, plus ARIMA(2,0)/GARCH(1,1) classical baselines.",
+  "reason": "The target series is a long monthly S&P 500 total/price return history, freely available from the Shiller (ie_data) CSV and, for the post-1927 portion, from Yahoo ^GSPC; the cross-asset panels are ordinary listed tickers. Everything else is model code with fully specified hyperparameters, so the head-vs-backbone gradient is directly rerunnable.",
+  "data_needed": [
+   "S&P 500 monthly log-returns, 1871-01 to 2023-12 (1,832 months) - Shiller ie_data free CSV; post-1927 cross-check with Yahoo ^GSPC monthly",
+   "Cross-asset / cross-frequency generalisation panels (equity index and daily-frequency series) - Yahoo Finance daily and monthly closes",
+   "Risk-free rate for any excess-return variant - FRED DGS3MO / Ken French RF"
+  ],
+  "reproducible_targets": [
+   "Head-mean CRPS-Skill-Score: point head -0.09%, Gaussian head +1.18%, GMM head +3.59% (averaged over 4 backbones x 4 horizons)",
+   "Head gradient point-to-GMM = 3.7 percentage points; point-to-Gaussian ~1.3% CRPS improvement, Gaussian-to-mixture a further ~2.4%",
+   "Backbone spread within the Gaussian head at h=1 = 5.07 pp; within GMM head at h=1 = 3.9 pp",
+   "Model Confidence Set on squared errors excludes none of the 12 variants at the 5% level",
+   "GARCH_gmm is best h=1 model at +12.92% CRPS-SS and best h=3 at +10.33%, then collapses to -50.52% at h=6",
+   "Classical baselines beat TimesNet_point by +6.8% to +17.0% at h in {1,3} and lose by -36.6% to -50.5% at h in {6,12} (the 'h-split')",
+   "Mixture beats point at p<0.05 in all 16 (backbone,horizon) cells; smallest gain +2.64% (iTransformer_gmm h=1), largest +6.48% (N-BEATS_gmm h=1)"
+  ]
+ },
+ {
+  "arxiv_id": "2606.29771v2",
+  "verdict": "drop",
+  "confidence": 0.74,
+  "gap": "live protocol",
+  "method": "CLQT is a closed-loop LLM portfolio-manager benchmark: agents run a five-stage gather/synthesize/allocate/execute/reflect cycle over 26 bi-weekly rounds under a TimeGate, cost model and MCP tool layer, scored on a five-axis APM-CS capability scorecard, with an ablation grid and a live broker track on post-cutoff data.",
+  "reason": "The headline validation is a live broker track on 18 NYSE days in June 2026 that is unseen post-cutoff by construction - rerunning it later cannot reproduce it. The backtest track additionally depends on a proprietary multi-provider news/sentiment channel registry and on stochastic LLM rollouts whose per-round allocations are not published as a fixed series, so the Sharpe and scorecard numbers are not recoverable from free data.",
+  "data_needed": [],
+  "reproducible_targets": []
+ },
+ {
+  "arxiv_id": "2512.07162v1",
+  "verdict": "drop",
+  "confidence": 0.95,
+  "gap": "synthetic only",
+  "method": "Trains a physics-informed DeepONet (hard-constrained ansatz plus residual-based adaptive refinement) to learn the Heston pricing operator across the whole parameter space, benchmarked against the semi-analytic Heston solution and a finite-difference solver.",
+  "reason": "Training requires no labelled data at all - the loss is the Heston PDE residual on sampled collocation points - and every reported accuracy figure is measured against a synthetic semi-analytic benchmark. No market prices are used anywhere.",
+  "data_needed": [],
+  "reproducible_targets": []
+ },
+ {
+  "arxiv_id": "2606.29406v1",
+  "verdict": "drop",
+  "confidence": 0.72,
+  "gap": "synthetic only",
+  "method": "Formulates adaptive AI delegation as a Governance-Aware POMDP with Bayesian belief updating and a Belief-at-Risk penalty, then validates it with synthetic stress tests, confidence-only perturbations, forecast-accuracy sweeps, appetite sensitivity and a benchmark against five governance heuristics.",
+  "reason": "Every reported number is generated from simulated AI-quality regimes (low-reliability, noisy, improving, high-reliability) with cached/perturbed AI confidence streams; the 'historical market replay' is only a backdrop for those synthetic AI evidence streams, which are not published. There is no empirical claim about market data that free prices could reproduce.",
+  "data_needed": [],
+  "reproducible_targets": []
+ },
+ {
+  "arxiv_id": "2606.28891v1",
+  "verdict": "drop",
+  "confidence": 0.94,
+  "gap": "pure theory",
+  "method": "Derives the variance-optimal (Galtchouk-Kunita-Watanabe) hedge for claims on forward curves driven by an HJMM SPDE with infinite-rank stochastic covariance, proving density of finite-maturity strategies, convergence of finite-rank spectral projections, and an exact bucket/rank/residual decomposition of the quadratic hedging error.",
+  "reason": "Illustrations are analytic examples in affine stochastic-covariance, multiplicative HJMM and CIR models. No dataset, no market forward curves, nothing empirical.",
+  "data_needed": [],
+  "reproducible_targets": []
+ },
+ {
+  "arxiv_id": "2512.06639v1",
+  "verdict": "drop",
+  "confidence": 0.88,
+  "gap": "synthetic only",
+  "method": "Trains deep-hedging RL agents under MSE, downside-risk and CVaR objectives to hedge swaptions with one to three swaps, benchmarked against sensitivity-based rho-hedging, with SHAP attribution and KAN-vs-FCNN comparison, plus misspecification stress on kappa and theta.",
+  "reason": "All experiments run on paths simulated from a three-factor arbitrage-free dynamic Nelson-Siegel model; the hedging-error distributions and every performance metric are Monte-Carlo outputs, not measurements on real swaption or swap quotes. Swaption/swap-rate histories are also vendor-only.",
+  "data_needed": [],
+  "reproducible_targets": []
+ },
+ {
+  "arxiv_id": "2606.28031v1",
+  "verdict": "drop",
+  "confidence": 0.93,
+  "gap": "pure theory",
+  "method": "Builds collective and individual actuarial risk models whose claim processes are driven by an underlying stochastic (SIS epidemic) population, derives scaling limits, and provides bounds and approximations for ruin probabilities.",
+  "reason": "Purely theoretical with Monte-Carlo illustrations of the ruin-probability bounds under assumed parameters. No dataset, and the subject is insurance solvency rather than market data.",
+  "data_needed": [],
+  "reproducible_targets": []
+ },
+ {
+  "arxiv_id": "2606.27932v1",
+  "verdict": "keep",
+  "confidence": 0.83,
+  "gap": "",
+  "method": "Introduces a regime-adaptive KS / GL-KS self-similarity test built on the discrete Grunwald-Letnikov fractional derivative, proves the filtered empirical-process limit and Hurst-estimator consistency, validates by Monte Carlo, then applies it to daily log-realized-volatility series and to daily equity-index log-price trajectories to classify rough volatility and (in)efficient market states.",
+  "reason": "The log-price half of the empirical work is daily closes of major equity indices (AEX, AORD, AXJO, BFX, BUX, BVSP, DJI, FCHI, FTSE, FTSEMIB, GDAXI and the rest of the realized-library universe), all of which are free Yahoo index tickers, and the GL-KS estimator is fully specified in the paper. The realized-volatility half needs an RV series (Oxford-Man style, intraday-derived) which is a weaker link, but the log-price Hurst table stands alone.",
+  "data_needed": [
+   "Daily closes for the index panel - Yahoo tickers ^AEX, ^AORD, ^AXJO, ^BFX, ^BVSP, ^DJI, ^FCHI, ^FTSE, FTSEMIB.MI, ^GDAXI (plus the remaining realized-library indices), full history through ~2023, sample lengths 5,900-13,500 daily observations",
+   "Optional: daily realized-variance series for the same indices (Oxford-Man / realized-library archive) for the log-volatility table",
+   "Monte Carlo replication of fBm/fGn paths at H in {0.1,...,0.9}, N in {100, 250, 500, 1000, 5000} for the size/power tables"
+  ],
+  "reproducible_targets": [
+   "Full-window GL-KS Hurst estimates on log prices: DJI 0.5221 (95% CI 0.5036-0.5407, N=13,516), AEX 0.5235 (0.5023-0.5447, N=10,922), FTSE 0.5005 (0.4800-0.5210, N=10,519), BFX 0.5167 (0.4934-0.5401), BUX 0.5093 (0.4814-0.5371), AORD 0.5105 (0.4827-0.5384), FTSEMIB 0.5015 (0.4760-0.5271)",
+   "Indices where the unfiltered KS branch is selected instead: AXJO 0.4921 (0.4684-0.5159), BVSP 0.4875 (0.4631-0.5120), FCHI 0.4964 (0.4747-0.5181)",
+   "Empirical size of GL-KS in the long-memory regime stays near nominal (about 0.9-1.2% at 1%, 4.7-5.4% at 5%, 9.8-10.5% at 10%) while the unfiltered KS statistic inflates to 47.1% / 76.9% / 88.5% at N=100 and stays at 5.1% / 16.3% / 27.8% even at N=5,000",
+   "Hurst estimator RMSE at N=1000: 0.0196 at H=0.10 rising to 0.0492 at H=0.80; at N=5000: 0.0087 at H=0.10"
+  ]
+ },
+ {
+  "arxiv_id": "2512.15739v1",
+  "verdict": "keep",
+  "confidence": 0.86,
+  "gap": "",
+  "method": "Builds a Bayesian pipeline with three arms: a discount-factor dynamic linear model for one-step-ahead log-realized-volatility and 95% VaR on S&P 500 daily returns (train 2000-2019, test 2020-01-02 to 2024-12-30), Bayesian logistic regression for card-fraud detection on IEEE-CIS, and a hierarchical Beta state-space model for compliance risk, comparing against GARCH(1,1)-t and an LSTM.",
+  "reason": "The market arm is nothing but daily S&P 500 log-returns over 2000-2024, free from Yahoo ^GSPC, with fully specified models (DLM delta=0.98 beta=0.98, GARCH(1,1) with standardized-t, 2-layer 64-unit LSTM on |r| and r^2 with 30-step lookback) and standard Kupiec/Christoffersen backtests. The fraud arm uses the free IEEE-CIS Kaggle dataset. Only the realized-volatility target needs an intraday-derived RV proxy, which can be substituted.",
+  "data_needed": [
+   "S&P 500 daily closes / log-returns 2000-01-01 to 2024-12-30 - Yahoo ^GSPC (train 2000-2019, out-of-sample T=1,257 days 2020-01-02 to 2024-12-30)",
+   "Daily realized-volatility proxy for the log-RV forecasting table (e.g. squared-return or range-based RV from ^GSPC OHLC, or an archived realized library)",
+   "IEEE-CIS Fraud Detection dataset (free Kaggle) for the fraud arm"
+  ],
+  "reproducible_targets": [
+   "95% VaR backtest on S&P 500, T=1,257: DLM N=75 exceedances, p-hat=0.060, LR_uc=2.335 (p=0.127), LR_ind=4.131 (p=0.042), LR_cc=6.465 (p=0.039)",
+   "GARCH(1,1)-t: N=130, p-hat=0.103, LR_uc=58.513 (p=0.000), LR_ind=1.766 (p=0.184), LR_cc=60.279 (p=0.000)",
+   "LSTM: N=68, p-hat=0.054, LR_uc=0.433 (p=0.510), LR_ind=1.398 (p=0.237), LR_cc=1.831 (p=0.400)",
+   "Volatility forecasting: Bayesian DLM MAE 0.0589 / RMSE 0.0754 / CRPS 0.0412 / 94% coverage 97.4%; GARCH(1,1) 0.0684 / 0.0684 / 0.0683 / 100%; LSTM 0.0511 / 0.0808 / 0.0511 / 94.7%",
+   "Fraud detection: Bayesian logistic AUC-ROC 0.953, precision@5%FPR 0.030, recall 0.842 vs XGBoost 0.93 / 0.027 / 0.80, Random Forest 0.91, Isolation Forest 0.85"
+  ]
+ },
+ {
+  "arxiv_id": "2606.27670v1",
+  "verdict": "keep",
+  "confidence": 0.8,
+  "gap": "",
+  "method": "Argues that temporal models fail on pure-price crypto prediction and instead proposes CryptoGAT, a lightweight correlation-graph attention network over the cross-section of coins, evaluated on daily OHLCV for 66 major cryptocurrencies (15/04/2023 to 08/01/2026, 999 trading days, 6:2:2 chronological split, 30-day lookback) against LSTM, GRU, ALSTM, PatchTST, iTransformer, StockMixer, TGN, Graphormer, MASTER, with IC/ICIR/Precision@N and a top-K long portfolio.",
+  "reason": "Inputs are plain daily OHLCV for the top-66 coins by market cap (USDT pairs on Binance), which map one-to-one onto free Yahoo crypto tickers (BTC-USD, ETH-USD, ...) and Coinbase spot candles. Filters (market cap > $200M, continuous daily data) and the trading protocol are stated, so the universe is reconstructable; only the USDT-vs-USD quote basis introduces small drift.",
+  "data_needed": [
+   "Daily OHLCV for the 66 largest cryptocurrencies by market cap, 2023-04-15 to 2026-01-08 (999 aligned trading days) - Yahoo Finance <SYM>-USD tickers or Coinbase spot daily candles",
+   "Market-cap screen (> $200M) to rebuild the universe - free CoinGecko/CoinMarketCap snapshot",
+   "Preprocessing as stated: prices normalized to prior close, volume to its 5-day MA, 30-day rolling lookback windows, 6:2:2 chronological split",
+   "NASDAQ benchmark panel used by StockMixer (daily OHLCV, free on Yahoo) for the cross-market ablation"
+  ],
+  "reproducible_targets": [
+   "CryptoGAT/GAT portfolio: annualized Sharpe 3.128 with no costs, cumulative return 229.12%, max drawdown -36.63%, daily volatility 4.25%, average daily turnover 35.5%",
+   "Cost sensitivity (per side): 0.000% -> SR 3.128 / +779% ann. return; 0.050% -> 2.920 / +673%; 0.075% -> 2.840 / +624%; 0.100% -> 2.759 / +579%; 0.200% -> 2.438 / +424%; 0.300% -> 2.117 / +305%",
+   "Ablation on crypto: GAT IC 0.037 / ICIR 0.138 vs StockMixer IC 0.011 / ICIR 0.113; adding time mixing to GAT collapses IC to 0.006 and ICIR to 0.023",
+   "Same ablation on NASDAQ reverses: StockMixer IC 0.043 / ICIR 0.501, dropping time mixing cuts IC to 0.018; GAT only 0.035 / 0.377",
+   "iTransformer IC and Sharpe stay negative across lookbacks L in {5,10,15,30,60} while GAT improves monotonically with L"
+  ]
+ },
+ {
+  "arxiv_id": "2606.27335v1",
+  "verdict": "drop",
+  "confidence": 0.92,
+  "gap": "pure theory",
+  "method": "Prices American options and flexible-forward FX contracts under a time-inhomogeneous Heston model via a recursive matrix-Riccati characteristic function and a Volterra early-exercise integral equation, solved with a double-COS expansion and a damped-Sinc local-basis scheme, benchmarked against a penalty-iteration MCS-ADI finite-difference solver.",
+  "reason": "A numerical-methods paper: every table compares the new spectral schemes against an FD solver and against published Haentjens-in't Hout benchmark values on assumed parameter sets. No market FX or option quotes are used.",
+  "data_needed": [],
+  "reproducible_targets": []
+ },
+ {
+  "arxiv_id": "2512.06550v1",
+  "verdict": "keep",
+  "confidence": 0.85,
+  "gap": "",
+  "method": "Multi-method event study of two Japanese bank M&A events - the October 3, 2005 MUFG creation and the April 1, 2018 Resona Holdings merger - estimating CARs with the market model, CAPM and Fama-French three-factor model over a +/-20-day window, then VAR/Granger causality and impulse responses for spillovers to other banks, plus propensity-score matching for the ATT.",
+  "reason": "Everything is daily listed-equity prices: MUFG (8306.T), Resona (8308.T), the peer Japanese bank cross-section and TOPIX/Nikkei as the market proxy are all free on Yahoo Finance, and Japanese Fama-French factors are free from Ken French's international library. Event dates and windows are published, so CARs and t-statistics are directly recomputable.",
+  "data_needed": [
+   "Daily closes for MUFG 8306.T and Resona 8308.T plus a Japanese bank peer group (8316.T, 8411.T, 8309.T, 8331.T, 8355.T etc.) around 2005-10-03 and 2018-04-01, estimation window of ~250 trading days pre-event - Yahoo Finance",
+   "Market proxy: TOPIX (^TOPX / 1306.T) or Nikkei 225 (^N225) daily - Yahoo Finance",
+   "Fama-French Japan/Asia-Pacific-ex-Japan daily 3 factors and RF - Ken French data library"
+  ],
+  "reproducible_targets": [
+   "MUFG (2005-10-03) event study: CAPM mean daily AR 0.69% (t = 7.05), CAR 29.79%; market model 0.27% (t = 2.84), CAR 12.01%; Fama-French 3-factor 0.64% (t = 6.48), CAR 27.37%",
+   "Resona (2018-04-01) event study: CAPM mean daily AR 0.18% (t = 5.02), CAR 5.64%; market model 0.23% (t = 6.22), CAR 6.99%; Fama-French 3-factor 0.18% (t = 5.04), CAR 5.66%",
+   "Resona Granger causality by horizon: lag 2 F = 3.8 (p = 0.02), lag 3 F = 2.31 (p = 0.07), lags 4-6 insignificant",
+   "MUFG Granger causality: lag 1 F = 4.67 (p = 0.03), lag 2 F = 2.56 (p = 0.08), lag 3 F = 3.26 (p = 0.02), lag 4 F = 2.38 (p = 0.05)"
+  ]
+ },
+ {
+  "arxiv_id": "2606.27150v1",
+  "verdict": "drop",
+  "confidence": 0.95,
+  "gap": "pure theory",
+  "method": "Studies a Stackelberg game where one reinsurer sets a common premium and invests, while many heterogeneous insurers choose retention and investment under relative-performance concerns; characterises follower equilibrium retention by a scalar fixed point, reduces the leader problem to one dimension, and proves finite-player to mean-field convergence.",
+  "reason": "A game-theoretic paper whose figures are equilibrium maps and convergence plots computed from assumed parameter values. No dataset at all, and the domain is reinsurance pricing rather than traded markets.",
+  "data_needed": [],
+  "reproducible_targets": []
+ }
+]
