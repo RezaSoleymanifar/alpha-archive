@@ -162,6 +162,55 @@ def trade(frame: pd.DataFrame, prob: pd.Series, mu: pd.Series | None = None,
     })
 
 
+def momentum_switch(frame: pd.DataFrame, months: int) -> pd.Series:
+    """The paper's backward-looking contrast: hold when the last k months were up.
+
+    No model, no estimation. It is in the paper precisely to show what the
+    forecasting machinery has to beat, so it is the cheapest artifact here and
+    there was no excuse for leaving it unbuilt.
+    """
+    window = frame.loc[OOS_START:OOS_END]
+    trailing = (1 + frame["mkt"]).rolling(months).apply(np.prod, raw=True) - 1
+    position = (trailing.shift(1).reindex(window.index) > 0).astype(float)
+    switch = position.diff().abs().fillna(0.0)
+    gross = position * window["mkt"] + (1 - position) * window["rf"]
+    return (1 + gross) * (1 - COST * switch) - 1
+
+
+def subset_regression(frame: pd.DataFrame, k: int = SUBSET_K) -> pd.Series:
+    """Complete subset regression: forecast the return itself, not its parts.
+
+    This is the comparison the decomposition is meant to beat. Same subsets,
+    same window, but a plain forecast of r rather than of sign and magnitude
+    separately.
+    """
+    subsets = list(itertools.combinations(PREDICTORS, k))
+    dates = frame.loc[OOS_START:OOS_END].index
+    values = frame[PREDICTORS].to_numpy()
+    xs = frame["xs"].to_numpy()
+    index = {d: i for i, d in enumerate(frame.index)}
+
+    out = {}
+    for date in dates:
+        t = index[date]
+        preds = []
+        for subset in subsets:
+            pick = [PREDICTORS.index(c) for c in subset]
+            X = np.column_stack([np.ones(t), values[:t, pick]])
+            beta = _ols(X, xs[:t])
+            preds.append(float(np.concatenate([[1.0], values[t, pick]]) @ beta))
+        out[date] = float(np.mean(preds))
+    return pd.Series(out)
+
+
+def switch_on(frame: pd.DataFrame, signal: pd.Series) -> pd.Series:
+    window = frame.loc[signal.index]
+    position = (signal > 0).astype(float)
+    switch = position.diff().abs().fillna(0.0)
+    gross = position * window["mkt"] + (1 - position) * window["rf"]
+    return (1 + gross) * (1 - COST * switch) - 1
+
+
 def summarise(returns: pd.Series, rf: pd.Series) -> dict[str, float]:
     excess = returns - rf
     return {
@@ -185,6 +234,18 @@ def main() -> None:
           f"Sharpe {hold['sharpe_monthly']}   (paper $104.63, 0.17)")
     print(f"  decomposition  TW ${ours['terminal_wealth']:8.2f}   "
           f"Sharpe {ours['sharpe_monthly']}   (paper $181.68, 0.21)")
+    rf = book["rf"]
+    for label, series, target in [
+        ("momentum 12m", momentum_switch(frame, 12), 100.21),
+        ("momentum 6m", momentum_switch(frame, 6), None),
+        ("momentum 3m", momentum_switch(frame, 3), None),
+        ("subset regression", switch_on(frame, subset_regression(frame)), 98.22),
+    ]:
+        stat = summarise(series, rf.reindex(series.index))
+        note = f"   (paper ${target})" if target else ""
+        print(f"  {label:<18} TW ${stat['terminal_wealth']:8.2f}   "
+              f"Sharpe {stat['sharpe_monthly']}{note}")
+
     print()
     print(f"  weight between {book['position'].min():.2f} and "
           f"{book['position'].max():.2f}, "

@@ -1,12 +1,12 @@
 {
  "paper": "2606.04153",
  "title": "A new decomposition approach to modeling financial returns",
- "headline": "6 of 11 published numbers reproduced, 2 missed, 3 not built yet",
+ "headline": "7 of 12 published numbers reproduced, 4 missed, 1 not built yet",
  "fully_reproduced": false,
  "tally": {
-  "REPRODUCED": 6,
-  "MISSED": 2,
-  "NOT_ATTEMPTED": 3,
+  "REPRODUCED": 7,
+  "MISSED": 4,
+  "NOT_ATTEMPTED": 1,
   "UNOBTAINABLE": 0
  },
  "notebook": "notebooks/2606.04153_sign_and_magnitude.ipynb",
@@ -18,10 +18,10 @@
    "observed": 104.62,
    "tolerance": 0.1,
    "units": "$",
-   "where": "Table 6 benchmark row",
+   "where": "Table 6",
    "gap": 0.01,
    "state": "REPRODUCED",
-   "note": "487 months, June 1981 to December 2021.",
+   "note": "",
    "blocker": ""
   },
   {
@@ -30,10 +30,10 @@
    "observed": 12.65,
    "tolerance": 0.05,
    "units": "%",
-   "where": "Table 6 benchmark row",
+   "where": "Table 6",
    "gap": 0.0,
    "state": "REPRODUCED",
-   "note": "Arithmetic annualisation.",
+   "note": "",
    "blocker": ""
   },
   {
@@ -42,7 +42,7 @@
    "observed": 15.0,
    "tolerance": 0.05,
    "units": "%",
-   "where": "Table 6 benchmark row",
+   "where": "Table 6",
    "gap": 0.0,
    "state": "REPRODUCED",
    "note": "",
@@ -54,7 +54,7 @@
    "observed": 0.172,
    "tolerance": 0.005,
    "units": "",
-   "where": "Table 6 benchmark row",
+   "where": "Table 6",
    "gap": 0.002,
    "state": "REPRODUCED",
    "note": "",
@@ -85,6 +85,42 @@
    "blocker": ""
   },
   {
+   "name": "3m and 6m momentum finish below $50",
+   "published": 50.0,
+   "observed": 47.7,
+   "tolerance": 10.0,
+   "units": "$",
+   "where": "Table 6",
+   "gap": 2.3,
+   "state": "REPRODUCED",
+   "note": "Paper states both finish below $50. Ours: 3m $40.49, 6m $47.70. Scored on the 6m leg, the closer of the two to the stated bound.",
+   "blocker": ""
+  },
+  {
+   "name": "12-month momentum benchmark",
+   "published": 100.21,
+   "observed": 89.4,
+   "tolerance": 2.0,
+   "units": "$",
+   "where": "Table 6",
+   "gap": 10.81,
+   "state": "MISSED",
+   "note": "",
+   "blocker": ""
+  },
+  {
+   "name": "CSR terminal wealth",
+   "published": 98.22,
+   "observed": 119.91,
+   "tolerance": 2.0,
+   "units": "$",
+   "where": "Table 6",
+   "gap": 21.69,
+   "state": "MISSED",
+   "note": "Ours BEATS the paper's CSR by 22%. Combined with our CSM falling short, the two methods land within 2% of each other in our hands where the paper shows CSM ahead by 85%. That gap is the paper's central claim and it is what we cannot reproduce.",
+   "blocker": ""
+  },
+  {
    "name": "CSM terminal wealth at k=3",
    "published": 181.68,
    "observed": 122.33,
@@ -93,7 +129,7 @@
    "where": "Table 6",
    "gap": 59.35,
    "state": "MISSED",
-   "note": "Complete subset averaging over all 56 three-predictor subsets, magnitude by OLS on log absolute excess return, sign by logistic on the same predictors plus the fitted magnitude, expanding window, switching rule with 10bp charged multiplicatively on each switch. Beats buy-and-hold and moves the right way, but falls well short. Our sign forecast is almost always positive, so the rule switches three times in 487 months where the paper's evidently switches far more. The gap is in how the sign conditional is parameterised, which the abstract and results sections do not pin down.",
+   "note": "Switching rule, 10bp charged multiplicatively. Switches 3 times in 487 months where the paper's evidently switches far more.",
    "blocker": ""
   },
   {
@@ -117,31 +153,7 @@
    "where": "Table 6",
    "gap": null,
    "state": "NOT_ATTEMPTED",
-   "note": "",
-   "blocker": ""
-  },
-  {
-   "name": "CSR terminal wealth",
-   "published": 98.22,
-   "observed": null,
-   "tolerance": 2.0,
-   "units": "$",
-   "where": "Table 6",
-   "gap": null,
-   "state": "NOT_ATTEMPTED",
-   "note": "",
-   "blocker": ""
-  },
-  {
-   "name": "12-month momentum benchmark",
-   "published": 100.21,
-   "observed": null,
-   "tolerance": 2.0,
-   "units": "$",
-   "where": "Table 6",
-   "gap": null,
-   "state": "NOT_ATTEMPTED",
-   "note": "",
+   "note": "Needs copula fitting. Buildable on the same data, not yet done.",
    "blocker": ""
   }
  ]
