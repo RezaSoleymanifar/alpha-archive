@@ -5,12 +5,12 @@
   "claimed_monthly_pct": 1.31,
   "claimed_t_stat": 3.74,
   "claimed_sample": "1964-1989",
-  "measured_monthly_pct": -0.0877,
-  "measured_t_stat": -0.327,
-  "measured_sharpe_annual": -0.072,
+  "measured_monthly_pct": -0.1164,
+  "measured_t_stat": -0.47,
+  "measured_sharpe_annual": -0.103,
   "measured_sample": "2006-02-28..2026-09-30",
   "months": 248,
-  "umd_correlation": 0.74,
+  "umd_correlation": 0.7638,
   "umd_months_compared": 245,
   "verification": {
     "status": "FIXTURE_UNAVAILABLE",
@@ -28,11 +28,11 @@
   "sanity_check": {
     "name": "UMD directional check",
     "against": "Ken French UMD",
-    "observed": 0.7400314843478708,
-    "description": "correlation vs Ken French UMD: 0.7400. UMD is value-weighted and double-sorted on size with NYSE breakpoints; this spec is an equal-weighted decile. They are different portfolios, so a high correlation is not available even from perfect code. This says whether we built momentum at all. It cannot verify parity.",
+    "observed": 0.7637613194450524,
+    "description": "correlation vs Ken French UMD: 0.7638. UMD is value-weighted and double-sorted on size with NYSE breakpoints; this spec is an equal-weighted decile. They are different portfolios, so a high correlation is not available even from perfect code. This says whether we built momentum at all. It cannot verify parity.",
     "verifies": false
   },
-  "gap_monthly_pct": -1.398,
+  "gap_monthly_pct": -1.426,
   "verdict": "UNVERIFIED \u2014 Open Source Asset Pricing's own monthly long-short return series for Mom12m is not fetchable, so this cannot be verified. OpenAP publishes portfolio returns via Google Drive only. Those links return quota-exceeded and virus-scan interstitials rather than the file, and the GitHub releases carry no data assets. Until a stable URL exists, or CRSP is reproduced from free sources, this stays unverified. Numbers below are a measurement on our sample, not a replication of the paper.",
   "umd_by_era": {
     "1964-1989 (paper sample)": {
@@ -61,9 +61,9 @@
     "Sample is 2006-02-28..2026-09-30, not the paper's 1964-1989. This is a different experiment, not a refutation.",
     "80 names versus all of NYSE/AMEX in the original, so deciles here are far coarser.",
     "Costs charged at 10 bps on turnover; the paper reported gross.",
-    "Holding period here is one month. The documented spec is a three-month hold with overlapping portfolios, so this is not yet the paper's strategy.",
+    "Holding period is 3 months with overlapping cohorts, matching the documented spec. Names below $5 nominal are screened out at formation.",
     "Prices are Yahoo adjusted closes, which are adjusted retroactively."
   ],
   "universe_size": 80,
-  "generated_at": "2026-08-06T03:41:02+00:00"
+  "generated_at": "2026-08-06T03:47:05+00:00"
 }

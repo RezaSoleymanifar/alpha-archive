@@ -173,7 +173,7 @@ footer .flinks{display:flex;flex-wrap:wrap;gap:18px;margin-bottom:13px}
   <table class="board">
       <thead><tr><th>ID</th><th>SIGNAL</th><th class="num">CLAIMED</th>
       <th class="num">MEASURED</th><th class="num">SANITY r</th><th>STATUS</th></tr></thead>
-      <tbody><tr><td class="rk">AA-0001</td><td class="nm"><a href="#mom12m">Mom12m</a><i>Jegadeesh and Titman 1993</i></td><td class="num">1.31%</td><td class="num neg">-0.0877%</td><td class="num">0.74</td><td><span class="verdict grey">UNVERIFIED</span></td></tr></tbody>
+      <tbody><tr><td class="rk">AA-0001</td><td class="nm"><a href="#mom12m">Mom12m</a><i>Jegadeesh and Titman 1993</i></td><td class="num">1.31%</td><td class="num neg">-0.1164%</td><td class="num">0.7638</td><td><span class="verdict grey">UNVERIFIED</span></td></tr></tbody>
     </table>
 
   <h2>Replications</h2>
@@ -183,7 +183,7 @@ footer .flinks{display:flex;flex-wrap:wrap;gap:18px;margin-bottom:13px}
       <span class="aid">AA-0001</span>
       <span class="cls">q-fin.PM</span>
       <span class="verdict grey big">UNVERIFIED</span>
-      <span class="corr bad">r = 0.74</span>
+      <span class="corr bad">r = 0.7638</span>
       <span class="corrnote">sanity check only &mdash; does not verify parity</span>
     </aside>
 
@@ -197,9 +197,9 @@ footer .flinks{display:flex;flex-wrap:wrap;gap:18px;margin-bottom:13px}
         <div><span>CLAIMED</span><b>1.31%</b>
           <i>1964-1989 &middot; t&nbsp;3.74</i></div>
         <div><span>MEASURED</span><b class="neg">
-          -0.0877%</b>
-          <i>2006-02-28..2026-09-30 &middot; t&nbsp;-0.327</i></div>
-        <div><span>GAP</span><b>-1.398%</b>
+          -0.1164%</b>
+          <i>2006-02-28..2026-09-30 &middot; t&nbsp;-0.47</i></div>
+        <div><span>GAP</span><b>-1.426%</b>
           <i>248 months &middot; 80 names</i></div>
       </div>
 
@@ -225,7 +225,7 @@ footer .flinks{display:flex;flex-wrap:wrap;gap:18px;margin-bottom:13px}
 
       <details>
         <summary>What this sample cannot tell you</summary>
-        <ul class="caveats"><li>Universe is survivor-biased: only currently-listed large caps. The delisted losers momentum would have shorted are structurally absent, which biases this test against the paper&#x27;s result.</li><li>Sample is 2006-02-28..2026-09-30, not the paper&#x27;s 1964-1989. This is a different experiment, not a refutation.</li><li>80 names versus all of NYSE/AMEX in the original, so deciles here are far coarser.</li><li>Costs charged at 10 bps on turnover; the paper reported gross.</li><li>Holding period here is one month. The documented spec is a three-month hold with overlapping portfolios, so this is not yet the paper&#x27;s strategy.</li><li>Prices are Yahoo adjusted closes, which are adjusted retroactively.</li></ul>
+        <ul class="caveats"><li>Universe is survivor-biased: only currently-listed large caps. The delisted losers momentum would have shorted are structurally absent, which biases this test against the paper&#x27;s result.</li><li>Sample is 2006-02-28..2026-09-30, not the paper&#x27;s 1964-1989. This is a different experiment, not a refutation.</li><li>80 names versus all of NYSE/AMEX in the original, so deciles here are far coarser.</li><li>Costs charged at 10 bps on turnover; the paper reported gross.</li><li>Holding period is 3 months with overlapping cohorts, matching the documented spec. Names below $5 nominal are screened out at formation.</li><li>Prices are Yahoo adjusted closes, which are adjusted retroactively.</li></ul>
       </details>
 
       <p class="links">

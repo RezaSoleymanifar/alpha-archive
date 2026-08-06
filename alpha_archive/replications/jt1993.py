@@ -42,6 +42,8 @@ PAPER = "Mom12m"                    # the OpenAP acronym for JT 12-1 momentum
 LOOKBACK, SKIP = 252, 21            # 12 months, skipping the most recent one
 DECILE = 0.10                       # long the top 10%, short the bottom 10%
 COST_BPS = 10.0                     # charged on turnover, every rebalance
+HOLD_MONTHS = 3                     # the paper's K: J=12, K=3, overlapping cohorts
+MIN_PRICE = 5.0                     # screen on the *unadjusted* close
 START = "2005-01-01"
 
 # A survivor-biased large-cap universe. This is the honest limit of free data:
@@ -91,9 +93,22 @@ class Result:
 # ------------------------------------------------------------------ the data
 
 
-async def price_panel(tickers: list[str]) -> pd.DataFrame:
-    """Adjusted closes, dates x tickers, fetched through Vintage."""
-    frames, missing = {}, []
+async def price_panel(
+    tickers: list[str], with_nominal: bool = True
+) -> tuple[pd.DataFrame, pd.DataFrame | None]:
+    """(adjusted closes, unadjusted closes) as dates x tickers.
+
+    Returns need the adjusted series; the price screen needs the unadjusted one,
+    because a split-adjusted history makes large caps look like penny stocks in
+    their early years.
+    """
+    adj, nom, missing = {}, {}, []
+
+    def series(rows):
+        return pd.Series(
+            {pd.Timestamp(r["observed_at"]): r["value"] for r in rows if r["value"]}
+        ).sort_index()
+
     for i, t in enumerate(tickers, 1):
         try:
             rows = await yahoo.prices(t, field="adjclose")
@@ -103,18 +118,27 @@ async def price_panel(tickers: list[str]) -> pd.DataFrame:
         if not rows:
             missing.append(f"{t} (empty)")
             continue
-        s = pd.Series(
-            {pd.Timestamp(r["observed_at"]): r["value"] for r in rows if r["value"]},
-            name=t,
-        )
-        frames[t] = s.sort_index()
-        if i % 20 == 0:
+        adj[t] = series(rows)
+
+        if with_nominal:
+            try:
+                nom[t] = series(await yahoo.prices(t, field="close"))
+            except Exception:
+                nom[t] = adj[t]                       # screen degrades, never crashes
+        if i % 40 == 0:
             print(f"    ... {i}/{len(tickers)} tickers")
 
     if missing:
-        print(f"    unavailable: {', '.join(missing)}")
-    panel = pd.DataFrame(frames).sort_index()
-    return panel[panel.index >= pd.Timestamp(START)]
+        print(f"    unavailable: {len(missing)} — {', '.join(missing[:8])}"
+              + (" ..." if len(missing) > 8 else ""))
+
+    start = pd.Timestamp(START)
+    panel = pd.DataFrame(adj).sort_index()
+    panel = panel[panel.index >= start]
+    if not with_nominal:
+        return panel, None
+    npanel = pd.DataFrame(nom).sort_index()
+    return panel, npanel[npanel.index >= start]
 
 
 # --------------------------------------------------------------- the signal
@@ -125,44 +149,70 @@ def momentum_12_1(prices: pd.DataFrame) -> pd.DataFrame:
     return prices.shift(SKIP) / prices.shift(LOOKBACK) - 1.0
 
 
-def long_short_monthly(prices: pd.DataFrame, signal: pd.DataFrame) -> pd.Series:
-    """Decile long-short, rebalanced monthly, costs charged on turnover.
+def long_short_monthly(
+    prices: pd.DataFrame,
+    signal: pd.DataFrame,
+    nominal: pd.DataFrame | None = None,
+    hold_months: int = HOLD_MONTHS,
+    min_price: float = MIN_PRICE,
+) -> pd.Series:
+    """Decile long-short with overlapping cohorts, costs charged on turnover.
 
-    Weights are formed on the last trading day of each month from information
-    available that day, then held through the following month. The signal is
-    already lagged by SKIP days, so nothing from the holding month leaks in.
+    Two things here are the paper's construction rather than a simplification:
+
+    **Overlapping holds.** Jegadeesh-Titman's headline strategy is J=12, K=3 —
+    form on twelve-month momentum, then hold three months. The standard way to
+    run that as a single monthly series is overlapping cohorts: a new decile
+    portfolio is formed each month and held for `hold_months`, so the live book
+    is the average of the last three cohorts and only a third of it turns over.
+    That lower turnover matters twice, once in the returns and once in costs.
+
+    **A price screen on nominal prices.** Sub-$5 stocks are dominated by
+    bid-ask bounce, which momentum sorts pick up as signal. The screen has to
+    use the *unadjusted* close: on a split-adjusted series Apple trades near $2
+    in 2006, so screening adjusted prices would throw out the largest company
+    in the sample for being a penny stock.
     """
     month_ends = prices.resample("ME").last().index
     forward = prices.resample("ME").last().pct_change().shift(-1)
+    nominal_me = nominal.resample("ME").last() if nominal is not None else None
 
-    returns, prev_w = {}, pd.Series(dtype=float)
+    cohorts: list[pd.Series] = []          # newest first, at most hold_months
+    returns, prev_book = {}, pd.Series(dtype=float)
+
     for date in month_ends:
         row = signal.loc[signal.index <= date]
         if row.empty:
             continue
         s = row.iloc[-1].dropna()
-        if len(s) < 20:                                # too thin to rank into deciles
+
+        if nominal_me is not None and min_price > 0 and date in nominal_me.index:
+            eligible = nominal_me.loc[date].reindex(s.index)
+            s = s[eligible >= min_price]
+
+        if len(s) >= 20:                    # too thin to rank into deciles
+            k = max(1, int(round(len(s) * DECILE)))
+            ranked = s.sort_values()
+            w = pd.Series(0.0, index=s.index)
+            w[ranked.index[-k:]] = 0.5 / k              # long the winners
+            w[ranked.index[:k]] = -0.5 / k              # short the losers
+            cohorts.insert(0, w)
+            del cohorts[hold_months:]
+
+        if not cohorts or date not in forward.index:
             continue
 
-        k = max(1, int(round(len(s) * DECILE)))
-        ranked = s.sort_values()
-        w = pd.Series(0.0, index=s.index)
-        w[ranked.index[-k:]] = 0.5 / k                 # long the winners
-        w[ranked.index[:k]] = -0.5 / k                 # short the losers
+        book = pd.concat(cohorts, axis=1).fillna(0.0).mean(axis=1)
+        nxt = forward.loc[date].reindex(book.index).fillna(0.0)
 
-        nxt = forward.loc[date].reindex(w.index).fillna(0.0) if date in forward.index else None
-        if nxt is None:
-            continue
-
-        gross = float((w * nxt).sum())
-        turnover = float((w - prev_w.reindex(w.index).fillna(0.0)).abs().sum())
+        gross = float((book * nxt).sum())
+        turnover = float((book - prev_book.reindex(book.index).fillna(0.0)).abs().sum())
         # Stamp the return with the month it was *earned*, not the month the
         # weights were formed. Getting this backwards shifts the whole series
         # by a month and drops the correlation against UMD from 0.74 to 0.01 —
-        # which is exactly what the validation step exists to catch.
-        earned = date + pd.offsets.MonthEnd(1)
-        returns[earned] = gross - turnover * COST_BPS / 10_000.0
-        prev_w = w
+        # which is exactly what a sanity check exists to catch.
+        returns[date + pd.offsets.MonthEnd(1)] = gross - turnover * COST_BPS / 10_000.0
+        prev_book = book
 
     return pd.Series(returns).sort_index().dropna()
 
@@ -223,12 +273,13 @@ async def run() -> Result:
           f"{claim['sample_start']}-{claim['sample_end']}")
 
     print(f"\n  [2/4] prices for {len(UNIVERSE)} tickers, via Vintage")
-    prices = await price_panel(UNIVERSE)
+    prices, nominal = await price_panel(UNIVERSE)
     print(f"        panel: {prices.shape[0]} days x {prices.shape[1]} tickers, "
           f"{prices.index[0].date()} to {prices.index[-1].date()}")
 
-    print("\n  [3/4] forming decile long-short, costs on turnover")
-    ours = long_short_monthly(prices, momentum_12_1(prices))
+    print(f"\n  [3/4] decile long-short, {HOLD_MONTHS}-month overlapping hold, "
+          f"nominal price >= ${MIN_PRICE:.0f}")
+    ours = long_short_monthly(prices, momentum_12_1(prices), nominal)
     print(f"        {len(ours)} monthly observations")
 
     print("\n  [4/4] validating the implementation against Ken French UMD")
@@ -300,8 +351,9 @@ async def run() -> Result:
             f"{prices.shape[1]} names versus all of NYSE/AMEX in the original, so "
             "deciles here are far coarser.",
             f"Costs charged at {COST_BPS:.0f} bps on turnover; the paper reported gross.",
-            "Holding period here is one month. The documented spec is a three-month "
-            "hold with overlapping portfolios, so this is not yet the paper's strategy.",
+            f"Holding period is {HOLD_MONTHS} months with overlapping cohorts, matching "
+            f"the documented spec. Names below ${MIN_PRICE:.0f} nominal are screened out at "
+            "formation.",
             "Prices are Yahoo adjusted closes, which are adjusted retroactively.",
         ],
     )
