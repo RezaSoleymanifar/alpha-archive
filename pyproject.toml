@@ -31,10 +31,12 @@ dependencies = [
     "uvicorn[standard]>=0.27.0",
     "python-dotenv>=1.0.0",
     "pyyaml>=6.0",
+    "mcp>=2.0.0",
 ]
 
 [project.scripts]
 alpha-archive = "alpha_archive.cli:app"
+alpha-archive-mcp = "alpha_archive.mcp.server:main"
 
 [build-system]
 requires = ["hatchling"]
