@@ -1,4 +1,4 @@
-"""Autonomous external-mention scraper — MINIMAL SCOPE.
+"""Autonomous external-mention scraper, MINIMAL SCOPE.
 
 Per meta/community.md: we do NOT scrape Twitter / Reddit / Substack. Those
 channels are 99% noise. Critics come to us via:
@@ -7,7 +7,7 @@ channels are 99% noise. Critics come to us via:
   - Email submissions (Phase 4)
 
 The Twitter/Reddit/Substack functions are kept as stubs but explicitly
-disabled — calling them returns []. Revisit only if high-precision filtering
+disabled: calling them returns []. Revisit only if high-precision filtering
 is built later (Phase 6+).
 """
 from __future__ import annotations

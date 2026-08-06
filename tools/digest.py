@@ -2,7 +2,7 @@
 
 The verdict needs three things: what the method is, what data it touched, and
 which numbers it reports. A 40-page PDF carries all three inside maybe two
-pages of text, and the rest — related work, proofs, appendices — never changes
+pages of text, and the rest (related work, proofs, appendices) never changes
 the answer. Pulling the relevant sections keeps a batch of papers small enough
 to judge in one pass instead of one paper at a time.
 
@@ -53,11 +53,11 @@ STOP = re.compile(
     re.I,
 )
 
-# Figure and table captions. These are not decoration — the verdicts already in
+# Figure and table captions. These are not decoration, the verdicts already in
 # the ledger name their reproducible targets as "Figure 6 panel (a)" and "Table
 # 3", so a digest that drops captions drops the very thing being reproduced.
 CAPTION = re.compile(
-    r"^\s*(fig(?:ure)?\.?\s*\d+[a-z]?|table\s+[IVX\d]+[a-z]?)\s*[.:—-]?\s+(.{20,})",
+    r"^\s*(fig(?:ure)?\.?\s*\d+[a-z]?|table\s+[IVX\d]+[a-z]?)\s*[.:, -]?\s+(.{20,})",
     re.I,
 )
 
@@ -67,7 +67,7 @@ DATA_HINT = re.compile(
     r"Binance|Coinbase|Kaggle|Fama[- ]French|open\s?source\s?asset|arXiv|"
     r"S&P|NASDAQ|NYSE|Russell|STOXX|FTSE|Nikkei|CSI\s?300|"
     r"daily (?:returns?|prices?|closes?)|tick data|order book|"
-    r"(?:19|20)\d{2}\s*(?:to|-|–|through)\s*(?:19|20)\d{2}|"
+    r"(?:19|20)\d{2}\s*(?:to|-| none |through)\s*(?:19|20)\d{2}|"
     r"we (?:use|collect|obtain|download|construct|simulate)",
     re.I,
 )

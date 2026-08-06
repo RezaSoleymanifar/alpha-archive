@@ -10,7 +10,7 @@ month-end M is the most recent grossProfit + totalAssets where
 filing_date <= M. Lookahead-free.
 
 Universe: whatever tickers are cached in data/_eodhd_probe/ (+ have
-matching grain prices). Probe set has ~33 large US names — too small for
+matching grain prices). Probe set has ~33 large US names, too small for
 real published-Sharpe comparison, but sufficient to validate the pipeline
 end-to-end on PIT EODHD data.
 """
@@ -33,7 +33,7 @@ print(f"universe: {len(tickers)} tickers")
 inc = load_fundamentals_panel(tickers, fields=["grossProfit"], statement="income")
 bal = load_fundamentals_panel(tickers, fields=["totalAssets"], statement="balance")
 
-# Merge on (ticker, fiscal_date) — both statements share fiscal periods
+# Merge on (ticker, fiscal_date), both statements share fiscal periods
 fund = pd.merge(
     inc[["ticker", "filing_date", "fiscal_date", "grossProfit"]],
     bal[["ticker", "fiscal_date", "totalAssets"]],
@@ -108,7 +108,7 @@ print(f"L-S monthly observations: {len(ls_df)}")
 ls_ret = ls_df["ls_ret"].dropna()
 print()
 print("=" * 70)
-print("Novy-Marx GP/A on probe universe — replication results")
+print("Novy-Marx GP/A on probe universe, replication results")
 print("=" * 70)
 print(f"  observations:           {len(ls_ret)} months")
 print(f"  date range:             {ls_df['next_month'].min().date()} -> "

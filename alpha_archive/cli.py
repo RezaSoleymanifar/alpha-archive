@@ -12,7 +12,7 @@ from .ingest import ingest as ingest_fn, SOURCES
 from .triage import triage_pending
 from sqlalchemy import select, func
 
-app = typer.Typer(help="Alpha Archive — paper-to-backtest replication engine")
+app = typer.Typer(help="Alpha Archive, paper-to-backtest replication engine")
 
 
 @app.command("init")
@@ -208,7 +208,7 @@ def cmd_actor_propose(
     if apply_changes and n > 0:
         applied = actor_self_edit.apply_proposal(proposal)
         if applied:
-            rprint("[yellow]applied to meta/actor.md — review + commit manually[/yellow]")
+            rprint("[yellow]applied to meta/actor.md, review + commit manually[/yellow]")
         else:
             rprint("[red]apply failed[/red]")
 

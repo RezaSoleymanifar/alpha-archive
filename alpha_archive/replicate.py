@@ -118,7 +118,7 @@ def replicate(
             rpt.spec_agreement = agreement
             rpt.spec = asdict(spec)
             if agreement < 0.85:
-                rpt.pipeline_errors.append(f"low spec agreement: {agreement:.2f} — flag for review")
+                rpt.pipeline_errors.append(f"low spec agreement: {agreement:.2f}, flag for review")
         else:
             spec = extract_spec_offline(text)
             rpt.spec_agreement = 1.0
@@ -191,7 +191,7 @@ if __name__ == "__main__":
     # Demo: run end-to-end on a known arXiv paper, offline mode (no API needed)
     rpt = replicate(
         paper_id="momentum_jt1993_demo",
-        pdf_url="https://arxiv.org/pdf/2403.16527.pdf",  # placeholder — any q-fin paper works
+        pdf_url="https://arxiv.org/pdf/2403.16527.pdf",  # placeholder, any q-fin paper works
         title="(demo paper)",
         use_llm=False,
         fixture_metadata={"expected_sharpe": (0.4, 0.9)},

@@ -1,4 +1,4 @@
-# Meta-learning loop — how the agent learns from mistakes
+# Meta-learning loop, how the agent learns from mistakes
 
 ## The problem
 
@@ -6,9 +6,9 @@ LLM-driven pipelines have failure modes at every step:
 
 | Step | False positive | False negative |
 |---|---|---|
-| Triage | Wastes compute on non-tradable paper | **Rejects a real signal — main risk** |
+| Triage | Wastes compute on non-tradable paper | **Rejects a real signal, main risk** |
 | Spec extraction | Wrong formula → garbage backtest | Misses key parameter, signal looks weak |
-| Code generation | Lookahead bias → fake-good Sharpe | Bug zeroes out signal — fake-bad |
+| Code generation | Lookahead bias → fake-good Sharpe | Bug zeroes out signal, fake-bad |
 | Backtest | Wrong CV → over-optimistic | Under-powered → false null |
 | Verdict | Ship a noise factor | Kill a real factor |
 
@@ -93,7 +93,7 @@ def triage_safe(paper) -> str:
     haiku_says = triage_haiku(paper)
     if haiku_says == "tradable":
         return "tradable"  # cheap model says yes → trust
-    # haiku says not_tradable — verify with sonnet before discarding
+    # haiku says not_tradable, verify with sonnet before discarding
     sonnet_says = triage_sonnet(paper)
     return sonnet_says
 ```

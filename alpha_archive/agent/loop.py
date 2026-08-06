@@ -1,13 +1,13 @@
-"""Loop orchestrator — chain the autonomous self-improvement cycle.
+"""Loop orchestrator, chain the autonomous self-improvement cycle.
 
 One full loop iteration:
-  1. POLL    — pull new papers from configured sources (--skip-poll to bypass)
-  2. TRIAGE  — LLM-classify pending papers; emit triage_notes
-  3. REPLICATE — for each newly-tradable paper, run end-to-end pipeline
-  4. CRITIQUE — grade each new ReplicationReport against meta/critique.md
-  5. ACTOR-PROPOSE — generate actor.md calibration proposal from critic findings
-  6. METRICS-LOG — append asymmetric loss + verdict counts to data/meta_runs/metrics.jsonl
-  7. (weekly only) LEARN — run aggregator → propose critique.md updates
+  1. POLL: pull new papers from configured sources (--skip-poll to bypass)
+  2. TRIAGE: LLM-classify pending papers; emit triage_notes
+  3. REPLICATE: for each newly-tradable paper, run end-to-end pipeline
+  4. CRITIQUE: grade each new ReplicationReport against meta/critique.md
+  5. ACTOR-PROPOSE: generate actor.md calibration proposal from critic findings
+  6. METRICS-LOG: append asymmetric loss + verdict counts to data/meta_runs/metrics.jsonl
+  7. (weekly only) LEARN: run aggregator → propose critique.md updates
 
 DEFAULT SAFETY:
   - Steps 1-6 run autonomously (read + write data/, no git commits)
@@ -90,7 +90,7 @@ def run(*, skip_poll: bool = False,
     """One full autonomous loop iteration."""
     loop = LoopResult(started_at=datetime.now(timezone.utc).isoformat())
 
-    # Lazy imports — these depend on heavy modules
+    # Lazy imports, these depend on heavy modules
     from alpha_archive import ingest, triage as triage_mod
     from alpha_archive.db import Session, Paper
 
@@ -179,7 +179,7 @@ def render_summary(loop: LoopResult) -> str:
     """Human-readable summary for CLI / cron logs."""
     lines = [
         "=" * 70,
-        f"Alpha Archive autonomous loop — {loop.finished_at}",
+        f"Alpha Archive autonomous loop, {loop.finished_at}",
         "=" * 70,
         f"  polled new papers:      {loop.polled}",
         f"  triaged pending:        {loop.triaged}",

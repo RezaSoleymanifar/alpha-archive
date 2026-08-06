@@ -2,7 +2,7 @@
 
 95 of 348 judged papers are reproducible on free data. The other 253 are not, and [the ledger](../data/triage/ledger.json) records why for each one.
 
-Effort is a tier, not an hour count. It is inferred from what the judgement recorded — how many sources a paper needs, how large its universe is, and whether anything must be trained — because that is the most those signals honestly support.
+Effort is a tier, not an hour count. It is inferred from what the judgement recorded (how many sources a paper needs, how large its universe is, and whether anything must be trained) because that is the most those signals honestly support.
 
 | Tier | Meaning | Count |
 |---|---|---|
@@ -16,7 +16,7 @@ Ordered cheapest first, then by confidence, then by how numeric the published ta
 
 ## 1. Fitting Accumulated Stock Returns with Tempered Skew t-Distribution
 
-`2606.19318` · [arXiv](https://arxiv.org/abs/2606.19318v1) · **S** — closed-form on a small universe · confidence 0.93 · 2026-06-17
+`2606.19318` · [arXiv](https://arxiv.org/abs/2606.19318v1) · **S**, closed-form on a small universe · confidence 0.93 · 2026-06-17
 
 Fits a tempered modified-Jones-Faddy Skew-t distribution (derived from a capped inverse-gamma stationary variance) to empirical distributions of S&P 500 returns accumulated over tau = 20, 30, ..., 120 trading days, 1980-2025.
 
@@ -35,7 +35,7 @@ Fits a tempered modified-Jones-Faddy Skew-t distribution (derived from a capped 
 
 ## 2. Conformal Kelly: Conformal Prediction Intervals as the Scale in Fractional Kelly Position Sizing
 
-`2608.01494` · [arXiv](https://arxiv.org/abs/2608.01494v1) · **S** — closed-form on a small universe · confidence 0.93 · 2026-08-02
+`2608.01494` · [arXiv](https://arxiv.org/abs/2608.01494v1) · **S**, closed-form on a small universe · confidence 0.93 · 2026-08-02
 
 Ridge forecast on 21/63/252-day momentum plus EWMA(20) vol, then position size = fractional Kelly scaled by the width of a 75% conformal prediction interval.
 
@@ -50,7 +50,7 @@ Ridge forecast on 21/63/252-day momentum plus EWMA(20) vol, then position size =
 
 ## 3. What Useful Alphas?
 
-`2607.06502` · [arXiv](https://arxiv.org/abs/2607.06502v1) · **S** — closed-form on a small universe · confidence 0.93 · 2026-07-07
+`2607.06502` · [arXiv](https://arxiv.org/abs/2607.06502v1) · **S**, closed-form on a small universe · confidence 0.93 · 2026-07-07
 
 Recomputes ~200 published long-short anomaly portfolios from the Chen-Zimmermann open-source signal library under alternative sample periods and size screens, then shrinks the cross-section of t-statistics for luck.
 
@@ -66,7 +66,7 @@ Recomputes ~200 published long-short anomaly portfolios from the Chen-Zimmermann
 
 ## 4. Enhancing the Black-Scholes Model for Option Valuation via Lévy Processes and Malliavin Calculus
 
-`2606.22796` · [arXiv](https://arxiv.org/abs/2606.22796v1) · **S** — closed-form on a small universe · confidence 0.92 · 2026-06-22
+`2606.22796` · [arXiv](https://arxiv.org/abs/2606.22796v1) · **S**, closed-form on a small universe · confidence 0.92 · 2026-06-22
 
 Adds a Levy subordinator to the volatility process in a Black-Scholes-type model, derives a European call price via multidimensional Ito calculus and an exact ATM implied-volatility expression via Malliavin calculus, then calibrates an OU (Stein-Stein) volatility process to a VIX-derived volatility proxy.
 
@@ -81,7 +81,7 @@ Adds a Levy subordinator to the volatility process in a Black-Scholes-type model
 
 ## 5. Probability Weighting Meets Heavy Tails: An Econometric Framework for Behavioral Asset Pricing
 
-`2511.16563` · [arXiv](https://arxiv.org/abs/2511.16563v1) · **S** — closed-form on a small universe · confidence 0.91 · 2025-11-20
+`2511.16563` · [arXiv](https://arxiv.org/abs/2511.16563v1) · **S**, closed-form on a small universe · confidence 0.91 · 2025-11-20
 
 Fits Normal, Laplace and Student's t distributions, plus a bounded behavioral probability-weighting transformation that preserves infinite divisibility, to daily returns of 86 exchange-traded assets across 25 categories from Jan 2004 to Dec 2024, comparing AIC, normality-test rejections, 99% VaR error and rolling-window out-of-sample forecasts.
 
@@ -99,7 +99,7 @@ Fits Normal, Laplace and Student's t distributions, plus a bounded behavioral pr
 
 ## 6. Portfolio Optimization and Tail-Risk Analytics of Actively Managed ETFs
 
-`2607.03082` · [arXiv](https://arxiv.org/abs/2607.03082v1) · **S** — closed-form on a small universe · confidence 0.90 · 2026-07-03
+`2607.03082` · [arXiv](https://arxiv.org/abs/2607.03082v1) · **S**, closed-form on a small universe · confidence 0.90 · 2026-07-03
 
 Builds buy-and-hold, mean-variance, CVaR-95/99 and tangency portfolios (long-only and long-short, static and rolling-window dynamic) over a 30-fund universe of actively managed ETFs, and reports Sharpe/Sortino/Calmar/STARR/Rachev ratios plus Hill and POT-GPD tail diagnostics.
 
@@ -119,7 +119,7 @@ Builds buy-and-hold, mean-variance, CVaR-95/99 and tangency portfolios (long-onl
 
 ## 7. Correlation Structures and Regime Shifts in Nordic Stock Markets
 
-`2601.06090` · [arXiv](https://arxiv.org/abs/2601.06090v1) · **S** — closed-form on a small universe · confidence 0.90 · 2025-12-31
+`2601.06090` · [arXiv](https://arxiv.org/abs/2601.06090v1) · **S**, closed-form on a small universe · confidence 0.90 · 2025-12-31
 
 Tracks the leading eigenvalues of the rolling correlation matrix of daily log-returns across three Nordic indices, and tests whether the eigenstructure dynamics identify regimes usable for portfolio construction.
 
@@ -134,7 +134,7 @@ Tracks the leading eigenvalues of the rolling correlation matrix of daily log-re
 
 ## 8. GARTFIMA Models: A Class of Observation-Driven Models with Tempered Fractional Dynamics
 
-`2607.19311` · [arXiv](https://arxiv.org/abs/2607.19311) · **S** — closed-form on a small universe · confidence 0.85 · 2026-07-21
+`2607.19311` · [arXiv](https://arxiv.org/abs/2607.19311) · **S**, closed-form on a small universe · confidence 0.85 · 2026-07-21
 
 Observation-driven (GAS-style) conditional-mean model for squared log-returns with a tempered fractional differencing operator, fitted by partial maximum likelihood.
 
@@ -149,7 +149,7 @@ Observation-driven (GAS-style) conditional-mean model for squared log-returns wi
 
 ## 9. Option Pricing with Time-Changed Fractional Brownian Motion: A Fractional Variance Gamma Model
 
-`2608.03925` · [arXiv](https://arxiv.org/abs/2608.03925v1) · **S** — closed-form on a small universe · confidence 0.85 · 2026-08-04
+`2608.03925` · [arXiv](https://arxiv.org/abs/2608.03925v1) · **S**, closed-form on a small universe · confidence 0.85 · 2026-08-04
 
 Fractional Variance Gamma: fractional Brownian motion evaluated at a gamma activity-time change, estimated by two-stage feasible GMM on unconditional return moments across multiple horizons.
 
@@ -164,7 +164,7 @@ Fractional Variance Gamma: fractional Brownian motion evaluated at a gamma activ
 
 ## 10. Anchored Geodesic Analysis for Multivariate Extremes
 
-`2607.13112` · [arXiv](https://arxiv.org/abs/2607.13112v1) · **S** — closed-form on a small universe · confidence 0.85 · 2026-07-14
+`2607.13112` · [arXiv](https://arxiv.org/abs/2607.13112v1) · **S**, closed-form on a small universe · confidence 0.85 · 2026-07-14
 
 Anchored geodesic component analysis - dimension reduction of the extremal angular measure via great subspheres through a balanced complete-dependence anchor, reducing to eigenanalysis of a second-moment matrix of anchored tangent departures.
 
@@ -179,7 +179,7 @@ Anchored geodesic component analysis - dimension reduction of the extremal angul
 
 ## 11. Fragility of Minimum-Variance Portfolios
 
-`2607.18624` · [arXiv](https://arxiv.org/abs/2607.18624) · **S** — closed-form on a small universe · confidence 0.84 · 2026-07-21
+`2607.18624` · [arXiv](https://arxiv.org/abs/2607.18624) · **S**, closed-form on a small universe · confidence 0.84 · 2026-07-21
 
 Closed-form long-only minimum-variance weights under a block-diagonal correlation assumption, exposing threshold effects, plus structured shrinkage schemes that robustify against them.
 
@@ -195,7 +195,7 @@ Closed-form long-only minimum-variance weights under a block-diagonal correlatio
 
 ## 12. Deep Generative Models for Synthetic Financial Data: Applications to Portfolio and Risk Modeling
 
-`2512.21798` · [arXiv](https://arxiv.org/abs/2512.21798v2) · **S** — closed-form on a small universe · confidence 0.82 · 2025-12-25
+`2512.21798` · [arXiv](https://arxiv.org/abs/2512.21798v2) · **S**, closed-form on a small universe · confidence 0.82 · 2025-12-25
 
 Trains TimeGAN and a VAE on daily S&P 500 log-returns and evaluates the synthetic series on statistical similarity, temporal structure, and three downstream tasks: mean-variance portfolio weights, VaR/ES risk estimation, and backtested portfolio performance, always against the real series.
 
@@ -211,7 +211,7 @@ Trains TimeGAN and a VAE on daily S&P 500 log-returns and evaluates the syntheti
 
 ## 13. Drawdown Risk Beyond Brownian Motion: A Monte-Carlo Framework, Non-Gaussian Extensions, and Long Memory
 
-`2608.00127` · [arXiv](https://arxiv.org/abs/2608.00127v1) · **S** — closed-form on a small universe · confidence 0.82 · 2026-07-31
+`2608.00127` · [arXiv](https://arxiv.org/abs/2608.00127v1) · **S**, closed-form on a small universe · confidence 0.82 · 2026-07-31
 
 Monte-Carlo mapping from Sharpe ratio and return structure to four drawdown risk measures, extended to skewed/fat-tailed archetypes and fractional Brownian long memory.
 
@@ -226,7 +226,7 @@ Monte-Carlo mapping from Sharpe ratio and return structure to four drawdown risk
 
 ## 14. Retail Trader's Ruin: An Anatomy of Popular Signal Failure
 
-`2607.20093` · [arXiv](https://arxiv.org/abs/2607.20093v1) · **S** — closed-form on a small universe · confidence 0.72 · 2026-07-22
+`2607.20093` · [arXiv](https://arxiv.org/abs/2607.20093v1) · **S**, closed-form on a small universe · confidence 0.72 · 2026-07-22
 
 Runs five retail signal families (50/200 SMA crossover, RSI-14 / MACD / Bollinger, on-balance-volume, sell-in-May calendar rules, seven candlestick patterns) against exposure-matched benchmarks at 10bps round-trip cost, then applies three predeclared gates: stationary-bootstrap Sharpe-gap CIs with Benjamini-Yekutieli control, net-of-cost CAGR-gap CIs, and a finite-bankroll ruin simulation.
 
@@ -242,7 +242,7 @@ Runs five retail signal families (50/200 SMA crossover, RSI-14 / MACD / Bollinge
 
 ## 15. A novel robust mixed integer linear programming model for index tracking problem under no rebalancing: heuristic optimization approach
 
-`2607.09556` · [arXiv](https://arxiv.org/abs/2607.09556v1) · **S** — closed-form on a small universe · confidence 0.72 · 2026-07-10
+`2607.09556` · [arXiv](https://arxiv.org/abs/2607.09556v1) · **S**, closed-form on a small universe · confidence 0.72 · 2026-07-10
 
 Robust mixed-integer linear program that picks a small no-rebalancing tracking basket, solved exactly with CPLEX and by a genetic-algorithm heuristic (GALB).
 
@@ -258,7 +258,7 @@ Robust mixed-integer linear program that picks a small no-rebalancing tracking b
 
 ## 16. Generative AI-enhanced Sector-based Investment Portfolio Construction
 
-`2512.24526` · [arXiv](https://arxiv.org/abs/2512.24526v1) · **S** — closed-form on a small universe · confidence 0.72 · 2025-12-31
+`2512.24526` · [arXiv](https://arxiv.org/abs/2512.24526v1) · **S**, closed-form on a small universe · confidence 0.72 · 2025-12-31
 
 Prompts twelve LLMs to pick and weight stocks inside each of the eleven S&P 500 sector indices, then scores those portfolios against equal-weight, minimum-variance, maximum-return and maximum-Sharpe benchmarks under mean-variance optimization.
 
@@ -273,7 +273,7 @@ Prompts twelve LLMs to pick and weight stocks inside each of the eleven S&P 500 
 
 ## 17. Mandate without Managers: Automated Market Makers as Verifiable Portfolio Products
 
-`2608.02917` · [arXiv](https://arxiv.org/abs/2608.02917v1) · **S** — closed-form on a small universe · confidence 0.70 · 2026-08-03
+`2608.02917` · [arXiv](https://arxiv.org/abs/2608.02917v1) · **S**, closed-form on a small universe · confidence 0.70 · 2026-08-03
 
 Simulate a geometric-mean market maker (Balancer G3M) with a multi-asset fee band so arbitrage-only order flow enforces a target-weight portfolio, then compare its CAGR and tracking error to the incumbent funds.
 
@@ -289,7 +289,7 @@ Simulate a geometric-mean market maker (Balancer G3M) with a multi-asset fee ban
 
 ## 18. Robust Hedging Valuation Adjustment under Liquidity--Demand Stress
 
-`2606.26731` · [arXiv](https://arxiv.org/abs/2606.26731v2) · **S** — closed-form on a small universe · confidence 0.68 · 2026-06-25
+`2606.26731` · [arXiv](https://arxiv.org/abs/2606.26731v2) · **S**, closed-form on a small universe · confidence 0.68 · 2026-06-25
 
 Defines a robust hedging valuation adjustment as the worst-case expected loss over a relative-entropy ball around the simulated loss distribution of a no-trade-band delta-hedging rule for a one-year at-the-money European call (252 steps, 20,000 Monte Carlo paths), then calibrates the benchmark stress level from public data by computing rolling Kendall rank correlation between the VIX and the SPY Amihud illiquidity measure and mapping it to a Gaussian scale.
 
@@ -306,7 +306,7 @@ Defines a robust hedging valuation adjustment as the worst-case expected loss ov
 
 ## 19. Two Sides of Schur Damping: High-Dimensional Pseudo-Likelihoods and Portfolio Allocation
 
-`2606.14798` · [arXiv](https://arxiv.org/abs/2606.14798v1) · **S** — closed-form on a small universe · confidence 0.55 · 2026-06-11
+`2606.14798` · [arXiv](https://arxiv.org/abs/2606.14798v1) · **S**, closed-form on a small universe · confidence 0.55 · 2026-06-11
 
 Shows that the damped Schur complement used in spatial Vecchia pseudo-likelihoods and the gamma parameter interpolating hierarchical risk parity and minimum variance are the same object, with the same closed-form James-Stein / Ledoit-Wolf optimal intensity, then runs a small out-of-sample log-likelihood experiment on daily asset returns comparing undamped, closed-form and held-out-tuned damping.
 
@@ -322,7 +322,7 @@ Shows that the damped Schur complement used in spatial Vecchia pseudo-likelihood
 
 ## 20. Relief-Gated Relative Rotation for QQQ-DIA Allocation: Globally Screened Relative States, Fixed Position Mapping, Incremental Interaction Admission, and Walk-Forward Validation
 
-`2607.06117` · [arXiv](https://arxiv.org/abs/2607.06117v1) · **M** — 4 separate sources · confidence 0.96 · 2026-07-07
+`2607.06117` · [arXiv](https://arxiv.org/abs/2607.06117v1) · **M**, 4 separate sources · confidence 0.96 · 2026-07-07
 
 A two-ETF allocation rule (RGRR) mapping screened QQQ-DIA relative states and macro relief states into a continuous QQQ weight, with signals globally screened by horizon-specific HAC regressions and correlation de-duplication, then frozen during rolling walk-forward validation that re-selects only signal-family lambdas; the final stack is one main effect, nine second-order and two third-order interactions with a 10 bps one-way turnover cost.
 
@@ -344,7 +344,7 @@ A two-ETF allocation rule (RGRR) mapping screened QQQ-DIA relative states and ma
 
 ## 21. Continuous Cash-Overlay Filters for a Static Growth--Defensive Risk Sleeve: Slow-Tail Compensation, V-Shape Crash Brakes, Walk-Forward Validation, and Max-Cash Combination
 
-`2606.09025` · [arXiv](https://arxiv.org/abs/2606.09025v2) · **M** — 6 separate sources · confidence 0.95 · 2026-06-08
+`2606.09025` · [arXiv](https://arxiv.org/abs/2606.09025v2) · **M**, 6 separate sources · confidence 0.95 · 2026-06-08
 
 Overlays cash on a fixed 50/50 growth-defensive ten-ETF risky sleeve using two independent filters - a slow-tail compensation/rate-headwind score with a 30% material-trade gate, and a fast V-shape crash brake on VIX, rate, credit and drawdown states - then takes the larger requested cash weight each day, validated by expanding and rolling walk-forward.
 
@@ -366,7 +366,7 @@ Overlays cash on a fixed 50/50 growth-defensive ten-ETF risky sleeve using two i
 
 ## 22. The Impact of Bitcoin ETF Approval on Bitcoin's Hedging Properties Against Traditional Assets
 
-`2512.12815` · [arXiv](https://arxiv.org/abs/2512.12815v1) · **M** — an estimator has to be fitted and checked · confidence 0.95 · 2025-12-14
+`2512.12815` · [arXiv](https://arxiv.org/abs/2512.12815v1) · **M**. An estimator has to be fitted and checked · confidence 0.95 · 2025-12-14
 
 Tests whether the January 2024 US spot Bitcoin ETF approval changed Bitcoin's co-movement with equities, gold and the dollar, using 30/60-day rolling correlations, Chow structural-break tests on both pairwise OLS and the rolling-correlation series, and an ARMA-DCC-GARCH(1,1) model.
 
@@ -385,7 +385,7 @@ Tests whether the January 2024 US spot Bitcoin ETF approval changed Bitcoin's co
 
 ## 23. Low-Turnover Rebalancing for Sparse Index Tracking
 
-`2512.22109` · [arXiv](https://arxiv.org/abs/2512.22109v2) · **M** — 500 names · confidence 0.95 · 2025-12-26
+`2512.22109` · [arXiv](https://arxiv.org/abs/2512.22109v2) · **M**, 500 names · confidence 0.95 · 2025-12-26
 
 Separates sparse index-tracker construction from maintenance: builds the initial tracker with a calibrated shrinkage model and posterior support screening, then at each rebalance defaults to holding and only makes self-financing local repairs when realised tracking error deteriorates and posterior directional gates agree.
 
@@ -404,7 +404,7 @@ Separates sparse index-tracker construction from maintenance: builds the initial
 
 ## 24. Crashing Together, Rallying Apart: Dynamic Conditional Tail Dependence in Cryptocurrency Markets
 
-`2606.16840` · [arXiv](https://arxiv.org/abs/2606.16840v1) · **M** — an estimator has to be fitted and checked · confidence 0.95 · 2026-06-15
+`2606.16840` · [arXiv](https://arxiv.org/abs/2606.16840v1) · **M**. An estimator has to be fitted and checked · confidence 0.95 · 2026-06-15
 
 Filters daily log returns of the thirteen largest cryptocurrencies with AR(1)-GJR-GARCH(1,1)-t, transforms residuals to Pareto margins, and fits Husler-Reiss graphical extremes models separately to the lower and upper tails over 89 overlapping 750-day windows (15-day steps), benchmarked against a Bayesian Gaussian graphical model.
 
@@ -421,7 +421,7 @@ Filters daily log returns of the thirteen largest cryptocurrencies with AR(1)-GJ
 
 ## 25. A Spectral Generalisation of the Variance Ratio: Eigenstructure of Long-Horizon Portfolio Covariance and a Multi-Memory Factor Model of U.S. Equity Returns
 
-`2607.03858` · [arXiv](https://arxiv.org/abs/2607.03858v1) · **M** — 4 separate sources · confidence 0.94 · 2026-07-04
+`2607.03858` · [arXiv](https://arxiv.org/abs/2607.03858v1) · **M**, 4 separate sources · confidence 0.94 · 2026-07-04
 
 Generalises the Lo-MacKinlay variance ratio to a multivariate spectral statistic (kappa, eigenvector-overlap) in both a return channel and a squared-return volatility channel, then fits a nine-parameter five-factor multi-memory model (fBm persistent/antipersistent, ARFIMA, MSM cascade) to eigenmode profiles via moving-block-bootstrapped L-BFGS-B.
 
@@ -442,7 +442,7 @@ Generalises the Lo-MacKinlay variance ratio to a multivariate spectral statistic
 
 ## 26. Broken Symmetry of Stock Returns -- a Modified Jones-Faddy Skew t-Distribution
 
-`2512.23640` · [arXiv](https://arxiv.org/abs/2512.23640v2) · **M** — an estimator has to be fitted and checked · confidence 0.94 · 2025-12-29
+`2512.23640` · [arXiv](https://arxiv.org/abs/2512.23640v2) · **M**. An estimator has to be fitted and checked · confidence 0.94 · 2025-12-29
 
 Splits the return distribution into gain and loss halves with separate stochastic-volatility parameters, and fits a modified Jones-Faddy skew t-distribution to daily S&P 500 log-returns by Bayesian estimation.
 
@@ -456,7 +456,7 @@ Splits the return distribution into gain and loss halves with separate stochasti
 
 ## 27. Regime-Conditional Distributional Comparison of Trading Strategies: A GAMLSS/ZAGA Framework Applied to the S&P 500
 
-`2606.31251` · [arXiv](https://arxiv.org/abs/2606.31251v1) · **M** — an estimator has to be fitted and checked · confidence 0.93 · 2026-06-30
+`2606.31251` · [arXiv](https://arxiv.org/abs/2606.31251v1) · **M**. An estimator has to be fitted and checked · confidence 0.93 · 2026-06-30
 
 Runs a 146-fold walk-forward backtest (160-day in-sample, 40-day out-of-sample, 40-day step) of a polynomial-kernel SVM on seven technical indicators against buy-and-hold on the S&P 500, then models the two fold-level Adjusted Information Ratio sequences jointly with a GAMLSS/Zero-Adjusted-Gamma regression conditioned on realised volatility and cumulative momentum, testing three nulls by parametric bootstrap.
 
@@ -475,7 +475,7 @@ Runs a 146-fold walk-forward backtest (160-day in-sample, 40-day out-of-sample, 
 
 ## 28. HODL Strategy or Fantasy? 480 Million Crypto Market Simulations and the Macro-Sentiment Effect
 
-`2512.02029` · [arXiv](https://arxiv.org/abs/2512.02029v1) · **M** — 6 separate sources · confidence 0.93 · 2025-11-19
+`2512.02029` · [arXiv](https://arxiv.org/abs/2512.02029v1) · **M**, 6 separate sources · confidence 0.93 · 2025-11-19
 
 Runs 480 million Monte Carlo buy-hold-sell episodes across 378 non-stablecoin crypto assets over six holding-horizon buckets and eight baskets, netting trading fees and the 1-month T-bill opportunity cost, then fits a Bayesian multi-horizon local projection of forward returns and Sharpe on macro-finance predictors and the Crypto Fear and Greed Index.
 
@@ -498,7 +498,7 @@ Runs 480 million Monte Carlo buy-hold-sell episodes across 378 non-stablecoin cr
 
 ## 29. Mens: Nonlinear shrinkage estimation in nonparanormal models for financial applications
 
-`2607.19825` · [arXiv](https://arxiv.org/abs/2607.19825) · **M** — 500 names · confidence 0.93 · 2026-07-22
+`2607.19825` · [arXiv](https://arxiv.org/abs/2607.19825) · **M**, 500 names · confidence 0.93 · 2026-07-22
 
 MENS applies the Ledoit-Wolf analytic nonlinear-shrinkage function to the eigenvalues of the normal-scores rank-covariance matrix, rescaled by MAD marginal volatilities, and plugs the result into a global minimum-variance portfolio.
 
@@ -513,7 +513,7 @@ MENS applies the Ledoit-Wolf analytic nonlinear-shrinkage function to the eigenv
 
 ## 30. The Three-Dimensional Decomposition of Volatility Memory
 
-`2512.02166` · [arXiv](https://arxiv.org/abs/2512.02166v1) · **M** — 4 separate sources · confidence 0.92 · 2025-12-01
+`2512.02166` · [arXiv](https://arxiv.org/abs/2512.02166v1) · **M**, 4 separate sources · confidence 0.92 · 2025-12-01
 
 Decomposes volatility memory into level, shape and tempo gates (regime-switching, fractional integration, business-time clock), shows GARCH-type models are special cases, and compares gated models against GARCH, EGARCH and GJR on rolling one-step-ahead variance forecasts and 1%/5% VaR-ES for SPY and EURUSD.
 
@@ -533,7 +533,7 @@ Decomposes volatility memory into level, shape and tempo gates (regime-switching
 
 ## 31. A new decomposition approach to modeling financial returns: Conditioning sign on magnitude
 
-`2606.04153` · [arXiv](https://arxiv.org/abs/2606.04153v1) · **M** — 4 separate sources · confidence 0.92 · 2026-06-02
+`2606.04153` · [arXiv](https://arxiv.org/abs/2606.04153v1) · **M**, 4 separate sources · confidence 0.92 · 2026-06-02
 
 Decomposes monthly excess returns into sign and magnitude, models the magnitude marginal and the sign conditional on contemporaneous magnitude, and forecasts S&P 500 excess returns out of sample against linear regression, complete subset regression, GARCH-M, Markov switching, copula-based decompositions and momentum switching rules, selecting predictor subsets by in-sample AUC.
 
@@ -554,7 +554,7 @@ Decomposes monthly excess returns into sign and magnitude, models the magnitude 
 
 ## 32. First-passage horizons in horizontal visibility graphs: a rank-invariant estimator of path roughness for rough volatility models
 
-`2512.02352` · [arXiv](https://arxiv.org/abs/2512.02352v3) · **M** — an estimator has to be fitted and checked · confidence 0.91 · 2025-12-02
+`2512.02352` · [arXiv](https://arxiv.org/abs/2512.02352v3) · **M**. An estimator has to be fitted and checked · confidence 0.91 · 2025-12-02
 
 Defines the forward visibility horizon on a horizontal visibility graph, proves it equals the first-passage time and has an exact 1/k iid survival law, derives theta(H)=1-H from fBm persistence theory, and estimates theta with a Hill-MLE using Clauset-Shalizi-Newman threshold selection on simulated paths and on the VIX.
 
@@ -571,7 +571,7 @@ Defines the forward visibility horizon on a horizontal visibility graph, proves 
 
 ## 33. Covariance-Aware Simplex Projection for Cardinality-Constrained Portfolio Optimization
 
-`2512.19986` · [arXiv](https://arxiv.org/abs/2512.19986v1) · **M** — 500 names · confidence 0.90 · 2025-12-23
+`2512.19986` · [arXiv](https://arxiv.org/abs/2512.19986v1) · **M**, 500 names · confidence 0.90 · 2025-12-23
 
 Introduces CASP, a two-stage repair operator for cardinality-constrained portfolios: select K assets by volatility-normalized score, then project weights onto the constrained simplex under the covariance-induced (tracking-error) metric rather than the Euclidean one, and drops it into a MOGWO metaheuristic.
 
@@ -589,7 +589,7 @@ Introduces CASP, a two-stage repair operator for cardinality-constrained portfol
 
 ## 34. Needles in a haystack: using forensic network science to uncover insider trading
 
-`2512.18918` · [arXiv](https://arxiv.org/abs/2512.18918v1) · **M** — an estimator has to be fitted and checked · confidence 0.90 · 2025-12-21
+`2512.18918` · [arXiv](https://arxiv.org/abs/2512.18918v1) · **M**. An estimator has to be fitted and checked · confidence 0.90 · 2025-12-21
 
 Builds a weighted network over corporate insiders from SEC Form 4 filings, with edge weights given by a symmetric same-week linear-decay temporal alignment kernel over each pair's trade dates at a shared issuer, then flags coordinated groups via centrality and OddBall egonet anomaly detection against calibrated and shuffled null models.
 
@@ -606,7 +606,7 @@ Builds a weighted network over corporate insiders from SEC Form 4 filings, with 
 
 ## 35. Standard and stressed value at risk forecasting using dynamic Bayesian networks
 
-`2512.05661` · [arXiv](https://arxiv.org/abs/2512.05661v1) · **M** — an estimator has to be fitted and checked · confidence 0.90 · 2025-12-05
+`2512.05661` · [arXiv](https://arxiv.org/abs/2512.05661v1) · **M**. An estimator has to be fitted and checked · confidence 0.90 · 2025-12-05
 
 Introduces a dynamic Bayesian network framework (MMHC, PC-Stable and SI-HITON-PC structure learning) for 10-day 99% VaR and stressed VaR, using both historical and forecasted returns, and compares it against ARCH(1), GARCH(1,1), EGARCH(1,1), RiskMetrics (each under normal and skewed Student-t innovations), historical simulation and delta-normal, on daily S&P 500 log returns from 15 March 1991 to 14 February 2020 with 7,286 rolling forecasts per model, evaluated by breach counts and forecasting error measures.
 
@@ -623,7 +623,7 @@ Introduces a dynamic Bayesian network framework (MMHC, PC-Stable and SI-HITON-PC
 
 ## 36. Continuous Hidden Markov Models for Equity Returns: Heavy-Tail Emission Families and Regime-Conditional Value-at-Risk
 
-`2606.23492` · [arXiv](https://arxiv.org/abs/2606.23492v1) · **M** — an estimator has to be fitted and checked · confidence 0.88 · 2026-06-22
+`2606.23492` · [arXiv](https://arxiv.org/abs/2606.23492v1) · **M**. An estimator has to be fitted and checked · confidence 0.88 · 2026-06-22
 
 Fits four-emission-family continuous hidden Markov models (Gaussian, Student-t, Laplace, GED) to daily equity growth rates by EM, and tests whether a few-state HMM reproduces heavy tails, near-zero return ACF and slow absolute-return ACF decay, plus regime-conditional VaR backtests.
 
@@ -642,7 +642,7 @@ Fits four-emission-family continuous hidden Markov models (Gaussian, Student-t, 
 
 ## 37. The Aligned Economic Index & The State Switching Model
 
-`2512.20460` · [arXiv](https://arxiv.org/abs/2512.20460v2) · **M** — 5 separate sources · confidence 0.88 · 2025-12-23
+`2512.20460` · [arXiv](https://arxiv.org/abs/2512.20460v2) · **M**, 5 separate sources · confidence 0.88 · 2025-12-23
 
 Introduces a state-switching predictive regression for the US equity premium in which the market state is set in real time by whether the 10Y-3M term spread was flat or inverted in the preceding tau months, and compares partial-least-squares, PCA and forecast-combination aggregations of the Welch-Goyal predictor set.
 
@@ -661,7 +661,7 @@ Introduces a state-switching predictive regression for the US equity premium in 
 
 ## 38. Stochastic Volatility in Mean Models with Heavy Tails: A Fast Approximate Bayesian Inference Using Hidden Markov Models
 
-`2606.22615` · [arXiv](https://arxiv.org/abs/2606.22615v1) · **M** — an estimator has to be fitted and checked · confidence 0.86 · 2026-06-21
+`2606.22615` · [arXiv](https://arxiv.org/abs/2606.22615v1) · **M**. An estimator has to be fitted and checked · confidence 0.86 · 2026-06-21
 
 Extends approximate Bayesian estimation of Stochastic Volatility in Mean models to Student-t, slash and variance-gamma errors from the scale-mixture-of-normals family, replacing numerical integration with special functions and a discretised HMM likelihood, then fits the models to four equity index return series and backtests VaR.
 
@@ -680,7 +680,7 @@ Extends approximate Bayesian estimation of Stochastic Volatility in Mean models 
 
 ## 39. Portfolio Optimization for Commodity ETFs under Heavy-Tailed Returns
 
-`2606.26625` · [arXiv](https://arxiv.org/abs/2606.26625v1) · **M** — an estimator has to be fitted and checked · confidence 0.85 · 2026-06-25
+`2606.26625` · [arXiv](https://arxiv.org/abs/2606.26625v1) · **M**. An estimator has to be fitted and checked · confidence 0.85 · 2026-06-25
 
 Compares a passive equal-weight buy-and-hold portfolio of 30 U.S.-listed commodity ETFs (2018-12-12 to 2024-12-16, daily) against rolling-window mean-variance and CVaR(95%/99%) optimized portfolios, long-only and restricted long-short, at both the minimum-risk and tangent points, then repeats the exercise dynamically with ARMA-GARCH marginals and a Student-t copula, and adds Hill tail-index and VaR/CVaR extreme-value diagnostics.
 
@@ -697,7 +697,7 @@ Compares a passive equal-weight buy-and-hold portfolio of 30 U.S.-listed commodi
 
 ## 40. Market Reactions and Information Spillovers in Bank Mergers: A Multi-Method Analysis of the Japanese Banking Sector
 
-`2512.06550` · [arXiv](https://arxiv.org/abs/2512.06550v1) · **M** — 4 separate sources · confidence 0.85 · 2025-12-06
+`2512.06550` · [arXiv](https://arxiv.org/abs/2512.06550v1) · **M**, 4 separate sources · confidence 0.85 · 2025-12-06
 
 Multi-method event study of two Japanese bank M&A events - the 2005-10-03 MUFG creation and the 2018-04-01 Resona Holdings merger - estimating cumulative abnormal returns with the market model, CAPM and Fama-French three-factor model over roughly a -20 to +22 day window, then VAR Granger-causality tests and impulse responses for spillovers to peer banks, plus propensity-score matching for the ATT.
 
@@ -716,7 +716,7 @@ Multi-method event study of two Japanese bank M&A events - the 2005-10-03 MUFG c
 
 ## 41. Stock Investment: The p-index Approach
 
-`2606.08569` · [arXiv](https://arxiv.org/abs/2606.08569v1) · **M** — 500 names · confidence 0.85 · 2026-06-07
+`2606.08569` · [arXiv](https://arxiv.org/abs/2606.08569v1) · **M**, 500 names · confidence 0.85 · 2026-06-07
 
 Defines a p-index as the model put premium per insured dollar guaranteeing at least a delta return, computed from a binomial tree fitted to each stock's own price path, then ranks stocks by p-index and p-ratio to run fair-price, momentum, contrarian and MCIRS strategies on the SSE 50 and the S&P 500 over 2018-2023.
 
@@ -737,7 +737,7 @@ Defines a p-index as the model put premium per insured dollar guaranteeing at le
 
 ## 42. Real-time identification of the onset of financial rogue waves
 
-`2606.31475` · [arXiv](https://arxiv.org/abs/2606.31475v2) · **M** — 4 separate sources · confidence 0.85 · 2026-06-30
+`2606.31475` · [arXiv](https://arxiv.org/abs/2606.31475v2) · **M**, 4 separate sources · confidence 0.85 · 2026-06-30
 
 Maps volatility-index time series onto a Schrodinger equation with a Kerr-nonlinearity potential built from the Fourier-filtered envelope wave, tracks the numerical gradient of the minimum eigenvalue in an 80-trading-day moving window, and uses spikes in that gradient as a real-time rogue-wave (extreme-event) warning indicator.
 
@@ -757,7 +757,7 @@ Maps volatility-index time series onto a Schrodinger equation with a Kerr-nonlin
 
 ## 43. Modelling financial time series with $φ^{4}$ quantum field theory
 
-`2512.17225` · [arXiv](https://arxiv.org/abs/2512.17225v1) · **M** — 500 names · confidence 0.85 · 2025-12-19
+`2512.17225` · [arXiv](https://arxiv.org/abs/2512.17225v1) · **M**, 500 names · confidence 0.85 · 2025-12-19
 
 Fits a phi^4 scalar quantum field theory with inhomogeneous couplings and explicit symmetry breaking to an ensemble of S&P 500 stock log-return series, compares its reproduction of market mean and kurtosis against a binarized Ising model, extracts finite-size scaling exponents for the learned weights and biases, and forecasts next-day price changes for AAPL, MSFT and NVDA.
 
@@ -775,7 +775,7 @@ Fits a phi^4 scalar quantum field theory with inhomogeneous couplings and explic
 
 ## 44. Are cryptocurrencies real financial bubbles? Evidence from quantitative analyses
 
-`2607.21826` · [arXiv](https://arxiv.org/abs/2607.21826v1) · **M** — an estimator has to be fitted and checked · confidence 0.85 · 2026-07-23
+`2607.21826` · [arXiv](https://arxiv.org/abs/2607.21826v1) · **M**. An estimator has to be fitted and checked · confidence 0.85 · 2026-07-23
 
 Log-Periodic Power Law (JLS) fitted by OLS, GLS and MLE to detect super-exponential price growth, cross-checked with Phillips-Shi-Yu right-tailed BSADF explosive-root tests for bubble date stamping.
 
@@ -790,7 +790,7 @@ Log-Periodic Power Law (JLS) fitted by OLS, GLS and MLE to detect super-exponent
 
 ## 45. Portfolio Allocation under Heterogeneous Scales and Multifractality
 
-`2608.04987` · [arXiv](https://arxiv.org/abs/2608.04987v1) · **M** — an estimator has to be fitted and checked · confidence 0.85 · 2026-08-05
+`2608.04987` · [arXiv](https://arxiv.org/abs/2608.04987v1) · **M**. An estimator has to be fitted and checked · confidence 0.85 · 2026-08-05
 
 Replace the covariance matrix in mean-variance optimization with the sign-preserving MFCCA multifractal fluctuation matrix indexed by scale s and order q, solved as a QP with no-short-selling on a 520-day rolling window rebalanced monthly.
 
@@ -805,7 +805,7 @@ Replace the covariance matrix in mean-variance optimization with the sign-preser
 
 ## 46. Leakage-Aware Benchmarking of LLM Forecasting: Real-Time Nowcasts as the Decision-Time Input for Macro Factor Ranking
 
-`2606.22719` · [arXiv](https://arxiv.org/abs/2606.22719v1) · **M** — 5 separate sources · confidence 0.84 · 2026-06-21
+`2606.22719` · [arXiv](https://arxiv.org/abs/2606.22719v1) · **M**, 5 separate sources · confidence 0.84 · 2026-06-21
 
 Runs a leakage-controlled monthly walk-forward in which a retrieval-augmented Qwen2.5-7B critic-actor pipeline scores seven U.S. equity style factors from decision-time-only inputs (lag-shifted FRED macro, archived Cleveland Fed daily CPI nowcast, FOMC/CPI event summaries), and compares its rank IC against kNN macro-analog and ridge baselines.
 
@@ -826,7 +826,7 @@ Runs a leakage-controlled monthly walk-forward in which a retrieval-augmented Qw
 
 ## 47. (In)Efficient Market States and Rough Volatility Detected via Grunwald-Letnikov Fractional Derivative
 
-`2606.27932` · [arXiv](https://arxiv.org/abs/2606.27932v1) · **M** — an estimator has to be fitted and checked · confidence 0.83 · 2026-06-26
+`2606.27932` · [arXiv](https://arxiv.org/abs/2606.27932v1) · **M**. An estimator has to be fitted and checked · confidence 0.83 · 2026-06-26
 
 Introduces a regime-adaptive KS / GL-KS self-similarity test built on the discrete Grunwald-Letnikov fractional derivative, proves the filtered empirical-process limit and consistency of the resulting Hurst estimator, validates by Monte Carlo, then applies it to daily log-realized-volatility series and to daily equity-index log-price trajectories to detect rough volatility and persistent / anti-persistent / efficient market states.
 
@@ -843,7 +843,7 @@ Introduces a regime-adaptive KS / GL-KS self-similarity test built on the discre
 
 ## 48. Recovering Structural Organization in Noisy Correlation Networks Using Financial Systems as a Testbed
 
-`2607.10297` · [arXiv](https://arxiv.org/abs/2607.10297v1) · **M** — 500 names · confidence 0.82 · 2026-07-11
+`2607.10297` · [arXiv](https://arxiv.org/abs/2607.10297v1) · **M**, 500 names · confidence 0.82 · 2026-07-11
 
 Splits the empirical correlation matrix into a structured component (eigenvalues above the Marchenko-Pastur bound) and noise, builds networks from the denoised matrix, and forms equal-weighted portfolios from peripheral assets.
 
@@ -859,7 +859,7 @@ Splits the empirical correlation matrix into a structured component (eigenvalues
 
 ## 49. Local Gaussian Correlation in the Tails: A Scarcity Diagnostic, an Optimal Local Bandwidth, and the Limits of Adaptivity
 
-`2607.03888` · [arXiv](https://arxiv.org/abs/2607.03888v2) · **M** — 4 separate sources · confidence 0.80 · 2026-07-04
+`2607.03888` · [arXiv](https://arxiv.org/abs/2607.03888v2) · **M**, 4 separate sources · confidence 0.80 · 2026-07-04
 
 Derives the first location-specific AMISE-optimal bandwidth for local Gaussian correlation, maps via Monte Carlo where adaptivity beats a global plug-in, then applies both estimators to GARCH-filtered daily equity returns and compares bootstrap stability of the tail-dependence surfaces.
 
@@ -880,7 +880,7 @@ Derives the first location-specific AMISE-optimal bandwidth for local Gaussian c
 
 ## 50. Synthetic Financial Data Generation for Enhanced Financial Modelling
 
-`2512.21791` · [arXiv](https://arxiv.org/abs/2512.21791v1) · **M** — an estimator has to be fitted and checked · confidence 0.80 · 2025-12-25
+`2512.21791` · [arXiv](https://arxiv.org/abs/2512.21791v1) · **M**. An estimator has to be fitted and checked · confidence 0.80 · 2025-12-25
 
 Sets up a multi-criteria evaluation framework (MMD and KS for fidelity, ACF and volatility clustering for temporal structure, mean-variance optimization and volatility forecasting for utility, NNDT for privacy) and applies it to ARIMA-GARCH, VAE and TimeGAN generators trained on daily S&P 500 returns.
 
@@ -895,7 +895,7 @@ Sets up a multi-criteria evaluation framework (MMD and KS for fidelity, ACF and 
 
 ## 51. Iterative detection of global factors near the BBP phase transition
 
-`2607.06908` · [arXiv](https://arxiv.org/abs/2607.06908v1) · **M** — 500 names · confidence 0.80 · 2026-07-08
+`2607.06908` · [arXiv](https://arxiv.org/abs/2607.06908v1) · **M**, 500 names · confidence 0.80 · 2026-07-08
 
 Iterative global-factor (IGF) detection using the participation-ratio structure of Brown-Harding factor eigenvectors to separate weak factors from Marcenko-Pastur edge noise near the BBP transition.
 
@@ -910,7 +910,7 @@ Iterative global-factor (IGF) detection using the participation-ratio structure 
 
 ## 52. Local and Global Balance in Financial Correlation Networks: an Application to Investment Decisions
 
-`2512.10606` · [arXiv](https://arxiv.org/abs/2512.10606v1) · **M** — 5 separate sources · confidence 0.78 · 2025-12-11
+`2512.10606` · [arXiv](https://arxiv.org/abs/2512.10606v1) · **M**, 5 separate sources · confidence 0.78 · 2025-12-11
 
 Builds signed correlation networks from rolling windows of daily stock log-returns, computes global balance kappa(G) and node-level local balance kappa_i(G) via matrix exponentials, and concentrates an equal-weight portfolio in the assets whose local balance deviates most from a high global balance, benchmarked against 1/N.
 
@@ -930,7 +930,7 @@ Builds signed correlation networks from rolling windows of daily stock log-retur
 
 ## 53. Portfolio Optimization via Transfer Learning
 
-`2511.21221` · [arXiv](https://arxiv.org/abs/2511.21221v1) · **M** — 5 separate sources · confidence 0.78 · 2025-11-26
+`2511.21221` · [arXiv](https://arxiv.org/abs/2511.21221v1) · **M**, 5 separate sources · confidence 0.78 · 2025-11-26
 
 Builds a transfer-learning portfolio rule that weights source-market datasets by forward validation so that uninformative sources are asymptotically discarded, proves it attains the maximum Sharpe ratio, and applies it to five dual-listed A-share/H-share firms in four sectors and to six US industry baskets of five large-cap names each.
 
@@ -950,7 +950,7 @@ Builds a transfer-learning portfolio rule that weights source-market datasets by
 
 ## 54. Are Three Matrices All You Need To Beat the Market? Observable Matrix Dynamics for Portfolio Optimization
 
-`2607.27461` · [arXiv](https://arxiv.org/abs/2607.27461v1) · **M** — 500 names · confidence 0.78 · 2026-07-29
+`2607.27461` · [arXiv](https://arxiv.org/abs/2607.27461v1) · **M**, 500 names · confidence 0.78 · 2026-07-29
 
 Three price-only matrices - an arccos correlation distance matrix plus monthly decile-rank Markov transition matrices for trailing return and trailing volatility - feed covariate-conditioned rank forecasts that drive a dollar-neutral momentum long-short blended with an opportunistic long-only sleeve.
 
@@ -966,7 +966,7 @@ Three price-only matrices - an arccos correlation distance matrix plus monthly d
 
 ## 55. Composite likelihood inference of fractional Gaussian processes with sequentially optimal subset selection
 
-`2606.11962` · [arXiv](https://arxiv.org/abs/2606.11962v2) · **M** — an estimator has to be fitted and checked · confidence 0.76 · 2026-06-10
+`2606.11962` · [arXiv](https://arxiv.org/abs/2606.11962v2) · **M**. An estimator has to be fitted and checked · confidence 0.76 · 2026-06-10
 
 Derives Fisher and Godambe information for fractional Brownian motion and fractional Gaussian noise, builds a composite-likelihood estimator whose sub-vector design sequentially maximises Godambe information, and compares it against method-of-moments and full MLE on simulated paths and then on log-volatility and wind-speed series.
 
@@ -984,7 +984,7 @@ Derives Fisher and Godambe information for fractional Brownian motion and fracti
 
 ## 56. Bitcoin Runs on a Clock: Why Every Price Indicator Dies and the Halving Clock Doesn't
 
-`2607.26188` · [arXiv](https://arxiv.org/abs/2607.26188v1) · **M** — 4 separate sources · confidence 0.72 · 2026-07-28
+`2607.26188` · [arXiv](https://arxiv.org/abs/2607.26188v1) · **M**, 4 separate sources · confidence 0.72 · 2026-07-28
 
 Dates each cycle's top and bottom mechanically, measures the elapsed days from each halving, and tests the clustering against a block-bootstrap null; separately shows Pi Cycle (111d SMA / 2x350d SMA), Mayer (price / 200d SMA), MVRV and Puell extremes decay monotonically across epochs.
 
@@ -1001,7 +1001,7 @@ Dates each cycle's top and bottom mechanically, measures the elapsed days from e
 
 ## 57. Bayesian Distributionally Robust Merton Problem with Nonlinear Wasserstein Projections
 
-`2512.01408` · [arXiv](https://arxiv.org/abs/2512.01408v1) · **M** — 500 names · confidence 0.71 · 2025-12-01
+`2512.01408` · [arXiv](https://arxiv.org/abs/2512.01408v1) · **M**, 500 names · confidence 0.71 · 2025-12-01
 
 Places a single Wasserstein ambiguity set on the drift prior in a Bayesian Merton problem rather than time-rectangular ambiguity, reduces the robust control to optimising a nonlinear functional of the prior, calibrates the radius by a nonlinear Wasserstein projection, and compares the resulting DRBC policy against Bayesian Merton, DRC and myopic DRO-Markowitz.
 
@@ -1018,7 +1018,7 @@ Places a single Wasserstein ambiguity set on the drift prior in a Bayesian Merto
 
 ## 58. Gaussian Boson Sampling for Asset Clustering in Statistical Arbitrage Portfolios
 
-`2607.19279` · [arXiv](https://arxiv.org/abs/2607.19279v1) · **M** — 500 names · confidence 0.68 · 2026-07-21
+`2607.19279` · [arXiv](https://arxiv.org/abs/2607.19279v1) · **M**, 500 names · confidence 0.68 · 2026-07-21
 
 Beta-residualized daily returns over a 5-day rolling window form an RMT-filtered correlation matrix; clusters are found by Spectral, SPONGE, and simulated Gaussian Boson Sampling dense-subgraph search, then traded as mean-reverting StatArb baskets.
 
@@ -1034,7 +1034,7 @@ Beta-residualized daily returns over a 5-day rolling window form an RMT-filtered
 
 ## 59. Extending the application of dynamic Bayesian networks in calculating market risk: Standard and stressed expected shortfall
 
-`2512.12334` · [arXiv](https://arxiv.org/abs/2512.12334v1) · **M** — an estimator has to be fitted and checked · confidence 0.66 · 2025-12-13
+`2512.12334` · [arXiv](https://arxiv.org/abs/2512.12334v1) · **M**. An estimator has to be fitted and checked · confidence 0.66 · 2025-12-13
 
 Produces 7,286 out-of-sample 10-day 97.5% expected shortfall and stressed ES forecasts for the S&P 500 (proxying a US bank equities trading desk), comparing ten traditional models (historical simulation, delta-normal, ARCH, GARCH, EGARCH, RiskMetrics under normal and skewed Student's t) against three dynamic Bayesian network structure-learning algorithms, then backtests all of them.
 
@@ -1052,7 +1052,7 @@ Produces 7,286 out-of-sample 10-day 97.5% expected shortfall and stressed ES for
 
 ## 60. The Nonstationarity-Complexity Tradeoff in Return Prediction
 
-`2512.23596` · [arXiv](https://arxiv.org/abs/2512.23596v1) · **M** — 5 separate sources · confidence 0.62 · 2025-12-29
+`2512.23596` · [arXiv](https://arxiv.org/abs/2512.23596v1) · **M**, 5 separate sources · confidence 0.62 · 2025-12-29
 
 Proposes ATOMS, a tournament model-selection procedure that jointly picks model class (ridge vs random forest) and training-window length under non-stationarity, then forecasts monthly excess returns of Kenneth French's 17 industry portfolios, Sep 1987-Nov 2016.
 
@@ -1072,7 +1072,7 @@ Proposes ATOMS, a tournament model-selection procedure that jointly picks model 
 
 ## 61. Long-memory GARCH via a two-dimensional Markov chain
 
-`2607.25189` · [arXiv](https://arxiv.org/abs/2607.25189v1) · **M** — an estimator has to be fitted and checked · confidence 0.62 · 2026-07-28
+`2607.25189` · [arXiv](https://arxiv.org/abs/2607.25189v1) · **M**. An estimator has to be fitted and checked · confidence 0.62 · 2026-07-28
 
 GARCH variant where level-and-slope updates of a latent power-law kernel sit in a two-dimensional Markov state, giving state-dependent decay of past shocks and long memory; estimated by Gaussian QMLE on three parameters.
 
@@ -1088,7 +1088,7 @@ GARCH variant where level-and-slope updates of a latent power-law kernel sit in 
 
 ## 62. Liquidity Premium and Investment Horizons
 
-`2607.01377` · [arXiv](https://arxiv.org/abs/2607.01377v1) · **M** — 5 separate sources · confidence 0.55 · 2026-07-01
+`2607.01377` · [arXiv](https://arxiv.org/abs/2607.01377v1) · **M**, 5 separate sources · confidence 0.55 · 2026-07-01
 
 Constructs firm-month signed order flow (volume x sign of daily price change), volume volatility, and two Kyle-lambda estimators (a within-month price-impact regression and an Amihud-style average) from daily US equity data, then runs panel and Fama-MacBeth cross-sectional regressions predicting one-month-ahead returns with Newey-West adjustment.
 
@@ -1109,7 +1109,7 @@ Constructs firm-month signed order flow (volume x sign of daily price change), v
 
 ## 63. Signature-Based Optimal Execution for Statistical Arbitrage with Path-Dependent Trading Signals
 
-`2606.31387` · [arXiv](https://arxiv.org/abs/2606.31387v2) · **M** — 4 separate sources · confidence 0.50 · 2026-06-30
+`2606.31387` · [arXiv](https://arxiv.org/abs/2606.31387v2) · **M**, 4 separate sources · confidence 0.50 · 2026-06-30
 
 Models both the alpha process and the trading speed as linear functionals of the truncated signature of a time-augmented market path, proves the restricted path-dependent execution problem reduces to a finite-dimensional concave quadratic programme, and compares the fitted policy's return on turnover against a z-score pairs-trading benchmark on synthetic OU spreads and on a Shell/BP backtest.
 
@@ -1127,7 +1127,7 @@ Models both the alpha process and the trading speed as linear functionals of the
 
 ## 64. Institutional Backing and Crypto Volatility: A Hybrid Framework for DeFi Stabilization
 
-`2512.19251` · [arXiv](https://arxiv.org/abs/2512.19251v1) · **M** — 5 separate sources · confidence 0.45 · 2025-12-22
+`2512.19251` · [arXiv](https://arxiv.org/abs/2512.19251v1) · **M**, 5 separate sources · confidence 0.45 · 2025-12-22
 
 Builds a daily panel of 18 major cryptocurrencies (Jan 2020 - Nov 2024) with Parkinson price risk, Amihud illiquidity, log market-cap change, a published decentralization index, Google-Trends attractiveness and a Crypto-50 realized volatility, then estimates panel EGLS (RE, FE, dynamic) testing whether institutionally backed 'HyFi-like' coins are less exposed to market-wide turbulence.
 
@@ -1147,7 +1147,7 @@ Builds a daily panel of 18 major cryptocurrencies (Jan 2020 - Nov 2024) with Par
 
 ## 65. Squeezed Covariance Matrix Estimation: Analytic Eigenvalue Control
 
-`2512.23021` · [arXiv](https://arxiv.org/abs/2512.23021v1) · **M** — 4 separate sources · confidence 0.45 · 2025-12-28
+`2512.23021` · [arXiv](https://arxiv.org/abs/2512.23021v1) · **M**, 4 separate sources · confidence 0.45 · 2025-12-28
 
 Reformulates the Gerber Informational Quality correlation estimator as a convex 'squeezing' combination of PSD atomic channel matrices with a closed-form eigenfloor, giving PSD by construction and analytic eigenvalue/condition-number control, then runs long-only monthly tangency backtests with 10bp costs against shrinkage, random-matrix and Gerber estimators.
 
@@ -1165,7 +1165,7 @@ Reformulates the Gerber Informational Quality correlation estimator as a convex 
 
 ## 66. Investigating Conditional Restricted Boltzmann Machines in Regime Detection
 
-`2512.21823` · [arXiv](https://arxiv.org/abs/2512.21823v2) · **M** — 4 separate sources · confidence 0.40 · 2025-12-26
+`2512.21823` · [arXiv](https://arxiv.org/abs/2512.21823v2) · **M**, 4 separate sources · confidence 0.40 · 2025-12-26
 
 Trains Conditional Restricted Boltzmann Machines (Bernoulli-Bernoulli on 16-bit discretized returns, and Gaussian-Bernoulli on z-scored returns) with Persistent Contrastive Divergence on a 19-series cross-asset panel, then studies whether the model's free energy works as an unsupervised systemic-risk / regime signal.
 
@@ -1182,7 +1182,7 @@ Trains Conditional Restricted Boltzmann Machines (Bernoulli-Bernoulli on 16-bit 
 
 ## 67. Stochastic Volatility Modelling with LSTM Networks: A Hybrid Approach for S&P 500 Index Volatility Forecasting
 
-`2512.12250` · [arXiv](https://arxiv.org/abs/2512.12250v1) · **L** — a model has to be trained, so results move with the seed · confidence 0.94 · 2025-12-13
+`2512.12250` · [arXiv](https://arxiv.org/abs/2512.12250v1) · **L**. A model has to be trained, so results move with the seed · confidence 0.94 · 2025-12-13
 
 Forecasts 21-day rolling realized volatility of the S&P 500 with a hybrid model that feeds stochastic-volatility model output into an LSTM, using a rolling-window scheme with per-window hyperparameter tuning, and evaluates against standalone SV and LSTM by error metrics, Diebold-Mariano style tests, and a trading simulation.
 
@@ -1201,7 +1201,7 @@ Forecasts 21-day rolling realized volatility of the S&P 500 with a hybrid model 
 
 ## 68. Adaptive Weighted Genetic Algorithm-Optimized SVR for Robust Long-Term Forecasting of Global Stock Indices for investment decisions
 
-`2512.15113` · [arXiv](https://arxiv.org/abs/2512.15113v1) · **L** — a model has to be trained, so results move with the seed · confidence 0.93 · 2025-12-17
+`2512.15113` · [arXiv](https://arxiv.org/abs/2512.15113v1) · **L**. A model has to be trained, so results move with the seed · confidence 0.93 · 2025-12-17
 
 Builds an improved genetic-algorithm-optimized SVR (IGA-SVR) that weights the most recent five years of training MAPE, and forecasts one year ahead of daily closing prices for five global equity indices, benchmarked against LSTM and a forward-validating GA-SVR (OGA-SVR).
 
@@ -1218,7 +1218,7 @@ Builds an improved genetic-algorithm-optimized SVR (IGA-SVR) that weights the mo
 
 ## 69. Addressing Market Regime Changes and Heavy-Tailed Returns in Portfolio Optimization via Bayesian VAR and Elliptical Black-Litterman
 
-`2606.09104` · [arXiv](https://arxiv.org/abs/2606.09104v1) · **L** — a model has to be trained, so results move with the seed · confidence 0.92 · 2026-06-08
+`2606.09104` · [arXiv](https://arxiv.org/abs/2606.09104v1) · **L**. A model has to be trained, so results move with the seed · confidence 0.92 · 2026-06-08
 
 Combines a 600-model Bayesian-averaged VAR ensemble over HAR features with an elliptical (Student-t) Black-Litterman step, a transformer that generates views and a CNN that estimates risk aversion, then refines the resulting weights with a TD3 reinforcement-learning agent on 29 DJIA stocks.
 
@@ -1234,7 +1234,7 @@ Combines a 600-model Bayesian-averaged VAR ensemble over HAR features with an el
 
 ## 70. Exploratory Mean-Variance with Jumps: An Equilibrium Approach
 
-`2512.09224` · [arXiv](https://arxiv.org/abs/2512.09224v1) · **L** — a model has to be trained, so results move with the seed · confidence 0.90 · 2025-12-10
+`2512.09224` · [arXiv](https://arxiv.org/abs/2512.09224v1) · **L**. A model has to be trained, so results move with the seed · confidence 0.90 · 2025-12-10
 
 Solves the exploratory (RL-regularised) time-inconsistent mean-variance problem under jump diffusion, obtains a Gaussian equilibrium policy centred on the classical equilibrium control, trains it with an orthogonality-condition actor-critic loss, and evaluates it on 14 rolling ten-year-train / one-year-test windows of the S&P 500.
 
@@ -1254,7 +1254,7 @@ Solves the exploratory (RL-regularised) time-inconsistent mean-variance problem 
 
 ## 71. Macro Economists in the Machine: A Multi-Agent LLM Framework for Commodity-Related ETF Portfolio Construction
 
-`2606.08283` · [arXiv](https://arxiv.org/abs/2606.08283v1) · **L** — a model has to be trained, so results move with the seed · confidence 0.90 · 2026-06-06
+`2606.08283` · [arXiv](https://arxiv.org/abs/2606.08283v1) · **L**. A model has to be trained, so results move with the seed · confidence 0.90 · 2026-06-06
 
 Feeds identical FRED macro z-scores to a Hawkish LLM agent, a Dovish agent, a Debate agent and a deterministic z-score Rule agent, routes all four tilt vectors through the same inverse-volatility portfolio engine over 124 weekly rebalances on fifteen commodity-related ETFs, and tests Sharpe differences by stationary block bootstrap.
 
@@ -1273,7 +1273,7 @@ Feeds identical FRED macro z-scores to a Hawkish LLM agent, a Dovish agent, a De
 
 ## 72. Hybrid LSTM and PPO Networks for Dynamic Portfolio Optimization
 
-`2511.17963` · [arXiv](https://arxiv.org/abs/2511.17963v1) · **L** — a model has to be trained, so results move with the seed · confidence 0.90 · 2025-11-22
+`2511.17963` · [arXiv](https://arxiv.org/abs/2511.17963v1) · **L**. A model has to be trained, so results move with the seed · confidence 0.90 · 2025-11-22
 
 Trains per-asset LSTM return forecasters and feeds their predictions into a PPO allocator with Top-K sparse long-only weights across a 32-asset universe of Nasdaq-100 names, IDX30 Indonesian equities, the 10-year Treasury yield and the ten largest cryptocurrencies, then compares to equal-weight, index and single-model baselines.
 
@@ -1295,7 +1295,7 @@ Trains per-asset LSTM return forecasters and feeds their predictions into a PPO 
 
 ## 73. Integrating LSTM Networks with Neural Levy Processes for Financial Forecasting
 
-`2512.07860` · [arXiv](https://arxiv.org/abs/2512.07860v1) · **L** — a model has to be trained, so results move with the seed · confidence 0.88 · 2025-11-26
+`2512.07860` · [arXiv](https://arxiv.org/abs/2512.07860v1) · **L**. A model has to be trained, so results move with the seed · confidence 0.88 · 2025-11-26
 
 Ensembles a Grey-Wolf-tuned LSTM price forecast with volatility paths from a Levy-Merton jump-diffusion (and a fractional Heston variant), calibrating the stochastic model by neural network, Marine Predators Algorithm or TorchSDE, and scores the hybrid against a plain LSTM on three daily price series.
 
@@ -1314,7 +1314,7 @@ Ensembles a Grey-Wolf-tuned LSTM price forecast with volatility paths from a Lev
 
 ## 74. Bayesian Modeling for Uncertainty Management in Financial Risk Forecasting and Compliance
 
-`2512.15739` · [arXiv](https://arxiv.org/abs/2512.15739v1) · **L** — a model has to be trained, so results move with the seed · confidence 0.86 · 2025-12-06
+`2512.15739` · [arXiv](https://arxiv.org/abs/2512.15739v1) · **L**. A model has to be trained, so results move with the seed · confidence 0.86 · 2025-12-06
 
 Builds a Bayesian pipeline with three arms: a discount-factor dynamic linear model (delta=0.98, beta=0.98) for one-step-ahead log-realized volatility and 95% VaR on daily S&P 500 returns (train 2000-2019, out-of-sample 2020-01-02 to 2024-12-30, T=1,257), Bayesian logistic regression for card-fraud detection on IEEE-CIS, and a hierarchical Beta state-space model for compliance risk, benchmarked against GARCH(1,1)-t and a two-layer LSTM.
 
@@ -1332,7 +1332,7 @@ Builds a Bayesian pipeline with three arms: a discount-factor dynamic linear mod
 
 ## 75. Data-Driven Duration Management -- Term Structure Forecasting Using Machine Learning
 
-`2606.26815` · [arXiv](https://arxiv.org/abs/2606.26815v1) · **L** — a model has to be trained, so results move with the seed · confidence 0.82 · 2026-06-25
+`2606.26815` · [arXiv](https://arxiv.org/abs/2606.26815v1) · **L**. A model has to be trained, so results move with the seed · confidence 0.82 · 2026-06-25
 
 Forecasts the U.S. and euro-area zero-coupon term structure (3M, 6M, 1Y, 2Y, 3Y, 5Y, 10Y, weekly, U.S. April 1987 to February 2025 and Europe backcast to February 1992) with classical models (dynamic Nelson-Siegel, PCA, AFNS) and neural networks that either forecast factors or forecast zero rates directly, adding macro features raw or compressed by an autoencoder, and evaluates with RMSE, MAE, directional accuracy plus a duration-managed bond trading strategy.
 
@@ -1351,7 +1351,7 @@ Forecasts the U.S. and euro-area zero-coupon term structure (3M, 6M, 1Y, 2Y, 3Y,
 
 ## 76. A3T-GCN for FTSE100 Components Price Forecasting
 
-`2511.21873` · [arXiv](https://arxiv.org/abs/2511.21873v1) · **L** — a model has to be trained, so results move with the seed · confidence 0.82 · 2025-11-26
+`2511.21873` · [arXiv](https://arxiv.org/abs/2511.21873v1) · **L**. A model has to be trained, so results move with the seed · confidence 0.82 · 2025-11-26
 
 Applies an A3T-GCN (attention temporal graph convolutional network) to forecast next-day closing prices of 79 FTSE 100 constituents, with node features RSI, MACD, normalized and log returns and annualized log returns over 1W/2W/1M/2M windows, and graphs built from sector classification plus Pearson correlation of returns.
 
@@ -1370,7 +1370,7 @@ Applies an A3T-GCN (attention temporal graph convolutional network) to forecast 
 
 ## 77. Interpretable Hypothesis-Driven Trading:A Rigorous Walk-Forward Validation Framework for Market Microstructure Signals
 
-`2512.12924` · [arXiv](https://arxiv.org/abs/2512.12924v1) · **L** — a model has to be trained, so results move with the seed · confidence 0.82 · 2025-12-15
+`2512.12924` · [arXiv](https://arxiv.org/abs/2512.12924v1) · **L**. A model has to be trained, so results move with the seed · confidence 0.82 · 2025-12-15
 
 Builds a walk-forward validation harness for five hand-crafted market-microstructure hypothesis types (institutional accumulation, flow momentum, mean reversion, breakout, range-bound value) driven by a 54-feature vector from daily OHLCV, with an RL agent selecting which hypothesis type to trade, tested over 34 rolling out-of-sample quarters.
 
@@ -1387,7 +1387,7 @@ Builds a walk-forward validation harness for five hand-crafted market-microstruc
 
 ## 78. Heads, Not Backbones: Output Heads Dominate Architectures on Fat-Tailed Returns
 
-`2606.30037` · [arXiv](https://arxiv.org/abs/2606.30037v1) · **L** — a model has to be trained, so results move with the seed · confidence 0.82 · 2026-06-29
+`2606.30037` · [arXiv](https://arxiv.org/abs/2606.30037v1) · **L**. A model has to be trained, so results move with the seed · confidence 0.82 · 2026-06-29
 
 Crosses four deep forecasting backbones (TimesNet, DLinear, N-BEATS, iTransformer) with three output heads (point/Huber, single-Gaussian NLL, K=4 Gaussian-mixture NLL) on S&P 500 monthly log-returns 1871-2023, under 5 anchored walk-forward folds x 3 seeds, scoring CRPS-skill, pinball, coverage, Diebold-Mariano and Model Confidence Set, plus ARIMA(2,0)/GARCH(1,1) classical baselines.
 
@@ -1406,7 +1406,7 @@ Crosses four deep forecasting backbones (TimesNet, DLinear, N-BEATS, iTransforme
 
 ## 79. CryptoGAT: Are Time Series Models Effective for Cryptocurrency Forecasting?
 
-`2606.27670` · [arXiv](https://arxiv.org/abs/2606.27670v1) · **L** — a model has to be trained, so results move with the seed · confidence 0.80 · 2026-06-26
+`2606.27670` · [arXiv](https://arxiv.org/abs/2606.27670v1) · **L**. A model has to be trained, so results move with the seed · confidence 0.80 · 2026-06-26
 
 Argues temporal models fail on pure-price crypto prediction and proposes CryptoGAT, a lightweight correlation-graph attention network over the cross-section of coins, evaluated on daily OHLCV for 66 major cryptocurrencies (2023-04-15 to 2026-01-08, 999 aligned trading days, 6:2:2 chronological split, 30-day lookback) against LSTM, GRU, ALSTM, RSR, PatchTST, iTransformer, ESTIMATE, StockMixer, TGN, Graphormer and MASTER, scored on IC, ICIR, Precision@N and a top-K long portfolio, with a NASDAQ cross-market ablation.
 
@@ -1425,7 +1425,7 @@ Argues temporal models fail on pure-price crypto prediction and proposes CryptoG
 
 ## 80. Partial multivariate transformer as a tool for cryptocurrencies time series prediction
 
-`2512.04099` · [arXiv](https://arxiv.org/abs/2512.04099v1) · **L** — a model has to be trained, so results move with the seed · confidence 0.80 · 2025-11-22
+`2512.04099` · [arXiv](https://arxiv.org/abs/2512.04099v1) · **L**. A model has to be trained, so results move with the seed · confidence 0.80 · 2025-11-22
 
 Applies the Partial-Multivariate Transformer to next-day log-return forecasting for BTCUSDT and ETHUSDT, training on sampled feature subsets of OHLCV plus six technical indicators, benchmarking against eleven statistical, recurrent and Transformer baselines under Bayesian tuning, and converting forecasts into a sign-based long/short simulation.
 
@@ -1442,7 +1442,7 @@ Applies the Partial-Multivariate Transformer to next-day log-return forecasting 
 
 ## 81. When Directional Accuracy Lies: A Base-Rate-Honest Benchmark for LoRA-Adapted TimesFM on Equity Forecasting
 
-`2607.12248` · [arXiv](https://arxiv.org/abs/2607.12248v2) · **L** — a model has to be trained, so results move with the seed · confidence 0.80 · 2026-07-14
+`2607.12248` · [arXiv](https://arxiv.org/abs/2607.12248v2) · **L**. A model has to be trained, so results move with the seed · confidence 0.80 · 2026-07-14
 
 LoRA fine-tune of the TimesFM foundation model on daily equity prices, benchmarked with expanding walk-forward folds and held-out tickers against always-up, random-walk, persistence and AR(1) baselines.
 
@@ -1457,7 +1457,7 @@ LoRA fine-tune of the TimesFM foundation model on daily equity prices, benchmark
 
 ## 82. Pretrained Time-Series Foundation Models for Financial Return Forecasting
 
-`2606.27100` · [arXiv](https://arxiv.org/abs/2606.27100v1) · **L** — a model has to be trained, so results move with the seed · confidence 0.80 · 2026-06-25
+`2606.27100` · [arXiv](https://arxiv.org/abs/2606.27100v1) · **L**. A model has to be trained, so results move with the seed · confidence 0.80 · 2026-06-25
 
 Benchmarks six pretrained time-series foundation models run zero-shot (TimeGPT, TimeGPT-LH, TimesFM-2.5, Moirai-2.0, Chronos, Chronos-2) against five train-from-scratch neural baselines (NBEATS, NHITS, PatchTST, iTransformer, KAN) on daily linear and log returns of five liquid U.S. equities (AAPL, AMZN, GOOG, JPM, META), under an equalized context budget L=512, a rolling-origin protocol with 20-business-day forecast windows, scored by rMAE against a zero-return random walk and one-sided Diebold-Mariano tests.
 
@@ -1474,7 +1474,7 @@ Benchmarks six pretrained time-series foundation models run zero-shot (TimeGPT, 
 
 ## 83. Robust Transformer-Based One-Step Stock Index Forecasting via Shifted Data Augmentation
 
-`2606.15701` · [arXiv](https://arxiv.org/abs/2606.15701v1) · **L** — a model has to be trained, so results move with the seed · confidence 0.78 · 2026-06-14
+`2606.15701` · [arXiv](https://arxiv.org/abs/2606.15701v1) · **L**. A model has to be trained, so results move with the seed · confidence 0.78 · 2026-06-14
 
 Modifies a Transformer encoder-decoder for one-step-ahead daily index forecasting, adds cosine-annealing-with-warmup scheduling and a Shifted Data Augmentation scheme, and sweeps dropout, heads/dimensions, sequence length and activation on VN30 and S&P 500 daily closes 2009-2025 with an 85/15 chronological split.
 
@@ -1493,7 +1493,7 @@ Modifies a Transformer encoder-decoder for one-step-ahead daily index forecastin
 
 ## 84. Zero-Copy Semantic Contagion: An In-Memory Streaming Architecture for Evolving Attention Graphs
 
-`2606.05733` · [arXiv](https://arxiv.org/abs/2606.05733v1) · **L** — a model has to be trained, so results move with the seed · confidence 0.75 · 2026-06-04
+`2606.05733` · [arXiv](https://arxiv.org/abs/2606.05733v1) · **L**. A model has to be trained, so results move with the seed · confidence 0.75 · 2026-06-04
 
 Streams news text through a zero-copy Rust parser into a multivariate neural Hawkes process with per-node continuous-time LSTM states and a bilinear latent projection, learning a directed cross-company attention graph, then tests whether the top-3 excited tickers per news event show extreme next-day absolute returns.
 
@@ -1513,7 +1513,7 @@ Streams news text through a zero-copy Rust parser into a multivariate neural Haw
 
 ## 85. LLM-Generated Counterfactual Stress Scenarios for Portfolio Risk Simulation via Hybrid Prompt-RAG Pipeline
 
-`2512.07867` · [arXiv](https://arxiv.org/abs/2512.07867v1) · **L** — a model has to be trained, so results move with the seed · confidence 0.72 · 2025-11-26
+`2512.07867` · [arXiv](https://arxiv.org/abs/2512.07867v1) · **L**. A model has to be trained, so results move with the seed · confidence 0.72 · 2025-11-26
 
 Prompts GPT-5-mini and Llama-3.1-8B for structured G7 macro stress scenarios (GDP, inflation, policy rate), then maps those shocks through a three-factor PCA model fitted on SPY/IEF/GLD returns into 63-day VaR and CVaR for two ETF portfolios, benchmarked against LLM-free historical-bootstrap, EWMA and GARCH(1,1)-t baselines.
 
@@ -1533,7 +1533,7 @@ Prompts GPT-5-mini and Llama-3.1-8B for structured G7 macro stress scenarios (GD
 
 ## 86. Learning Predictive Ambiguity Sets for Decision-Focused Distributionally Robust Optimization
 
-`2607.09820` · [arXiv](https://arxiv.org/abs/2607.09820v1) · **L** — a model has to be trained, so results move with the seed · confidence 0.72 · 2026-07-10
+`2607.09820` · [arXiv](https://arxiv.org/abs/2607.09820v1) · **L**. A model has to be trained, so results move with the seed · confidence 0.72 · 2026-07-10
 
 A deep contextual network emits a nominal scenario distribution plus a state-dependent Wasserstein radius, defining a contextual ambiguity set for a distributionally robust portfolio choice trained with decision loss.
 
@@ -1547,7 +1547,7 @@ A deep contextual network emits a nominal scenario distribution plus a state-dep
 
 ## 87. SciPhy Reinforcement Learning for Portfolio Optimization
 
-`2607.15195` · [arXiv](https://arxiv.org/abs/2607.15195v1) · **L** — a model has to be trained, so results move with the seed · confidence 0.70 · 2026-07-16
+`2607.15195` · [arXiv](https://arxiv.org/abs/2607.15195v1) · **L**. A model has to be trained, so results move with the seed · confidence 0.70 · 2026-07-16
 
 Offline physics-informed RL: a pathwise Hamilton-Jacobi equation is fit by a PINN on realized ETF trajectories to learn a Gibbs target-holdings policy under a quadratic price-impact cost model, driven by a synthetic oracle alpha with controlled out-of-sample R-squared.
 
@@ -1562,7 +1562,7 @@ Offline physics-informed RL: a pathwise Hamilton-Jacobi equation is fit by a PIN
 
 ## 88. Neural Network-Driven Volatility Drag Mitigation under Aggressive Leverage
 
-`2607.23068` · [arXiv](https://arxiv.org/abs/2607.23068v1) · **L** — a model has to be trained, so results move with the seed · confidence 0.70 · 2026-07-25
+`2607.23068` · [arXiv](https://arxiv.org/abs/2607.23068v1) · **L**. A model has to be trained, so results move with the seed · confidence 0.70 · 2026-07-25
 
 Compact end-to-end neural network for global minimum-variance weights: a five-parameter hyperbolic weighted moving average replaces the lag-transformation layer, a bidirectional GRU eigencleans the correlation matrix, and a marginal-volatility net rescales, all trained to minimize realized out-of-sample portfolio variance.
 
@@ -1578,7 +1578,7 @@ Compact end-to-end neural network for global minimum-variance weights: a five-pa
 
 ## 89. Belief at Risk: Quantifying Agentic AI Model Risk with LLM-Inferred Bayesian State Filters
 
-`2606.15473` · [arXiv](https://arxiv.org/abs/2606.15473v1) · **L** — a model has to be trained, so results move with the seed · confidence 0.68 · 2026-06-13
+`2606.15473` · [arXiv](https://arxiv.org/abs/2606.15473v1) · **L**. A model has to be trained, so results move with the seed · confidence 0.68 · 2026-06-13
 
 Represents an agentic AI system as a POMDP in which an LLM returns a schema-constrained probability vector over four latent regimes (Risk-on, Neutral, Risk-off, Crisis), tempered by eta and passed through a Bayesian filter; posterior entropy, belief drift and rolling 95% CVaR combine into a Belief-at-Risk measure, and beliefs map to portfolio exposures of +1 / +0.5 / -0.5 / -1.
 
@@ -1595,7 +1595,7 @@ Represents an agentic AI system as a POMDP in which an LLM returns a schema-cons
 
 ## 90. Integration of LSTM Networks in Random Forest Algorithms for Stock Market Trading Predictions
 
-`2512.02036` · [arXiv](https://arxiv.org/abs/2512.02036v1) · **L** — a model has to be trained, so results move with the seed · confidence 0.60 · 2025-11-20
+`2512.02036` · [arXiv](https://arxiv.org/abs/2512.02036v1) · **L**. A model has to be trained, so results move with the seed · confidence 0.60 · 2025-11-20
 
 Trains 482 per-asset LSTM networks on price-derived technical indicators, a Random Forest on bimonthly fundamental variables, and a hybrid that feeds each LSTM's test AUC, weighted probability and train-test AUC gap into the Random Forest, predicting the 10-trading-day direction and then simulating a weekly top-30-by-AUC equal-weight strategy against the S&P 500, Nasdaq Composite and EuroStoxx 50.
 
@@ -1613,7 +1613,7 @@ Trains 482 per-asset LSTM networks on price-derived technical indicators, a Rand
 
 ## 91. Interpretable Deep Learning for Stock Returns: A Consensus-Bottleneck Asset Pricing Model
 
-`2512.16251` · [arXiv](https://arxiv.org/abs/2512.16251v5) · **L** — a model has to be trained, so results move with the seed · confidence 0.60 · 2025-12-18
+`2512.16251` · [arXiv](https://arxiv.org/abs/2512.16251v5) · **L**. A model has to be trained, so results move with the seed · confidence 0.60 · 2025-12-18
 
 Builds CB-APM, a deep asset pricing model whose hidden layer is forced through a bottleneck that must reproduce nine analyst-consensus variables, trained with a joint loss weighted by lambda, then evaluates annual out-of-sample return R2, decile and long-short portfolios, and GRS pricing tests.
 
@@ -1633,7 +1633,7 @@ Builds CB-APM, a deep asset pricing model whose hidden layer is forced through a
 
 ## 92. Robust Control under Stationary Ambiguity
 
-`2608.04832` · [arXiv](https://arxiv.org/abs/2608.04832v1) · **L** — a model has to be trained, so results move with the seed · confidence 0.60 · 2026-08-05
+`2608.04832` · [arXiv](https://arxiv.org/abs/2608.04832v1) · **L**. A model has to be trained, so results move with the seed · confidence 0.60 · 2026-08-05
 
 Train LSTM deep-hedging policies inside a GBM simulator whose volatility parameter is randomized under a 'refresh latent model' that keeps the filtering ambiguity stationary, then backtest the policy on real daily equity paths.
 
@@ -1649,7 +1649,7 @@ Train LSTM deep-hedging policies inside a GBM simulator whose volatility paramet
 
 ## 93. Model Validation of Agentic AI Systems: A POMDP-Based Framework for Belief-State, Forecast, and Policy Validation
 
-`2606.17383` · [arXiv](https://arxiv.org/abs/2606.17383v1) · **L** — a model has to be trained, so results move with the seed · confidence 0.55 · 2026-06-16
+`2606.17383` · [arXiv](https://arxiv.org/abs/2606.17383v1) · **L**. A model has to be trained, so results move with the seed · confidence 0.55 · 2026-06-16
 
 Casts an agentic AI portfolio manager as a POMDP: an LLM acts as an approximate Bayesian filter inferring five latent market regimes (AI Boom, Soft Landing, Inflation Shock, Recession, Crisis) from market and macro information, feeding belief-conditioned views into a Black-Litterman long-only monthly-rebalanced portfolio, validated by performance, calibration, coverage, ablation and sensitivity tests.
 
@@ -1669,7 +1669,7 @@ Casts an agentic AI portfolio manager as a POMDP: an LLM acts as an approximate 
 
 ## 94. A Hybrid Architecture for Options Wheel Strategy Decisions: LLM-Generated Bayesian Networks for Transparent Trading
 
-`2512.01123` · [arXiv](https://arxiv.org/abs/2512.01123v1) · **L** — a model has to be trained, so results move with the seed · confidence 0.55 · 2025-11-30
+`2512.01123` · [arXiv](https://arxiv.org/abs/2512.01123v1) · **L**. A model has to be trained, so results move with the seed · confidence 0.55 · 2025-11-30
 
 An LLM builds a context-specific Bayesian network per trade decision for an options 'wheel' strategy (sell puts 10% OTM, hold assignment, sell calls), populating CPTs from an 8,919-trade historical archive; backtested 2007-2025 on leveraged ETFs and mega-cap tech.
 
@@ -1689,7 +1689,7 @@ An LLM builds a context-specific Bayesian network per trade decision for an opti
 
 ## 95. End-to-End Parametric Portfolio Policies for Cross-Asset Futures Timing: When Do AI Models Beat Simple Rules?
 
-`2607.00475` · [arXiv](https://arxiv.org/abs/2607.00475v1) · **L** — a model has to be trained, so results move with the seed · confidence 0.50 · 2026-07-01
+`2607.00475` · [arXiv](https://arxiv.org/abs/2607.00475v1) · **L**. A model has to be trained, so results move with the seed · confidence 0.50 · 2026-07-01
 
 Trains end-to-end LSTM and transformer allocation policies that map the cross-section of daily returns directly to long/short weights on sixteen liquid CME futures using a differentiable Sharpe loss, benchmarked walk-forward against equal weighting, risk parity and time-series momentum with transaction-cost sensitivity and alpha/beta decomposition.
 

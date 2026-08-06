@@ -1,7 +1,7 @@
 """LLM triage: read each pending paper's abstract, decide if it describes a
 tradable signal. Updates papers.triage_status and papers.triage_score.
 
-Uses pluggable LLM provider (anthropic / claude_code / offline) — see alpha_archive.llm.
+Uses pluggable LLM provider (anthropic / claude_code / offline), see alpha_archive.llm.
 """
 from __future__ import annotations
 

@@ -2,8 +2,8 @@
 
 Sorting by citations and paging until the quota fills, one pass per window so
 the 30-day tab is not empty while the all-time tab overflows. `is_oa:true` is
-asked of OpenAlex directly, so every paper here has a PDF a reader can open —
-which is also what makes a real first-page thumbnail possible.
+asked of OpenAlex directly, so every paper here has a PDF a reader can open.
+Which is also what makes a real first-page thumbnail possible.
 
     uv run python tools/build_1000.py --target 1000
     uv run python tools/build_1000.py --target 1000 --no-thumbs

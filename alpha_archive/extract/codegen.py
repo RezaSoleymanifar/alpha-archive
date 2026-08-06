@@ -123,9 +123,9 @@ def validate_code(code: str) -> ValidationResult:
 
     # Heuristic warnings
     if "for " in code and "iterrows" in code:
-        warnings.append("uses iterrows() — may be slow on large panels")
+        warnings.append("uses iterrows(), may be slow on large panels")
     if ".rolling(" not in code and ".pct_change(" not in code and ".diff(" not in code:
-        warnings.append("no rolling/pct_change/diff — verify this is intentional")
+        warnings.append("no rolling/pct_change/diff, verify this is intentional")
 
     return ValidationResult(ok=len(errors) == 0, errors=errors, warnings=warnings)
 

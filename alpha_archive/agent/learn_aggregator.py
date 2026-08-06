@@ -1,4 +1,4 @@
-"""Learn aggregator — meta-meta loop per meta/learn.md.
+"""Learn aggregator, meta-meta loop per meta/learn.md.
 
 Runs weekly. Reads:
   - git log meta/actor.md (every actor change + commit message)
@@ -150,7 +150,7 @@ def aggregate(*, since_days: int = 90, write: bool = True) -> dict:
         "metric_snapshots_available": len(metrics),
         "rule_attribution": rule_summary,
         "summary": (
-            "ATTRIBUTION CHAIN BROKEN — no actor commits cited critiques."
+            "ATTRIBUTION CHAIN BROKEN, no actor commits cited critiques."
             if not attribution else
             f"{len(attribution)} critique refs attributed across "
             f"{sum(len(d) for d in attribution.values())} actor commits."
@@ -174,7 +174,7 @@ def aggregate(*, since_days: int = 90, write: bool = True) -> dict:
 
 def _render_proposal(artifact: dict) -> str:
     lines = [
-        f"# Learn aggregator — proposed critique.md updates",
+        f"# Learn aggregator, proposed critique.md updates",
         f"Run: {artifact['run_ts']}",
         f"Window: last {artifact['since_days']} days",
         "",
@@ -197,7 +197,7 @@ def _render_proposal(artifact: dict) -> str:
             f"{r['mean_delta_L']:+.3f} | {r['verdict']} |"
         )
     if not artifact["rule_attribution"]:
-        lines.append("| _(none — no attribution chain established)_ | | | |")
+        lines.append("| _(none, no attribution chain established)_ | | | |")
     lines += [
         "",
         "## Recommended actions",
@@ -211,12 +211,12 @@ def _render_proposal(artifact: dict) -> str:
     if promotes:
         lines += ["### PROMOTE (rules that improved L)", ""]
         for r in promotes:
-            lines.append(f"- `{r['critique_ref']}` — strengthen / make more strict")
+            lines.append(f"- `{r['critique_ref']}`, strengthen / make more strict")
         lines += [""]
     if demotes:
         lines += ["### DEMOTE (rules that degraded L)", ""]
         for r in demotes:
-            lines.append(f"- `{r['critique_ref']}` — weaken or remove")
+            lines.append(f"- `{r['critique_ref']}`, weaken or remove")
         lines += [""]
     if not promotes and not demotes:
         lines.append("- No high-confidence promotions/demotions yet. Need more "

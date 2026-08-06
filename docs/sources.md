@@ -3,7 +3,7 @@
 Every row below is a place quants actually read. The question this page answers
 is narrower than "is it good": **can we index it without scraping?**
 
-The rule is the same one the archive runs on — if a stranger cannot fetch it the
+The rule is the same one the archive runs on, if a stranger cannot fetch it the
 way we fetched it, it does not go in. That means public APIs and registered
 metadata only. No headless browsers, no HTML parsing of pages that did not offer
 an API, no download counts lifted off a listing.
@@ -14,8 +14,8 @@ Status is as of 2026-08-06, verified by calling each endpoint.
 
 | Tier | Source | How we reach it | What we get |
 |---|---|---|---|
-| 1 | **SSRN — Financial Economics Network** | OpenAlex, via Crossref DOIs (`10.2139/ssrn.*`), ISSN 1556-5068 | Title, authors, abstract, date, citations. 1.66M works indexed. |
-| 1 | **arXiv q-fin** | arXiv API for the listing, OpenAlex for citations; source `S4306400194` filtered to the Finance subfield | Everything, plus the openly distributed PDF — which is why only arXiv cards carry a first-page thumbnail. |
+| 1 | **SSRN, Financial Economics Network** | OpenAlex, via Crossref DOIs (`10.2139/ssrn.*`), ISSN 1556-5068 | Title, authors, abstract, date, citations. 1.66M works indexed. |
+| 1 | **arXiv q-fin** | arXiv API for the listing, OpenAlex for citations; source `S4306400194` filtered to the Finance subfield | Everything, plus the openly distributed PDF, which is why only arXiv cards carry a first-page thumbnail. |
 | 1 | **NBER Working Papers** | OpenAlex source `S2809516038` | Title, authors, abstract, date, citations. 36,566 works. |
 | 2 | **Journal of Finance, JFE, RFS** | OpenAlex by ISSN | Metadata and citations. Abstracts where the publisher released them. |
 | 2 | **JFQA, Management Science, Review of Asset Pricing Studies** | OpenAlex by ISSN, filtered to the Economics/Econometrics/Finance field | Same. The field filter is what keeps Management Science's information-systems canon out of a finance index. |
@@ -40,10 +40,10 @@ are built from. Neither is available without scraping, so neither appears here.
 | Tier | Source | Why not |
 |---|---|---|
 | 2 | **JFE data appendices** | The appendix is a file inside a paywalled article, not a catalogued work. Nothing to query. |
-| 4 | **AQR, Robeco, Man AHL, Research Affiliates libraries** | Firm research libraries publish as web pages with no API and usually no DOI. Some AQR papers reach us anyway, because the authors also post them to SSRN — and that copy is the one we index. |
+| 4 | **AQR, Robeco, Man AHL, Research Affiliates libraries** | Firm research libraries publish as web pages with no API and usually no DOI. Some AQR papers reach us anyway, because the authors also post them to SSRN, and that copy is the one we index. |
 | 4 | **Alpha Architect, Quantpedia, Quantocracy** | Aggregators and summaries. Indexing them would be indexing a description of a paper rather than the paper, and Quantpedia's encyclopedia is a paid product besides. Useful for discovery; not a source. |
-| 4 | **Open Source Asset Pricing (Chen–Zimmermann)** | Not a paper feed — it is the replication scoreboard, 331 predictors with claimed t-statistics. It belongs in the results, not the index, and is already wired into [Vintage](https://github.com/RezaSoleymanifar/vintage) as `openap:`. |
-| — | **Risk.net** | Subscription, no public metadata endpoint. |
+| 4 | **Open Source Asset Pricing (Chen-Zimmermann)** | Not a paper feed. It is the replication scoreboard, 331 predictors with claimed t-statistics. It belongs in the results, not the index, and is already wired into [Vintage](https://github.com/RezaSoleymanifar/vintage) as `openap:`. |
+| none | **Risk.net** | Subscription, no public metadata endpoint. |
 
 ## Ranking
 

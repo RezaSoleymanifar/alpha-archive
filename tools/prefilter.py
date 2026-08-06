@@ -11,7 +11,7 @@ stated before the run and is deliberately lopsided:
 
     A paper the PDF read called `keep` must never be screened out.
 
-Recall on keeps is the number that matters. Precision is a bonus — a theory
+Recall on keeps is the number that matters. Precision is a bonus, a theory
 paper that survives to the PDF stage costs one read, while a keep that is
 screened out is a paper lost from the archive with nobody ever noticing. Those
 two errors are not worth the same, so the thresholds are not symmetric.
@@ -83,7 +83,7 @@ EMPIRICAL = re.compile(r"""
   | daily \s+ (returns?|closes?|prices?) | historical \s+ (data|prices?|returns?)
   | real[- ]world \s+ data | empirical(ly)? \s+ (test|evaluat|validat|analys|studi|examin)
   | using \s+ data \s+ from | data \s+ (spanning|covering|from) \s+ \d{4}
-  | \b(19|20)\d{2}\s*(to|-|–|through)\s*(19|20)\d{2}\b
+  | \b(19|20)\d{2}\s*(to|-| none |through)\s*(19|20)\d{2}\b
   | cross[- ]section \s+ of \s+ (stock|equity|asset) | \bWRDS\b
   | Fama[- ]French | \bCompustat\b | Yahoo \s+ Finance | \bETFs?\b
 """, re.I | re.X)
@@ -106,7 +106,7 @@ def screen(title: str, abstract: str) -> tuple[str, str]:
         return "skip", f"simulation only ({synth.group(0).strip()[:28]})"
 
     # Says nothing either way. A PDF read is exactly how that gets resolved.
-    return "read", "abstract is not explicit — resolve by reading"
+    return "read", "abstract is not explicit, resolve by reading"
 
 
 def norm(arxiv_id: str | None) -> str:
@@ -163,12 +163,12 @@ def evaluate() -> bool:
           f"   PDF reads saved {dropped_saved}")
     if kept_lost:
         print()
-        print("KEEPS THE SCREEN WOULD HAVE LOST — the screen is not safe to apply:")
+        print("KEEPS THE SCREEN WOULD HAVE LOST. The screen is not safe to apply:")
         for title, why in kept_lost:
             print(f"  - {title}  [{why}]")
     print()
     passed = recall == 1.0
-    print("VERDICT:", "safe to apply" if passed else "NOT safe — do not apply")
+    print("VERDICT:", "safe to apply" if passed else "NOT safe, do not apply")
     return passed
 
 
@@ -181,7 +181,7 @@ def apply() -> None:
     queue, skipped = [], []
     for paper in pending:
         _, why = screen(paper.get("title", ""), paper.get("abstract", ""))
-        # The screen's verdict is recorded and deliberately not acted on — see
+        # The screen's verdict is recorded and deliberately not acted on, see
         # the measured result at the top of this file.
         record = {
             "arxiv_id": paper.get("arxiv_id"),

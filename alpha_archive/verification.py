@@ -7,7 +7,7 @@ a fixture we did not produce.**
 This is not hypothetical rigour. On the first replication the criterion was set
 at 0.6 correlation, the result came back at 0.74, and it was called "validated".
 That is grading your own exam. Worse, 0.6 was chosen *after* seeing that 0.9 was
-unreachable — the threshold moved to fit the number.
+unreachable: the threshold moved to fit the number.
 
 So:
 
@@ -40,7 +40,7 @@ class Criterion:
     """What must be true for a replication to count as verified.
 
     `fixture` names the artifact we are matching and who produced it. If we
-    produced it, it is not a fixture — it is an opinion.
+    produced it, it is not a fixture. It is an opinion.
     """
     name: str
     fixture: str
@@ -97,8 +97,8 @@ class ScalarTarget:
     question is whether the rebuild lands on them.
 
     The tolerance is the whole argument, so it is stated with its reason and
-    frozen. Tolerances differ per statistic on purpose — turnover moves with
-    the rebalance calendar far more than a Sharpe moves with anything — and a
+    frozen. Tolerances differ per statistic on purpose, turnover moves with
+    the rebalance calendar far more than a Sharpe moves with anything, and a
     tolerance wide enough to pass whatever comes back is not a criterion.
     """
     name: str

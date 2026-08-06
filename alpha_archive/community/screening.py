@@ -1,4 +1,4 @@
-"""Gate 1 — LLM-based screening of community submissions.
+"""Gate 1, LLM-based screening of community submissions.
 
 For each submission, the LLM judges:
   - on_topic         (matches paper / result?)

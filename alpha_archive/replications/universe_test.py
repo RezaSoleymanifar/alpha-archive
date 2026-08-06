@@ -54,7 +54,7 @@ async def candidate_tickers(n: int) -> list[str]:
 
 
 async def main() -> None:
-    print("Universe-size test — is 0.74 our code, or our universe?\n")
+    print("Universe-size test, is 0.74 our code, or our universe?\n")
 
     from .jt1993 import UNIVERSE as MEGA
     wanted = max(SIZES)
@@ -114,12 +114,12 @@ def _verdict(rows: list[dict]) -> str:
         return "not enough rungs to say"
     lift = rows[-1]["correlation"] - rows[0]["correlation"]
     if lift >= 0.08:
-        return (f"universe was the ceiling — correlation rose {lift:+.3f} from "
+        return (f"universe was the ceiling, correlation rose {lift:+.3f} from "
                 f"{rows[0]['universe']} to {rows[-1]['universe']} names. The construction "
                 "is sound; the original 0.74 was a breadth limit, not a bug.")
     if lift <= -0.03:
         return (f"correlation fell {lift:+.3f} as the universe grew. Broader names are "
-                "noisier here — worth checking liquidity filtering before trusting either.")
+                "noisier here, worth checking liquidity filtering before trusting either.")
     return (f"correlation barely moved ({lift:+.3f}). Universe size is not the binding "
             "constraint, so the remaining gap is construction: French double-sorts on size "
             "and value-weights with NYSE breakpoints, and we do neither.")

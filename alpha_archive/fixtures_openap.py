@@ -9,7 +9,7 @@ For each cross-sectional anomaly documented:
   - map OpenAP's `T-Stat` to expected_sharpe range
   - map OpenAP's `Sign` to expected_signal_sign
 
-Result: ~200 ground-truth fixtures with peer-reviewed labels — feeds the
+Result: ~200 ground-truth fixtures with peer-reviewed labels, feeds the
 meta-learning loop's F1 / asymmetric-loss computation.
 """
 from __future__ import annotations

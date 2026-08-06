@@ -1,5 +1,5 @@
 """AlphaArchitect blog RSS poller.
-They publish curated replications of academic factor papers — high signal density.
+They publish curated replications of academic factor papers, high signal density.
 ~5 posts per week.
 """
 from __future__ import annotations

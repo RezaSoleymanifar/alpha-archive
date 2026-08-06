@@ -20,7 +20,7 @@ SOURCES_PRIMARY: dict[str, Callable] = {
     "nber": poll_nber,                         # NBER finance working papers
 }
 
-# Background discovery — high volume, requires aggressive LLM triage
+# Background discovery, high volume, requires aggressive LLM triage
 SOURCES_BACKGROUND: dict[str, Callable] = {
     "arxiv": poll_arxiv,                       # q-fin RSS, mostly noise
     "ssrn": poll_ssrn,                         # scrape flaky, deprioritized

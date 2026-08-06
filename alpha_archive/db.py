@@ -167,14 +167,14 @@ class Submission(Base):
     proposed_code: Mapped[Optional[str]] = mapped_column(Text)
     proposed_spec_diff: Mapped[Optional[dict]] = mapped_column(JSON)
 
-    # Gate 1 — automated screening
+    # Gate 1, automated screening
     screening_status: Mapped[str] = mapped_column(String(16), default="pending")  # pending | passed | spam | low_effort
     screening_notes: Mapped[Optional[str]] = mapped_column(Text)
 
-    # Gate 2 — backtest delta
+    # Gate 2, backtest delta
     measured_delta: Mapped[Optional[dict]] = mapped_column(JSON)  # {sharpe_delta, ic_delta, verdict_change}
 
-    # Gate 3-4 — voting tally + bipartisan check
+    # Gate 3-4, voting tally + bipartisan check
     votes_agree: Mapped[int] = mapped_column(Integer, default=0)
     votes_disagree: Mapped[int] = mapped_column(Integer, default=0)
     bipartisan_passed: Mapped[Optional[bool]] = mapped_column(Integer)

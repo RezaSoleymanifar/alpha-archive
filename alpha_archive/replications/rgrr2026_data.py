@@ -5,8 +5,8 @@ and then asks the cheapest possible question: does buy-and-hold QQQ over the
 paper's own sample come out at the CAGR the paper printed for it?
 
 A static hold has no parameters, no signal and no rebalancing. If it misses,
-the disagreement is in the prices — the sample window, the adjustment
-convention, the annualisation — and every later number would inherit that error
+the disagreement is in the prices, the sample window, the adjustment
+convention, the annualisation, and every later number would inherit that error
 while looking like a modelling result. So this runs first and gates everything.
 
 RESULT, 2026-08-06: six of nine targets clear, three miss narrowly.
@@ -23,8 +23,8 @@ the start date across a fortnight moves QQQ's CAGR by 0.16 and its drawdown not
 at all, so the window is not it either.
 
 What is left is that the price series itself differs slightly from the authors'.
-Every miss runs the same way — our drawdowns are shallower and QQQ compounds
-faster — which is what a later pull of Yahoo's adjusted history looks like after
+Every miss runs the same way, our drawdowns are shallower and QQQ compounds
+faster: which is what a later pull of Yahoo's adjusted history looks like after
 distributions have been reclassified. That is the reason the CAGR tolerance was
 set at half a point in the first place; it was set slightly too tight.
 
@@ -144,7 +144,7 @@ def main() -> None:
     print("Table 5 buy-and-hold, 2008-07-25 to 2026-07-02")
     print(chr(10).join(lines))
     print()
-    print("data gate:", "PASSED" if passed else "FAILED — do not build the rule on this")
+    print("data gate:", "PASSED" if passed else "FAILED, do not build the rule on this")
 
 
 if __name__ == "__main__":

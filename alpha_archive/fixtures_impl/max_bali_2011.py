@@ -1,7 +1,7 @@
 """Reference implementation for the MAX anomaly (Bali-Cakici-Whitelaw 2011).
 
 Stocks with high maximum daily returns in the prior month underperform
-in the following month — interpreted as retail lottery preference.
+in the following month: interpreted as retail lottery preference.
 Long-short sorted by past-month max-daily-return.
 
 Signal convention: higher = more bullish, so we return `-max_return`.

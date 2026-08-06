@@ -1,13 +1,13 @@
 """Index the Open Source Asset Pricing predictors as first-class entries.
 
 The paywall problem has a way around it that is not piracy. Chen and Zimmermann
-publish, for 331 published predictors, the claim each paper made — mean return,
-t-statistic, sample window — together with a definition precise enough to
+publish, for 331 published predictors, the claim each paper made, mean return,
+t-statistic, sample window, together with a definition precise enough to
 implement. The PDF is not needed to run the paper, which is exactly how this
 project's first replication was built.
 
 We keep the ones a reader can actually run: predictors OSAP marks as clearly
-predictive, built from accounting, price or trading data — all of which Vintage
+predictive, built from accounting, price or trading data, all of which Vintage
 fetches free. Analyst estimates, options and 13F signals are excluded on the
 same data gate the rest of the index uses.
 
@@ -109,7 +109,7 @@ def main() -> None:
             journal = JOURNALS.get((r.get("Journal") or "").strip(),
                                    (r.get("Journal") or "working paper").strip())
             tstat = (r.get("T-Stat") or "").strip()
-            sample = f"{r.get('SampleStartYear', '')}–{r.get('SampleEndYear', '')}".strip("–")
+            sample = f"{r.get('SampleStartYear', '')}, {r.get('SampleEndYear', '')}".strip(", ")
             desc = (r.get("LongDescription") or r.get("Acronym") or "").strip()
             summary = (r.get("Evidence Summary") or "").strip()
 

@@ -1,4 +1,4 @@
-"""Offline backend — no LLM calls. Returns templated stubs for testing plumbing.
+"""Offline backend. No LLM calls. Returns templated stubs for testing plumbing.
 
 When called for triage, returns is_tradable=true with low confidence.
 When called for spec extract, returns minimal stub.
@@ -21,7 +21,7 @@ CANNED_RESPONSES = {
         "data_required": ["prices"],
         "horizon_days": 21,
         "claimed_sharpe": None,
-        "notes": "OFFLINE provider — no real triage performed",
+        "notes": "OFFLINE provider, no real triage performed",
     }),
     "Extract the signal specification": json.dumps({
         "hypothesis": "stub: cross-sectional momentum",

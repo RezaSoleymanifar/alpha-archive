@@ -1,18 +1,18 @@
-# LEARN — meta-meta loop that improves the critique itself (mutable, slow-moving)
+# LEARN, meta-meta loop that improves the critique itself (mutable, slow-moving)
 
 This file defines HOW the system learns to critique better over time. It analyzes the git history of `critique.md` and `actor.md` against actual platform-quality outcomes (asymmetric loss trend, fixture pass rate). Its job is to propose updates to `critique.md` so future critiques produce more north-star-aligned actor changes.
 
 ## Version
 
-v0.1.0 — initial bootstrap
+v0.1.0: initial bootstrap
 
 ## What learn does
 
 1. Periodically (weekly cron in production) read:
-   - `git log meta/actor.md` — every actor change + its commit message
-   - `git log meta/critique.md` — every critique-rule change + its commit message
-   - `data/meta_runs/metrics.jsonl` — platform metrics time series
-   - `data/critique_runs/*.json` — every critique report (planned)
+   - `git log meta/actor.md`, every actor change + its commit message
+   - `git log meta/critique.md`, every critique-rule change + its commit message
+   - `data/meta_runs/metrics.jsonl`, platform metrics time series
+   - `data/critique_runs/*.json`, every critique report (planned)
 2. Compute "did each critique actually help?" by attributing actor changes to upstream critiques and measuring downstream metric impact
 3. Identify critique rules that are:
    - **Effective** (lead to changes that improve `L`)
@@ -79,7 +79,7 @@ WEEKLY at SUN 00:00 UTC:
 - `git log --follow meta/actor.md` (use `git log -p` for diffs)
 - `git log --follow meta/critique.md`
 - `data/meta_runs/metrics.jsonl` (per-run platform metrics)
-- `data/critique_runs/*.json` (per-run critique reports — planned)
+- `data/critique_runs/*.json` (per-run critique reports, planned)
 - `data/fixture_runs/*.json` (per-fixture historical results)
 
 ## Outputs learn produces
@@ -122,7 +122,7 @@ Until enough actor commits accumulate (~20+), attribution is noisy. Bootstrap po
 
 ## Evolution policy for THIS file
 
-`learn.md` itself is meta-meta and changes only by human PR. Self-modification of learn.md is explicitly forbidden. This is the bedrock — if learn could rewrite its own rules, the whole self-improvement system has no anchor.
+`learn.md` itself is meta-meta and changes only by human PR. Self-modification of learn.md is explicitly forbidden. This is the bedrock, if learn could rewrite its own rules, the whole self-improvement system has no anchor.
 
 ## Changelog
 

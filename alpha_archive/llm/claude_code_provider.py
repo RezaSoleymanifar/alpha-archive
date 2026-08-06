@@ -1,4 +1,4 @@
-"""Claude Code CLI backend — shells out to `claude -p`.
+"""Claude Code CLI backend, shells out to `claude -p`.
 
 Free if the user has a Max plan. No API key required (CLI is already authed).
 Per-call latency similar to API. Supports --model alias and --json-schema.

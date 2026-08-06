@@ -31,7 +31,7 @@ def main() -> None:
     for p in papers:
         ok, why = fp.practical(p)
         if ok and not p.get("thumb"):
-            ok, why = False, "no open pdf — cannot be read or rerun"
+            ok, why = False, "no open pdf, cannot be read or rerun"
         if ok:
             keep.append(p)
         else:

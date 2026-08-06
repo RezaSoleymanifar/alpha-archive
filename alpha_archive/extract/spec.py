@@ -13,7 +13,7 @@ from typing import Optional
 
 SPEC_MODEL = "claude-sonnet-4-6"
 
-EXTRACT_PROMPT = """You are a quantitative finance research engineer. You read academic papers and extract the trading signal specification in a strict JSON schema. Missing or unclear fields should be returned as null — do NOT invent values.
+EXTRACT_PROMPT = """You are a quantitative finance research engineer. You read academic papers and extract the trading signal specification in a strict JSON schema. Missing or unclear fields should be returned as null, do NOT invent values.
 
 Read the following paper excerpt carefully:
 

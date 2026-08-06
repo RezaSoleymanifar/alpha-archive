@@ -19,7 +19,7 @@ import httpx
 
 OPENALEX_WORKS = "https://api.openalex.org/works"
 
-# Default search query — favors anomaly / factor / cross-section papers.
+# Default search query, favors anomaly / factor / cross-section papers.
 DEFAULT_QUERY = "cross-section stock returns anomaly factor"
 
 

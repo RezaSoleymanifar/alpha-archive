@@ -18,7 +18,7 @@ description: Use when the user asks to brainstorm new features for Alpha Archive
 - False-positive rate < 10%
 - Verdict accuracy on canonical fixtures ≥ 85%
 - IC sign correctness ≥ 90%
-- Replication score (measured/claimed Sharpe) on canon: 0.4–0.8
+- Replication score (measured/claimed Sharpe) on canon: 0.4-0.8
 - Reproducibility 100%
 - Asymmetric loss `L = 5·FN + 1·FP + 2·|repl_score − 0.6|` trending down
 
@@ -26,20 +26,20 @@ If a feature does not move any of these, do NOT propose it. Cut.
 
 ## Process
 
-### Step 1 — Load context (read in this order)
-1. `meta/north_star.md` — the immutable goal + quality bar
-2. `meta/actor.md` — current pipeline policy + calibration
-3. `meta/critique.md` — how the system grades itself
-4. `meta/community.md` — crowdsourcing layer state
-5. `meta/learn.md` — meta-meta-loop policy
-6. `docs/roadmap.md` — phased plan + phase markers
-7. `data/meta_runs/metrics.jsonl` (if exists) — recent platform metrics
-8. `data/critique_runs/*.json` (if exist) — recent critic findings
-9. Top-level repo tree (Glob) — what already exists vs. what's referenced
+### Step 1, Load context (read in this order)
+1. `meta/north_star.md`, the immutable goal + quality bar
+2. `meta/actor.md`, current pipeline policy + calibration
+3. `meta/critique.md`, how the system grades itself
+4. `meta/community.md`, crowdsourcing layer state
+5. `meta/learn.md`, meta-meta-loop policy
+6. `docs/roadmap.md`, phased plan + phase markers
+7. `data/meta_runs/metrics.jsonl` (if exists), recent platform metrics
+8. `data/critique_runs/*.json` (if exist), recent critic findings
+9. Top-level repo tree (Glob), what already exists vs. what's referenced
 
 If any of these are missing, note that as a finding (skill assumes they exist).
 
-### Step 2 — Diagnose where the system is failing or thin
+### Step 2, Diagnose where the system is failing or thin
 For each north-star metric, ask:
 - What does the system currently do that addresses it?
 - Where is the weakest link in the chain?
@@ -51,7 +51,7 @@ Examples of weak-link diagnoses:
 - "DSR threshold platform-N inflation untracked" → no platform N counter
 - "Self-improvement loop silent" → no learn aggregator running
 
-### Step 3 — Propose features (5–10 max, ranked)
+### Step 3, Propose features (5-10 max, ranked)
 Each feature gets a row in this template:
 
 ```
@@ -73,7 +73,7 @@ Ranking criteria (in order):
 3. **Lowest effort × highest leverage**
 4. **Unblocks downstream features**
 
-### Step 4 — Sanity gates (apply before presenting)
+### Step 4, Sanity gates (apply before presenting)
 For each proposed feature, check:
 - [ ] Maps to a specific north-star metric (not vague "improves quality")
 - [ ] Has a concrete acceptance test (e.g., "fixture set passes after deploy")
@@ -83,7 +83,7 @@ For each proposed feature, check:
 
 Drop any feature that fails a gate. Re-rank.
 
-### Step 5 — Present
+### Step 5, Present
 Output exactly this structure:
 
 ```
@@ -99,7 +99,7 @@ Output exactly this structure:
 {numbered list of which order to build, with brief why}
 
 ## What I'm NOT proposing (and why)
-{optional but useful — list 2-4 features that came up but failed gates, with the gate that killed them}
+{optional but useful, list 2-4 features that came up but failed gates, with the gate that killed them}
 ```
 
 ## Anti-patterns to avoid
@@ -107,7 +107,7 @@ Output exactly this structure:
 - **Don't propose UI / web features** unless they unblock a north-star metric (e.g., public landing pages = reproducibility audit trail = OK; pretty charts = NOT OK on their own)
 - **Don't propose data-vendor expansions** without the corresponding metric impact (e.g., "add Sharadar" must justify what additional FN/FP rate it reduces, not just "more anomalies")
 - **Don't propose ML model swaps** (e.g., "use Opus instead of Sonnet") unless there's a measured replication-quality gap
-- **Don't propose growth/marketing features** — those belong in `docs/go-to-market.md`, not here
+- **Don't propose growth/marketing features**, those belong in `docs/go-to-market.md`, not here
 - **Don't propose anything in `north_star.md`'s out-of-scope list** (live execution, proprietary alpha, HFT, crypto-native, replacing fund DD)
 
 ## Output style

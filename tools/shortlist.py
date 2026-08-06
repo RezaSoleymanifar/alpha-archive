@@ -5,7 +5,7 @@ taxonomy holds the area and task. Three files, and both the website and the
 work queue need the same join of them, so it happens here rather than twice
 with two chances to disagree.
 
-Effort is a tier inferred from what the judgement recorded — how many sources a
+Effort is a tier inferred from what the judgement recorded, how many sources a
 paper joins, how large its universe is, whether anything has to be trained. It
 is not an estimate in hours, because a tier is the most those signals honestly
 support.

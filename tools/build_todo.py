@@ -1,4 +1,4 @@
-"""Generate docs/PAPERS_TODO.md — the shortlist, ordered by what to build next.
+"""Generate docs/PAPERS_TODO.md, the shortlist, ordered by what to build next.
 
 The ledger says which papers are reproducible. It does not say what any of them
 costs to build, and without that the shortlist is a wish rather than a queue.
@@ -9,7 +9,7 @@ be trained rather than computed. It is a tier, not an estimate in hours, because
 a tier is the most these signals can honestly support.
 
 Ranking puts the cheapest well-specified papers first. A paper is worth building
-early when its targets are numerous and numeric — those are the ones where a
+early when its targets are numerous and numeric, those are the ones where a
 replication can be declared right or wrong rather than argued about.
 
     uv run python tools/build_todo.py
@@ -114,8 +114,8 @@ def main() -> None:
         "records why for each one.",
         "",
         "Effort is a tier, not an hour count. It is inferred from what the "
-        "judgement recorded — how many sources a paper needs, how large its "
-        "universe is, and whether anything must be trained — because that is the "
+        "judgement recorded, how many sources a paper needs, how large its "
+        "universe is, and whether anything must be trained, because that is the "
         "most those signals honestly support.",
         "",
         "| Tier | Meaning | Count |",
@@ -136,7 +136,7 @@ def main() -> None:
         out += [
             f"## {i}. {k['title']}",
             "",
-            f"`{k['id']}` · [arXiv]({k['url']}) · **{k['tier']}** — {k['why']} · "
+            f"`{k['id']}` · [arXiv]({k['url']}) · **{k['tier']}**, {k['why']} · "
             f"confidence {k['confidence']:.2f}"
             + (f" · {k['published'][:10]}" if k["published"] else ""),
             "",

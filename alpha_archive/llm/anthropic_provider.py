@@ -1,4 +1,4 @@
-"""Anthropic SDK backend — direct API calls.
+"""Anthropic SDK backend, direct API calls.
 
 Activates when ALPHA_ARCHIVE_LLM_PROVIDER=anthropic and ANTHROPIC_API_KEY is set.
 """
@@ -17,7 +17,7 @@ MODEL_MAP = {
     "opus": "claude-opus-4-7",
 }
 
-# Approximate $ / 1M tokens (input, output) — Anthropic published pricing snapshot
+# Approximate $ / 1M tokens (input, output), Anthropic published pricing snapshot
 PRICING_PER_MTOK = {
     "claude-haiku-4-5-20251001": (1.0, 5.0),
     "claude-sonnet-4-6":          (3.0, 15.0),

@@ -1,6 +1,6 @@
 """What RGRR has to hit, written down before any of it was built.
 
-arXiv 2607.06117 — a two-ETF rule that maps screened QQQ-DIA relative states and
+arXiv 2607.06117: a two-ETF rule that maps screened QQQ-DIA relative states and
 macro relief states into a continuous QQQ weight. Table 16 reports it across
 four out-of-sample start dates, which is the reason this paper was picked first:
 one window could be luck, four windows with a rule this intricate could not be.
@@ -101,7 +101,7 @@ TABLE_16: dict[str, dict[str, dict[str, float]]] = {
 
 # Table 5, the static baselines over the full 2008-07-25 to 2026-07-02 sample.
 # These gate nothing about RGRR itself but they are the cheapest possible check
-# that the price data was assembled correctly — if buy-and-hold QQQ does not
+# that the price data was assembled correctly, if buy-and-hold QQQ does not
 # come out at 17.17%, nothing downstream is worth reading.
 TABLE_5 = {
     "DIA": {"cagr": 11.65, "sharpe": 0.66, "max_drawdown": -44.54},

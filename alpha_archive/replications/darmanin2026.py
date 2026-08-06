@@ -1,4 +1,4 @@
-"""Replication #2 — Darmanin (2026), "Retail Trader's Ruin".
+"""Replication #2, Darmanin (2026), "Retail Trader's Ruin".
 
 arXiv:2607.20093, posted 22 July 2026. The first *recent* paper here, and the
 first with no external fixture: nobody has replicated it, so the paper's own
@@ -206,7 +206,7 @@ def stationary_bootstrap_ci(
 def _bootstrap_indices(n: int, draws: int, mean_block: int) -> np.ndarray:
     """Stationary-bootstrap index matrix, (draws, n), built without a Python loop.
 
-    Walking the chain one step at a time costs draws*n iterations — 17 million
+    Walking the chain one step at a time costs draws*n iterations, 17 million
     per interval here, and this module needs dozens of intervals. The same
     process vectorises: mark where blocks restart, carry the most recent restart
     position forward with a running maximum, and offset from it.
@@ -226,7 +226,7 @@ def _bootstrap_indices(n: int, draws: int, mean_block: int) -> np.ndarray:
 
 def gate(ci: tuple[float, float], delta: float) -> str:
     """The paper's classification. REFUTED needs material exclusion, never
-    bare non-significance — that distinction is the point of their design."""
+    bare non-significance. That distinction is the point of their design."""
     lo, hi = ci
     if np.isnan(lo) or np.isnan(hi):
         return "NO READ"
@@ -294,12 +294,12 @@ async def run_family(name: str) -> FamilyResult:
 
     matched = s_gate == claim["sharpe_gate"] and c_gate == claim["cagr_gate"]
     if matched and s_ov and c_ov:
-        verdict = "REPLICATED — same gate classification, and both intervals overlap the paper's"
+        verdict = "REPLICATED, same gate classification, and both intervals overlap the paper's"
     elif matched:
-        verdict = ("gates match but an interval does not overlap — agreement here is not "
+        verdict = ("gates match but an interval does not overlap, agreement here is not "
                    "evidence of the same computation")
     else:
-        verdict = "DIVERGES — our gate classification differs from the paper's"
+        verdict = "DIVERGES, our gate classification differs from the paper's"
 
     notes = [n for n in [claim.get("spec_note")] if n]
     if not s_ov or not c_ov:
@@ -339,7 +339,7 @@ async def run_family(name: str) -> FamilyResult:
         "max_abs_sharpe_gap": round(float(np.max(np.abs(gaps))), 4),
         "reading": (
             "Coin-flip signals trade almost every day, so this figure is dominated by cost "
-            "drag rather than by spurious edge — it says what daily churn costs against an "
+            "drag rather than by spurious edge. It says what daily churn costs against an "
             "exposure-matched hold, not what the pipeline invents from noise. A turnover-"
             "matched null would be the sharper test for the low-turnover rules above."
         ),
@@ -361,7 +361,7 @@ async def run_family(name: str) -> FamilyResult:
 
 
 async def main() -> None:
-    print(f"Darmanin (2026), Retail Trader's Ruin — {ARXIV}")
+    print(f"Darmanin (2026), Retail Trader's Ruin, {ARXIV}")
     print("  Replicating the two families that run on a single price series.")
     print("  The other four need Russell 3000 / S&P 500 point-in-time membership.")
 
@@ -386,10 +386,10 @@ async def main() -> None:
             "bootstrap": {"draws": BOOTSTRAP_DRAWS, "mean_block": MEAN_BLOCK, "seed": SEED},
             "families": [asdict(r) for r in results],
             "not_attempted": [
-                "Oscillator (RSI) — NASDAQ-100, reproducible in principle, not yet run",
-                "Volume (OBV) — needs Russell 3000 point-in-time membership",
-                "Candlestick — needs Russell 3000 point-in-time membership",
-                "Momentum calibration — needs S&P 500 point-in-time membership",
+                "Oscillator (RSI), NASDAQ-100, reproducible in principle, not yet run",
+                "Volume (OBV), needs Russell 3000 point-in-time membership",
+                "Candlestick, needs Russell 3000 point-in-time membership",
+                "Momentum calibration, needs S&P 500 point-in-time membership",
             ],
             "generated_at": datetime.now(timezone.utc).isoformat(timespec="seconds"),
         }, fh, indent=2)

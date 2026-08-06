@@ -1,4 +1,4 @@
-# NORTH STAR — immutable
+# NORTH STAR, immutable
 
 This file defines the goal. It does NOT change without an explicit human-approved PR. Every other meta file (`actor.md`, `critique.md`, `learn.md`) ultimately serves this north star.
 
@@ -26,7 +26,7 @@ At each step the pipeline must:
 | **False-positive rate** (ship a noise factor) | < 10% | Filterable downstream by human review or ensemble. |
 | **Verdict accuracy on canonical fixtures** | ≥ 85% | If we can't replicate Fama-French / Jegadeesh-Titman correctly, we have no credibility. |
 | **IC sign correctness** | ≥ 90% | Getting the direction wrong is worse than getting magnitude wrong. |
-| **Replication score (measured/claimed Sharpe) on canon** | 0.4 – 0.8 | Matches McLean & Pontiff post-pub decay literature. |
+| **Replication score (measured/claimed Sharpe) on canon** | 0.4, 0.8 | Matches McLean & Pontiff post-pub decay literature. |
 | **Reproducibility** | 100% | Every published verdict must be byte-for-byte rerunnable from public code + data version. |
 
 ## Asymmetric loss function
@@ -43,7 +43,7 @@ Minimizing L is the platform's optimization objective. False negatives weighted 
 |---|---|
 | `ship` | DSR > 0.95 AND ICIR > 0.3 AND OOS Sharpe ≥ 0.5 × IS Sharpe AND IC sign correct |
 | `iterate` | Default when not all `ship` gates pass AND not multiple `kill` gates triggered |
-| `kill` | (DSR < 0.3 AND OOS Sharpe < 0) OR (ICIR < 0.1 AND IC sign wrong) — requires ≥2 negative gates |
+| `kill` | (DSR < 0.3 AND OOS Sharpe < 0) OR (ICIR < 0.1 AND IC sign wrong), requires ≥2 negative gates |
 
 Bias toward `iterate`. `kill` requires multiple independent negative signals.
 
@@ -61,7 +61,7 @@ These are explicitly NOT goals:
 ## Hard constraints
 
 - All LLM-generated code must run in sandbox (no network, no fs writes outside tmp, time + memory limits)
-- All published results must be reproducible — versioned code + data vintage logged
+- All published results must be reproducible, versioned code + data vintage logged
 - Every verdict on a public paper must include the original paper link
 - Methodology changes require ground-truth fixture validation (see `meta/critique.md`)
 
@@ -71,7 +71,7 @@ The actor (defined in `actor.md`) is optimal when:
 1. It correctly verdicts ≥ 90% of canonical fixtures
 2. It surfaces ≥ 1 novel insight per 100 papers (e.g., "this paper's published Sharpe is unreproducible due to X")
 3. Its asymmetric loss `L` trends down month-over-month
-4. Its decisions are explainable — every verdict ships with reasoning
+4. Its decisions are explainable, every verdict ships with reasoning
 
 ## Evolution policy for THIS file
 

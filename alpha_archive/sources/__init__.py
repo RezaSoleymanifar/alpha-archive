@@ -1,6 +1,6 @@
-"""Paper source pollers — curated-first hierarchy.
+"""Paper source pollers, curated-first hierarchy.
 
-PRIMARY (high-signal, low-noise — ship by default):
+PRIMARY (high-signal, low-noise, ship by default):
   - alpha_architect: hand-curated by Wes Gray's team, often pre-replicated
   - aqr:             AQR research insights (Asness, Frazzini, Pedersen)
   - two_sigma:       Two Sigma research blog
@@ -11,7 +11,7 @@ BACKGROUND (volume, heavily LLM-triaged):
 
 DEPRIORITIZED (in repo for future, not active):
   - ssrn:            scraping unreliable; better via official partnerships
-  - twitter/reddit/substack: dropped — let critics file GitHub issues instead
+  - twitter/reddit/substack: dropped: let critics file GitHub issues instead
 
 Each module exposes:
     poll() -> list[dict]   # standardized paper records

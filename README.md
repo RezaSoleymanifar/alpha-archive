@@ -7,7 +7,7 @@ Alpha Archive is an automated signal-extraction engine. It ingests academic pape
 ## Why this exists
 
 - **400+ "factors"** have been published in academic finance journals. Most decay or never worked. Nobody knows which to trust.
-- **Replication is manual today** — sites like AlphaArchitect do it by hand, ~50 papers/year.
+- **Replication is manual today**, sites like AlphaArchitect do it by hand, ~50 papers/year.
 - **Quantpedia charges $300/yr** for static curated database with no live re-runs.
 - **Nothing exists** that's: (1) automated, (2) free, (3) live-updating, (4) standardized methodology, (5) crowdsourced.
 
@@ -46,7 +46,7 @@ Alpha Archive is the **autonomous, perpetually-running version of HXZ**:
 | Result lifecycle | Frozen at publication | Live re-runs track alpha decay over time |
 | Code / data | Closed source-of-truth | Open code, open results, crowdsourced verification |
 
-The methodology HXZ established — point-in-time data, survivorship-free universe, purged CV, multiple-testing correction — is the methodology spec here. See [docs/methodology.md](./docs/methodology.md). After HXZ, no credible factor paper can skip these checks; Alpha Archive enforces them automatically and at scale.
+The methodology HXZ established (point-in-time data, survivorship-free universe, purged CV, multiple-testing correction) is the methodology spec here. See [docs/methodology.md](./docs/methodology.md). After HXZ, no credible factor paper can skip these checks; Alpha Archive enforces them automatically and at scale.
 
 ## Differentiators
 
@@ -64,9 +64,9 @@ The methodology HXZ established — point-in-time data, survivorship-free univer
 
 Alpha Archive combines three loops into one knowledge base:
 
-1. **Automated replication** — LLM reads paper, extracts spec, writes code, runs backtest
-2. **Meta-learning critique** — internal critic agent judges every result; actor self-improves; learn improves the critic
-3. **Crowdsourced verification** — community submits challenges, alternatives, annotations; Twitter-Community-Notes-style bipartisan agreement gates merges
+1. **Automated replication**, LLM reads paper, extracts spec, writes code, runs backtest
+2. **Meta-learning critique**, internal critic agent judges every result; actor self-improves; learn improves the critic
+3. **Crowdsourced verification**, community submits challenges, alternatives, annotations; Twitter-Community-Notes-style bipartisan agreement gates merges
 
 The result: one canonical, continuously-updated, executable, community-verified page per quant finance paper.
 
@@ -127,7 +127,7 @@ Until enabled, the workflow remains manually-triggered via the Actions tab ("Run
 
 **Hard safety per `meta/learn.md`:**
 - Actor self-edits emit a markdown PROPOSAL by default; `--auto-apply` is opt-in.
-- Critique.md changes (LEARN's domain) ALWAYS go through human-reviewed PRs — no auto-merge ever.
+- Critique.md changes (LEARN's domain) ALWAYS go through human-reviewed PRs, no auto-merge ever.
 - Loop never modifies `meta/north_star.md` or `meta/learn.md` (immutable per spec).
 
 ## Architecture
@@ -156,29 +156,29 @@ Methodology (purged CV, DSR, replication scores) is independent of any specific 
 
 | Tier | Vendor | Cost | Coverage of HXZ-452 anomalies | Who can buy |
 |------|--------|------|-------------------------------|-------------|
-| **Institutional** | WRDS bundle (CRSP + Compustat + I/B/E/S + TAQ + OptionMetrics) | $40-80K/yr | ~95% | Universities, hedge funds, asset managers — **not individuals** |
+| **Institutional** | WRDS bundle (CRSP + Compustat + I/B/E/S + TAQ + OptionMetrics) | $40-80K/yr | ~95% | Universities, hedge funds, asset managers, **not individuals** |
 | **Retail** | Sharadar Core US (Nasdaq Data Link) | ~$300/mo | ~70% | Anyone |
 | **Free** | OpenAP fixtures + Ken French + HXZ q-factors + FRED + grain prices | $0 | ~25 (price + ADV only) for direct compute; ground-truth scoring on 326 derived returns | Anyone |
 
 **Why CRSP + Compustat are gated:** sold only via institutional contracts (WRDS portal, Wharton). No individual seat exists. Bundled with university affiliation, employer subscription, or a negotiated WRDS Individual Research tier (~$1.5-3K/yr, opaque pricing).
 
-**Sharadar is the indie equivalent**: WRDS-tier methodology (PIT fundamentals + survivorship-free universe + ~150 line items) at 1/100th the cost. History starts 1999 vs CRSP's 1925, and only ~150 of CRSP/Compustat's ~1000 line items — but covers the meat of academic asset pricing.
+**Sharadar is the indie equivalent**: WRDS-tier methodology (PIT fundamentals + survivorship-free universe + ~150 line items) at 1/100th the cost. History starts 1999 vs CRSP's 1925, and only ~150 of CRSP/Compustat's ~1000 line items, but covers the meat of academic asset pricing.
 
 ### Pipeline data sources (current)
 
 | Source | Cost | Role |
 |---|---|---|
-| **Sharadar Core US Fundamentals** (Nasdaq Data Link) | ~$300/mo | PIT fundamentals + adjusted prices + delisting actions, ~3000 US tickers since 1999. The single biggest unlock — solves survivorship-bias and lookahead-bias blockers in one subscription. **Buy when traction justifies; not required for MVP.** |
-| **OpenAP CrossSection** (Chen + Zimmermann) | free | 326 anomaly return series pre-computed against CRSP+Compustat. Used as ground-truth fixtures for replication scoring — you don't need raw CRSP because you have the derived returns. |
+| **Sharadar Core US Fundamentals** (Nasdaq Data Link) | ~$300/mo | PIT fundamentals + adjusted prices + delisting actions, ~3000 US tickers since 1999. The single biggest unlock, solves survivorship-bias and lookahead-bias blockers in one subscription. **Buy when traction justifies; not required for MVP.** |
+| **OpenAP CrossSection** (Chen + Zimmermann) | free | 326 anomaly return series pre-computed against CRSP+Compustat. Used as ground-truth fixtures for replication scoring. You don't need raw CRSP because you have the derived returns. |
 | **Ken French data library** | free | Fama-French + Carhart benchmark factor return series since 1926, for alpha computation |
 | **HXZ q-factors** (authors' site) | free | q-factor return series for HXZ-style alpha decomposition |
 | **FRED** | free | Macro (rates, inflation, VIX, credit spreads) for regime-conditional analysis |
 | **grain parquet** (companion repo) | free | Daily prices for ~3000 US tickers since 2011, OHLCV |
-| **EODHD** | $79/mo | International universe + intraday — complementary, not core |
+| **EODHD** | $79/mo | International universe + intraday, complementary, not core |
 
 ### Coverage of the academic qfin universe
 
-Per `scripts/audit_qfin_universe_coverage.py` (re-runnable): **the addressable half of academic qfin is the cross-sectional US equity asset pricing canon plus pure portfolio-construction methodology — about 50% of published research by volume.**
+Per `scripts/audit_qfin_universe_coverage.py` (re-runnable): **the addressable half of academic qfin is the cross-sectional US equity asset pricing canon plus pure portfolio-construction methodology, about 50% of published research by volume.**
 
 | Bucket | % of academic qfin output | Coverage with current stack |
 |--------|--------------------------:|-----------------------------|
@@ -188,14 +188,14 @@ Per `scripts/audit_qfin_universe_coverage.py` (re-runnable): **the addressable h
 | Asset pricing / derivatives pricing **theory** (no data needed) | ~5% | ✅ N/A |
 | US equity stat arb / pairs | ~2% | ✅ FULL |
 | PEAD / sentiment indices / country rotation (partial) | ~7% | 🟡 PARTIAL |
-| Multi-asset (Carry, Value+Momentum Everywhere) | ~6% | ❌ blocked — need Bloomberg/Refinitiv |
-| FX, commodities, fixed income | ~16% | ❌ blocked — same |
-| Equity options + vol arb | ~5% | ❌ blocked — need OptionMetrics |
-| Microstructure / HFT | ~3% | ❌ blocked — need TAQ |
-| Alt-data / text / NLP (Lazy Prices, ChatGPT factor, Google attention) | ~10% | ❌ blocked — need news corpus / SEC EDGAR scrape |
-| Crypto factor / on-chain | ~6% | ❌ blocked — cheap to add (free APIs) |
+| Multi-asset (Carry, Value+Momentum Everywhere) | ~6% | ❌ blocked, need Bloomberg/Refinitiv |
+| FX, commodities, fixed income | ~16% | ❌ blocked, same |
+| Equity options + vol arb | ~5% | ❌ blocked, need OptionMetrics |
+| Microstructure / HFT | ~3% | ❌ blocked, need TAQ |
+| Alt-data / text / NLP (Lazy Prices, ChatGPT factor, Google attention) | ~10% | ❌ blocked, need news corpus / SEC EDGAR scrape |
+| Crypto factor / on-chain | ~6% | ❌ blocked, cheap to add (free APIs) |
 
-**Positioning is honest:** Alpha Archive replicates the addressable half of academic quant finance — the US equity asset pricing canon, ML applied to it, and portfolio construction methodology. Frontier research (multi-asset, derivatives, microstructure, alt-data) is gated by data licensing and intentionally out of scope.
+**Positioning is honest:** Alpha Archive replicates the addressable half of academic quant finance, the US equity asset pricing canon, ML applied to it, and portfolio construction methodology. Frontier research (multi-asset, derivatives, microstructure, alt-data) is gated by data licensing and intentionally out of scope.
 
 ### Live paper-discovery sources (post-OpenAP cutoff)
 
@@ -206,8 +206,8 @@ OpenAP is the calibration corpus. Live feeds catch new papers as they drop:
 | **arXiv q-fin** (last 30d) | direct API | ⭐ ~2-5% factor papers | ✅ |
 | **NBER working papers** | Crossref (DOI prefix `10.3386`) | ⭐⭐ ~25% factor papers | ✅ |
 | **SSRN Electronic Journal** | Crossref (DOI prefix `10.2139`) | ⭐⭐ noisy without keyword filter | ✅ |
-| **JF / JFE / RFS / JFQA** | Crossref (journal ISSN filter) — wireable | ⭐⭐⭐⭐ peer-reviewed gold | ✅ for metadata, paywalled for PDF |
-| **AQR research portal** (Asness/Frazzini/Pedersen) | RSS / scrape — wireable | ⭐⭐⭐⭐ | ✅ |
+| **JF / JFE / RFS / JFQA** | Crossref (journal ISSN filter), wireable | ⭐⭐⭐⭐ peer-reviewed gold | ✅ for metadata, paywalled for PDF |
+| **AQR research portal** (Asness/Frazzini/Pedersen) | RSS / scrape, wireable | ⭐⭐⭐⭐ | ✅ |
 
 Triage filters the firehose. Real funnel: ~200 raw papers/month → ~30 candidates after keyword filter → ~10 surviving LLM triage → ~5 backtest-ready specs.
 
@@ -217,11 +217,11 @@ Every published replication pins its data vendor + version (academic standard si
 
 - `ALPHA_ARCHIVE_DATA_VENDOR=sharadar|wrds|grain` selects the source
 - Each `ReplicationReport` records the vendor + pull-date + filter set used
-- LLM-generated code is forbidden from fetching arbitrary external APIs at runtime — only the configured vendor's local cache is readable
+- LLM-generated code is forbidden from fetching arbitrary external APIs at runtime, only the configured vendor's local cache is readable
 
 ## Companion repo: portfolio-management
 
-Alpha Archive answers "does this signal work?" — it produces a catalog of validated signals with replication scores and decay curves. The companion repo [`portfolio-management`](../portfolio-management) answers the next question: "given working signals, how do I build a portfolio from them?"
+Alpha Archive answers "does this signal work?", it produces a catalog of validated signals with replication scores and decay curves. The companion repo [`portfolio-management`](../portfolio-management) answers the next question: "given working signals, how do I build a portfolio from them?"
 
 ```
 alpha-archive (this repo)              portfolio-management
@@ -251,10 +251,10 @@ Key principles:
 
 See [docs/roadmap.md](./docs/roadmap.md). Phased:
 - **Phase 0** ✅ Repo skeleton, SQLite schema, six source pollers (arXiv, SSRN, NBER, AlphaArchitect, AQR, Two Sigma), Typer CLI
-- **Phase 0.5** ✅ **Fixture calibration** — 326 ground-truth fixtures bootstrapped from Open Source Asset Pricing (Chen+Zimmermann), plus 4 hand-coded canonical anomalies (12-1 momentum, low-vol Baker-Haugen, BAB Frazzini-Pedersen, MAX Bali-Cakici-Whitelaw) running end-to-end on grain prices. Live-feed pollers rewired through Crossref (NBER, SSRN) — both blocked direct scraping. Meta-loop now F1-meaningful.
+- **Phase 0.5** ✅ **Fixture calibration**, 326 ground-truth fixtures bootstrapped from Open Source Asset Pricing (Chen+Zimmermann), plus 4 hand-coded canonical anomalies (12-1 momentum, low-vol Baker-Haugen, BAB Frazzini-Pedersen, MAX Bali-Cakici-Whitelaw) running end-to-end on grain prices. Live-feed pollers rewired through Crossref (NBER, SSRN), both blocked direct scraping. Meta-loop now F1-meaningful.
 - **Phase 1** ✅ LLM triage + spec extraction + code generation, end-to-end demo on real arXiv paper (VP-MACD). Pluggable provider abstraction: `claude_code` (free via Max plan) | `anthropic` (API key) | `offline` (no LLM)
 - **Phase 2** 🟡 Backtest engine: purged CV, DSR, IC report, asymmetric verdict assignment shipped. Cost model + regime splits in progress.
-- **Phase 2.5** 🟡 **Meta-learning loop** — actor/critic/learn governance scaffolded under `meta/`; community layer (Tier-1 GitHub-issue-based crowdsourcing, Community-Notes-style bipartisan agreement) scaffolded under `alpha_archive/community/`
+- **Phase 2.5** 🟡 **Meta-learning loop**, actor/critic/learn governance scaffolded under `meta/`; community layer (Tier-1 GitHub-issue-based crowdsourcing, Community-Notes-style bipartisan agreement) scaffolded under `alpha_archive/community/`
 - **Phase 3** ⏳ Web UI MVP (Streamlit)
 - **Phase 4** ⏳ Public launch on alpha-archive.io
 - **Phase 5** ⏳ Crowdsourced submissions + bipartisan verification at scale
@@ -270,7 +270,7 @@ See [docs/roadmap.md](./docs/roadmap.md). Phased:
 
 ## Status
 
-**Phase 2** — pipeline operational end-to-end on real papers (proof-of-life: see [docs/demo_run.md](./docs/demo_run.md)). 4 hand-coded fixtures running on grain S&P 500 daily prices; momentum survives 2014-2026, low-vol/BAB/MAX correctly killed (regime decay consistent with McLean-Pontiff 2016 + HXZ 2018). Live-feed pollers (arXiv, NBER, SSRN) all returning real recent papers. Meta-learning + community layers scaffolded. Pre-Streamlit. Not production. Not financial advice. Use at your own risk.
+**Phase 2**: pipeline operational end-to-end on real papers (proof-of-life: see [docs/demo_run.md](./docs/demo_run.md)). 4 hand-coded fixtures running on grain S&P 500 daily prices; momentum survives 2014-2026, low-vol/BAB/MAX correctly killed (regime decay consistent with McLean-Pontiff 2016 + HXZ 2018). Live-feed pollers (arXiv, NBER, SSRN) all returning real recent papers. Meta-learning + community layers scaffolded. Pre-Streamlit. Not production. Not financial advice. Use at your own risk.
 
 ## License
 

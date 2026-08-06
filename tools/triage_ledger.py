@@ -5,8 +5,8 @@ time the paper resurfaces in a harvest, so the ledger is append-only and the
 harvester consults it before spending a token.
 
 The drops are also the more interesting half. They record *why* a paper is out
-of reach — RavenPack, Binance order books, a proprietary ALM engine, tables the
-authors themselves labelled illustrative — which is a map of what the archive
+of reach: RavenPack, Binance order books, a proprietary ALM engine, tables the
+authors themselves labelled illustrative: which is a map of what the archive
 would need to reach further.
 
     uv run python tools/triage_ledger.py            # fold in data/triage/result_*.json
@@ -90,7 +90,7 @@ def main() -> None:
                     "reason": r.get("reason"),
                     # The judgement states its own gap. Re-deriving one from the
                     # prose overwrote it, and collapsed every reason the regex
-                    # had no pattern for — "out of scope", "live protocol" —
+                    # had no pattern for, "out of scope", "live protocol", 
                     # into "other". classify() is only the fallback now, for the
                     # first ten batches which predate the field.
                     "gap": (r.get("gap") or classify(r.get("reason", "")))

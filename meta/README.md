@@ -1,14 +1,14 @@
-# Meta — agent operating system
+# Meta, agent operating system
 
 Five files that govern how the agent self-improves:
 
 ```
 meta/
-├── north_star.md   IMMUTABLE — the goal. Human-PR only.
-├── actor.md        MUTABLE — current pipeline policy. Actor edits, must align with north_star.
-├── critique.md     MUTABLE — how to evaluate the actor. Edited only by learn.md proposals.
-├── community.md    MUTABLE — crowdsourcing layer governing human-in-the-loop contributions.
-└── learn.md        IMMUTABLE — meta-meta loop that improves critique + community. Human-PR only.
+├── north_star.md   IMMUTABLE, the goal. Human-PR only.
+├── actor.md        MUTABLE, current pipeline policy. Actor edits, must align with north_star.
+├── critique.md     MUTABLE, how to evaluate the actor. Edited only by learn.md proposals.
+├── community.md    MUTABLE, crowdsourcing layer governing human-in-the-loop contributions.
+└── learn.md        IMMUTABLE, meta-meta loop that improves critique + community. Human-PR only.
 ```
 
 ## Loop
@@ -40,11 +40,11 @@ meta/
 
 ## Roles
 
-- **north_star.md** — defines the optimization objective + quality bar. Never changes without human approval.
-- **actor.md** — defines current pipeline policy + calibration. Self-edits in response to critique. All edits via git for auditability.
-- **critique.md** — defines how to grade actor's outputs. Updated by learn's proposals (human-approved).
-- **community.md** — governs crowdsourced contributions (challenges, alternatives, annotations). Twitter-Community-Notes-style bipartisan agreement; reputation system; AI-driven scraper for external mentions.
-- **learn.md** — meta-meta: analyzes git history of actor + critique + outcome metrics + community signals, proposes improvements. Never self-modifies.
+- **north_star.md**, defines the optimization objective + quality bar. Never changes without human approval.
+- **actor.md**, defines current pipeline policy + calibration. Self-edits in response to critique. All edits via git for auditability.
+- **critique.md**, defines how to grade actor's outputs. Updated by learn's proposals (human-approved).
+- **community.md**, governs crowdsourced contributions (challenges, alternatives, annotations). Twitter-Community-Notes-style bipartisan agreement; reputation system; AI-driven scraper for external mentions.
+- **learn.md**, meta-meta: analyzes git history of actor + critique + outcome metrics + community signals, proposes improvements. Never self-modifies.
 
 ## Why 5 layers
 
@@ -58,7 +58,7 @@ meta/
 
 Each layer's mutability is one less than the layer below it. This prevents any layer from rewriting its own constitution.
 
-Critique and community are PARALLEL evidence sources (neither dominates) — both feed `learn` which arbitrates.
+Critique and community are PARALLEL evidence sources (neither dominates), both feed `learn` which arbitrates.
 
 ## Operational cadence
 

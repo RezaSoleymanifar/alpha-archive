@@ -111,7 +111,7 @@ def run_in_sandbox(
 
 def run_inline(code: str, prices: pd.DataFrame) -> tuple[Optional[pd.DataFrame], Optional[str]]:
     """Faster path: run in-process without subprocess. Use when code already
-    passed static validation. NOT a real sandbox — only catches Python errors.
+    passed static validation. NOT a real sandbox, only catches Python errors.
     """
     fn, err = load_signal_callable(code)
     if err:

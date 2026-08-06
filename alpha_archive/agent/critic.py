@@ -1,4 +1,4 @@
-"""Critic agent — grades ReplicationReports against meta/critique.md.
+"""Critic agent, grades ReplicationReports against meta/critique.md.
 
 Reads:
   - data/replications/{paper_id}.json  (ReplicationReport written by replicate.py)
@@ -53,7 +53,7 @@ You do NOT execute the pipeline. You only read its outputs and produce structure
 feedback. Be specific, evidence-based, and reference exact metric values from the
 report. Never propose changes to north_star.md or learn.md.
 
-OUTPUT FORMAT — return a single JSON object matching this schema exactly. No prose
+OUTPUT FORMAT: return a single JSON object matching this schema exactly. No prose
 outside JSON. No markdown fences.
 
 {
@@ -141,7 +141,7 @@ def critique_report(report_path: Path,
     prompt = f"""# RUBRIC (meta/critique.md)
 {critique_md}
 
-# QUALITY BAR (meta/north_star.md — relevant excerpt)
+# QUALITY BAR (meta/north_star.md, relevant excerpt)
 {north_star_md}
 
 # REPLICATION REPORT TO GRADE

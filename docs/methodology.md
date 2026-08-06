@@ -6,7 +6,7 @@ Every paper goes through the same pipeline. No cherry-picking, no parameter tuni
 
 Default: SP500 constituents (point-in-time membership). Override per paper if author specifies (e.g., Russell 1000, Russell 3000).
 
-We use point-in-time membership where available — no survivor bias.
+We use point-in-time membership where available, no survivor bias.
 
 ## 2. Data alignment
 
@@ -21,14 +21,14 @@ Every published replication pins its data source. Academic convention since ~200
 
 - `ALPHA_ARCHIVE_DATA_VENDOR` env var selects the source. Supported: `sharadar` (retail PIT), `wrds` (institutional, requires WRDS auth), `grain` (free, prices only)
 - Each `ReplicationReport.json` records `data_vendor`, `data_pull_date`, and the filter set (universe, share-class, exchange codes, period)
-- LLM-generated `signal()` code may NOT fetch from arbitrary external APIs at runtime — only the configured vendor's local cache is readable inside the sandbox
+- LLM-generated `signal()` code may NOT fetch from arbitrary external APIs at runtime, only the configured vendor's local cache is readable inside the sandbox
 - A re-run of the same replication on the same vendor + same pull-date must produce byte-for-byte identical results
 
 This pinning is what makes published verdicts auditable: any reader with the same subscription can re-run the verdict and either confirm or refute it. Without the pin, "Sharpe 0.4 net of costs" is unfalsifiable.
 
 ### 2b. Why CRSP + Compustat are not directly used
 
-The academic gold standard (CRSP for prices, Compustat for fundamentals, both via WRDS) is **institutionally gated** — sold only to universities, hedge funds, and asset managers via corporate contracts. No individual seat exists. Cost: $40-80K/yr.
+The academic gold standard (CRSP for prices, Compustat for fundamentals, both via WRDS) is **institutionally gated**, sold only to universities, hedge funds, and asset managers via corporate contracts. No individual seat exists. Cost: $40-80K/yr.
 
 Sharadar Core US (~$300/mo retail) is the **closest legally-available retail equivalent**: PIT-timestamped fundamentals, survivorship-free universe, ~150 line items, ~3000 US tickers since 1999. Methodology is identical to WRDS practice; the gap is shorter history (1999 vs 1925) and fewer line items (~150 vs ~1000). For ~70% of HXZ-452 anomalies this is sufficient.
 
@@ -114,7 +114,7 @@ A signal that only works in 1 regime is flagged, not killed.
 
 Every paper:
 - **Training window**: last 60 months before OOS
-- **OOS window**: last 24 months, frozen — never used for parameter selection
+- **OOS window**: last 24 months, frozen, never used for parameter selection
 - **OOS-vs-IS Sharpe ratio**: reported as `oos_decay`. <50% = significant decay.
 
 ## 10. Verdict criteria

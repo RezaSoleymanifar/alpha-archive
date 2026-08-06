@@ -5,7 +5,7 @@ overlap between the two repos is recorded while it is fresh. Nothing here is sch
 
 ---
 
-## 1. The reproducibility hole — do this first
+## 1. The reproducibility hole, do this first
 
 `alpha_archive/data/prices.py` resolves its price panel like this:
 
@@ -18,7 +18,7 @@ It reads a parquet dump from a **different, private repo on one laptop**, and fa
 yfinance when that is missing. `alpha_archive/data/fundamentals.py` has the same shape.
 
 The README promises *"Every quantitative finance paper, replicated. Open. Verified."* and the
-comparison table against Hou–Xue–Zhang claims **"Open code, open results, crowdsourced
+comparison table against Hou-Xue-Zhang claims **"Open code, open results, crowdsourced
 verification"** where HXZ is **"Closed source-of-truth"**.
 
 Those two things cannot both be true. Today nobody outside this machine can reproduce a single
@@ -29,7 +29,7 @@ paper describing its data. This ships a path to a directory that does not exist 
 (`pip install vintage-mcp`). Anyone can then rerun any paper with no local corpus, and the
 figures come from SEC EDGAR and FRED directly rather than a parquet snapshot of unknown vintage.
 
-That is also the honest answer to the obvious reviewer question — *where did your data come
+That is also the honest answer to the obvious reviewer question, *where did your data come
 from, and was it point-in-time?* Right now there is no good answer.
 
 ## 2. Delete the duplicated engine
@@ -38,7 +38,7 @@ Both repos independently grew the same three modules:
 
 | Alpha Archive | Vintage | Keep |
 |---|---|---|
-| `backtest/dsr.py` (111 lines) | `engine/honesty.py` (138) | Vintage — it carries a session trial ledger |
+| `backtest/dsr.py` (111 lines) | `engine/honesty.py` (138) | Vintage. It carries a session trial ledger |
 | `backtest/runner.py` (256) | `engine/backtest.py` (216) | Undecided; see below |
 | `data/prices.py` (98) | `sources/yahoo.py` (98) | Vintage |
 
@@ -52,8 +52,8 @@ wasted work.
 
 ## 3. Make the DSR cumulative across papers
 
-The README already promises this — *"Cumulative DSR adjustment across all papers ever tested"* —
-and it is the single most defensible claim in the project. It is also not implemented: `dsr.py`
+The README already promises this, *"Cumulative DSR adjustment across all papers ever tested"*.
+And it is the single most defensible claim in the project. It is also not implemented: `dsr.py`
 takes `n_trials` as an argument, so each paper is deflated against its own trial count rather
 than against every specification the archive has ever run.
 
@@ -73,8 +73,8 @@ Requires §1 first, or the failures are unverifiable and the claim is worse than
 
 SEC XBRL only reaches back to roughly 2009. Price-based anomalies replicate over decades;
 accounting-based ones do not. Every published result needs its usable sample window stamped on
-it, because a "failed replication" run on 2009–2026 against a paper sampled 1963–2000 is not a
-failed replication — it is a different experiment.
+it, because a "failed replication" run on 2009-2026 against a paper sampled 1963-2000 is not a
+failed replication. It is a different experiment.
 
 ---
 

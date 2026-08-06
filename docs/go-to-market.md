@@ -10,7 +10,7 @@
 | **Students / educators** | Learning quant finance; need reproducible examples | Open code per paper | Reddit r/algotrading, university courses |
 | **Content creators (newsletters, YT)** | Need fresh content backed by data | Weekly "5 papers replicated" newsletter | Substack, YouTube collaborations |
 
-## Distribution wedge — what makes it spread
+## Distribution wedge, what makes it spread
 
 ### 1. SEO moat
 Every replicated paper = a landing page indexed by Google. Search "[paper title]" → Alpha Archive page in top 3.
@@ -41,7 +41,7 @@ Substack-friendly. Free tier acquires; paid tier funds.
 GitHub repo with all generated code. Pull requests for improvements. Lowers barrier for quant blogger ecosystem to cite us.
 
 ### 5. Conference & academic credibility
-- Submit Alpha Archive itself as a paper to JFE/JF/RFS — "Replicating the factor zoo at scale"
+- Submit Alpha Archive itself as a paper to JFE/JF/RFS, "Replicating the factor zoo at scale"
 - Sponsor / present at AFA, EFA, CFA Institute events
 - Partner with academic departments for student projects
 

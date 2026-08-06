@@ -1,4 +1,4 @@
-"""Actor self-edit — given critic findings, propose patches to actor.md
+"""Actor self-edit, given critic findings, propose patches to actor.md
 calibration parameters and emit a git-friendly diff + commit message.
 
 Hard rule (per meta/actor.md "Evolution policy"): the actor MAY edit actor.md
@@ -34,7 +34,7 @@ CRIT_DIR = REPO_ROOT / "data" / "critique_runs"
 SELF_EDIT_SYSTEM = """You are the ACTOR-SELF-EDIT agent for Alpha Archive.
 
 You read recent CRITIC findings and propose precise patches to the calibration
-parameters in meta/actor.md. You DO NOT rewrite policy text — only adjust the
+parameters in meta/actor.md. You DO NOT rewrite policy text, only adjust the
 YAML calibration block under "## Calibration parameters".
 
 HARD RULES:
@@ -155,7 +155,7 @@ def write_proposal(proposal: dict) -> Path:
     out = PROPOSAL_DIR / f"{ts}_actor_proposal.md"
 
     changes = proposal.get("proposed_changes", [])
-    body = [f"# Actor self-edit proposal — {ts}", ""]
+    body = [f"# Actor self-edit proposal, {ts}", ""]
     if not changes:
         body += ["**No changes proposed.** All recent critiques were LOW/INFO or "
                  "did not warrant calibration adjustment."]
@@ -194,7 +194,7 @@ def apply_proposal(proposal: dict) -> bool:
 
     SAFETY: this directly modifies meta/actor.md. Caller is responsible for
     review + commit. Actor self-edit policy in meta/actor.md requires that the
-    commit message reference critique IDs — apply_proposal does NOT auto-commit.
+    commit message reference critique IDs, apply_proposal does NOT auto-commit.
     """
     changes = proposal.get("proposed_changes", [])
     if not changes:

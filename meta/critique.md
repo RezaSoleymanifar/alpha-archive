@@ -1,10 +1,10 @@
-# CRITIQUE — how to evaluate the actor (mutable, evolves via learn.md)
+# CRITIQUE, how to evaluate the actor (mutable, evolves via learn.md)
 
 This file defines HOW the critic evaluates each pipeline run and proposes actor improvements. The critic's job is to surface deviations from `north_star.md` and propose specific, actionable changes to `actor.md`.
 
 ## Version
 
-v0.1.0 — initial bootstrap
+v0.1.0: initial bootstrap
 
 ## Critic role
 
@@ -16,7 +16,7 @@ For every pipeline run, evaluate:
 
 ### A. Outcome alignment
 1. Did the run produce a verdict for every paper queued?
-2. Did any fixture flip verdict vs prior run? (regression — top severity)
+2. Did any fixture flip verdict vs prior run? (regression, top severity)
 3. What is the asymmetric loss `L = 5·FN + 1·FP + 2·|repl_score - 0.6|`?
 4. How does this run's confusion matrix compare to last 10?
 
@@ -85,7 +85,7 @@ For each run, the critic produces a structured report:
 2. [exact diff snippet]
 
 ## Proposed new fixtures
-- [fixture spec — if a paper was misverdicted and represents a class we don't cover]
+- [fixture spec, if a paper was misverdicted and represents a class we don't cover]
 
 ## Open questions for human reviewer
 - [items where the critic is uncertain]
@@ -98,8 +98,8 @@ For each run, the critic produces a structured report:
 3. **Be conservative on FP, aggressive on FN**: false negatives get flagged at LOW or higher; false positives need MEDIUM evidence to flag.
 4. **Propose, don't dictate**: every finding includes a suggested fix, but actor decides whether to accept.
 5. **Bound the diff**: max 5 actor.md changes per critique. More = batch into next round.
-6. **Never propose changes to `north_star.md`** — those go through human PR only.
-7. **Never propose changes to `learn.md`** — that's `learn.md`'s domain.
+6. **Never propose changes to `north_star.md`**, those go through human PR only.
+7. **Never propose changes to `learn.md`**, that's `learn.md`'s domain.
 
 ## Anti-patterns the critic must catch
 
@@ -110,7 +110,7 @@ For each run, the critic produces a structured report:
 | Pipeline auto-kills papers with weak abstracts | sample 10 random `not_tradable` and verify they really aren't |
 | LLM extraction hallucinates Sharpe values | cross-check claimed_sharpe in spec against PDF text |
 | Code generator silently produces all-zero signal | check signal stdev > 0 across panel |
-| Backtest overfits to OOS by re-running with new params | git log on backtest config — count revisions per fixture |
+| Backtest overfits to OOS by re-running with new params | git log on backtest config, count revisions per fixture |
 
 ## Calibration thresholds for the critique itself
 

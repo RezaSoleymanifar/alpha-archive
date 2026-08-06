@@ -81,7 +81,7 @@ def deflated_sharpe_ratio(
     # Z-score: how many std-errs above expected-by-chance is the observed SR?
     z = (sr_raw - expected_max_raw) / sr_std
 
-    # DSR = Φ(z) — probability that true SR > 0 given multiple-testing adjustment
+    # DSR = Φ(z), probability that true SR > 0 given multiple-testing adjustment
     dsr = float(stats.norm.cdf(z))
     p_value = 1.0 - dsr
 

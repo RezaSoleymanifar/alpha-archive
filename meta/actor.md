@@ -1,17 +1,17 @@
-# ACTOR — current agent policy (mutable, evolves)
+# ACTOR, current agent policy (mutable, evolves)
 
 This file defines HOW the agent currently operates the pipeline. It MUST stay aligned with `meta/north_star.md`. The agent updates this file in response to critique (see `meta/critique.md`). All edits go through git so evolution is auditable.
 
 ## Version
 
-v0.1.0 — initial bootstrap
+v0.1.0: initial bootstrap
 
 ## Stage policies
 
 ### 1. Ingest (`alpha_archive.ingest`)
 
 - Poll all sources daily at 06:00 UTC
-- Dedupe by `(source, external_id)` — never re-ingest a paper
+- Dedupe by `(source, external_id)`, never re-ingest a paper
 - Set `triage_status="pending"` on insert
 - On source failure (HTTP 4xx/5xx, parse error): log, retry next cycle, do NOT crash
 - Cap per-poll at 1000 papers per source to bound LLM cost
@@ -32,7 +32,7 @@ False-negative red flags (escalate immediately):
 - Abstract has numerical results (Sharpe, t-stat, return)
 - Author affiliation is academic finance department or known quant firm
 
-### 3. Extract (`alpha_archive.extract` — to build)
+### 3. Extract (`alpha_archive.extract`, to build)
 
 **Goal**: convert PDF → structured signal spec with high fidelity.
 
@@ -43,7 +43,7 @@ Current rules (initial):
 - Cache PDF text under `data/papers/{paper_id}.pdf.txt` for replay
 - Hard requirement: spec must include `formula`, `data_required`, `universe`, `horizon_days`, `expected_sign`. Missing any → mark spec incomplete.
 
-### 4. Implement (`alpha_archive.codegen` — to build)
+### 4. Implement (`alpha_archive.codegen`, to build)
 
 **Goal**: convert spec → working Python `signal(prices)` function with no leakage.
 
@@ -98,7 +98,7 @@ Every result → public landing page at `alpha-archive.io/papers/{paper_id}`:
 1. **Be explainable**: every verdict ships with `verdict_reasoning` list of pass/fail gates
 2. **Be reproducible**: log seed, data vintage, model version, prompt version with each result
 3. **Be conservative**: when uncertain → escalate to human review, don't auto-kill
-4. **Fail loudly**: if any gate fails its preconditions, raise — don't silently proceed
+4. **Fail loudly**: if any gate fails its preconditions, raise, don't silently proceed
 5. **Learn from history**: every false-positive / false-negative becomes a fixture or test case
 
 ## Calibration parameters (mutable, tracked here for transparency)
@@ -132,7 +132,7 @@ backtest:
 Format: `YYYY-MM-DD | <fixture_id or run_id> | <observation> | <action taken in actor.md>`
 
 ```
-2026-05-01 | momentum_jt1993 | Full-window Sharpe 0.07 vs claimed 0.7 — clear post-pub decay. Pipeline correctly avoided FN by verdict=iterate. Validates asymmetric verdict rules. | No actor changes; reaffirms ship_oos_ratio guardrail.
+2026-05-01 | momentum_jt1993 | Full-window Sharpe 0.07 vs claimed 0.7, clear post-pub decay. Pipeline correctly avoided FN by verdict=iterate. Validates asymmetric verdict rules. | No actor changes; reaffirms ship_oos_ratio guardrail.
 2026-05-01 | bootstrap        | Imported 326 fixtures from Open Source Asset Pricing (Chen+Zimmermann). 165 ship / 47 iterate / 114 kill labels. Fixture set grew 6 -> 332. | No actor changes; meta-loop F1 now statistically meaningful.
 ```
 

@@ -1,4 +1,4 @@
-# Demo run — end-to-end LLM replication
+# Demo run, end-to-end LLM replication
 
 Date: 2026-05-01
 Provider: claude_code (free, via Claude Code CLI Max plan)
@@ -22,17 +22,17 @@ No human input beyond the URL.
 
 ## What the pipeline did
 
-1. **Triage** (Claude Haiku via CLI) — classified as `tradable`, confidence 0.9
-2. **PDF download** — cached to `data/papers/macd_demo_15.pdf`
-3. **Text extraction** (pypdf) — first 30 pages
+1. **Triage** (Claude Haiku via CLI), classified as `tradable`, confidence 0.9
+2. **PDF download**, cached to `data/papers/macd_demo_15.pdf`
+3. **Text extraction** (pypdf), first 30 pages
 4. **Spec extraction** (Sonnet via CLI, run twice with different temps)
    - Self-consistency score: 0.71 (below 0.85 threshold → flagged for review per actor.md)
    - Spec extracted: `universe=sp500, sign=both`
 5. **Code generation** (Sonnet via CLI, with retry-on-validation-error)
    - Passed all gates: signature, AST imports, no lookahead, no banned tokens, deterministic
-6. **Sandbox execution** — restricted-builtins exec, no errors
-7. **Backtest** (5bps cost, monthly rebalance, 36mo train window, 2014–2026)
-8. **Verdict assignment** (asymmetric — bias toward iterate)
+6. **Sandbox execution**, restricted-builtins exec, no errors
+7. **Backtest** (5bps cost, monthly rebalance, 36mo train window, 2014-2026)
+8. **Verdict assignment** (asymmetric, bias toward iterate)
 
 ## Result
 
@@ -47,9 +47,9 @@ No human input beyond the URL.
 ### Verdict reasoning
 
 - ✅ DSR > 0.95
-- ❌ ICIR > 0.3 (failed — IC is essentially zero)
+- ❌ ICIR > 0.3 (failed, IC is essentially zero)
 - ✅ OOS Sharpe ≥ 0.5 × IS Sharpe
-- ❌ IC sign correct, positive (failed — IC slightly negative)
+- ❌ IC sign correct, positive (failed, IC slightly negative)
 
 Two failures → not ship.
 Only two failures (no DSR or OOS catastrophe) → not kill.
@@ -57,7 +57,7 @@ Only two failures (no DSR or OOS catastrophe) → not kill.
 
 ### Honest interpretation
 
-Sharpe 0.81 is respectable but IC near zero suggests the Sharpe likely comes from market beta (long-biased exposure) rather than cross-sectional alpha. The pipeline correctly identified this and did NOT ship — preventing a false positive.
+Sharpe 0.81 is respectable but IC near zero suggests the Sharpe likely comes from market beta (long-biased exposure) rather than cross-sectional alpha. The pipeline correctly identified this and did NOT ship, preventing a false positive.
 
 The "low spec agreement" warning shows self-consistency working: two LLM calls produced specs that agreed only 71% on key fields, automatically flagging for human review.
 
@@ -101,12 +101,12 @@ Notable: the model gracefully handled missing intraday data (paper assumes OHLC;
 
 ## What this proves
 
-1. **Plumbing is real** — PDF in, verdict out, all artifacts logged
-2. **Validation gates work** — generated code passed lookahead / imports / signature checks
-3. **Asymmetric verdict works** — preserved an ambiguous signal (iterate, not kill)
-4. **Self-consistency check works** — flagged 0.71 agreement for human review
-5. **Provider abstraction works** — entire flow used Claude Code CLI, free
-6. **Reproducible** — all artifacts saved at `data/replications/macd_demo_15.{json,py}`
+1. **Plumbing is real**, PDF in, verdict out, all artifacts logged
+2. **Validation gates work**, generated code passed lookahead / imports / signature checks
+3. **Asymmetric verdict works**, preserved an ambiguous signal (iterate, not kill)
+4. **Self-consistency check works**, flagged 0.71 agreement for human review
+5. **Provider abstraction works**, entire flow used Claude Code CLI, free
+6. **Reproducible**, all artifacts saved at `data/replications/macd_demo_15.{json,py}`
 
 ## Reproduce yourself
 

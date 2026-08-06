@@ -3,7 +3,7 @@
 Their site works because a task is a page: one narrow, named problem with the
 papers that attempt it listed side by side, so a reader lands on "Image
 Classification" and sees the field rather than a search result. Flat tags cannot
-do that — "portfolio" covers 429 papers here and answers nothing.
+do that: "portfolio" covers 429 papers here and answers nothing.
 
 So the same two levels. An AREA is the wing of the building; a TASK is the room,
 and the room is what a reader actually wants. A task earns its place only if
@@ -151,7 +151,7 @@ AREAS = list(dict.fromkeys(area for area, _, _, _ in TASKS))
 # Tasks whose patterns are wide enough to catch a paper that belongs somewhere
 # more specific. "portfolio" appears in a volatility-forecasting abstract as
 # often as in a portfolio paper, so these are tried only after every narrow task
-# in every area has failed — otherwise ordering inside one area silently
+# in every area has failed, otherwise ordering inside one area silently
 # outranks precision in another.
 BROAD = {"Portfolio Optimization", "Macro-Financial Linkages", "Crypto Asset Pricing"}
 

@@ -3,7 +3,7 @@
 Original paper: rank stocks by past 12-1 month return; long top decile, short
 bottom decile; rebalance monthly; hold 3-12 months.
 
-This implementation is the canonical "golden" version — what the LLM should
+This implementation is the canonical "golden" version, what the LLM should
 approximate when given the paper. Used as fixture in the meta-learning loop.
 """
 from __future__ import annotations

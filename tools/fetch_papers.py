@@ -1,7 +1,7 @@
 """Pull the index's paper universe and render arXiv first pages as thumbnails.
 
 Two halves, deliberately equal. One hundred come from arXiv q-fin, one hundred
-from the core finance journals — Journal of Finance, JFE, RFS, JFQA and the
+from the core finance journals, Journal of Finance, JFE, RFS, JFQA and the
 rest. Both halves are drawn the same way: OpenAlex, sorted by citations, so the
 index is ranked by how often the field actually cites the work rather than by
 how recently it appeared.
@@ -48,7 +48,7 @@ QUANT_TOPICS = [
     "T10067",   # Stochastic processes and financial applications
     "T10282",   # Financial Risk and Volatility Modeling
     "T11270",   # Complex Systems and Time Series Analysis
-    "T12137",   # Economic theories and models — where CAPM and Jensen–Meckling sit
+    "T12137",   # Economic theories and models, where CAPM and Jensen-Meckling sit
     "T11496",   # Credit Risk and Financial Regulations
 ]
 
@@ -58,9 +58,9 @@ QUANT_TOPICS = [
 # count. Only the PDF and SSRN's own download ranking need a scrape, and we do
 # not take either.
 JOURNAL_ISSNS = [
-    # tier 1 — the preprint tier, where finance work appears first
+    # tier 1. The preprint tier, where finance work appears first
     "1556-5068",   # SSRN Electronic Journal (incl. the Financial Economics Network)
-    # tier 2 — the big three, and what sits beside them
+    # tier 2. The big three, and what sits beside them
     "0022-1082",   # Journal of Finance
     "0304-405X",   # Journal of Financial Economics
     "0893-9454",   # Review of Financial Studies
@@ -72,7 +72,7 @@ JOURNAL_ISSNS = [
     "0927-5398",   # Journal of Empirical Finance
     "1386-4181",   # Journal of Financial Markets
     "0046-3892",   # Financial Management
-    # tier 3 — practitioner-facing, implementation-aware
+    # tier 3, practitioner-facing, implementation-aware
     "0015-198X",   # Financial Analysts Journal (CFA Institute)
     "0095-4918",   # Journal of Portfolio Management
     "2640-3943",   # Journal of Financial Data Science
@@ -87,7 +87,7 @@ JOURNAL_ISSNS = [
 SERIES_SOURCES = ["S2809516038"]      # NBER Working Papers
 
 # The leaderboard windows. Each is a publication-date cohort, ranked inside
-# itself by citations — a month-old paper is never asked to out-cite Fama.
+# itself by citations. A month-old paper is never asked to out-cite Fama.
 WINDOWS = [("30d", 30), ("12m", 365), ("5y", 1826), ("10y", 3653), ("all", None)]
 
 # DOIs of the papers we have actually replicated, so their citation counts stay
@@ -116,7 +116,7 @@ TAG_RULES = [
 ]
 
 # A desk wants a paper it could code. This keeps the index to work that proposes
-# a signal, a portfolio rule, or a forecast — and drops the essays about
+# a signal, a portfolio rule, or a forecast, and drops the essays about
 # governance, disclosure and policy that dominate a citation ranking otherwise.
 STRATEGY = re.compile(
     r"cross[- ]section|time[- ]series[^.]{0,40}return|stock returns|"
@@ -185,7 +185,7 @@ def practical(rec: dict) -> tuple[bool, str]:
     text = f"{title} {abstract}"
 
     if ESSAY.search(text):
-        return False, "essay — governance, policy or disclosure, no mechanism"
+        return False, "essay, governance, policy or disclosure, no mechanism"
     named = bool(STRATEGY.search(title)) or (
         len(abstract) >= MIN_ABSTRACT and bool(STRATEGY.search(abstract)))
     if not named:

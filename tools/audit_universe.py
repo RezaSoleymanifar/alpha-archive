@@ -10,7 +10,7 @@ Three questions, asked in order, and a paper has to pass all three:
   3. Is it engineering, not proof?  A convergence theorem for a PDE scheme is
                                     codeable and useless to a desk.
 
-Papers that fail are not deleted here — this prints the ledger so the filter in
+Papers that fail are not deleted here, this prints the ledger so the filter in
 fetch_papers.py can be argued with. Run it after every fetch.
 
     uv run python tools/audit_universe.py            # summary + samples

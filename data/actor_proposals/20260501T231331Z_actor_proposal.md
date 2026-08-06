@@ -1,4 +1,4 @@
-# Actor self-edit proposal — 20260501T231331Z
+# Actor self-edit proposal, 20260501T231331Z
 
 **No changes proposed.** All recent critiques were LOW/INFO or did not warrant calibration adjustment.
 

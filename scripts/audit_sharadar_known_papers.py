@@ -11,7 +11,7 @@ from __future__ import annotations
 
 
 PAPERS = [
-    # === Pure US-equity factor / anomaly papers — Sharadar's sweet spot ===
+    # === Pure US-equity factor / anomaly papers, Sharadar's sweet spot ===
     {
         "id": "gu_kelly_xiu_2020",
         "title": "Empirical Asset Pricing via Machine Learning",
@@ -85,7 +85,7 @@ PAPERS = [
         "needs": ["pit_fundamentals", "international_optional"],
     },
 
-    # === ML / NLP on financial text — Sharadar partial / blocked ===
+    # === ML / NLP on financial text, Sharadar partial / blocked ===
     {
         "id": "cong_tang_wang_2024",
         "title": "AlphaPortfolio: Direct Construction Through DRL",
@@ -111,7 +111,7 @@ PAPERS = [
         "needs": ["news_data_blocked"],
     },
 
-    # === Multi-asset / international / derivatives — Sharadar blocked ===
+    # === Multi-asset / international / derivatives, Sharadar blocked ===
     {
         "id": "asness_moskowitz_pedersen_2013",
         "title": "Value and Momentum Everywhere",
@@ -153,7 +153,7 @@ PAPERS = [
         "needs": ["fund_flow_data_blocked"],
     },
 
-    # === Alternative data / behavioral — Sharadar blocked ===
+    # === Alternative data / behavioral, Sharadar blocked ===
     {
         "id": "da_engelberg_gao_2011",
         "title": "In Search of Attention",
@@ -179,7 +179,7 @@ PAPERS = [
         "needs": ["filings_nlp_blocked"],
     },
 
-    # === Options / IV — Sharadar blocked ===
+    # === Options / IV, Sharadar blocked ===
     {
         "id": "an_ang_bali_cakici_2014",
         "title": "Joint Cross Section of Stocks and Options",
@@ -197,7 +197,7 @@ PAPERS = [
         "needs": ["options_microstructure_blocked"],
     },
 
-    # === Microstructure / HFT — Sharadar blocked ===
+    # === Microstructure / HFT, Sharadar blocked ===
     {
         "id": "kyle_obizhaeva_2016",
         "title": "Market Microstructure Invariance",

@@ -36,7 +36,7 @@ class Fixture:
     ground_truth_sources: list[str]
     notes: str = ""
 
-    # Hand-coded reference implementation (golden — what code-gen should produce)
+    # Hand-coded reference implementation (golden, what code-gen should produce)
     reference_module: Optional[str] = None  # e.g., "alpha_archive.fixtures_impl.momentum_jt1993"
 
 

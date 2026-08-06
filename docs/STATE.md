@@ -1,6 +1,6 @@
 # Where this project stands
 
-Written 2026-08-06. Read this first next session — it records the decisions and
+Written 2026-08-06. Read this first next session, it records the decisions and
 the measured numbers behind them, so none of it has to be rediscovered.
 
 ## What α-Archive is
@@ -23,14 +23,14 @@ Everything below was probed live, not assumed.
 | Can we build it on free data? | **Yes.** No keys, no scraping, no paid tier. |
 | How much arrives weekly? | **76** new arXiv q-fin papers in the last 7 days |
 | Monthly? | **311** arXiv q-fin; **998** over 90 days |
-| Journals in the same topics? | **11/month, 54/quarter** — and mostly unreadable |
+| Journals in the same topics? | **11/month, 54/quarter**, and mostly unreadable |
 | Can we open journal PDFs? | **No.** Unpaywall confirms `is_oa: false` for JF, JFE, RFS |
 | Open-access share of the corpus | **45%** overall, but only **4%** of the top-50 by citations |
 | arXiv open share | **99%** (144/145) |
 | Journal open share | **5%** (10/194) |
 
-**The consequence, which drove every later decision:** arXiv is the feed —
-volume, full text, real thumbnails. The journals are a citation layer on top,
+**The consequence, which drove every later decision:** arXiv is the feed.
+Volume, full text, real thumbnails. The journals are a citation layer on top,
 readable as metadata only. And the canon (Fama-French, Jegadeesh-Titman) cannot
 be indexed as PDFs at all.
 
@@ -38,14 +38,14 @@ be indexed as PDFs at all.
 
 Open Source Asset Pricing (Chen & Zimmermann) publishes, for 331 predictors,
 each paper's claimed return, t-statistic and sample window, plus a definition
-precise enough to implement. **The PDF is not needed to rerun the paper** —
-that is exactly how `alpha_archive/replications/jt1993.py` already works.
+precise enough to implement. **The PDF is not needed to rerun the paper**.
+That is exactly how `alpha_archive/replications/jt1993.py` already works.
 
 Of those 331: **127** are marked clearly predictive *and* built from accounting,
 price or trading data, which Vintage fetches free. They are indexed as spec
 cards via `tools/fetch_osap.py`.
 
-Sci-Hub was considered and rejected — it distributes pirated copies.
+Sci-Hub was considered and rejected, it distributes pirated copies.
 
 ## Pipeline
 
@@ -68,10 +68,10 @@ uv run python tools/build_site.py                    # renders docs/index.html
 ## The three gates
 
 Documented in full in [selection.md](selection.md). In short, a paper is indexed
-only if it (1) names a mechanism — a signal, portfolio rule or forecast, not
-governance or policy; (2) runs on data we can fetch free — no tick data, options
+only if it (1) names a mechanism, a signal, portfolio rule or forecast, not
+governance or policy; (2) runs on data we can fetch free, no tick data, options
 chains, analyst estimates, 13F, TRACE; (3) delivers a position rather than a
-proof — no convergence theorems or mean-field games.
+proof. No convergence theorems or mean-field games.
 
 Roughly four in five papers fail. That ratio is the product.
 
@@ -93,14 +93,14 @@ citations, which is exactly the recent cohort. `refine_universe.py` fills those
 from the paper's rank inside its own publication year in our corpus, and marks
 them `percentile_source: "local"`.
 
-## Cadence — the thing that keeps an audience
+## Cadence, the thing that keeps an audience
 
-- **Weekly.** Pull the new arXiv q-fin papers (~76), run the gates, expect 15–25
+- **Weekly.** Pull the new arXiv q-fin papers (~76), run the gates, expect 15-25
   worth showing. That is the "this week in quant" list.
 - **Monthly.** Refresh citations so the ranking moves, and publish **one**
   replication with its gap table. The replication is the part nobody else has.
 
-## To do later — growth and collaborators
+## To do later, growth and collaborators
 
 Not built, deliberately parked. Recorded here so it is not lost.
 
@@ -113,21 +113,29 @@ Not built, deliberately parked. Recorded here so it is not lost.
   index, run it with Vintage, open a PR with the gap table. One worked example
   (`jt1993.py`) plus a template replication file, so the first contribution is
   a fill-in rather than a blank page.
-- **Good first issues.** Label 10–20 indexed papers as "replicate me" with the
+- **Good first issues.** Label 10-20 indexed papers as "replicate me" with the
   data they need already named, so a newcomer can see in ten seconds whether
   they can do it this weekend.
 - **Author outreach.** One email per replication, offering a right of reply
   rendered on the card, with a public GitHub issue as the thread. Never a bulk
   mail of the corpus.
-- **Credit line.** Show who — or what — implemented each replication:
+- **Reader outreach, which is not author outreach.** Authors get the "we
+  replicated yours" note, one at a time. Practising quants get told the index
+  exists, and that is a different message with a different failure mode: a bulk
+  mail reads as spam and spends the name once. What works instead is answering
+  the question where it is already being asked, a specific paper thread on
+  r/quant or the Quantitative Finance Stack Exchange, and linking the card for
+  that one paper rather than the front page. The unit that travels is a single
+  replication with its gap table, never the corpus.
+- **Credit line.** Show who, or what, implemented each replication:
   `implemented by <model or person> · reviewed · commit <sha>`. Provenance next
   to the result, not a headline claim.
-- **Weekly digest.** The 15–25 new arXiv papers that pass the gates, as a page
+- **Weekly digest.** The 15-25 new arXiv papers that pass the gates, as a page
   and a mailing list people opt into. That is the reason to come back.
 
 ## Open threads
 
-- The universe is a 500-paper draw, not an exhaustive sweep — each window was
+- The universe is a 500-paper draw, not an exhaustive sweep, each window was
   capped at 50 per source. The true count of implementable papers is higher.
 - Sign in / Sign up in the nav are UI only; they point at the repo.
 - Author outreach was discussed and not built: publish first, then one specific

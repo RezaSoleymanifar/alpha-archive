@@ -1,4 +1,4 @@
-"""LLMProvider interface — every backend implements `complete()`."""
+"""LLMProvider interface, every backend implements `complete()`."""
 from __future__ import annotations
 
 from abc import ABC, abstractmethod
@@ -40,7 +40,7 @@ class LLMProvider(ABC):
 
         Args:
             prompt: user message text
-            model: model alias (e.g., "haiku", "sonnet") — provider-specific
+            model: model alias (e.g., "haiku", "sonnet"), provider-specific
             system: optional system prompt
             temperature: 0.0 to 1.0
             max_tokens: cap on output tokens

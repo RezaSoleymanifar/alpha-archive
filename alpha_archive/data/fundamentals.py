@@ -123,7 +123,7 @@ def _statement_block(raw: dict, statement: str, freq: str) -> dict:
 
 @dataclass(frozen=True)
 class TickerFundamentals:
-    """Coverage metadata for one ticker — useful for diagnostics."""
+    """Coverage metadata for one ticker, useful for diagnostics."""
     ticker: str
     has_data: bool
     n_quarters: int = 0

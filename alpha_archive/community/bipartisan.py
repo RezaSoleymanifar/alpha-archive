@@ -1,4 +1,4 @@
-"""Gate 4 — Community Notes-style bipartisan agreement check.
+"""Gate 4, Community Notes-style bipartisan agreement check.
 
 A submission requires SAME-DIRECTION votes from at least 2 distinct factions
 to pass merge consideration. This prevents:

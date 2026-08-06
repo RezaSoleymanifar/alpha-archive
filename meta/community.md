@@ -1,10 +1,10 @@
-# COMMUNITY — crowdsourcing layer (mutable, governs human-in-the-loop)
+# COMMUNITY, crowdsourcing layer (mutable, governs human-in-the-loop)
 
 This file defines HOW community contributions interact with the AI pipeline. The community layer is a **third evidence source** alongside (1) automated backtests against fixtures and (2) LLM-driven critique. It exists to catch what AI misses: domain-expert nuance, paper-author corrections, methodology subtleties.
 
 ## Version
 
-v0.1.0 — initial bootstrap
+v0.1.0: initial bootstrap
 
 ## Position in the meta system
 
@@ -68,7 +68,7 @@ Required:
 
 Every contribution goes through these gates:
 
-### Gate 1 — automated screening
+### Gate 1, automated screening
 
 LLM judges:
 - Is it on-topic? (matches paper)
@@ -79,14 +79,14 @@ LLM judges:
 Pass → enters voting queue.
 Fail → rejected with reason; submitter can appeal.
 
-### Gate 2 — automated backtest verification (for code submissions only)
+### Gate 2, automated backtest verification (for code submissions only)
 
 For `alternative_implementation` and code-changing `challenges`:
 - Run proposed code through standard backtest pipeline
 - Compute delta in: Sharpe, IC, replication score, verdict
 - Attach measured impact to the submission for voters to see
 
-### Gate 3 — community voting
+### Gate 3, community voting
 
 Each submission collects votes:
 - `agree` / `disagree` / `not_qualified_to_judge`
@@ -94,7 +94,7 @@ Each submission collects votes:
 - Voter cannot vote on own submission
 - Vote weight = sqrt(reputation), capped at 10×
 
-### Gate 4 — bipartisan-agreement check (the Community Notes mechanic)
+### Gate 4, bipartisan-agreement check (the Community Notes mechanic)
 
 Compute agreement across reviewer **factions**. Factions are inferred from past voting patterns:
 - "AI-trusters": consistently vote against challenges
@@ -103,7 +103,7 @@ Compute agreement across reviewer **factions**. Factions are inferred from past 
 
 A submission requires **agreement from ≥ 2 factions** to merge. Same-faction-only consensus = NOT enough. Prevents both unconditional rubber-stamping and unconditional contrarianism.
 
-### Gate 5 — governance tier
+### Gate 5, governance tier
 
 | Tier | Definition | Merge rule |
 |---|---|---|
@@ -123,7 +123,7 @@ Moderators are appointed by humans with ≥ 1000 reputation OR explicit appointm
 | Submission rejected (Gate 1 spam) | −10 |
 | Submission rejected (failed Gate 4 vote) | 0 |
 | Vote with eventual majority | +1 |
-| Vote against eventual majority | −1 (but capped — can't go negative for Gate-5-overridden cases) |
+| Vote against eventual majority | −1 (but capped, can't go negative for Gate-5-overridden cases) |
 | Comment marked helpful (≥ 5 upvotes) | +3 |
 | Comment marked spam | −5 |
 
@@ -141,13 +141,13 @@ Moderator threshold: 1000
 5. **Authorial disclosure**: if submitter claims to be paper author, must sign w/ email matching paper, flagged as `author_submission`
 6. **Cooldowns**: same paper can't have > 5 simultaneous challenges (forces consolidation)
 
-## AI-driven scraping (minimal scope — signal over noise)
+## AI-driven scraping (minimal scope, signal over noise)
 
 We DO NOT scrape Twitter/X, Reddit, or Substack. Those channels are 99% noise; mining them costs more in spam-filtering than the signal yields. Per the principle "signal over noise", critics come to us.
 
 Active scraping (autonomous, daily):
-1. **GitHub issues** on the Alpha Archive repo — anyone can file an issue to challenge a verdict; LLM auto-classifies it into a Tier-1 community_signal
-2. **Replies on Alpha Archive-published landing pages** (when web UI ships, Phase 4) — comments + "this is wrong" buttons
+1. **GitHub issues** on the Alpha Archive repo, anyone can file an issue to challenge a verdict; LLM auto-classifies it into a Tier-1 community_signal
+2. **Replies on Alpha Archive-published landing pages** (when web UI ships, Phase 4), comments + "this is wrong" buttons
 3. **Email submissions** to a published address (Phase 4)
 
 That's it. No social-media trawl. Twitter et al. may be revisited in Phase 6+ if and only if a high-precision filter exists.

@@ -50,7 +50,7 @@ def vote_weight(reputation: int) -> float:
 
 
 def apply_event(rep: int, event: str) -> int:
-    """Pure function — returns new rep after event."""
+    """Pure function, returns new rep after event."""
     delta = REPUTATION_EVENTS.get(event, 0)
     return max(0, rep + delta)
 

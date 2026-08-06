@@ -1,4 +1,4 @@
-"""Replication #1 — Jegadeesh & Titman (1993), cross-sectional momentum.
+"""Replication #1, Jegadeesh & Titman (1993), cross-sectional momentum.
 
 The first paper run end to end on Vintage rather than on a local parquet, so
 every number here is reproducible by a stranger with `pip install vintage-mcp`.
@@ -129,7 +129,7 @@ async def price_panel(
             print(f"    ... {i}/{len(tickers)} tickers")
 
     if missing:
-        print(f"    unavailable: {len(missing)} — {', '.join(missing[:8])}"
+        print(f"    unavailable: {len(missing)}, {', '.join(missing[:8])}"
               + (" ..." if len(missing) > 8 else ""))
 
     start = pd.Timestamp(START)
@@ -160,8 +160,8 @@ def long_short_monthly(
 
     Two things here are the paper's construction rather than a simplification:
 
-    **Overlapping holds.** Jegadeesh-Titman's headline strategy is J=12, K=3 —
-    form on twelve-month momentum, then hold three months. The standard way to
+    **Overlapping holds.** Jegadeesh-Titman's headline strategy is J=12, K=3.
+    Form on twelve-month momentum, then hold three months. The standard way to
     run that as a single monthly series is overlapping cohorts: a new decile
     portfolio is formed each month and held for `hold_months`, so the live book
     is the average of the last three cohorts and only a third of it turns over.
@@ -209,7 +209,7 @@ def long_short_monthly(
         turnover = float((book - prev_book.reindex(book.index).fillna(0.0)).abs().sum())
         # Stamp the return with the month it was *earned*, not the month the
         # weights were formed. Getting this backwards shifts the whole series
-        # by a month and drops the correlation against UMD from 0.74 to 0.01 —
+        # by a month and drops the correlation against UMD from 0.74 to 0.01, 
         # which is exactly what a sanity check exists to catch.
         returns[date + pd.offsets.MonthEnd(1)] = gross - turnover * COST_BPS / 10_000.0
         prev_book = book
@@ -264,7 +264,7 @@ def t_stat(x: pd.Series) -> float:
 
 
 async def run() -> Result:
-    print("Jegadeesh & Titman (1993) — replication on Vintage\n")
+    print("Jegadeesh & Titman (1993), replication on Vintage\n")
 
     print("  [1/4] what the paper claimed, from Open Source Asset Pricing")
     claim = await openap.get(PAPER)
@@ -292,7 +292,7 @@ async def run() -> Result:
     # The criterion is declared in alpha_archive.verification, before any run,
     # against a fixture we did not produce. Nothing here can move it. The
     # correlation below is a sanity check and is deliberately not passed to
-    # evaluate() — a check against a differently-constructed factor cannot
+    # evaluate(), a check against a differently-constructed factor cannot
     # verify parity, no matter how high it comes back.
     verification = evaluate(PAPER, None)
     sanity_result = sanity(PAPER, corr)
@@ -308,10 +308,10 @@ async def run() -> Result:
     umd_flat_too = abs(ours_era.get("t_stat", 9)) < 2.0
 
     if verification["status"] != "VERIFIED":
-        verdict = (f"UNVERIFIED — {verification['reason']} Numbers below are a measurement "
+        verdict = (f"UNVERIFIED, {verification['reason']} Numbers below are a measurement "
                    "on our sample, not a replication of the paper.")
     elif umd_flat_too and tstat < 2.0:
-        verdict = ("decayed — the published factor is also flat over this window, so this "
+        verdict = ("decayed. The published factor is also flat over this window, so this "
                    "agrees with the literature rather than contradicting the paper")
     elif tstat >= 2.0 and measured_pct > 0:
         verdict = "survives on this sample"
@@ -361,7 +361,7 @@ async def run() -> Result:
 
 def report(r: Result) -> None:
     print("\n" + "=" * 68)
-    print(f"  {r.authors} ({r.year}) — {r.paper}")
+    print(f"  {r.authors} ({r.year}), {r.paper}")
     print("=" * 68)
     print(f"  claimed    {r.claimed_monthly_pct:>8}%/mo   t = {r.claimed_t_stat:<6} "
           f"({r.claimed_sample})")
@@ -380,7 +380,7 @@ def report(r: Result) -> None:
         print(f"  sanity check (does not verify): {r.sanity_check['description']}")
     print()
     if r.umd_by_era:
-        print("  Ken French's own UMD, by era — is it us, or did it decay?")
+        print("  Ken French's own UMD, by era, is it us, or did it decay?")
         for label, e in r.umd_by_era.items():
             print(f"    {label:<30} {e['mean_monthly_pct']:+7.3f}%/mo  "
                   f"t {e['t_stat']:+6.2f}  n={e['months']}")

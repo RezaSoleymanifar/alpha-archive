@@ -2,7 +2,7 @@
 
 A replication is judged by whether its curve lands on top of the author's, so
 the author's figure has to survive somewhere durable. The render cache does not
-count — it is gitignored and rebuilt from PDFs that may move or be withdrawn.
+count. It is gitignored and rebuilt from PDFs that may move or be withdrawn.
 
 Only keeps are promoted. Rendering every page of all 1,014 papers at review
 resolution is roughly a gigabyte, and the drops are dropped precisely because

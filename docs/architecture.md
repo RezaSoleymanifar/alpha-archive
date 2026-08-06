@@ -65,8 +65,8 @@ See [meta/README.md](../meta/README.md) for the meta-loop.
 
 ## Storage
 
-- **SQLite** for metadata (papers, specs, results) — sufficient until 100K+ papers
-- **Parquet** for backtest artifacts (IC time series, equity curves, plots) — under `data/parquet/`
+- **SQLite** for metadata (papers, specs, results), sufficient until 100K+ papers
+- **Parquet** for backtest artifacts (IC time series, equity curves, plots), under `data/parquet/`
 - **PDFs** cached under `data/papers/{paper_id}.pdf`
 - Migration to **Postgres** when multi-tenant or write-heavy
 
@@ -86,9 +86,9 @@ See [meta/README.md](../meta/README.md) for the meta-loop.
 ## LLM usage
 
 Pluggable provider via `ALPHA_ARCHIVE_LLM_PROVIDER` env var:
-- `claude_code` (default) — routes through Claude Code CLI on Max plan. **Cost: $0.**
-- `anthropic` — direct Anthropic API. Requires `ANTHROPIC_API_KEY`.
-- `offline` — no LLM; for tests / dry runs.
+- `claude_code` (default), routes through Claude Code CLI on Max plan. **Cost: $0.**
+- `anthropic`, direct Anthropic API. Requires `ANTHROPIC_API_KEY`.
+- `offline`. No LLM; for tests / dry runs.
 
 Per-paper LLM workload (5 calls total):
 - **Triage**: Haiku, ~200 tokens in / 100 out

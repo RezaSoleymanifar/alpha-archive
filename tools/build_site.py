@@ -1,4 +1,4 @@
-"""Generate docs/index.html — a citation leaderboard for quant finance research.
+"""Generate docs/index.html, a citation leaderboard for quant finance research.
 
 Papers are ranked by citations inside a publication-date window: 30 days, 12
 months, 5 years, all time. Every window ships in the page, so switching one is
@@ -6,11 +6,11 @@ a filter in the DOM rather than a request.
 
 Layout follows the reference (huggingface.co/papers, successor to Papers With
 Code): first-page thumbnail flush on the left, title and truncated abstract in
-the middle, stacked actions on the right. Dark and light both supported —
-the reference follows the reader's system theme, and rendering light against
+the middle, stacked actions on the right. Dark and light both supported.
+The reference follows the reader's system theme, and rendering light against
 its dark is most of why a copy reads as a copy.
 
-Two sources feed it. data/papers/papers.json is the indexed universe — arXiv
+Two sources feed it. data/papers/papers.json is the indexed universe, arXiv
 q-fin on one side, the journals, SSRN and NBER on the other, with citation
 counts from OpenAlex. data/replications/*.json are the few we have actually
 run; those carry a result and a Code link, and everything else says plainly
@@ -46,9 +46,9 @@ REPLICATED = {
         "date": "1993",
         "tags": ["momentum", "factors", "equities"],
         "abstract": "Past winners keep winning: buying prior 12-month winners and selling "
-                    "losers earned about 1.3% a month over 1964–1989, an effect large enough "
+                    "losers earned about 1.3% a month over 1964-1989, an effect large enough "
                     "that the authors argue markets cannot be fully efficient. We measure "
-                    "−0.12%/mo on currently-listed large caps since 2006 — but the reference "
+                    "−0.12%/mo on currently-listed large caps since 2006, but the reference "
                     "factor is flat over that window too, so this reads as decay rather than "
                     "refutation. Not verified: the parity fixture is unobtainable.",
         "paper_url": "https://doi.org/10.1111/j.1540-6261.1993.tb04702.x",
@@ -61,8 +61,8 @@ REPLICATED = {
         "venue": "arXiv:2607.20093",
         "date": "2026-07-22",
         "tags": ["technical-analysis", "market-timing", "factors"],
-        "abstract": "Tests five widely promoted retail signal families — trend, oscillator, "
-                    "candlestick, volume and calendar rules — against three predeclared gates: "
+        "abstract": "Tests five widely promoted retail signal families, trend, oscillator, "
+                    "candlestick, volume and calendar rules, against three predeclared gates: "
                     "statistical edge after multiplicity correction, economic viability after "
                     "costs, and survival under leverage. Four are refuted, two unresolved, "
                     "none supported. We reproduce the golden/death cross result exactly; "
@@ -135,7 +135,7 @@ def load_citations() -> dict[str, int]:
 
 
 def per_month(citations: int, published: str) -> float:
-    """Citations a month since publication — the only fair way to compare a
+    """Citations a month since publication, the only fair way to compare a
     paper from last quarter with one from 1993."""
     from datetime import datetime, timezone
     text = published if len(published) >= 10 else f"{published[:4]}-01-01"
@@ -211,12 +211,12 @@ def detail(rec: dict) -> str:
         f"<td class='n'>{x['t_stat']:+.2f}</td><td class='n sub'>{x['months']}</td></tr>"
         for k, x in rec.get("umd_by_era", {}).items())
     caveats = "".join(f"<li>{e(c)}</li>" for c in rec.get("caveats", []))
-    return (f"<h4>Verification &mdash; "
+    return (f"<h4>Verification, "
             f"{e(v.get('status', '?').lower().replace('_', ' '))}</h4>"
             f"<p>{e(v.get('reason', ''))}</p>"
             f'<p class="fine">Bar: {e(str(crit.get("statistic", "")))} &ge; '
             f'{crit.get("threshold", "")}, against {e(str(crit.get("fixture", "")))} '
-            f'&mdash; declared by {e(str(crit.get("fixture_source", "")))}, not by us.</p>'
+            f', declared by {e(str(crit.get("fixture_source", "")))}, not by us.</p>'
             f"<h4>Reference factor by era</h4>"
             f'<table><thead><tr><th>Ken French UMD</th><th class="n">mean</th>'
             f'<th class="n">t</th><th class="n">months</th></tr></thead>'
@@ -257,7 +257,7 @@ def card(*, thumb_html: str, title: str, url: str, abstract: str, venue: str,
 
     # "top 0.02%" reads; "0.0%" does not. Keep a digit that means something.
     top_pct = max(0.01, (1 - percentile) * 100)
-    pct_txt = ("—" if not percentile else
+    pct_txt = (", " if not percentile else
                f"{top_pct:.0f}%" if top_pct >= 10 else
                f"{top_pct:.1f}%" if top_pct >= 1 else
                f"{top_pct:.2f}%")
@@ -346,7 +346,7 @@ def thumb_src(rel: str) -> str:
 
 
 def placeholder(p: dict) -> str:
-    """No open PDF exists for most journal papers — Unpaywall confirms it, not
+    """No open PDF exists for most journal papers, Unpaywall confirms it, not
     a fetch failure. Draw the title page instead of apologising for it, so the
     card still reads as a paper."""
     e = html.escape
@@ -429,9 +429,9 @@ def render_queued(p: dict) -> str:
         data = "".join(f"<li>{html.escape(html.unescape(d))}</li>"
                        for d in (p.get("data_needed") or [])[:5])
         spec = (
-            "<h4>Must land on</h4><ul>" + (rows or "<li>—</li>") + "</ul>"
+            "<h4>Must land on</h4><ul>" + (rows or "<li>, </li>") + "</ul>"
             + ("<h4>Free data it needs</h4><ul>" + data + "</ul>" if data else "")
-            + f"<p class=\"note\">Effort <b>{p['tier']}</b> — {html.escape(p['tier_why'])}."
+            + f"<p class=\"note\">Effort <b>{p['tier']}</b>, {html.escape(p['tier_why'])}."
               f" Judged reproducible at confidence {p['confidence']:.2f}.</p>"
         )
 
@@ -439,7 +439,7 @@ def render_queued(p: dict) -> str:
         thumb_html=t, title=p["title"], url=p["url"],
         abstract=p["abstract"],
         spec=spec,
-        venue=p["primary_category"], authors=p["authors"] or "—",
+        venue=p["primary_category"], authors=p["authors"] or ", ",
         date=p["published"], tags=p["tags"], status=(label, cls),
         citations=int(p.get("citations") or 0),
         per_month=float(p.get("citations_per_month") or 0.0),
@@ -467,7 +467,7 @@ def render_spec(p: dict) -> str:
                         "/blob/main/COVERAGE.md")]
     return card(
         thumb_html=t, title=p["title"], url=p["url"], abstract=p["abstract"],
-        venue=p["primary_category"], authors=p["authors"] or "—",
+        venue=p["primary_category"], authors=p["authors"] or ", ",
         date=p["published"], tags=p["tags"], status=("spec", "queue"),
         citations=int(p.get("citations") or 0),
         per_month=float(p.get("citations_per_month") or 0.0),
@@ -484,7 +484,7 @@ PAGE = """<!doctype html>
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Quantitative Finance with Code — papers rebuilt and checked against their own numbers</title>
+<title>Quantitative Finance with Code, papers rebuilt and checked against their own numbers</title>
 <meta name="description" content="Quantitative finance papers rebuilt in code and scored against the numbers they printed. Every paper read in full, its data traced to a free source, its targets written down before anything was run.">
 <meta property="og:title" content="Quantitative Finance with Code">
 <meta property="og:description" content="Papers rebuilt in code and scored against the numbers they printed.">
@@ -580,7 +580,7 @@ h1 em{font-style:italic;color:var(--accent)}
 .side a.row.task:hover{border-left-color:var(--accent)}
 
 /* What a replication has to match. Folded away by default because it is a
-   reference, not a pitch — but it is the whole reason the card is here. */
+   reference, not a pitch, but it is the whole reason the card is here. */
 /* What the paper found, ahead of what it says about itself. An abstract is
    written to get published; this is written to be skimmed. */
 .finding{margin:8px 0 6px;font-size:14.5px;line-height:1.55;color:var(--ink);
@@ -835,7 +835,7 @@ function apply() {
   empty.hidden = shown > 0;
   note.hidden = !(shown > 0 && cited === 0 && sortBy !== 'date');
   if (!note.hidden) {
-    note.textContent = 'Nothing published in this window has been cited yet — ' +
+    note.textContent = 'Nothing published in this window has been cited yet, ' +
       'citations take a year or more to accrue, so these are ordered by date.';
   }
 }
@@ -960,7 +960,7 @@ def main() -> None:
     os.makedirs(out_dir, exist_ok=True)
     with open(os.path.join(out_dir, "index.html"), "w", encoding="utf-8", newline="\n") as fh:
         fh.write(page)
-    print(f"wrote docs/index.html ({len(page):,} bytes) — "
+    print(f"wrote docs/index.html ({len(page):,} bytes), "
           f"{len(cards)} cards, {len(reps)} with results")
 
 
