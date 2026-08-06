@@ -39,6 +39,8 @@ PAPERS = {
         "paper_url": "https://doi.org/10.1111/j.1540-6261.1993.tb04702.x",
         "impl_url": f"{REPO}/blob/main/alpha_archive/replications/jt1993.py",
         "run_cmd": "uv run python -m alpha_archive.replications.jt1993",
+        "claim": "Buying past winners and selling past losers earns about 1.3% a month, "
+                 "and the effect is large enough that markets cannot be fully efficient.",
         "summary": "Rank stocks on the return from twelve months ago to one month ago, "
                    "buy the top decile and sell the bottom, hold three months. Reported "
                    "about 1.3% per month over 1964–1989 and became one of the most cited "
@@ -54,6 +56,10 @@ PAPERS = {
         "paper_url": "https://arxiv.org/abs/2607.20093",
         "impl_url": f"{REPO}/blob/main/alpha_archive/replications/darmanin2026.py",
         "run_cmd": "uv run python -m alpha_archive.replications.darmanin2026",
+        "claim": "None of the five most popular retail trading signals delivers a usable "
+                 "edge. Moving-average crosses, RSI, candlestick patterns, volume indicators "
+                 "and Sell-in-May: four are refuted outright, two cannot be resolved, and "
+                 "not one is supported once costs and multiple testing are accounted for.",
         "summary": "Tests five widely promoted retail signal families against three "
                    "predeclared gates: statistical edge after multiplicity correction, "
                    "economic viability after costs, and survival under leverage. Reports "
@@ -118,6 +124,7 @@ def _head(key: str, status_label: str, status_cls: str, extra: str = "") -> str:
       <h3><a href="{m['paper_url']}">{e(m['title'])}</a></h3>
       <p class="authors">{e(m['authors'])}</p>
       <p class="venue">{e(m['venue'])}</p>
+      <p class="claim"><b>The claim.</b> {e(m['claim'])}</p>
       <p class="summary">{e(m['summary'])}</p>
       <p class="tags">{tags}</p>
       <p class="actions">
@@ -197,6 +204,22 @@ def render_families(rec: dict) -> str:
                  ("partial", "warn") if replicated else ("diverges", "bad")
     extra = f'<span class="count">{replicated}/{len(fams)} families reproduced</span>'
 
+    def match_cell(f):
+        """Judge both gates. Reporting only the statistical one would have shown
+        Sell-in-May as reproduced while its card-level verdict said otherwise."""
+        checks = [
+            ("statistical", f["sharpe_gate"] == f["paper_sharpe_gate"], f["sharpe_ci_overlaps"]),
+            ("economic", f["cagr_gate"] == f["paper_cagr_gate"], f["cagr_ci_overlaps"]),
+        ]
+        failed = [name for name, same, _ in checks if not same]
+        if not failed and all(ov for _, _, ov in checks):
+            return "<span class='status ok'>reproduced</span>"
+        if not failed:
+            return ("<span class='status warn'>gates agree</span>"
+                    "<br><span class='muted'>interval does not overlap</span>")
+        return (f"<span class='status bad'>differs</span>"
+                f"<br><span class='muted'>on the {failed[0]} gate</span>")
+
     rows = "".join(
         f"<tr><td>{e(f['label'])}<br><span class='muted'>{e(f['symbol'])}, "
         f"{f['obs']:,} obs (paper {f['paper_obs']:,})</span></td>"
@@ -204,7 +227,7 @@ def render_families(rec: dict) -> str:
         f"<span class='muted'>{e(f['paper_sharpe_gate'])}</span></td>"
         f"<td class='n'>[{f['sharpe_ci'][0]:.3f}, {f['sharpe_ci'][1]:.3f}]<br>"
         f"<span class='muted'>{e(f['sharpe_gate'])}</span></td>"
-        f"<td class='n'>{'yes' if f['sharpe_ci_overlaps'] else 'no'}</td></tr>"
+        f"<td class='n'>{match_cell(f)}</td></tr>"
         for f in fams
     )
     perts = "".join(
@@ -224,8 +247,19 @@ def render_families(rec: dict) -> str:
   <article class="paper" id="{e(key.lower())}">
     {_head(key, label, cls, extra)}
     <table class="results">
-      <thead><tr><th>Family</th><th class="n">Paper, Sharpe-gap 95% CI</th>
-      <th class="n">Ours</th><th class="n">Overlap</th></tr></thead>
+      <caption><b>Two separate questions.</b> The middle columns show the paper's
+      <i>statistical</i> gate and ours. That answers <i>does the rule work</i>, where
+      "inconclusive" is a legitimate finding rather than a failure. The last column answers
+      <i>did we reproduce their answer</i>, and reproducing an inconclusive result counts as
+      a success.<br><br>
+      <b>Why ranges rather than numbers.</b> Neither side reports a single figure. Each
+      reports an interval the true value probably sits in. A family counts as reproduced
+      only when the verdicts match <i>and</i> the intervals share ground, on both the
+      statistical and the economic gate. Two people can reach the same verdict from
+      different numbers; if the intervals never touch, we computed different things and the
+      agreement was luck.</caption>
+      <thead><tr><th>Family</th><th class="n">Paper, statistical gate</th>
+      <th class="n">Ours</th><th class="n">Both gates reproduced?</th></tr></thead>
       <tbody>{rows}</tbody>
     </table>
     <p class="note">Thresholds are the paper's own: a family is refuted when the interval's
@@ -303,6 +337,10 @@ h2{font-size:11px;letter-spacing:.22em;text-transform:uppercase;color:var(--soft
 .paper h3 a{color:var(--ink)}
 .authors{font-family:var(--serif);font-size:16px;margin:0 0 2px}
 .venue{color:var(--soft);font-size:13.5px;margin:0 0 12px}
+.claim{font-family:var(--serif);font-size:16.5px;line-height:1.58;margin:0 0 12px;
+  padding:11px 14px;background:#f4f6f8;border-left:3px solid var(--hair);max-width:56em}
+.claim b{font-family:var(--sans);font-size:10.5px;letter-spacing:.14em;
+  text-transform:uppercase;color:var(--soft);display:block;margin-bottom:4px}
 .summary{font-family:var(--serif);font-size:16px;line-height:1.62;margin:0 0 13px;max-width:56em}
 .tags{margin:0 0 14px;display:flex;gap:7px;flex-wrap:wrap}
 .tag{font-size:11px;color:var(--soft);border:1px solid var(--rule);border-radius:3px;
@@ -314,6 +352,9 @@ h2{font-size:11px;letter-spacing:.22em;text-transform:uppercase;color:var(--soft
 .actions code{font-family:var(--mono);font-size:12px;color:var(--soft)}
 
 table.results{width:100%;border-collapse:collapse;font-size:14px;margin:18px 0 0}
+table.results caption{caption-side:top;text-align:left;color:var(--soft);font-size:12.5px;
+  line-height:1.65;padding:0 0 14px;max-width:60em}
+table.results caption b{color:var(--ink)}
 table.results thead th{font-size:11px;letter-spacing:.1em;text-transform:uppercase;
   color:var(--soft);font-weight:600;text-align:left;padding:0 10px 7px;
   border-bottom:1px solid var(--ink)}
