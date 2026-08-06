@@ -1,14 +1,17 @@
 """Generate docs/index.html for Alpha Archive.
 
-Data-driven: every entry comes from a JSON record in data/replications/, so
-running a paper and rerunning this adds it. Nothing about a result is retyped
-by hand — a replication site that hand-copies its own numbers has the same
-credibility problem as a backtest that hand-picks its sample.
+Papers With Code, for finance — with the part they never did. They index a
+paper and link its repository. We run the code and report whether the claim
+survives, on data anyone can fetch, with the bar written down first.
 
-The look is deliberate: an arXiv listing (serif titles, dense citation lines,
-identifiers down the left) rendered on a CRT (scanlines, phosphor glow, and a
-high-score table where the verdicts go). Papers are the content; the arcade is
-the scoreboard, because "did this survive" really is a score.
+Data-driven: entries come from JSON in data/replications/, so running a paper
+and rerunning this adds it. No result is retyped by hand — a replication site
+that hand-copies its own numbers has the same credibility problem as a backtest
+that hand-picks its sample.
+
+The look is a journal, not an arcade: white page, serif titles, hairline rules,
+booktabs tables. Quant research is read by people who read journals, and a
+neon terminal reads as a toy no matter how good the statistics underneath are.
 
     uv run python tools/build_site.py
 """
@@ -23,42 +26,64 @@ import os
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 REPO = "https://github.com/RezaSoleymanifar/alpha-archive"
 
+# Metadata that does not belong in a result record.
 PAPERS = {
     "Mom12m": {
         "id": "AA-0001",
         "title": "Returns to Buying Winners and Selling Losers: "
                  "Implications for Stock Market Efficiency",
-        "journal": "The Journal of Finance, 48(1), 65–91",
+        "authors": "Narasimhan Jegadeesh, Sheridan Titman",
+        "venue": "The Journal of Finance, 48(1), 65–91",
+        "year": 1993,
+        "tags": ["cross-sectional", "momentum", "equities"],
         "paper_url": "https://doi.org/10.1111/j.1540-6261.1993.tb04702.x",
         "impl_url": f"{REPO}/blob/main/alpha_archive/replications/jt1993.py",
         "run_cmd": "uv run python -m alpha_archive.replications.jt1993",
-        "abstract": "Rank stocks on the return from twelve months ago to one month "
-                    "ago. Buy the top decile, sell the bottom, rebalance monthly. The "
-                    "original reports a strategy earning about 1% per month over "
-                    "1964–1989, which became one of the most cited results in finance.",
-        "class": "q-fin.PM",
+        "summary": "Rank stocks on the return from twelve months ago to one month ago, "
+                   "buy the top decile and sell the bottom, hold three months. Reported "
+                   "about 1.3% per month over 1964–1989 and became one of the most cited "
+                   "results in finance.",
+    },
+    "Darmanin2026": {
+        "id": "AA-0002",
+        "title": "Retail Trader's Ruin: An Anatomy of Popular Signal Failure",
+        "authors": "Adam Darmanin",
+        "venue": "arXiv:2607.20093 [q-fin.ST]",
+        "year": 2026,
+        "tags": ["technical-analysis", "market-timing", "multiple-testing"],
+        "paper_url": "https://arxiv.org/abs/2607.20093",
+        "impl_url": f"{REPO}/blob/main/alpha_archive/replications/darmanin2026.py",
+        "run_cmd": "uv run python -m alpha_archive.replications.darmanin2026",
+        "summary": "Tests five widely promoted retail signal families against three "
+                   "predeclared gates: statistical edge after multiplicity correction, "
+                   "economic viability after costs, and survival under leverage. Reports "
+                   "four refuted, two inconclusive, none supported.",
     },
 }
 
-# Arcade verdicts. The word people remember is the one in the scoreboard.
-TONES = [
-    ("unverified", "UNVERIFIED", "grey"),
-    ("survives", "PASS", "green"),
-    ("decayed", "DECAYED", "amber"),
-    ("positive", "WEAK", "amber"),
-    ("does not survive", "FAIL", "red"),
-    ("inconclusive", "NO READ", "grey"),
-]
+TONE = {
+    "REPLICATED": ("replicated", "ok"),
+    "DIVERGES": ("diverges", "bad"),
+    "UNVERIFIED": ("unverified", "warn"),
+    "FIXTURE_UNAVAILABLE": ("fixture unavailable", "warn"),
+}
 
 
-def tone(verdict: str) -> tuple[str, str]:
-    for key, label, cls in TONES:
-        if verdict.lower().startswith(key):
-            return label, cls
-    return "NO READ", "grey"
+def _tone(text: str) -> tuple[str, str]:
+    upper = (text or "").upper()
+    for key, pair in TONE.items():
+        if upper.startswith(key):
+            return pair
+    if "GATES MATCH" in upper:
+        return ("partial", "warn")
+    return ("unresolved", "warn")
 
 
-def load_results() -> list[dict]:
+# ------------------------------------------------------------------- loading
+
+
+def load_records() -> list[dict]:
+    """Normalize both record shapes into one list of renderable entries."""
     out = []
     for path in sorted(glob.glob(os.path.join(ROOT, "data", "replications", "*.json"))):
         with open(path, encoding="utf-8") as fh:
@@ -66,121 +91,162 @@ def load_results() -> list[dict]:
                 rec = json.load(fh)
             except json.JSONDecodeError:
                 continue
-        if "measured_monthly_pct" in rec and rec.get("paper") in PAPERS:
-            out.append(rec)
-    return out
+        key = rec.get("paper")
+        if key not in PAPERS:
+            continue
+        if "families" in rec:
+            out.append({"kind": "families", "key": key, "rec": rec})
+        elif "measured_monthly_pct" in rec:
+            out.append({"kind": "single", "key": key, "rec": rec})
+    order = {k: i for i, k in enumerate(PAPERS)}
+    return sorted(out, key=lambda e: order.get(e["key"], 99))
 
 
-def scoreboard(results: list[dict]) -> str:
-    rows = []
-    for r in results:
-        meta = PAPERS[r["paper"]]
-        label, cls = tone(r["verdict"])
-        corr = r.get("umd_correlation")
-        rows.append(
-            f'<tr><td class="rk">{meta["id"]}</td>'
-            f'<td class="nm"><a href="#{r["paper"].lower()}">{html.escape(r["paper"])}</a>'
-            f'<i>{html.escape(r["authors"])} {r["year"]}</i></td>'
-            f'<td class="num">{r["claimed_monthly_pct"]}%</td>'
-            f'<td class="num {"neg" if r["measured_monthly_pct"] < 0 else ""}">'
-            f'{r["measured_monthly_pct"]}%</td>'
-            f'<td class="num">{corr}</td>'
-            f'<td><span class="verdict {cls}">{label}</span></td></tr>'
-        )
-    return f"""<table class="board">
-      <thead><tr><th>ID</th><th>SIGNAL</th><th class="num">CLAIMED</th>
-      <th class="num">MEASURED</th><th class="num">SANITY r</th><th>STATUS</th></tr></thead>
-      <tbody>{''.join(rows)}</tbody>
-    </table>"""
+# ----------------------------------------------------------------- rendering
 
 
-def _verification_block(rec: dict) -> str:
-    """The criterion, and why it has or has not been met.
+def _head(key: str, status_label: str, status_cls: str, extra: str = "") -> str:
+    e, m = html.escape, PAPERS[key]
+    tags = "".join(f'<span class="tag">{e(t)}</span>' for t in m["tags"])
+    return f"""
+    <header class="phead">
+      <div class="pmeta">
+        <span class="pid">{m['id']}</span>
+        <span class="status {status_cls}">{e(status_label)}</span>
+        {extra}
+      </div>
+      <h3><a href="{m['paper_url']}">{e(m['title'])}</a></h3>
+      <p class="authors">{e(m['authors'])}</p>
+      <p class="venue">{e(m['venue'])}</p>
+      <p class="summary">{e(m['summary'])}</p>
+      <p class="tags">{tags}</p>
+      <p class="actions">
+        <a class="btn" href="{m['paper_url']}">Paper</a>
+        <a class="btn" href="{m['impl_url']}">Code</a>
+        <code>{e(m['run_cmd'])}</code>
+      </p>
+    </header>"""
 
-    Declared before the run in alpha_archive.verification, against a fixture we
-    did not produce. Rendering it here means a visitor can check that the bar
-    was not moved to fit the number.
-    """
+
+def render_single(rec: dict) -> str:
+    """A record with one measured statistic — the JT-1993 shape."""
     e = html.escape
-    v = rec.get("verification")
-    if not v:
-        return ""
-    crit = v.get("criterion", {})
-    return f"""<div class="verify {'ok' if v['status'] == 'VERIFIED' else 'no'}">
-        <b>VERIFICATION &middot; {e(v['status'])}</b>
-        <p class="vreason">{e(v['reason'])}</p>
-        <dl>
-          <dt>criterion</dt><dd>{e(str(crit.get('statistic','')))} &ge; {crit.get('threshold','')}</dd>
-          <dt>fixture</dt><dd>{e(str(crit.get('fixture','')))}</dd>
-          <dt>declared by</dt><dd>{e(str(crit.get('fixture_source','')))} &mdash; not by us</dd>
-          <dt>why that bar</dt><dd>{e(str(crit.get('rationale','')))}</dd>
-        </dl>
-      </div>"""
-
-
-def entry(rec: dict) -> str:
-    e = html.escape
-    meta = PAPERS[rec["paper"]]
-    label, cls = tone(rec["verdict"])
-    corr = rec.get("umd_correlation")
-    ok = corr is not None and corr >= 0.6
+    key = rec["paper"]
+    v = rec.get("verification", {})
+    label, cls = _tone(v.get("status", rec.get("verdict", "")))
 
     eras = "".join(
-        f"<tr><td>{e(k)}</td><td class='num'>{v['mean_monthly_pct']:+.3f}%</td>"
-        f"<td class='num'>{v['t_stat']:+.2f}</td><td class='num dim'>{v['months']}</td></tr>"
-        for k, v in rec.get("umd_by_era", {}).items()
+        f"<tr><td>{e(k)}</td><td class='n'>{x['mean_monthly_pct']:+.3f}%</td>"
+        f"<td class='n'>{x['t_stat']:+.2f}</td><td class='n muted'>{x['months']}</td></tr>"
+        for k, x in rec.get("umd_by_era", {}).items()
     )
     caveats = "".join(f"<li>{e(c)}</li>" for c in rec.get("caveats", []))
+    crit = v.get("criterion", {})
 
     return f"""
-  <article class="entry" id="{e(rec['paper'].lower())}">
-    <aside class="ident">
-      <span class="aid">{meta['id']}</span>
-      <span class="cls">{meta['class']}</span>
-      <span class="verdict {cls} big">{label}</span>
-      <span class="corr bad">r = {corr}</span>
-      <span class="corrnote">sanity check only &mdash; does not verify parity</span>
-    </aside>
+  <article class="paper" id="{e(key.lower())}">
+    {_head(key, label, cls)}
+    <table class="results">
+      <thead><tr><th>Quantity</th><th class="n">Paper</th><th class="n">Ours</th>
+      <th class="n">Difference</th></tr></thead>
+      <tbody>
+        <tr><td>Mean monthly return</td>
+          <td class="n">{rec['claimed_monthly_pct']}%</td>
+          <td class="n">{rec['measured_monthly_pct']}%</td>
+          <td class="n neg">{rec['gap_monthly_pct']}%</td></tr>
+        <tr><td><i>t</i>-statistic</td>
+          <td class="n">{rec['claimed_t_stat']}</td>
+          <td class="n">{rec['measured_t_stat']}</td><td class="n muted">—</td></tr>
+        <tr><td>Sample</td>
+          <td class="n">{e(rec['claimed_sample'])}</td>
+          <td class="n">{e(rec['measured_sample'])}</td>
+          <td class="n muted">{rec['months']} mo</td></tr>
+      </tbody>
+    </table>
 
-    <div class="body">
-      <h3><a href="{meta['paper_url']}">{e(meta['title'])}</a></h3>
-      <p class="byline">{e(rec['authors'])} &nbsp;({rec['year']})</p>
-      <p class="cite">{e(meta['journal'])}</p>
-      <p class="abstract"><b>Signal.</b> {e(meta['abstract'])}</p>
-
-      <div class="scores">
-        <div><span>CLAIMED</span><b>{rec['claimed_monthly_pct']}%</b>
-          <i>{e(rec['claimed_sample'])} &middot; t&nbsp;{rec['claimed_t_stat']}</i></div>
-        <div><span>MEASURED</span><b class="{'neg' if rec['measured_monthly_pct'] < 0 else ''}">
-          {rec['measured_monthly_pct']}%</b>
-          <i>{e(rec['measured_sample'])} &middot; t&nbsp;{rec['measured_t_stat']}</i></div>
-        <div><span>GAP</span><b>{rec['gap_monthly_pct']}%</b>
-          <i>{rec['months']} months &middot; {rec['universe_size']} names</i></div>
-      </div>
-
-      {_verification_block(rec)}
-
-      <details open>
-        <summary>Is it us, or did the effect decay?</summary>
-        <p class="note">Before blaming a paper, check whether the published factor still
-        works. If Ken French's own momentum series is flat over the same window, a weak
-        result here is agreement with the literature rather than a refutation.</p>
-        <table class="eras"><thead><tr><th>Ken French UMD</th><th class="num">mean</th>
-        <th class="num">t</th><th class="num">n</th></tr></thead><tbody>{eras}</tbody></table>
-      </details>
-
-      <details>
-        <summary>What this sample cannot tell you</summary>
-        <ul class="caveats">{caveats}</ul>
-      </details>
-
-      <p class="links">
-        <a href="{meta['paper_url']}">[ paper ]</a>
-        <a href="{meta['impl_url']}">[ our code ]</a>
-        <code>{e(meta['run_cmd'])}</code>
-        <span class="dim">rerun {e(rec['generated_at'][:10])}</span>
-      </p>
+    <div class="verify {cls}">
+      <b>Verification — {e(v.get('status', 'UNKNOWN'))}</b>
+      <p>{e(v.get('reason', ''))}</p>
+      <dl>
+        <dt>Criterion</dt><dd>{e(str(crit.get('statistic', '')))} ≥ {crit.get('threshold', '')}</dd>
+        <dt>Fixture</dt><dd>{e(str(crit.get('fixture', '')))}</dd>
+        <dt>Declared by</dt><dd>{e(str(crit.get('fixture_source', '')))}, not by us</dd>
+      </dl>
     </div>
+
+    <details><summary>Is it us, or did the effect decay?</summary>
+      <p class="note">Before blaming a paper, check whether the published factor still works.
+      If the reference factor is flat over the same window, a weak result here agrees with the
+      literature rather than refuting the paper.</p>
+      <table class="results"><thead><tr><th>Ken French UMD</th><th class="n">Mean</th>
+      <th class="n"><i>t</i></th><th class="n">Months</th></tr></thead>
+      <tbody>{eras}</tbody></table>
+    </details>
+    <details><summary>What this sample cannot tell you</summary>
+      <ul class="caveats">{caveats}</ul></details>
+  </article>"""
+
+
+def render_families(rec: dict) -> str:
+    """A record with one row per tested family — the Darmanin shape."""
+    e = html.escape
+    key = rec["paper"]
+    fams = rec.get("families", [])
+    replicated = sum(1 for f in fams if f["verdict"].startswith("REPLICATED"))
+    label, cls = ("replicated", "ok") if replicated == len(fams) and fams else \
+                 ("partial", "warn") if replicated else ("diverges", "bad")
+    extra = f'<span class="count">{replicated}/{len(fams)} families reproduced</span>'
+
+    rows = "".join(
+        f"<tr><td>{e(f['label'])}<br><span class='muted'>{e(f['symbol'])}, "
+        f"{f['obs']:,} obs (paper {f['paper_obs']:,})</span></td>"
+        f"<td class='n'>[{f['paper_sharpe_ci'][0]:.3f}, {f['paper_sharpe_ci'][1]:.3f}]<br>"
+        f"<span class='muted'>{e(f['paper_sharpe_gate'])}</span></td>"
+        f"<td class='n'>[{f['sharpe_ci'][0]:.3f}, {f['sharpe_ci'][1]:.3f}]<br>"
+        f"<span class='muted'>{e(f['sharpe_gate'])}</span></td>"
+        f"<td class='n'>{'yes' if f['sharpe_ci_overlaps'] else 'no'}</td></tr>"
+        for f in fams
+    )
+    perts = "".join(
+        f"<tr><td>{e(f['label'])}</td><td>" + ", ".join(
+            f"<code>{e(p['params'])}</code> {p['sharpe_gap']:+.3f}" for p in f["perturbations"]
+        ) + "</td></tr>" for f in fams if f.get("perturbations")
+    )
+    placebo = "".join(
+        f"<tr><td>{e(f['label'])}</td><td class='n'>{f['placebo']['mean_sharpe_gap']:+.3f}</td>"
+        f"<td class='n'>{f['placebo']['max_abs_sharpe_gap']:.3f}</td>"
+        f"<td class='n muted'>{f['placebo']['runs']}</td></tr>"
+        for f in fams if f.get("placebo")
+    )
+    skipped = "".join(f"<li>{e(x)}</li>" for x in rec.get("not_attempted", []))
+
+    return f"""
+  <article class="paper" id="{e(key.lower())}">
+    {_head(key, label, cls, extra)}
+    <table class="results">
+      <thead><tr><th>Family</th><th class="n">Paper, Sharpe-gap 95% CI</th>
+      <th class="n">Ours</th><th class="n">Overlap</th></tr></thead>
+      <tbody>{rows}</tbody>
+    </table>
+    <p class="note">Thresholds are the paper's own: a family is refuted when the interval's
+    upper bound falls below δ<sub>S</sub> = {rec['delta_sharpe']}, never on bare
+    non-significance. Costs are {rec['cost_bps_per_leg']} bps per leg. Intervals come from a
+    stationary bootstrap, {rec['bootstrap']['draws']:,} draws, mean block
+    {rec['bootstrap']['mean_block']} days.</p>
+
+    <details open><summary>Did the authors' parameter choices carry the result?</summary>
+      <p class="note">Every rule embeds free choices. Re-running across them shows whether a
+      finding lives only at the parameters that were reported.</p>
+      <table class="results"><tbody>{perts}</tbody></table></details>
+
+    <details><summary>Placebo: the same machinery on coin flips</summary>
+      <p class="note">Random signals pushed through the identical pipeline. Whatever appears
+      here is manufactured by the method, not found in the market.</p>
+      <table class="results"><thead><tr><th>Family</th><th class="n">Mean gap</th>
+      <th class="n">Max |gap|</th><th class="n">Runs</th></tr></thead>
+      <tbody>{placebo}</tbody></table></details>
+
+    <details><summary>Not attempted</summary><ul class="caveats">{skipped}</ul></details>
   </article>"""
 
 
@@ -189,203 +255,149 @@ PAGE = """<!doctype html>
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Alpha Archive — every quantitative finance paper, replicated</title>
-<meta name="description" content="Published trading signals re-run on point-in-time data with costs charged, each validated against a published factor before the paper is judged.">
-<meta property="og:title" content="Alpha Archive — every quantitative finance paper, replicated">
-<meta property="og:description" content="Published trading signals, re-run on point-in-time data with honest costs.">
+<title>Alpha Archive — finance papers, with code that we actually run</title>
+<meta name="description" content="Papers with code, for finance. Published trading signals re-implemented on point-in-time data with costs charged, judged against a bar declared before the run.">
+<meta property="og:title" content="Alpha Archive — finance papers, with code that we actually run">
+<meta property="og:description" content="Papers with code, for finance. We run the code and report whether the claim survives.">
 <meta property="og:type" content="website">
-<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='6' fill='%23070a0e'/><path d='M7 24 L16 8 L25 24' stroke='%2335e08a' stroke-width='2.8' fill='none' stroke-linecap='round' stroke-linejoin='round'/><path d='M11 19 H21' stroke='%2335e08a' stroke-width='2.8' stroke-linecap='round'/></svg>">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='5' fill='%23111'/><path d='M8 23 L16 9 L24 23' stroke='%23fff' stroke-width='2.6' fill='none' stroke-linecap='round' stroke-linejoin='round'/><path d='M11.6 18.4 H20.4' stroke='%23fff' stroke-width='2.6' stroke-linecap='round'/></svg>">
 <style>
 :root{
-  --bg:#070a0e;--panel:#0b1017;--line:#1b2733;--ink:#dfe9e3;--dim:#5d7789;
-  --green:#35e08a;--red:#ff6b5e;--amber:#ffc46b;--blue:#7fb3ff;
-  --mono:ui-monospace,"SF Mono","Cascadia Mono",Menlo,Consolas,monospace;
+  --page:#f7f7f5; --card:#ffffff; --ink:#16191d; --soft:#5b6570; --rule:#e0e2e0;
+  --hair:#c9ccc9; --ok:#136f42; --warn:#8a5a00; --bad:#a02219; --link:#0b4f9e;
   --serif:"Iowan Old Style","Palatino Linotype",Palatino,Georgia,"Times New Roman",serif;
+  --sans:-apple-system,BlinkMacSystemFont,"Segoe UI",Inter,Helvetica,Arial,sans-serif;
+  --mono:ui-monospace,"SF Mono","Cascadia Mono",Menlo,Consolas,monospace;
 }
 *{box-sizing:border-box}
-body{
-  margin:0;background:var(--bg);color:var(--ink);font-family:var(--mono);
-  font-size:15.5px;line-height:1.6;
-}
-/* CRT scanlines — the arcade half, kept faint enough to read through. */
-body::before{
-  content:"";position:fixed;inset:0;pointer-events:none;z-index:9;
-  background:repeating-linear-gradient(180deg,rgba(0,0,0,.22) 0 1px,transparent 1px 3px);
-  mix-blend-mode:multiply;
-}
-body::after{
-  content:"";position:fixed;inset:0;pointer-events:none;z-index:8;
-  background:radial-gradient(120% 90% at 50% 40%,transparent 55%,rgba(0,0,0,.55) 100%);
-}
-.wrap{max-width:1020px;margin:0 auto;padding:0 20px;position:relative;z-index:1}
-a{color:var(--green);text-decoration:none}
+body{margin:0;background:var(--page);color:var(--ink);font-family:var(--sans);
+  font-size:16px;line-height:1.6;-webkit-font-smoothing:antialiased}
+.wrap{max-width:940px;margin:0 auto;padding:0 22px}
+a{color:var(--link);text-decoration:none}
 a:hover{text-decoration:underline}
 
-/* ------------------------------------------------------------- masthead */
-.masthead{border-bottom:2px solid var(--green);padding:34px 0 16px;margin-bottom:6px}
-.brand{display:flex;align-items:baseline;gap:14px;flex-wrap:wrap}
-h1{
-  font-size:clamp(28px,5.6vw,46px);margin:0;letter-spacing:.14em;font-weight:700;
-  color:var(--green);text-shadow:0 0 14px rgba(53,224,138,.45),0 0 34px rgba(53,224,138,.18);
-}
-.brand .sub{color:var(--dim);font-size:11.5px;letter-spacing:.3em;text-transform:uppercase}
-.strap{font-family:var(--serif);font-size:clamp(16px,2.7vw,21px);line-height:1.45;
-  margin:14px 0 0;max-width:40em;color:var(--ink)}
-.intro{color:var(--dim);font-size:13.5px;max-width:52em;margin:10px 0 0;line-height:1.7}
+.masthead{border-bottom:1px solid var(--hair);padding:44px 0 26px}
+h1{font-family:var(--serif);font-size:clamp(30px,5vw,44px);margin:0 0 4px;
+  letter-spacing:-.01em;font-weight:600}
+.kicker{font-size:11px;letter-spacing:.22em;text-transform:uppercase;color:var(--soft);
+  margin:0 0 14px}
+.lede{font-family:var(--serif);font-size:clamp(17px,2.5vw,21px);line-height:1.5;
+  margin:0 0 14px;max-width:36em}
+.sub{color:var(--soft);font-size:14.5px;max-width:44em;margin:0 0 8px;line-height:1.68}
 
-h2{font-size:11.5px;letter-spacing:.3em;color:var(--dim);text-transform:uppercase;
-   margin:46px 0 14px;font-weight:400;display:flex;align-items:center;gap:12px}
-h2::after{content:"";flex:1;height:1px;background:var(--line)}
+h2{font-size:11px;letter-spacing:.22em;text-transform:uppercase;color:var(--soft);
+  margin:44px 0 14px;font-weight:600;padding-bottom:7px;border-bottom:1px solid var(--rule)}
 
-/* ----------------------------------------------------------- scoreboard */
-.board{width:100%;border-collapse:collapse;font-size:13px;
-  border:1px solid var(--line);background:var(--panel)}
-.board th{
-  background:#080d13;color:var(--dim);font-size:10px;letter-spacing:.22em;
-  padding:10px 12px;text-align:left;border-bottom:1px solid var(--line);font-weight:400;
-}
-.board td{padding:11px 12px;border-bottom:1px solid var(--line);vertical-align:middle}
-.board tr:last-child td{border-bottom:none}
-.board .rk{color:var(--dim);font-size:11.5px;letter-spacing:.1em;white-space:nowrap}
-.board .nm{font-weight:700}
-.board .nm i{display:block;color:var(--dim);font-weight:400;font-style:normal;font-size:11.5px}
-.num{text-align:right}
-td.num{font-weight:700;white-space:nowrap}
-td.num.neg{color:var(--red)}
-.verdict{
-  display:inline-block;padding:3px 10px;border-radius:3px;border:1px solid;
-  font-size:10.5px;letter-spacing:.2em;font-weight:700;white-space:nowrap;
-}
-.verdict.big{font-size:12px;padding:6px 12px;text-align:center}
-.verdict.green{color:var(--green);border-color:var(--green);background:rgba(53,224,138,.1);
-  text-shadow:0 0 10px rgba(53,224,138,.5)}
-.verdict.amber{color:var(--amber);border-color:var(--amber);background:rgba(255,196,107,.1);
-  text-shadow:0 0 10px rgba(255,196,107,.45)}
-.verdict.red{color:var(--red);border-color:var(--red);background:rgba(255,107,94,.1);
-  text-shadow:0 0 10px rgba(255,107,94,.45)}
-.verdict.grey{color:var(--dim);border-color:var(--line)}
+.paper{background:var(--card);border:1px solid var(--rule);border-radius:6px;
+  padding:26px 28px;margin-bottom:20px}
+.pmeta{display:flex;align-items:center;gap:11px;flex-wrap:wrap;margin-bottom:11px}
+.pid{font-family:var(--mono);font-size:11.5px;color:var(--soft);letter-spacing:.06em}
+.status{font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;font-weight:700;
+  padding:3px 9px;border-radius:3px;border:1px solid}
+.status.ok{color:var(--ok);border-color:#b7dcc7;background:#eef7f2}
+.status.warn{color:var(--warn);border-color:#e6d3a8;background:#fdf7ea}
+.status.bad{color:var(--bad);border-color:#e8c0bb;background:#fdf0ee}
+.count{font-size:12px;color:var(--soft)}
+.paper h3{font-family:var(--serif);font-size:clamp(19px,2.7vw,24px);line-height:1.3;
+  margin:0 0 6px;font-weight:600}
+.paper h3 a{color:var(--ink)}
+.authors{font-family:var(--serif);font-size:16px;margin:0 0 2px}
+.venue{color:var(--soft);font-size:13.5px;margin:0 0 12px}
+.summary{font-family:var(--serif);font-size:16px;line-height:1.62;margin:0 0 13px;max-width:56em}
+.tags{margin:0 0 14px;display:flex;gap:7px;flex-wrap:wrap}
+.tag{font-size:11px;color:var(--soft);border:1px solid var(--rule);border-radius:3px;
+  padding:2px 8px;background:#fafaf8}
+.actions{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin:0 0 4px}
+.btn{font-size:13px;font-weight:600;border:1px solid var(--hair);border-radius:4px;
+  padding:5px 13px;color:var(--ink);background:#fafaf8}
+.btn:hover{background:#f0f0ec;text-decoration:none}
+.actions code{font-family:var(--mono);font-size:12px;color:var(--soft)}
 
-/* --------------------------------------------------------------- entries */
-.entry{display:grid;grid-template-columns:1fr;gap:18px;padding:24px 0;
-  border-bottom:1px solid var(--line)}
-@media(min-width:760px){.entry{grid-template-columns:132px 1fr;gap:26px}}
-.ident{display:flex;flex-direction:column;gap:7px;align-items:flex-start}
-.aid{color:var(--green);font-size:12.5px;letter-spacing:.14em;font-weight:700}
-.cls{color:var(--dim);font-size:10.5px;letter-spacing:.14em}
-.corr{font-size:19px;font-weight:700;margin-top:4px}
-.corr.ok{color:var(--green)}
-.corr.bad{color:var(--red)}
-.corrnote{color:var(--dim);font-size:10px;letter-spacing:.06em;line-height:1.35}
+table.results{width:100%;border-collapse:collapse;font-size:14px;margin:18px 0 0}
+table.results thead th{font-size:11px;letter-spacing:.1em;text-transform:uppercase;
+  color:var(--soft);font-weight:600;text-align:left;padding:0 10px 7px;
+  border-bottom:1px solid var(--ink)}
+table.results tbody td{padding:10px;border-bottom:1px solid var(--rule);vertical-align:top}
+table.results tbody tr:last-child td{border-bottom:1px solid var(--ink)}
+.n{text-align:right;font-family:var(--mono);font-size:13px;white-space:nowrap}
+th.n{text-align:right}
+.muted{color:var(--soft);font-weight:400;font-size:12px}
+.neg{color:var(--bad)}
 
-.body h3{font-family:var(--serif);font-size:clamp(19px,3vw,25px);line-height:1.28;
-  margin:0 0 7px;font-weight:600}
-.body h3 a{color:var(--ink)}
-.byline{font-family:var(--serif);font-size:16px;margin:0 0 3px;color:var(--ink)}
-.cite{color:var(--dim);font-size:12.5px;margin:0 0 13px}
-.abstract{font-family:var(--serif);font-size:15.5px;line-height:1.62;margin:0 0 16px;
-  color:var(--ink);max-width:58em}
-.abstract b{color:var(--green);font-family:var(--mono);font-size:12px;letter-spacing:.1em}
+.verify{border:1px solid var(--rule);border-left:3px solid var(--hair);border-radius:4px;
+  padding:14px 16px;margin-top:18px;background:#fbfbf9}
+.verify.warn{border-left-color:#d9b96a}
+.verify.bad{border-left-color:#c98079}
+.verify.ok{border-left-color:#79b795}
+.verify b{display:block;font-size:11px;letter-spacing:.14em;text-transform:uppercase;
+  color:var(--soft);margin-bottom:7px}
+.verify p{margin:0 0 11px;font-size:13.5px;line-height:1.6}
+.verify dl{margin:0;display:grid;grid-template-columns:1fr;gap:1px 16px;font-size:12.5px}
+@media(min-width:640px){.verify dl{grid-template-columns:96px 1fr}}
+.verify dt{color:var(--soft);font-weight:600}
+.verify dd{margin:0 0 6px;line-height:1.55}
 
-.scores{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:var(--line);
-  border:1px solid var(--line);margin-bottom:15px}
-@media(min-width:640px){.scores{grid-template-columns:repeat(3,1fr)}}
-.scores div{background:var(--panel);padding:12px 13px}
-.scores span{display:block;color:var(--dim);font-size:9.5px;letter-spacing:.22em}
-.scores b{display:block;font-size:26px;line-height:1.2;color:var(--green);margin-top:3px;
-  text-shadow:0 0 12px rgba(53,224,138,.35)}
-.scores b.neg{color:var(--red);text-shadow:0 0 12px rgba(255,107,94,.35)}
-.scores i{display:block;color:var(--dim);font-size:10.5px;font-style:normal;margin-top:4px}
+details{margin-top:16px;border-top:1px solid var(--rule);padding-top:12px}
+summary{cursor:pointer;font-size:13.5px;font-weight:600}
+.note{color:var(--soft);font-size:13px;line-height:1.65;margin:10px 0 0;max-width:58em}
+.caveats{margin:10px 0 0;padding-left:19px;color:var(--soft);font-size:13px;line-height:1.7}
 
-.verify{border:1px solid var(--line);border-left:3px solid var(--dim);padding:12px 14px;
-  margin:0 0 15px;background:rgba(255,255,255,.015)}
-.verify.no{border-left-color:var(--red)}
-.verify.ok{border-left-color:var(--green)}
-.verify b{display:block;color:var(--red);letter-spacing:.2em;font-size:11px;margin-bottom:7px}
-.verify.ok b{color:var(--green)}
-.vreason{margin:0 0 10px;font-size:13px;line-height:1.6;color:var(--ink)}
-.verify dl{margin:0;display:grid;grid-template-columns:1fr;gap:2px 14px;font-size:12px}
-@media(min-width:640px){.verify dl{grid-template-columns:110px 1fr}}
-.verify dt{color:var(--dim);letter-spacing:.12em;font-size:10px;padding-top:3px}
-.verify dd{margin:0 0 6px;color:var(--ink);line-height:1.55}
-
-details{border-top:1px solid var(--line);padding-top:11px;margin-top:11px}
-summary{cursor:pointer;font-size:13px;font-weight:700;color:var(--ink)}
-summary::marker{color:var(--green)}
-.note{color:var(--dim);font-size:12.5px;line-height:1.65;margin:9px 0 11px;max-width:56em}
-.eras{width:100%;border-collapse:collapse;font-size:12.5px}
-.eras th,.eras td{text-align:left;padding:6px 10px;border-bottom:1px solid var(--line)}
-.eras th{color:var(--dim);font-size:10px;letter-spacing:.14em;font-weight:400}
-.eras td.num{color:var(--ink)}
-.eras td.dim{color:var(--dim);font-weight:400}
-.caveats{margin:9px 0 0;padding-left:17px;color:var(--dim);font-size:12.5px;line-height:1.65}
-.caveats li{margin-bottom:5px}
-.links{margin:15px 0 0;font-size:12px;display:flex;flex-wrap:wrap;gap:14px;align-items:center}
-.links code{color:var(--green);opacity:.8}
-.dim{color:var(--dim)}
-
-/* ---------------------------------------------------------------- panels */
-.how{display:grid;grid-template-columns:1fr;gap:12px}
+.how{display:grid;grid-template-columns:1fr;gap:14px}
 @media(min-width:720px){.how{grid-template-columns:1fr 1fr 1fr}}
-.step{background:var(--panel);border:1px solid var(--line);padding:16px}
-.step b{display:block;color:var(--green);font-size:11px;letter-spacing:.18em;margin-bottom:7px}
-.step p{margin:0;color:var(--dim);font-size:12.5px;line-height:1.65}
-footer{padding:48px 0 66px;color:var(--dim);font-size:12.5px;line-height:1.75}
-footer .flinks{display:flex;flex-wrap:wrap;gap:18px;margin-bottom:13px}
+.step{background:var(--card);border:1px solid var(--rule);border-radius:6px;padding:18px}
+.step b{display:block;font-size:14px;margin-bottom:7px;font-family:var(--serif)}
+.step p{margin:0;color:var(--soft);font-size:13.5px;line-height:1.65}
+footer{padding:44px 0 64px;color:var(--soft);font-size:13px;line-height:1.75;
+  border-top:1px solid var(--rule);margin-top:44px}
+footer .flinks{display:flex;gap:18px;flex-wrap:wrap;margin-bottom:12px}
 </style>
 </head>
 <body>
 <div class="wrap">
 
   <div class="masthead">
-    <div class="brand">
-      <h1>ALPHA ARCHIVE</h1>
-      <span class="sub">replication registry</span>
-    </div>
-    <p class="strap">Every quantitative finance paper, re-run on point-in-time data with
-    costs charged — and validated against a published factor <i>before</i> the paper is
-    judged.</p>
-    <p class="intro">Roughly two thirds of published anomalies fail to replicate. Almost
-    nobody re-checks them, and those who do publish once and stop. This runs continuously,
-    shows its working, and states what each sample cannot cover.</p>
-    <p class="intro"><b style="color:var(--green)">A replication is only marked verified when it
-    clears a threshold written down before the run, measured against a fixture we did not
-    produce.</b> If the fixture cannot be fetched, the status is unverified — not a pass with
-    an asterisk. There is no "partially validated" tier, because that is the phrase you reach
-    for when you want credit you have not earned. Every figure below comes from code in the
-    repository, from data anyone can fetch.</p>
+    <p class="kicker">Alpha Archive</p>
+    <h1>Finance papers, with code that we actually run.</h1>
+    <p class="lede">Papers With Code indexes a paper and links its repository. We take the
+    next step: re-implement the signal, run it on point-in-time data with costs charged, and
+    report whether the claim survives.</p>
+    <p class="sub">Roughly two thirds of published anomalies fail to replicate, and almost
+    nobody re-checks them. A replication is marked verified only when it clears a threshold
+    written down before the run, measured against something we did not produce. If that
+    reference cannot be obtained, the status is unverified — not a pass with an asterisk, and
+    never a "partially validated" tier. Every figure below is produced by code in the
+    repository from data anyone can fetch.</p>
   </div>
-
-  <h2>Scoreboard</h2>
-  __BOARD__
 
   <h2>Replications</h2>
   __ENTRIES__
 
-  <h2>How a replication works</h2>
+  <h2>Method</h2>
   <div class="how">
-    <div class="step"><b>01 &middot; DECLARE THE BAR</b><p>The criterion is written down before
-    the run, against a fixture we did not produce, and frozen. The first version of this failed
-    that test: the bar was set at 0.6 after 0.9 turned out to be unreachable. Moving a threshold
-    to fit a result is the thing this project exists to catch.</p></div>
-    <div class="step"><b>02 &middot; SCORE THE CLAIM</b><p>The paper's own numbers come from
-    Chen &amp; Zimmermann's Open Source Asset Pricing, not from memory, so the bar is the
-    published one and cannot drift to suit the result.</p></div>
-    <div class="step"><b>03 &middot; DECAY OR BUG</b><p>If the published factor is also flat
-    over our window, a weak result is agreement with the literature. That distinction is the
-    difference between a finding and a headline.</p></div>
+    <div class="step"><b>Declare the bar first</b><p>The criterion is written down before the
+    run and frozen. An earlier version of this failed that test: the threshold was set at 0.6
+    after 0.9 proved unreachable. Moving a bar to fit a result is the thing this project
+    exists to catch.</p></div>
+    <div class="step"><b>Perturb what the authors chose</b><p>Every rule embeds free choices —
+    lookback, holding period, breakpoints. Re-running across them shows whether a finding lives
+    only at the reported parameters. This needs no external reference, which is why it works
+    for papers nobody has replicated.</p></div>
+    <div class="step"><b>Say what the sample cannot cover</b><p>Free data means survivor-biased
+    universes and short accounting history. Those limits are printed with every result, because
+    a gap against a claim is often evidence about our sample rather than about the paper.</p></div>
   </div>
 
   <h2>Built on</h2>
   <div class="how">
-    <div class="step"><b>VINTAGE</b><p>The data layer. Point-in-time prices, filings and
-    factors from the SEC, the St. Louis Fed and Dartmouth, every value carrying the date it
-    became public. <a href="https://github.com/RezaSoleymanifar/vintage">Repo</a> &middot;
+    <div class="step"><b>Vintage</b><p>The data layer. Point-in-time prices, filings and factors
+    from the SEC, the St. Louis Fed and Dartmouth, each value carrying the date it became public.
+    <a href="https://github.com/RezaSoleymanifar/vintage">Repository</a> ·
     <a href="https://rezasoleymanifar.github.io/vintage/">Site</a></p></div>
-    <div class="step"><b>OPEN SOURCE ASSET PRICING</b><p>Chen &amp; Zimmermann's documented
-    scoreboard of 331 published predictors — the claimed return and t-statistic for each.
+    <div class="step"><b>Open Source Asset Pricing</b><p>Chen &amp; Zimmermann's documented
+    scoreboard of 331 published predictors, with the claimed return and t-statistic for each.
     <a href="https://www.openassetpricing.com/">openassetpricing.com</a></p></div>
-    <div class="step"><b>KEN FRENCH DATA LIBRARY</b><p>Dartmouth's published factors, used as
-    the yardstick that validates an implementation before it is trusted.</p></div>
+    <div class="step"><b>Ken French Data Library</b><p>Dartmouth's published factors, used as a
+    reference series when a like-for-like construction exists.</p></div>
   </div>
 
   <footer>
@@ -396,7 +408,8 @@ footer .flinks{display:flex;flex-wrap:wrap;gap:18px;margin-bottom:13px}
     </div>
     <p>MIT licensed. Alpha Archive redistributes no data and reproduces no paper text — it
     links to originals and publishes its own code and results. Not affiliated with arXiv,
-    Cornell University, or any cited author. Nothing here is investment advice.</p>
+    Cornell University, Papers With Code, or any cited author. Nothing here is investment
+    advice.</p>
   </footer>
 
 </div>
@@ -406,22 +419,22 @@ footer .flinks{display:flex;flex-wrap:wrap;gap:18px;margin-bottom:13px}
 
 
 def main() -> None:
-    results = load_results()
-    if not results:
+    records = load_records()
+    if not records:
         raise SystemExit("no replication records found in data/replications/")
 
-    page = (
-        PAGE.replace("__BOARD__", scoreboard(results))
-        .replace("__ENTRIES__", "\n".join(entry(r) for r in results))
-        .replace("__REPO__", REPO)
+    entries = "\n".join(
+        render_families(e["rec"]) if e["kind"] == "families" else render_single(e["rec"])
+        for e in records
     )
+    page = PAGE.replace("__ENTRIES__", entries).replace("__REPO__", REPO)
 
     out_dir = os.path.join(ROOT, "docs")
     os.makedirs(out_dir, exist_ok=True)
     out = os.path.join(out_dir, "index.html")
     with open(out, "w", encoding="utf-8", newline="\n") as fh:
         fh.write(page)
-    print(f"wrote {out} ({len(page):,} bytes, {len(results)} replication(s))")
+    print(f"wrote {out} ({len(page):,} bytes, {len(records)} paper(s))")
 
 
 if __name__ == "__main__":
