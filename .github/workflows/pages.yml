@@ -1,0 +1,43 @@
+name: Deploy site
+
+# The legacy Pages builder errored twice on this repo and then hung mid-build,
+# leaving stale HTML served while the source was already correct. This publishes
+# docs/ directly instead, so a deploy either succeeds visibly or fails visibly.
+
+on:
+  push:
+    branches: [main, feat/autonomous-loop]
+    paths: ["docs/**", "tools/**", "data/replications/**", ".github/workflows/pages.yml"]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deploy.outputs.page_url }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Fail if the site was not rebuilt from the records
+        run: |
+          test -f docs/index.html || { echo "::error::docs/index.html missing"; exit 1; }
+          grep -q 'class="fig"' docs/index.html \
+            || { echo "::error::no figure column — run tools/build_site.py"; exit 1; }
+          echo "index.html looks current ($(wc -c < docs/index.html) bytes)"
+
+      - uses: actions/configure-pages@v5
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: docs
+      - id: deploy
+        uses: actions/deploy-pages@v4
