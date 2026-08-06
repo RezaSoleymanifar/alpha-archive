@@ -19,7 +19,7 @@ def _shell(body: str, caption: str) -> str:
     return (
         f'<svg viewBox="0 0 {W} {H}" width="{W}" height="{H}" role="img" '
         f'aria-label="{html.escape(caption)}" preserveAspectRatio="xMidYMid meet">'
-        f'<rect width="{W}" height="{H}" fill="#fff"/>{body}</svg>'
+        f'<rect width="{W}" height="{H}" fill="none"/>{body}</svg>'
     )
 
 
@@ -88,7 +88,7 @@ def intervals(rows: list[tuple[str, tuple[float, float], tuple[float, float]]]) 
 
     y = 36
     for name, paper, ours in rows:
-        parts.append(_label(PAD, y, _clip(name, 24), 8, "#111418", weight=700))
+        parts.append(_label(PAD, y, _clip(name, 24), 8, "currentColor", weight=700))
         y += 9
         for (a, b), colour in ((paper, "#61707e"), (ours, "#0b5fd0")):
             x1, x2 = px(a), px(b)

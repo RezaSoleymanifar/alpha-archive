@@ -23,3 +23,7 @@ outputs/
 .DS_Store
 
 uv.lock
+
+.screens/
+__pycache__/
+*.pyc

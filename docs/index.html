@@ -4,163 +4,534 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Alpha Archive — finance papers with code, actually run</title>
-<meta name="description" content="An index of finance papers re-implemented and re-run on point-in-time data. Each entry shows what the paper claimed, what we measured, and whether it reproduced.">
+<meta name="description" content="An index of quantitative finance papers, re-implemented and re-run on point-in-time data. What the paper claimed, what we measured, and whether it reproduced.">
 <meta property="og:title" content="Alpha Archive">
 <meta property="og:description" content="Finance papers with code, actually run.">
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='5' fill='%23111'/><path d='M8 23 L16 9 L24 23' stroke='%23fff' stroke-width='2.6' fill='none' stroke-linecap='round' stroke-linejoin='round'/><path d='M11.6 18.4 H20.4' stroke='%23fff' stroke-width='2.6' stroke-linecap='round'/></svg>">
 <style>
-:root{--bg:#f6f7f9;--card:#fff;--ink:#111418;--soft:#61707e;--line:#e3e7eb;
-  --ok:#0f7a45;--okbg:#e8f6ee;--warn:#8a5b00;--warnbg:#fdf5e6;--bad:#a5231a;--badbg:#fdeeec;
-  --link:#0b5fd0;
+:root{
+  --page:#fff; --card:#fff; --ink:#12181f; --soft:#65758a; --line:#e6e9ef; --chip:#f2f4f7;
+  --ok:#0f7a45; --okbg:#e8f6ee; --okbd:#bfe3ce;
+  --warn:#8a5b00; --warnbg:#fdf5e6; --warnbd:#eddcb6;
+  --bad:#a5231a; --badbg:#fdeeec; --badbd:#eec7c2;
+  --accent:#e06c2b;
   --sans:-apple-system,BlinkMacSystemFont,"Segoe UI",Inter,Roboto,Helvetica,Arial,sans-serif;
   --mono:ui-monospace,"SF Mono","Cascadia Mono",Menlo,Consolas,monospace}
+@media (prefers-color-scheme: dark){:root{
+  --page:#0b0f14; --card:#11161d; --ink:#e8edf3; --soft:#8b9bb0; --line:#212a35; --chip:#1a222c;
+  --ok:#4ade8a; --okbg:#12241b; --okbd:#20452f;
+  --warn:#e3a94a; --warnbg:#241d10; --warnbd:#463a1c;
+  --bad:#f2837a; --badbg:#251413; --badbd:#4a2320;
+  --accent:#ff9a5c}}
 *{box-sizing:border-box}
-body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--sans);font-size:15px;
+body{margin:0;background:var(--page);color:var(--ink);font-family:var(--sans);font-size:15px;
   line-height:1.55;-webkit-font-smoothing:antialiased}
-a{color:var(--link);text-decoration:none}
+a{color:inherit;text-decoration:none}
 a:hover{text-decoration:underline}
-.wrap{max-width:1000px;margin:0 auto;padding:0 20px}
+.wrap{max-width:1560px;margin:0 auto;padding:0 32px}
 
-header.site{background:var(--card);border-bottom:1px solid var(--line);position:sticky;top:0;z-index:5}
-.bar{display:flex;align-items:center;gap:16px;padding:13px 0;flex-wrap:wrap}
-.logo{font-weight:700;font-size:17px;letter-spacing:-.01em;color:var(--ink);white-space:nowrap}
-.logo span{color:var(--soft);font-weight:400;font-size:13px;margin-left:8px}
-#q{flex:1;min-width:180px;font:inherit;font-size:14px;padding:7px 12px;border:1px solid var(--line);
-  border-radius:6px;background:#fbfcfd}
-#q:focus{outline:2px solid #cfe0f8;border-color:#8fb6ec}
-.filters{display:flex;gap:6px;flex-wrap:wrap}
-.f{font-size:12.5px;padding:5px 11px;border:1px solid var(--line);border-radius:20px;
-  background:#fbfcfd;color:var(--soft);cursor:pointer}
-.f.on{background:var(--ink);border-color:var(--ink);color:#fff}
+.hero{padding:34px 0 18px}
+.heroTop{display:flex;align-items:flex-start;gap:28px;flex-wrap:wrap}
+h1{font-size:34px;font-weight:800;letter-spacing:-.02em;margin:0}
+.tagline{color:var(--soft);font-size:15px;margin:5px 0 0}
+.tagline b{color:var(--ink);font-weight:600}
+.searchWrap{flex:1;min-width:280px;max-width:520px;margin-top:4px}
+#q{width:100%;font:inherit;font-size:15px;padding:11px 16px;border:1px solid var(--line);
+  border-radius:999px;background:var(--card);color:var(--ink)}
+#q::placeholder{color:var(--soft)}
+#q:focus{outline:none;border-color:var(--soft)}
+.tabs{display:flex;gap:4px;align-items:center;margin-top:6px;flex-wrap:wrap}
+.tab{font-size:14px;padding:7px 14px;border-radius:999px;border:1px solid transparent;
+  background:transparent;color:var(--soft);cursor:pointer;font-weight:500;font-family:inherit}
+.tab:hover{color:var(--ink)}
+.tab.on{background:var(--chip);color:var(--ink);font-weight:600}
+.tab.cta{background:var(--warnbg);color:var(--accent);border-color:var(--warnbd);
+  font-weight:700;cursor:default}
 
-.count{color:var(--soft);font-size:13px;padding:18px 0 10px}
+.count{color:var(--soft);font-size:14px;padding:4px 0 14px}
 
-/* Card: figure left, text centre, actions right — the reference layout. */
-.card{background:var(--card);border:1px solid var(--line);border-radius:10px;
-  padding:16px;margin-bottom:14px;display:grid;gap:18px;grid-template-columns:1fr}
-@media(min-width:760px){.card{grid-template-columns:240px 1fr 152px}}
-.fig{border:1px solid var(--line);border-radius:6px;overflow:hidden;background:#fff;
-  align-self:start;line-height:0}
-.fig svg{width:100%;height:auto;display:block}
-
-.mid{min-width:0}
-.card h2{font-size:19px;line-height:1.32;margin:0 0 8px;font-weight:650;letter-spacing:-.01em}
-.card h2 a{color:var(--ink)}
-.abs{margin:0 0 10px;font-size:14.5px;line-height:1.55;color:#3d4750}
-.meta{margin:0 0 10px;font-size:13px;color:var(--soft);display:flex;align-items:center;
+.card{display:grid;grid-template-columns:1fr;border:1px solid var(--line);border-radius:10px;
+  background:var(--card);margin-bottom:14px;overflow:hidden}
+@media(min-width:900px){.card{grid-template-columns:212px 1fr 176px}}
+.fig{display:block;background:var(--chip);overflow:hidden;line-height:0}
+.fig img{width:100%;height:100%;max-height:246px;object-fit:cover;object-position:top center;
+  display:block}
+.gen{padding:10px;background:var(--chip);color:var(--ink);height:100%;display:flex;align-items:center}
+.gen svg{width:100%;height:auto}
+.noimg{display:flex;align-items:center;justify-content:center;min-height:150px;
+  color:var(--soft);font-size:12px;background:var(--chip)}
+.mid{padding:18px 22px;min-width:0}
+.card h2{font-size:19px;line-height:1.33;margin:0 0 7px;font-weight:700;letter-spacing:-.01em}
+.abs{margin:0 0 10px;font-size:14px;line-height:1.55;color:var(--soft);
+  display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.meta{margin:0 0 9px;font-size:13px;color:var(--soft);display:flex;align-items:center;
   gap:7px;flex-wrap:wrap}
-.org{background:#eef1f4;border-radius:5px;padding:2px 8px;font-size:12px;
-  font-weight:600;color:#3d4750}
-.dot{color:#c3ccd4}
+.org{background:var(--chip);border-radius:6px;padding:3px 9px;font-size:12px;font-weight:600;
+  color:var(--ink)}
+.dot{color:var(--line)}
 .tagrow{margin:0;display:flex;gap:6px;flex-wrap:wrap}
-.tag{font-size:11.5px;color:var(--soft);background:#eef1f4;border-radius:4px;padding:3px 8px}
-.tag:hover{background:#e2e7ec;text-decoration:none}
+.tag{font-size:11.5px;color:var(--soft);background:var(--chip);border-radius:5px;padding:3px 9px}
+.tag:hover{color:var(--ink);text-decoration:none}
+.acts{display:flex;flex-direction:column;gap:8px;padding:18px 18px 18px 0;align-self:start}
+@media(max-width:899px){.acts{padding:0 22px 18px}}
+.act{display:flex;align-items:center;justify-content:center;font-size:13.5px;font-weight:600;
+  border:1px solid var(--line);border-radius:8px;padding:8px 12px;background:var(--card);
+  white-space:nowrap}
+a.act:hover{background:var(--chip);text-decoration:none}
+.act.st{cursor:default}
+.act.st.ok{color:var(--ok);background:var(--okbg);border-color:var(--okbd)}
+.act.st.warn{color:var(--warn);background:var(--warnbg);border-color:var(--warnbd)}
+.act.st.bad{color:var(--bad);background:var(--badbg);border-color:var(--badbd)}
+.act.st.queue{color:var(--soft);background:var(--chip)}
+.act.st.muted{color:var(--soft);background:transparent;border-style:dashed}
 
-.acts{display:flex;flex-direction:column;gap:8px;align-self:start}
-.act{display:flex;align-items:center;justify-content:center;gap:6px;font-size:13px;
-  font-weight:600;border:1px solid var(--line);border-radius:7px;padding:7px 12px;
-  color:var(--ink);background:#fff;white-space:nowrap}
-a.act:hover{background:#f2f5f8;text-decoration:none}
-.act.status{cursor:default}
-.act.status.ok{color:var(--ok);background:var(--okbg);border-color:#bfe3ce}
-.act.status.warn{color:var(--warn);background:var(--warnbg);border-color:#eddcb6}
-.act.status.bad{color:var(--bad);background:var(--badbg);border-color:#eec7c2}
-
-.empty{padding:36px 0;color:var(--soft);text-align:center}
-footer{color:var(--soft);font-size:12.5px;padding:26px 0 56px;line-height:1.7}
-footer a{margin-right:16px}
+details{margin-top:12px;border-top:1px solid var(--line);padding-top:11px}
+summary{cursor:pointer;font-size:13.5px;font-weight:600;color:var(--accent)}
+details h4{font-size:11.5px;letter-spacing:.06em;text-transform:uppercase;color:var(--soft);
+  margin:16px 0 7px;font-weight:700}
+details p{font-size:13.5px;margin:0 0 8px}
+details ul{margin:0;padding-left:18px;font-size:13px;color:var(--soft);line-height:1.65}
+.fine{color:var(--soft);font-size:12.5px}
+table{width:100%;border-collapse:collapse;font-size:13px;margin:4px 0 0}
+th{color:var(--soft);font-size:10.5px;letter-spacing:.06em;text-transform:uppercase;
+  font-weight:700;text-align:left;padding:6px 8px;border-bottom:1px solid var(--soft)}
+td{padding:8px;border-bottom:1px solid var(--line);vertical-align:top}
+table.plain th,table.plain td{border:none;padding:5px 8px}
+.n{text-align:right;font-family:var(--mono);white-space:nowrap}
+th.n{text-align:right}
+.sub{color:var(--soft);font-size:11.5px;font-weight:400}
+code{font-family:var(--mono)}
+.empty{padding:44px 0;color:var(--soft);text-align:center}
+footer{color:var(--soft);font-size:12.5px;padding:30px 0 60px;line-height:1.7;
+  border-top:1px solid var(--line);margin-top:26px}
+footer a{margin-right:18px;color:var(--soft)}
 </style>
 </head>
 <body>
-
-<header class="site"><div class="wrap"><div class="bar">
-  <span class="logo">Alpha Archive<span>finance papers with code, actually run</span></span>
-  <input id="q" type="search" placeholder="Search papers, authors, tags…" autocomplete="off">
-  <div class="filters">
-    <button class="f on" data-f="all">All</button>
-    <button class="f" data-f="ok">Reproduced</button>
-    <button class="f" data-f="warn">Unresolved</button>
-    <button class="f" data-f="bad">Differs</button>
-  </div>
-</div></div></header>
-
 <div class="wrap">
+
+  <div class="hero">
+    <div class="heroTop">
+      <div>
+        <h1>Alpha Archive</h1>
+        <p class="tagline">Finance papers with code &mdash; and we <b>run</b> the code.</p>
+      </div>
+      <div class="searchWrap">
+        <input id="q" type="search" placeholder="Search papers, authors, tags&hellip;"
+               autocomplete="off">
+      </div>
+      <div class="tabs">
+        <button class="tab on" data-f="all">All</button>
+        <button class="tab" data-f="done">Replicated</button>
+        <button class="tab" data-f="queue">Queued</button>
+        <button class="tab" data-f="muted">Blocked</button>
+        <span class="tab cta">2 replicated</span>
+      </div>
+    </div>
+  </div>
+
   <p class="count" id="count"></p>
   <div id="list">
-  <article class="card" data-status="warn" data-search="returns to buying winners and selling losers: implications for stock market efficiency jegadeesh, titman journal of finance momentum cross-sectional equities unverified" id="mom12m">
-    <div class="fig"><svg viewBox="0 0 240 168" width="240" height="168" role="img" aria-label="paper 1.31, measured -0.1164" preserveAspectRatio="xMidYMid meet"><rect width="240" height="168" fill="#fff"/><text x="14" y="22" font-size="8.5" fill="#61707e" text-anchor="start" font-weight="700" font-family="ui-monospace,Menlo,Consolas,monospace">CLAIM VS MEASURED</text><line x1="114.0" y1="36" x2="114.0" y2="96" stroke="#e3e7eb" stroke-width="1"/><text x="14" y="55" font-size="9" fill="#61707e" text-anchor="start" font-weight="400" font-family="ui-monospace,Menlo,Consolas,monospace">paper</text><rect x="114.0" y="46" width="50.0" height="12" rx="2" fill="#0f7a45" opacity="0.85"/><text x="226" y="55" font-size="8.5" fill="#0f7a45" text-anchor="end" font-weight="700" font-family="ui-monospace,Menlo,Consolas,monospace">+1.31%/mo</text><text x="14" y="89" font-size="9" fill="#61707e" text-anchor="start" font-weight="400" font-family="ui-monospace,Menlo,Consolas,monospace">ours</text><rect x="109.6" y="80" width="4.4" height="12" rx="2" fill="#a5231a" opacity="0.85"/><text x="226" y="89" font-size="8.5" fill="#a5231a" text-anchor="end" font-weight="700" font-family="ui-monospace,Menlo,Consolas,monospace">-0.12%/mo</text><text x="14" y="154" font-size="7.5" fill="#aab4bd" text-anchor="start" font-weight="400" font-family="ui-monospace,Menlo,Consolas,monospace">zero marked; bars share a scale</text></svg></div>
-
+  <article class="card" data-status="warn" data-search="returns to buying winners and selling losers: implications for stock market efficiency narasimhan jegadeesh, sheridan titman journal of finance momentum factors equities unverified">
+    <a class="fig" href="https://doi.org/10.1111/j.1540-6261.1993.tb04702.x"><div class="gen"><svg viewBox="0 0 240 168" width="240" height="168" role="img" aria-label="paper 1.31, measured -0.1164" preserveAspectRatio="xMidYMid meet"><rect width="240" height="168" fill="none"/><text x="14" y="22" font-size="8.5" fill="#61707e" text-anchor="start" font-weight="700" font-family="ui-monospace,Menlo,Consolas,monospace">CLAIM VS MEASURED</text><line x1="114.0" y1="36" x2="114.0" y2="96" stroke="#e3e7eb" stroke-width="1"/><text x="14" y="55" font-size="9" fill="#61707e" text-anchor="start" font-weight="400" font-family="ui-monospace,Menlo,Consolas,monospace">paper</text><rect x="114.0" y="46" width="50.0" height="12" rx="2" fill="#0f7a45" opacity="0.85"/><text x="226" y="55" font-size="8.5" fill="#0f7a45" text-anchor="end" font-weight="700" font-family="ui-monospace,Menlo,Consolas,monospace">+1.31%/mo</text><text x="14" y="89" font-size="9" fill="#61707e" text-anchor="start" font-weight="400" font-family="ui-monospace,Menlo,Consolas,monospace">ours</text><rect x="109.6" y="80" width="4.4" height="12" rx="2" fill="#a5231a" opacity="0.85"/><text x="226" y="89" font-size="8.5" fill="#a5231a" text-anchor="end" font-weight="700" font-family="ui-monospace,Menlo,Consolas,monospace">-0.12%/mo</text><text x="14" y="154" font-size="7.5" fill="#aab4bd" text-anchor="start" font-weight="400" font-family="ui-monospace,Menlo,Consolas,monospace">zero marked; bars share a scale</text></svg></div></a>
     <div class="mid">
       <h2><a href="https://doi.org/10.1111/j.1540-6261.1993.tb04702.x">Returns to Buying Winners and Selling Losers: Implications for Stock Market Efficiency</a></h2>
-      <p class="abs">Past winners keep winning: about 1.3% a month over 1964–1989. We measure −0.12%/mo on currently-listed large caps since 2006, but the reference factor is flat over that window too, so this is decay rather than refutation. Not verified — the parity fixture is unobtainable.</p>
-      <p class="meta">
-        <span class="org">Journal of Finance</span>
-        <span class="dot">·</span>Jegadeesh, Titman
-        <span class="dot">·</span>Published 1993
-      </p>
-      <p class="tagrow"><a class="tag" href="#" data-tag="momentum">momentum</a><a class="tag" href="#" data-tag="cross-sectional">cross-sectional</a><a class="tag" href="#" data-tag="equities">equities</a></p>
-      <details><summary>Full result</summary>
-      <h4>Verification — fixture unavailable</h4>
-      <p>Open Source Asset Pricing&#x27;s own monthly long-short return series for Mom12m is not fetchable, so this cannot be verified. OpenAP publishes portfolio returns via Google Drive only. Those links return quota-exceeded and virus-scan interstitials rather than the file, and the GitHub releases carry no data assets. Until a stable URL exists, or CRSP is reproduced from free sources, this stays unverified.</p>
-      <p class="fine">Bar: correlation with the fixture&#x27;s monthly return series ≥ 0.95,
-      against Open Source Asset Pricing&#x27;s own monthly long-short return series for Mom12m — declared by
-      Chen &amp; Zimmermann, openassetpricing.com, not by us.</p>
-      <h4>Reference factor by era</h4>
-      <table><thead><tr><th>Ken French UMD</th><th class="n">mean</th><th class="n">t</th>
-      <th class="n">months</th></tr></thead><tbody><tr><td>1964-1989 (paper sample)</td><td class='n'>+0.802%</td><td class='n'>+4.08</td><td class='n sub'>312</td></tr><tr><td>1990-2005 (post-publication)</td><td class='n'>+0.908%</td><td class='n'>+2.60</td><td class='n sub'>192</td></tr><tr><td>2006-2026 (our window)</td><td class='n'>+0.154%</td><td class='n'>+0.54</td><td class='n sub'>246</td></tr><tr><td>1927-2026 (full)</td><td class='n'>+0.627%</td><td class='n'>+4.63</td><td class='n sub'>1194</td></tr></tbody></table>
-      <h4>Sample limits</h4><ul><li>Universe is survivor-biased: only currently-listed large caps. The delisted losers momentum would have shorted are structurally absent, which biases this test against the paper&#x27;s result.</li><li>Sample is 2006-02-28..2026-09-30, not the paper&#x27;s 1964-1989. This is a different experiment, not a refutation.</li><li>80 names versus all of NYSE/AMEX in the original, so deciles here are far coarser.</li><li>Costs charged at 10 bps on turnover; the paper reported gross.</li><li>Holding period is 3 months with overlapping cohorts, matching the documented spec. Names below $5 nominal are screened out at formation.</li><li>Prices are Yahoo adjusted closes, which are adjusted retroactively.</li></ul></details>
+      <p class="abs">Past winners keep winning: buying prior 12-month winners and selling losers earned about 1.3% a month over 1964–1989, an effect large enough that the authors argue markets cannot be fully efficient. We measure −0.12%/mo on currently-listed large caps since 2006 — but the reference factor is flat over that window too, so this reads as decay rather than refutation. Not verified: the parity fixture is unobtainable.</p>
+      <p class="meta"><span class="org">Journal of Finance</span><span class="dot">&middot;</span>
+        Narasimhan Jegadeesh, Sheridan Titman<span class="dot">&middot;</span>Published 1993</p>
+      <p class="tagrow"><a class="tag" href="#" data-tag="momentum">momentum</a><a class="tag" href="#" data-tag="factors">factors</a><a class="tag" href="#" data-tag="equities">equities</a></p>
+      <details><summary>Full result</summary><h4>Verification &mdash; fixture unavailable</h4><p>Open Source Asset Pricing&#x27;s own monthly long-short return series for Mom12m is not fetchable, so this cannot be verified. OpenAP publishes portfolio returns via Google Drive only. Those links return quota-exceeded and virus-scan interstitials rather than the file, and the GitHub releases carry no data assets. Until a stable URL exists, or CRSP is reproduced from free sources, this stays unverified.</p><p class="fine">Bar: correlation with the fixture&#x27;s monthly return series &ge; 0.95, against Open Source Asset Pricing&#x27;s own monthly long-short return series for Mom12m &mdash; declared by Chen &amp; Zimmermann, openassetpricing.com, not by us.</p><h4>Reference factor by era</h4><table><thead><tr><th>Ken French UMD</th><th class="n">mean</th><th class="n">t</th><th class="n">months</th></tr></thead><tbody><tr><td>1964-1989 (paper sample)</td><td class='n'>+0.802%</td><td class='n'>+4.08</td><td class='n sub'>312</td></tr><tr><td>1990-2005 (post-publication)</td><td class='n'>+0.908%</td><td class='n'>+2.60</td><td class='n sub'>192</td></tr><tr><td>2006-2026 (our window)</td><td class='n'>+0.154%</td><td class='n'>+0.54</td><td class='n sub'>246</td></tr><tr><td>1927-2026 (full)</td><td class='n'>+0.627%</td><td class='n'>+4.63</td><td class='n sub'>1194</td></tr></tbody></table><h4>Sample limits</h4><ul><li>Universe is survivor-biased: only currently-listed large caps. The delisted losers momentum would have shorted are structurally absent, which biases this test against the paper&#x27;s result.</li><li>Sample is 2006-02-28..2026-09-30, not the paper&#x27;s 1964-1989. This is a different experiment, not a refutation.</li><li>80 names versus all of NYSE/AMEX in the original, so deciles here are far coarser.</li><li>Costs charged at 10 bps on turnover; the paper reported gross.</li><li>Holding period is 3 months with overlapping cohorts, matching the documented spec. Names below $5 nominal are screened out at formation.</li><li>Prices are Yahoo adjusted closes, which are adjusted retroactively.</li></ul></details>
     </div>
-
-    <div class="acts">
-      <span class="act status warn">unverified</span>
-      <a class="act" href="https://github.com/RezaSoleymanifar/alpha-archive/blob/main/alpha_archive/replications/jt1993.py">Code</a>
-      <a class="act" href="https://doi.org/10.1111/j.1540-6261.1993.tb04702.x">Paper</a>
-    </div>
+    <div class="acts"><span class="act st warn">unverified</span><a class="act" href="https://github.com/RezaSoleymanifar/alpha-archive/blob/main/alpha_archive/replications/jt1993.py">Code</a><a class="act" href="https://doi.org/10.1111/j.1540-6261.1993.tb04702.x">Paper</a></div>
   </article>
 
-  <article class="card" data-status="warn" data-search="retail trader&#x27;s ruin: an anatomy of popular signal failure darmanin arxiv:2607.20093 technical-analysis market-timing multiple-testing partial" id="darmanin2026">
-    <div class="fig"><svg viewBox="0 0 240 168" width="240" height="168" role="img" aria-label="confidence intervals, paper against ours" preserveAspectRatio="xMidYMid meet"><rect width="240" height="168" fill="#fff"/><text x="14" y="20" font-size="8.5" fill="#61707e" text-anchor="start" font-weight="700" font-family="ui-monospace,Menlo,Consolas,monospace">95% INTERVALS</text><line x1="152.3" y1="28" x2="152.3" y2="142" stroke="#e3e7eb" stroke-width="1"/><text x="14" y="36" font-size="8" fill="#111418" text-anchor="start" font-weight="700" font-family="ui-monospace,Menlo,Consolas,monospace">Sell-in-May</text><line x1="37.7" y1="45" x2="152.3" y2="45" stroke="#61707e" stroke-width="3" stroke-linecap="round"/><line x1="37.7" y1="42" x2="37.7" y2="48" stroke="#61707e" stroke-width="1"/><line x1="152.3" y1="42" x2="152.3" y2="48" stroke="#61707e" stroke-width="1"/><line x1="94.2" y1="56" x2="180.9" y2="56" stroke="#0b5fd0" stroke-width="3" stroke-linecap="round"/><line x1="94.2" y1="53" x2="94.2" y2="59" stroke="#0b5fd0" stroke-width="1"/><line x1="180.9" y1="53" x2="180.9" y2="59" stroke="#0b5fd0" stroke-width="1"/><text x="14" y="73" font-size="8" fill="#111418" text-anchor="start" font-weight="700" font-family="ui-monospace,Menlo,Consolas,monospace">Golden/death cross…</text><line x1="108.9" y1="82" x2="201.5" y2="82" stroke="#61707e" stroke-width="3" stroke-linecap="round"/><line x1="108.9" y1="79" x2="108.9" y2="85" stroke="#61707e" stroke-width="1"/><line x1="201.5" y1="79" x2="201.5" y2="85" stroke="#61707e" stroke-width="1"/><line x1="120.5" y1="93" x2="202.3" y2="93" stroke="#0b5fd0" stroke-width="3" stroke-linecap="round"/><line x1="120.5" y1="90" x2="120.5" y2="96" stroke="#0b5fd0" stroke-width="1"/><line x1="202.3" y1="90" x2="202.3" y2="96" stroke="#0b5fd0" stroke-width="1"/><line x1="18" y1="148" x2="222" y2="148" stroke="#e3e7eb"/><text x="18" y="158" font-size="7.5" fill="#aab4bd" text-anchor="start" font-weight="400" font-family="ui-monospace,Menlo,Consolas,monospace">-0.72</text><text x="222" y="158" font-size="7.5" fill="#aab4bd" text-anchor="end" font-weight="400" font-family="ui-monospace,Menlo,Consolas,monospace">+0.38</text><text x="120" y="30" font-size="7.5" fill="#aab4bd" text-anchor="middle" font-weight="400" font-family="ui-monospace,Menlo,Consolas,monospace">grey = paper   blue = ours</text></svg></div>
-
+  <article class="card" data-status="warn" data-search="retail trader&#x27;s ruin: an anatomy of popular signal failure adam darmanin arxiv:2607.20093 technical-analysis market-timing factors partial">
+    <a class="fig" href="https://arxiv.org/abs/2607.20093"><img src="thumbs/2607.20093.jpg" alt="First page" loading="lazy"></a>
     <div class="mid">
       <h2><a href="https://arxiv.org/abs/2607.20093">Retail Trader&#x27;s Ruin: An Anatomy of Popular Signal Failure</a></h2>
-      <p class="abs">None of the five most popular retail signals beats buy-and-hold. We reproduce the golden/death cross result exactly. Sell-in-May matches on the statistical gate and differs on the economic one, where the paper searches a battery of calendar rules and we run the canonical one.</p>
-      <p class="meta">
-        <span class="org">arXiv:2607.20093</span>
-        <span class="dot">·</span>Darmanin
-        <span class="dot">·</span>Published 2026
-      </p>
-      <p class="tagrow"><a class="tag" href="#" data-tag="technical-analysis">technical-analysis</a><a class="tag" href="#" data-tag="market-timing">market-timing</a><a class="tag" href="#" data-tag="multiple-testing">multiple-testing</a></p>
-      <details><summary>Full result</summary>
-      <table><thead><tr><th rowspan="2">Family</th>
-        <th colspan="2" class="n">Sharpe gap, 95% CI</th>
-        <th colspan="2" class="n">CAGR gap, 95% CI</th></tr>
-        <tr><th class="n">paper</th><th class="n">ours</th>
-            <th class="n">paper</th><th class="n">ours</th></tr></thead>
-        <tbody><tr><td>Sell-in-May<div class='sub'>SPY · 8,435 obs (paper 8,358)</div></td><td class='n'>[-0.618, 0.000]<div class='sub'>refuted</div></td><td class='n'>[-0.313, 0.154]<div class='sub'>refuted</div></td><td class='n'>[-0.131, -0.026]</td><td class='n'>[-0.016, 0.040]</td></tr><tr><td>Golden/death cross (50/200)<div class='sub'>^NDX · 10,289 obs (paper 10,331)</div></td><td class='n'>[-0.234, 0.265]<div class='sub'>inconclusive</div></td><td class='n'>[-0.172, 0.269]<div class='sub'>inconclusive</div></td><td class='n'>[-0.081, 0.024]</td><td class='n'>[-0.030, 0.056]</td></tr></tbody></table>
-      <p class="fine">Reproduced means the verdict matches <em>and</em> the intervals overlap,
-      on both gates. Thresholds are the paper's: δ<sub>S</sub>=0.2,
-      δ<sub>R</sub>=0.01. Costs 5.0bps/leg. Stationary
-      bootstrap, 2,000 draws, mean block 20.</p>
-      <h4>Parameter sensitivity</h4>
-      <table class="plain"><tbody><tr><td>Sell-in-May</td><td><code>Nov-Apr</code> -0.091 · <code>Oct-Apr</code> -0.032 · <code>Nov-May</code> -0.054 · <code>Dec-Mar</code> -0.367</td></tr><tr><td>Golden/death cross (50/200)</td><td><code>20/100</code> -0.028 · <code>50/200</code> +0.044 · <code>100/300</code> +0.019 · <code>10/50</code> -0.096</td></tr></tbody></table>
-      <h4>Where we differ</h4><ul><li>Table 1 describes this family as &#x27;Sell-in-May (best of battery, Bonferroni + BY)&#x27;. The paper searches a battery of calendar rules and reports the best after multiplicity correction. We run the single canonical November-April rule, so a disagreement on the economic gate is a specification difference before it is a replication failure.</li><li>Our sample carries 78 more or fewer observations than the paper&#x27;s, and the bootstrap block length is our choice rather than theirs, so intervals are not expected to match to the digit.</li></ul>
-      <h4>Not attempted</h4><ul><li>Oscillator (RSI) — NASDAQ-100, reproducible in principle, not yet run</li><li>Volume (OBV) — needs Russell 3000 point-in-time membership</li><li>Candlestick — needs Russell 3000 point-in-time membership</li><li>Momentum calibration — needs S&amp;P 500 point-in-time membership</li></ul></details>
+      <p class="abs">Tests five widely promoted retail signal families — trend, oscillator, candlestick, volume and calendar rules — against three predeclared gates: statistical edge after multiplicity correction, economic viability after costs, and survival under leverage. Four are refuted, two unresolved, none supported. We reproduce the golden/death cross result exactly; Sell-in-May matches on the statistical gate and differs on the economic one, where the paper searches a battery of calendar rules and we run the canonical one.</p>
+      <p class="meta"><span class="org">arXiv:2607.20093</span><span class="dot">&middot;</span>
+        Adam Darmanin<span class="dot">&middot;</span>Published 2026-07-22</p>
+      <p class="tagrow"><a class="tag" href="#" data-tag="technical-analysis">technical-analysis</a><a class="tag" href="#" data-tag="market-timing">market-timing</a><a class="tag" href="#" data-tag="factors">factors</a></p>
+      <details><summary>Full result</summary><table><thead><tr><th rowspan="2">Family</th><th colspan="2" class="n">Sharpe gap, 95% CI</th><th colspan="2" class="n">CAGR gap, 95% CI</th></tr><tr><th class="n">paper</th><th class="n">ours</th><th class="n">paper</th><th class="n">ours</th></tr></thead><tbody><tr><td>Sell-in-May<div class='sub'>SPY · 8,435 obs (paper 8,358)</div></td><td class='n'>[-0.618, 0.000]<div class='sub'>refuted</div></td><td class='n'>[-0.313, 0.154]<div class='sub'>refuted</div></td><td class='n'>[-0.131, -0.026]</td><td class='n'>[-0.016, 0.040]</td></tr><tr><td>Golden/death cross (50/200)<div class='sub'>^NDX · 10,289 obs (paper 10,331)</div></td><td class='n'>[-0.234, 0.265]<div class='sub'>inconclusive</div></td><td class='n'>[-0.172, 0.269]<div class='sub'>inconclusive</div></td><td class='n'>[-0.081, 0.024]</td><td class='n'>[-0.030, 0.056]</td></tr></tbody></table><p class="fine">Reproduced means the verdict matches <em>and</em> the intervals overlap, on both gates. Thresholds are the paper's: &delta;<sub>S</sub>=0.2, &delta;<sub>R</sub>=0.01. Costs 5.0bps/leg. Stationary bootstrap, 2,000 draws, mean block 20.</p><h4>Parameter sensitivity</h4><table class="plain"><tbody><tr><td>Sell-in-May</td><td><code>Nov-Apr</code> -0.091 · <code>Oct-Apr</code> -0.032 · <code>Nov-May</code> -0.054 · <code>Dec-Mar</code> -0.367</td></tr><tr><td>Golden/death cross (50/200)</td><td><code>20/100</code> -0.028 · <code>50/200</code> +0.044 · <code>100/300</code> +0.019 · <code>10/50</code> -0.096</td></tr></tbody></table><h4>Where we differ</h4><ul><li>Table 1 describes this family as &#x27;Sell-in-May (best of battery, Bonferroni + BY)&#x27;. The paper searches a battery of calendar rules and reports the best after multiplicity correction. We run the single canonical November-April rule, so a disagreement on the economic gate is a specification difference before it is a replication failure.</li><li>Our sample carries 78 more or fewer observations than the paper&#x27;s, and the bootstrap block length is our choice rather than theirs, so intervals are not expected to match to the digit.</li></ul><h4>Not attempted</h4><ul><li>Oscillator (RSI) — NASDAQ-100, reproducible in principle, not yet run</li><li>Volume (OBV) — needs Russell 3000 point-in-time membership</li><li>Candlestick — needs Russell 3000 point-in-time membership</li><li>Momentum calibration — needs S&amp;P 500 point-in-time membership</li></ul></details>
     </div>
+    <div class="acts"><span class="act st warn">partial</span><a class="act" href="https://github.com/RezaSoleymanifar/alpha-archive/blob/main/alpha_archive/replications/darmanin2026.py">Code</a><a class="act" href="https://arxiv.org/abs/2607.20093">Paper</a></div>
+  </article>
 
-    <div class="acts">
-      <span class="act status warn">partial</span>
-      <a class="act" href="https://github.com/RezaSoleymanifar/alpha-archive/blob/main/alpha_archive/replications/darmanin2026.py">Code</a>
-      <a class="act" href="https://arxiv.org/abs/2607.20093">Paper</a>
+  <article class="card" data-status="queue" data-search="portfolio allocation under heterogeneous scales and multifractality shinji kakinaka, ken umeno q-fin.pm portfolio risk queued">
+    <a class="fig" href="https://arxiv.org/abs/2608.04987v1"><img src="thumbs/2608.04987v1.jpg" alt="First page" loading="lazy"></a>
+    <div class="mid">
+      <h2><a href="https://arxiv.org/abs/2608.04987v1">Portfolio Allocation under Heterogeneous Scales and Multifractality</a></h2>
+      <p class="abs">Cross-correlations between financial signals are neither scale-free nor amplitude-independent: they vary with the time scale over which they are measured and with the magnitude of the fluctuations that dominate the average. We exploit this structure to construct a portfolio allocation model in which the risk functional is the signed fluctuation function of multifractal cross-correlation analysis (MFCCA), indexed by a scale $s$ and a fluctuation order $q$. Unlike MFDCCA-type criteria, which rectify local detrended covariances before aggregation, MFCCA retains their sign, so that co-moving and counter-moving components contribute to risk with opposite signs; for $q=2$ the resulting quadratic form coincides with the detrended fluctuation function of the portfolio series itself, recovering the mean--variance criterion as a scale-dependent limit. Using two-component ARFIMA and Markov-switching multifractal processes, we show that prescribed multiscale and multifractal dependence is transmitted into the optimal weights, and that sign preservation contributes more to the reduction of tail risk than aggregation over fluctuation orders. Applied to financial multi-assets, the criterion lowers drawdown, Value-at-Risk, and expected shortfall relative to the mean--variance benchmark at every required return, in and out of sample, without any loss in realized portfolio return. The construction maps signed multiscale interaction structures onto resource-allocation decisions, and applies to any complex system whose components interact across heterogeneous scales with amplitude-dependent coupling.</p>
+      <p class="meta"><span class="org">q-fin.PM</span><span class="dot">&middot;</span>
+        Shinji Kakinaka, Ken Umeno<span class="dot">&middot;</span>Published 2026-08-05</p>
+      <p class="tagrow"><a class="tag" href="#" data-tag="portfolio">portfolio</a><a class="tag" href="#" data-tag="risk">risk</a></p>
+      
     </div>
+    <div class="acts"><span class="act st queue">queued</span><a class="act" href="https://arxiv.org/abs/2608.04987v1">Paper</a><a class="act" href="https://arxiv.org/pdf/2608.04987v1">PDF</a></div>
+  </article>
+
+  <article class="card" data-status="queue" data-search="open information: a defining perspective on web datasets for carbon pricing sidharth mallik, anastasios megaritis, waymond rodgers q-fin.pr volatility crypto risk triage">
+    <a class="fig" href="https://arxiv.org/abs/2608.04929v1"><img src="thumbs/2608.04929v1.jpg" alt="First page" loading="lazy"></a>
+    <div class="mid">
+      <h2><a href="https://arxiv.org/abs/2608.04929v1">Open Information: A Defining Perspective on Web Datasets for Carbon Pricing</a></h2>
+      <p class="abs">The impact of web datasets on market prices has suggested the development of new sources of information, such as social media and web portals, indicating the possibility of an emergent phenomenon. We propose a defining perspective, termed open information, that adds to the existing types of public and private information. We demonstrate their existence and justify material significance for pricing. In this respect, we present statistical hypotheses to test for a web dataset, GDELT, integrated for carbon pricing, that is represented by EU Allowance spot prices. Tests are designed with VAR and GARCH-X formulations, and return forecasting. The outcomes cannot rule out the material existence of open information. The result is significant for providing a conceptual basis to integrate a vast number of web datasets as alternative data in investment decisions.</p>
+      <p class="meta"><span class="org">q-fin.PR</span><span class="dot">&middot;</span>
+        Sidharth Mallik, Anastasios Megaritis, Waymond Rodgers<span class="dot">&middot;</span>Published 2026-08-05</p>
+      <p class="tagrow"><a class="tag" href="#" data-tag="volatility">volatility</a><a class="tag" href="#" data-tag="crypto">crypto</a><a class="tag" href="#" data-tag="risk">risk</a></p>
+      
+    </div>
+    <div class="acts"><span class="act st queue">triage</span><a class="act" href="https://arxiv.org/abs/2608.04929v1">Paper</a><a class="act" href="https://arxiv.org/pdf/2608.04929v1">PDF</a></div>
+  </article>
+
+  <article class="card" data-status="queue" data-search="robust control under stationary ambiguity konrad j. mueller, amira akkari, ben wood et al. cs.lg volatility factors queued">
+    <a class="fig" href="https://arxiv.org/abs/2608.04832v1"><img src="thumbs/2608.04832v1.jpg" alt="First page" loading="lazy"></a>
+    <div class="mid">
+      <h2><a href="https://arxiv.org/abs/2608.04832v1">Robust Control under Stationary Ambiguity</a></h2>
+      <p class="abs">Control policies optimized in simulation can perform poorly in the real system when the parameters $x$ of the simulator are estimated from limited data but the resulting parameter uncertainty is not represented inside the simulation. A common way to incorporate such ambiguity is to simulate each trajectory of the system under a randomly drawn value for $x$. Since the policy cannot observe the drawn value, it must initially choose controls that perform well across many possible parameter values. However, if the policy progressively observes the system, it can often gradually infer the value of $x$, so that ambiguity vanishes. Over time, the policy then specializes to its estimate of $x$ and loses its robustness. This is undesirable in many real systems, where latent factors are expected to shift. In financial markets, for example, a policy hedging a derivative payoff should remain robust to changes in the volatility regime. To induce such continual robustness, we propose training policies in simulators where ambiguity varies with the system&#x27;s state but does not systematically decay over time. We formalize this requirement as stationary ambiguity: the simulator should induce a stationary filter process over the latent state. We show how to construct such simulators and demonstrate, on hedging problems, that policies trained under stationary ambiguity preserve robustness to latent factors over time, leading to strong performance on real market data. As a modeling principle, stationary ambiguity informs many simulator design decisions: which models make realistic simulators, how their parameters should be randomized, and how simulator and policy should be initialized. While our experiments focus on hedging, stationary ambiguity may also be useful for other sequential control problems driven by exogenous stochastic processes with shifting latent structure.</p>
+      <p class="meta"><span class="org">cs.LG</span><span class="dot">&middot;</span>
+        Konrad J. Mueller, Amira Akkari, Ben Wood et al.<span class="dot">&middot;</span>Published 2026-08-05</p>
+      <p class="tagrow"><a class="tag" href="#" data-tag="volatility">volatility</a><a class="tag" href="#" data-tag="factors">factors</a></p>
+      
+    </div>
+    <div class="acts"><span class="act st queue">queued</span><a class="act" href="https://arxiv.org/abs/2608.04832v1">Paper</a><a class="act" href="https://arxiv.org/pdf/2608.04832v1">PDF</a></div>
+  </article>
+
+  <article class="card" data-status="queue" data-search="attributing differences between forecast runs to input changes, with applications to ccar and cecl exercises xuan mei, junze lin q-fin.rm portfolio macro queued">
+    <a class="fig" href="https://arxiv.org/abs/2608.04547v1"><img src="thumbs/2608.04547v1.jpg" alt="First page" loading="lazy"></a>
+    <div class="mid">
+      <h2><a href="https://arxiv.org/abs/2608.04547v1">Attributing Differences Between Forecast Runs to Input Changes, With Applications to CCAR and CECL Exercises</a></h2>
+      <p class="abs">Forecasting systems used in the Comprehensive Capital Analysis and Review (CCAR) and Current Expected Credit Losses (CECL) processes combine portfolio data, macroeconomic scenarios, model specifications, business assump- tions, and management adjustments. When the forecast changes from one run to the next, practitioners need an attribu- tion that reconciles to the total change without depending on an arbitrary sequence of input replacements. This paper formulates forecast-gap attribution as a cooperative game and examines several approaches: the exact Shapley value, hierarchical or nested Shapley values, Integrated Gradients, Gradient SHAP, Permutation SHAP, and Kernel SHAP. We compare their allocation rules, computational costs, implementation requirements, and limitations in production forecasting systems. The analysis provides a practical framework for choosing an attribution method according to the number and type of inputs, the feasibility of hybrid forecast runs, and the need for interpretability, reproducibility, and governance.</p>
+      <p class="meta"><span class="org">q-fin.RM</span><span class="dot">&middot;</span>
+        Xuan Mei, Junze Lin<span class="dot">&middot;</span>Published 2026-08-05</p>
+      <p class="tagrow"><a class="tag" href="#" data-tag="portfolio">portfolio</a><a class="tag" href="#" data-tag="macro">macro</a></p>
+      
+    </div>
+    <div class="acts"><span class="act st queue">queued</span><a class="act" href="https://arxiv.org/abs/2608.04547v1">Paper</a><a class="act" href="https://arxiv.org/pdf/2608.04547v1">PDF</a></div>
+  </article>
+
+  <article class="card" data-status="queue" data-search="optimal life insurance decision in mean-variance dc management with mortality improvements yueman fen, wenyuan li, mengyi xu et al. q-fin.pm crypto portfolio macro triage">
+    <a class="fig" href="https://arxiv.org/abs/2608.04532v1"><img src="thumbs/2608.04532v1.jpg" alt="First page" loading="lazy"></a>
+    <div class="mid">
+      <h2><a href="https://arxiv.org/abs/2608.04532v1">Optimal Life Insurance Decision in Mean-Variance DC Management with Mortality Improvements</a></h2>
+      <p class="abs">This paper studies the investment and insurance strategies of defined-contribution (DC) pension plans under the mean-variance framework. We consider a stochastic environment with time-varying interest rates, contributions, and mortality risk. The DC plan members are allowed to decide their bond and stock allocations, as well as their life insurance coverage. Adopting the martingale approach, we derive the closed-form optimal strategies and the mean-variance efficient frontier. Further numerical analysis investigates how mortality improvements affect investment and insurance decisions, as well as the sensitivity of the optimal decision to market parameters. Our analysis suggests that longevity raises expectations of future contributions, allowing pension members to adopt a less risky investment strategy. Meanwhile, insurance strategy shifts toward early adulthood to protect the high value of future income and decreases significantly at later ages. Moreover, we conduct sensitivity analyses on the target expected wealth, market price of risk, and contribution growth. These findings provide practical guidance for pension members on investment and offer insights for the design of DC pension plans.</p>
+      <p class="meta"><span class="org">q-fin.PM</span><span class="dot">&middot;</span>
+        Yueman Fen, Wenyuan Li, Mengyi Xu et al.<span class="dot">&middot;</span>Published 2026-08-05</p>
+      <p class="tagrow"><a class="tag" href="#" data-tag="crypto">crypto</a><a class="tag" href="#" data-tag="portfolio">portfolio</a><a class="tag" href="#" data-tag="macro">macro</a></p>
+      
+    </div>
+    <div class="acts"><span class="act st queue">triage</span><a class="act" href="https://arxiv.org/abs/2608.04532v1">Paper</a><a class="act" href="https://arxiv.org/pdf/2608.04532v1">PDF</a></div>
+  </article>
+
+  <article class="card" data-status="queue" data-search="low-rank and graphon limits for dynamic threshold distress contagion in heterogeneous financial networks pengbin feng q-fin.mf factors macro queued">
+    <a class="fig" href="https://arxiv.org/abs/2608.04529v1"><img src="thumbs/2608.04529v1.jpg" alt="First page" loading="lazy"></a>
+    <div class="mid">
+      <h2><a href="https://arxiv.org/abs/2608.04529v1">Low-rank and graphon limits for dynamic threshold distress contagion in heterogeneous financial networks</a></h2>
+      <p class="abs">We study a deterministic contagion model for a large population of financial institutions connected by a weighted directed exposure matrix. The sign convention and loss term are motivated by a default cascade with partial recovery and interest servicing, whereas the dynamic model records distress through occupation time and therefore permits recovery. A rank-\(K\) factorization yields an exact reduction of the finite network to \(K\) macroscopic feedback coordinates. For bounded Lipschitz losses, the reduced dynamics form a nonautonomous \(K\)-dimensional ODE; we prove Wasserstein stability with respect to the type law and derive a transport representation for the joint state--factor distribution. On a fixed latent space, the associated directed-kernel equation is well posed and \(L^1\)-stable, and a quantitative bridge theorem separates finite-population error from kernel-approximation error. For the indicator loss, we establish fixed-rank well-posedness under threshold regularity and a Vapnik--Chervonenkis-type estimate for measurable selections of sampled solutions. At the graphon level, we prove well-posedness for factorized kernels and for piecewise-\(C^1\) kernel--profile pairs satisfying uniform transversality, together with a perturbation theorem for uniformly transverse approximation families. A sovereign-overlap illustration based on the 2025 EBA transparency exercise computes factor loadings and a priori sensitivity bounds from public disclosures; resampling errors on the empirical 117-bank population are consistent with the predicted \(N^{-1/2}\) scale.</p>
+      <p class="meta"><span class="org">q-fin.MF</span><span class="dot">&middot;</span>
+        Pengbin Feng<span class="dot">&middot;</span>Published 2026-08-05</p>
+      <p class="tagrow"><a class="tag" href="#" data-tag="factors">factors</a><a class="tag" href="#" data-tag="macro">macro</a></p>
+      
+    </div>
+    <div class="acts"><span class="act st queue">queued</span><a class="act" href="https://arxiv.org/abs/2608.04529v1">Paper</a><a class="act" href="https://arxiv.org/pdf/2608.04529v1">PDF</a></div>
+  </article>
+
+  <article class="card" data-status="muted" data-search="public trader identity: adverse selection and return predictability daojing zhai q-fin.tr microstructure blocked">
+    <a class="fig" href="https://arxiv.org/abs/2608.04373v1"><img src="thumbs/2608.04373v1.jpg" alt="First page" loading="lazy"></a>
+    <div class="mid">
+      <h2><a href="https://arxiv.org/abs/2608.04373v1">Public Trader Identity: Adverse Selection and Return Predictability</a></h2>
+      <p class="abs">Informed traders are supposed to need anonymity: they profit by hiding among the uninformed. A decentralized exchange now publishes the counterparty: every committed order, cancellation, rejection, and fill carries a persistent pseudonymous wallet address. We reconstruct the full-depth limit order book from a record of 17.1 billion messages and 14.3 million aggressive orders by 147,113 wallets, covering $84.3 billion in taker notional. We report three findings. First, informativeness is a persistent wallet attribute. We rank wallets by the price movement that follows their aggressive orders over ten days, and the ranking largely holds over the next ten, with a rank correlation of 0.52. Second, the ranking predicts returns: a linear model using identity information reaches an out-of-sample R2 of 12.31% for one-second returns, a 13.2% gain (t = 9.2) over a standard anonymous benchmark of prices, quotes, and order flow. That gain is 1.6 times the largest gain from 200 activity-matched placebo cohorts. Third, we test the gain at realized trades rather than at every sampled moment, and the identity increment grows from 1.43 to 2.47 percentage points of R2. Public wallet histories therefore carry short-horizon price information that anonymous order-book data leave unmeasured.</p>
+      <p class="meta"><span class="org">q-fin.TR</span><span class="dot">&middot;</span>
+        Daojing Zhai<span class="dot">&middot;</span>Published 2026-08-05</p>
+      <p class="tagrow"><a class="tag" href="#" data-tag="microstructure">microstructure</a></p>
+      
+    </div>
+    <div class="acts"><span class="act st muted">blocked</span><a class="act" href="https://arxiv.org/abs/2608.04373v1">Paper</a><a class="act" href="https://arxiv.org/pdf/2608.04373v1">PDF</a></div>
+  </article>
+
+  <article class="card" data-status="queue" data-search="adaptive finite-budget training for cvar risk-aware q-learning yifan wu, junjie lei, wenjie huang cs.lg volatility machine-learning crypto queued">
+    <a class="fig" href="https://arxiv.org/abs/2608.04305v1"><img src="thumbs/2608.04305v1.jpg" alt="First page" loading="lazy"></a>
+    <div class="mid">
+      <h2><a href="https://arxiv.org/abs/2608.04305v1">Adaptive Finite-Budget Training for CVaR Risk-Aware Q-Learning</a></h2>
+      <p class="abs">Risk-aware Q-learning (RaQL) provides a model-free, two-timescale estimator for dynamic risk objectives, but its finite-budget behavior remains fragile: fixed inner-loop hyperparameters can produce unstable value estimates, persistent Bellman residuals, and inefficient sample reuse. This paper proposes an adaptive training controller for Conditional Value-at-Risk (CVaR) RaQL and evaluates it on a daily Bitcoin trading task. The controller preserves the original CVaR estimator and Bellman fixed point; instead, it redesigns the training procedure through six coordinated mechanisms: per-cell inner-step sizing, outer-rate-matched decay synchronization, a short early correction for the VaR-like inner variable, a coverage-first-then-greedy sample allocation rule, progressive suffix aggregation of mature inner estimates, and data-driven calibration of key scales from online-observable quantities. Across 20 random seeds and 856,000 inner-transition samples, the controller reduces the mean empirical CVaR Bellman residual by approximately 85% relative to the fixed-parameter baseline (MeanBEQ: 1.2202 to 0.1854; MeanBEV: 1.1624 to 0.0535) and maintains stability across CVaR levels, discount factors, and training budgets. On the chronological out-of-sample test set, the learned policy attains a Sharpe ratio of 0.9281 with a maximum drawdown of 6.46% after transaction costs. Although buy-and-hold yields a higher cumulative return (35.43% vs. 23.61%), the adaptive policy achieves far lower volatility (9.57% vs. 47.93%), drawdown, and CVaR loss. These results demonstrate that adaptive finite-budget training design, applied solely to the training procedure without altering the risk objective, can materially improve the reliability and risk-adjusted performance of risk-aware Q-learning in financial applications.</p>
+      <p class="meta"><span class="org">cs.LG</span><span class="dot">&middot;</span>
+        Yifan Wu, Junjie Lei, Wenjie Huang<span class="dot">&middot;</span>Published 2026-08-05</p>
+      <p class="tagrow"><a class="tag" href="#" data-tag="volatility">volatility</a><a class="tag" href="#" data-tag="machine-learning">machine-learning</a><a class="tag" href="#" data-tag="crypto">crypto</a></p>
+      
+    </div>
+    <div class="acts"><span class="act st queue">queued</span><a class="act" href="https://arxiv.org/abs/2608.04305v1">Paper</a><a class="act" href="https://arxiv.org/pdf/2608.04305v1">PDF</a></div>
+  </article>
+
+  <article class="card" data-status="queue" data-search="from financial sentiment classification to return predictability: a qlora benchmark of large language models fusheng luo q-fin.mf portfolio factors macro queued">
+    <a class="fig" href="https://arxiv.org/abs/2608.04200v1"><img src="thumbs/2608.04200v1.jpg" alt="First page" loading="lazy"></a>
+    <div class="mid">
+      <h2><a href="https://arxiv.org/abs/2608.04200v1">From Financial Sentiment Classification to Return Predictability: A QLoRA Benchmark of Large Language Models</a></h2>
+      <p class="abs">Financial sentiment classifiers are commonly evaluated against human labels, but strong linguistic performance does not necessarily imply economically useful return predictability. This study separates these questions through two experiments. First, we construct a unified three-class benchmark from five financial text datasets and compare TF--IDF Naive Bayes, off-the-shelf FinBERT and Financial-RoBERTa encoders, zero-shot Qwen2.5-7B, and QLoRA-adapted Qwen2.5-7B, LLaMA3-8B, and Mistral-7B models. Mistral-7B achieves the best test accuracy (0.8840) and macro-F1 (0.8771), while QLoRA raises Qwen2.5&#x27;s macro-F1 from 0.7274 to 0.8615. An inverse-frequency class-weighted loss does not improve Qwen2.5. Second, we evaluate economic validity on a temporally separate 2019 Benzinga sample containing 10,637 unique headlines and 13,115 headline--stock observations for a fixed S\&amp;P~100 universe. Model probabilities are converted into continuous sentiment scores, aggregated by stock and signal date, and aligned with next-session returns over one-, two-, three-, and five-day horizons. All seven downstream models produce positive but small mean rank information coefficients at the one-day horizon; the largest is 0.0143 for FinBERT. None of the 28 model--horizon tests remains significant after Newey--West inference and false-discovery-rate correction. Portfolio results likewise fail to establish a robust advantage for the best-performing classifiers. The findings show that QLoRA is effective for financial sentiment adaptation, while also documenting a clear gap between classification accuracy and tradable cross-sectional signals.</p>
+      <p class="meta"><span class="org">q-fin.MF</span><span class="dot">&middot;</span>
+        Fusheng Luo<span class="dot">&middot;</span>Published 2026-08-04</p>
+      <p class="tagrow"><a class="tag" href="#" data-tag="portfolio">portfolio</a><a class="tag" href="#" data-tag="factors">factors</a><a class="tag" href="#" data-tag="macro">macro</a></p>
+      
+    </div>
+    <div class="acts"><span class="act st queue">queued</span><a class="act" href="https://arxiv.org/abs/2608.04200v1">Paper</a><a class="act" href="https://arxiv.org/pdf/2608.04200v1">PDF</a></div>
+  </article>
+
+  <article class="card" data-status="muted" data-search="option pricing with time-changed fractional brownian motion: a fractional variance gamma model robert jarrow, jayen tan q-fin.mf options crypto factors blocked">
+    <a class="fig" href="https://arxiv.org/abs/2608.03925v1"><img src="thumbs/2608.03925v1.jpg" alt="First page" loading="lazy"></a>
+    <div class="mid">
+      <h2><a href="https://arxiv.org/abs/2608.03925v1">Option Pricing with Time-Changed Fractional Brownian Motion: A Fractional Variance Gamma Model</a></h2>
+      <p class="abs">Fractional Brownian motion (fBm) exhibits attractive features for financial modeling, including long-range dependence, path roughness, and anomalous diffusion. However, its non-semimartingale nature precludes the use of conventional no-arbitrage approaches to option pricing. We address this limitation by introducing a time-changed fBm, obtained by evaluating fBm at stochastic gamma activity time, where activity time represents cumulative executed trading time. The resulting process retains the defining properties of fBm while recovering the semimartingale structure. Building on this construction, we develop the fractional Variance Gamma (fVG) model and propose a generalized method of moments (GMM) estimation procedure for option pricing. An empirical analysis of the S\&amp;P 500 yields an estimated Hurst exponent of approximately 0.45, consistent with mildly sublinear temporal scaling of return moments.</p>
+      <p class="meta"><span class="org">q-fin.MF</span><span class="dot">&middot;</span>
+        Robert Jarrow, Jayen Tan<span class="dot">&middot;</span>Published 2026-08-04</p>
+      <p class="tagrow"><a class="tag" href="#" data-tag="options">options</a><a class="tag" href="#" data-tag="crypto">crypto</a><a class="tag" href="#" data-tag="factors">factors</a></p>
+      
+    </div>
+    <div class="acts"><span class="act st muted">blocked</span><a class="act" href="https://arxiv.org/abs/2608.03925v1">Paper</a><a class="act" href="https://arxiv.org/pdf/2608.03925v1">PDF</a></div>
+  </article>
+
+  <article class="card" data-status="queue" data-search="measuring the engine of a liquidation cascade: subcritical branching inside a first-order transition ramon marc garcia seuma physics.soc-ph crypto factors queued">
+    <a class="fig" href="https://arxiv.org/abs/2608.03616v1"><img src="thumbs/2608.03616v1.jpg" alt="First page" loading="lazy"></a>
+    <div class="mid">
+      <h2><a href="https://arxiv.org/abs/2608.03616v1">Measuring the engine of a liquidation cascade: subcritical branching inside a first-order transition</a></h2>
+      <p class="abs">We study seven major crypto-perpetual liquidation cascades (2022-2025), and in the largest of them we can watch the mechanism directly. From the on-chain fill log of a fully transparent venue we measure the branching ratio of that event -- the October 2025 crash, the largest on record -- in flight, with both of its factors observed and no free constants. It ran deeply subcritical: the structural ratio and the amplification bookkeeping both place it at $\hatλ\approx 0.1-0.2$ throughout, while a third, flow-based estimator falls through the climax rather than rising. All three agree on subcriticality within the venue, not on a common numerical level. Alongside them, 88% of all post-onset forced selling landed within thirty minutes and 63% of it was absorbed off-book by the venue&#x27;s backstop, which drives the branching ratio down precisely at the climax. Across the full set of seven, at onset -- the minute ending the steepest hour of each crash -- the order parameter (mean inter-asset coupling) jumps by between 1.6 and 4.4 baseline standard deviations into a near-fully-ordered phase, while the susceptibility proxy $χ$ collapses in five of the seven events and diverges in none; the jump is invariant under subsampling. The transition is abrupt and scale-robust rather than critical, and its in-cascade signature lives in the liquidity sector: price impact spikes on two venues and two instruments while open interest clears by 25-70%. The natural mechanistic account, a Galton-Watson cascade with $λ= k \tildeρ$, is then eliminated as a description of the pre-cascade state: both of its falsifiable predictions fail at simulated power &gt;= 0.96, on proxied and on directly measured regressors alike. Severity is set by shock times map-in-path times liquidity withdrawal rather than by a diverging multiplier, which is why none of the scalar pre-state measures we can construct grades it.</p>
+      <p class="meta"><span class="org">physics.soc-ph</span><span class="dot">&middot;</span>
+        Ramon Marc Garcia Seuma<span class="dot">&middot;</span>Published 2026-08-04</p>
+      <p class="tagrow"><a class="tag" href="#" data-tag="crypto">crypto</a><a class="tag" href="#" data-tag="factors">factors</a></p>
+      
+    </div>
+    <div class="acts"><span class="act st queue">queued</span><a class="act" href="https://arxiv.org/abs/2608.03616v1">Paper</a><a class="act" href="https://arxiv.org/pdf/2608.03616v1">PDF</a></div>
+  </article>
+
+  <article class="card" data-status="queue" data-search="a unifying perspective on the collapse to the mean for law-invariant functionals felix-benedikt liebrich q-fin.rm crypto triage">
+    <a class="fig" href="https://arxiv.org/abs/2608.03466v1"><img src="thumbs/2608.03466v1.jpg" alt="First page" loading="lazy"></a>
+    <div class="mid">
+      <h2><a href="https://arxiv.org/abs/2608.03466v1">A unifying perspective on the collapse to the mean for law-invariant functionals</a></h2>
+      <p class="abs">We revisit the ``collapse to the mean&#x27;&#x27; phenomenon, which refers to mild structural conditions, such as local linearity, that force a law-invariant functional $\ph$ defined on finite-mean random variables to depend solely on the expectation of its argument $X$, and not on any other distributional feature. Starting from a concise characterisation of the convex order, our simplified approach unifies and extends existing results without assuming the functional to be convex or monotone in the almost-sure order, and clarifies the conceptual foundations of the ``collapse to the mean&quot; phenomenon. In addition, we establish a new ``dual collapse&#x27;&#x27; result for quasi-star-shaped functionals.</p>
+      <p class="meta"><span class="org">q-fin.RM</span><span class="dot">&middot;</span>
+        Felix-Benedikt Liebrich<span class="dot">&middot;</span>Published 2026-08-04</p>
+      <p class="tagrow"><a class="tag" href="#" data-tag="crypto">crypto</a></p>
+      
+    </div>
+    <div class="acts"><span class="act st queue">triage</span><a class="act" href="https://arxiv.org/abs/2608.03466v1">Paper</a><a class="act" href="https://arxiv.org/pdf/2608.03466v1">PDF</a></div>
+  </article>
+
+  <article class="card" data-status="queue" data-search="a new approach to goodness of fit for ergodic markov processes vance martin, yoshihiko nishiyama, john stachurski et al. stat.me quant-finance triage">
+    <a class="fig" href="https://arxiv.org/abs/2608.03088v1"><img src="thumbs/2608.03088v1.jpg" alt="First page" loading="lazy"></a>
+    <div class="mid">
+      <h2><a href="https://arxiv.org/abs/2608.03088v1">A New Approach to Goodness of Fit for Ergodic Markov Processes</a></h2>
+      <p class="abs">We introduce a new density-based goodness of fit test for ergodic Markov processes. Our test compares the data against the class of models specified in the null hypothesis, and rejects if no model in the class yields a stationary density that matches with the data. No alternative needs to be specified in order to implement the test. Although our test compares densities, estimation of smoothing parameters is not required, and the test has nontrivial power against $1/\sqrt{n}$ local alternatives. The test provides new perspectives on some existing problems in econometric and financial modeling.</p>
+      <p class="meta"><span class="org">stat.ME</span><span class="dot">&middot;</span>
+        Vance Martin, Yoshihiko Nishiyama, John Stachurski et al.<span class="dot">&middot;</span>Published 2026-08-04</p>
+      <p class="tagrow"><a class="tag" href="#" data-tag="quant-finance">quant-finance</a></p>
+      
+    </div>
+    <div class="acts"><span class="act st queue">triage</span><a class="act" href="https://arxiv.org/abs/2608.03088v1">Paper</a><a class="act" href="https://arxiv.org/pdf/2608.03088v1">PDF</a></div>
+  </article>
+
+  <article class="card" data-status="muted" data-search="mandate without managers: automated market makers as verifiable portfolio products zachary feinstein, ionut florescu, sean o&#x27;leary q-fin.tr portfolio microstructure blocked">
+    <a class="fig" href="https://arxiv.org/abs/2608.02917v1"><img src="thumbs/2608.02917v1.jpg" alt="First page" loading="lazy"></a>
+    <div class="mid">
+      <h2><a href="https://arxiv.org/abs/2608.02917v1">Mandate without Managers: Automated Market Makers as Verifiable Portfolio Products</a></h2>
+      <p class="abs">Automated market makers (AMMs) are typically interpreted and evaluated as decentralized exchanges. Herein, we take the perspective envisioned by Balancer that an AMM can also be viewed as a portfolio technology that programmatically enforces an economic mandate. In particular, we follow the geometric mean market maker (G3M) invariant employed by that protocol in order to enforce a target-weighted portfolio. We introduce a multi-asset fee structure to the G3M under which competitive arbitrage implements a band-rebalancing strategy with mis-weighting bounded ex ante, allowing compliance with the mandate to be verified directly from the pool&#x27;s observable holdings. We then compare simulated G3M portfolios against the realized performance of VBIAX, EQL, and EDOW on annualized returns and tracking error against the portfolio mandate. Across these historical case studies, and using arbitrage-only order flow, the G3M is found to outperform the incumbent funds in both metrics for certain fee ranges.</p>
+      <p class="meta"><span class="org">q-fin.TR</span><span class="dot">&middot;</span>
+        Zachary Feinstein, Ionut Florescu, Sean O&#x27;Leary<span class="dot">&middot;</span>Published 2026-08-03</p>
+      <p class="tagrow"><a class="tag" href="#" data-tag="portfolio">portfolio</a><a class="tag" href="#" data-tag="microstructure">microstructure</a></p>
+      
+    </div>
+    <div class="acts"><span class="act st muted">blocked</span><a class="act" href="https://arxiv.org/abs/2608.02917v1">Paper</a><a class="act" href="https://arxiv.org/pdf/2608.02917v1">PDF</a></div>
+  </article>
+
+  <article class="card" data-status="queue" data-search="preference robust distortion risk measures carole bernard, silvana m. pesenti q-fin.rm quant-finance triage">
+    <a class="fig" href="https://arxiv.org/abs/2608.02854v1"><img src="thumbs/2608.02854v1.jpg" alt="First page" loading="lazy"></a>
+    <div class="mid">
+      <h2><a href="https://arxiv.org/abs/2608.02854v1">Preference robust distortion risk measures</a></h2>
+      <p class="abs">We introduce a framework for preference-robust decision making when preferences over risk are modelled through generalised distortion risk measures. Unlike distributional robustness, our approach addresses ambiguity in the risk functional itself. We construct ambiguity sets on distortion (weight) functions using the Wasserstein distance and Bregman divergences, and derive closed-form expressions for the worst- and best-case distortion risk measures. We further extend the framework to rank-dependent utility, yielding preference-robust behavioural models. In particular, rank-dependent utility appears as a robustification of the expected utility model, yielding a novel way to address the Allais paradox.</p>
+      <p class="meta"><span class="org">q-fin.RM</span><span class="dot">&middot;</span>
+        Carole Bernard, Silvana M. Pesenti<span class="dot">&middot;</span>Published 2026-08-03</p>
+      <p class="tagrow"><a class="tag" href="#" data-tag="quant-finance">quant-finance</a></p>
+      
+    </div>
+    <div class="acts"><span class="act st queue">triage</span><a class="act" href="https://arxiv.org/abs/2608.02854v1">Paper</a><a class="act" href="https://arxiv.org/pdf/2608.02854v1">PDF</a></div>
+  </article>
+
+  <article class="card" data-status="muted" data-search="proper-score observation-driven filters: local geometry, estimation, and continuous-time limits giulia livieri, gianluca palmari math.st microstructure factors blocked">
+    <a class="fig" href="https://arxiv.org/abs/2608.02828v1"><img src="thumbs/2608.02828v1.jpg" alt="First page" loading="lazy"></a>
+    <div class="mid">
+      <h2><a href="https://arxiv.org/abs/2608.02828v1">Proper-score observation-driven filters: local geometry, estimation, and continuous-time limits</a></h2>
+      <p class="abs">Observation-driven filters update a time-varying parameter with the likelihood score, linking the recursion to the logarithmic scoring rule. We replace this update with the negative parameter derivative of a differentiable proper scoring rule, within a declared working family and predictable scaling. For a general rule, the conditional mean update is a pre-conditioned stochastic-gradient of conditional scoring risk; when an autoregressive pull is included, the centre is the zero of a composite mean field. We derive local realised-loss descent and conditional-mean contraction results, and decompose the local dynamics into risk curvature and innovation variability. These two quantities coincide for the log score under the Bartlett identity but generally differ, which clarifies how bounded drivers can limit the transmission of extreme observations to the filtered path. We also establish consistency and dependent-data sandwich asymptotic normality for batch minimum-scoring-risk estimation of the static recursion parameters. For high-frequency scale models, centred updates yield a diffusion limit, non-centred updates yield a mean-flow limit, and a local transfer theorem gives an Ornstein-Uhlenbeck approximation around a moving scoring-rule risk projection. The working family, scoring rule, scaling, and autoregressive parameters jointly determine the filtered path, while the working family also determines predictive quantiles. Controlled experiments illustrate these channels. An empirical density-by-criterion factorial on international equity returns evaluates point-variance loss, value-at-risk coverage, and probability-integral-transform diagnostics without imposing a universal ranking. The results provide a criterion-based framework for observation-driven filtering under misspecification and identify the assumptions required for estimation, local tracking, and continuous-time approximation.</p>
+      <p class="meta"><span class="org">math.ST</span><span class="dot">&middot;</span>
+        Giulia Livieri, Gianluca Palmari<span class="dot">&middot;</span>Published 2026-08-03</p>
+      <p class="tagrow"><a class="tag" href="#" data-tag="microstructure">microstructure</a><a class="tag" href="#" data-tag="factors">factors</a></p>
+      
+    </div>
+    <div class="acts"><span class="act st muted">blocked</span><a class="act" href="https://arxiv.org/abs/2608.02828v1">Paper</a><a class="act" href="https://arxiv.org/pdf/2608.02828v1">PDF</a></div>
+  </article>
+
+  <article class="card" data-status="muted" data-search="neural networks with local converging inputs for efficient options pricing models harris cobb, wenbo hao, yingjie liu cs.lg volatility machine-learning options blocked">
+    <a class="fig" href="https://arxiv.org/abs/2608.02778v1"><img src="thumbs/2608.02778v1.jpg" alt="First page" loading="lazy"></a>
+    <div class="mid">
+      <h2><a href="https://arxiv.org/abs/2608.02778v1">Neural Networks with Local Converging Inputs for Efficient Options Pricing Models</a></h2>
+      <p class="abs">We present a novel application of Neural Networks with Local Converging Inputs (NNLCI) to improve the efficiency of existing numerical methods for pricing multi-asset options. The most concise input format for NNLCI has been introduced, offering substantial convenience and efficiency. NNLCI uses a neural network to locally correct solutions from a coarse mesh and a refined mesh (relative to the coarse one), requiring only a minimal amount of high-fidelity training data. We demonstrate this approach on cash-or-nothing options under the Black-Scholes equation in one, two, and three spatial dimensions, and on single-asset down-and-out barrier call options under the Heston stochastic-volatility model (whose pricing PDE is two-dimensional in the spot price $S$ and the instantaneous variance $v$). In each case, NNLCI reduces the root-mean-square error (RMSE) of the refined-mesh numerical solution by a factor of approximately 4-12 on test sets, even when the neural network is trained on only a small subset of parameter combinations. These results demonstrate that NNLCI significantly reduces computational requirements for high-dimensional problems in real-time options trading and risk management, offering low training costs and strong generalization ability.</p>
+      <p class="meta"><span class="org">cs.LG</span><span class="dot">&middot;</span>
+        Harris Cobb, Wenbo Hao, Yingjie Liu<span class="dot">&middot;</span>Published 2026-08-03</p>
+      <p class="tagrow"><a class="tag" href="#" data-tag="volatility">volatility</a><a class="tag" href="#" data-tag="machine-learning">machine-learning</a><a class="tag" href="#" data-tag="options">options</a></p>
+      
+    </div>
+    <div class="acts"><span class="act st muted">blocked</span><a class="act" href="https://arxiv.org/abs/2608.02778v1">Paper</a><a class="act" href="https://arxiv.org/pdf/2608.02778v1">PDF</a></div>
+  </article>
+
+  <article class="card" data-status="queue" data-search="methodology for modelling token economies and performing event impact analysis with detect rem sadykhov, geoffrey goodell, philip treleaven q-fin.gn crypto macro triage">
+    <a class="fig" href="https://arxiv.org/abs/2608.02475v1"><img src="thumbs/2608.02475v1.jpg" alt="First page" loading="lazy"></a>
+    <div class="mid">
+      <h2><a href="https://arxiv.org/abs/2608.02475v1">Methodology for Modelling Token Economies and Performing Event Impact Analysis with DeTEcT</a></h2>
+      <p class="abs">The objective of this paper is to provide a methodology for applying the DeTEcT framework to modelling token economies, to formalise the configuration of the simulation environment, and to introduce an event analysis framework. A token economy is an economic system that has a unique mechanism for controlling its monetary supply, and a medium, in the form of a token or currency, for the valuation of goods and services, the settlement of transactions, and the storage of value. We show the key decisions that must be made when modelling an economy with the DeTEcT framework and showcase some numerical methods that can be used in conjunction with the framework to perform economic simulations. We also propose a framework for analysing and measuring the impacts of events on an economy, while also developing a procedure to measure the significance of these impacts. Throughout the paper, we use Bitcoin as a case study to demonstrate how to apply the frameworks and tools we proposed here. We show how a model of Bitcoin token economy can be set up, and how to measure the impacts of Bitcoin&#x27;s endogenous policies (i.e., BIPs) on the wealth distribution of its economic participants.</p>
+      <p class="meta"><span class="org">q-fin.GN</span><span class="dot">&middot;</span>
+        Rem Sadykhov, Geoffrey Goodell, Philip Treleaven<span class="dot">&middot;</span>Published 2026-08-03</p>
+      <p class="tagrow"><a class="tag" href="#" data-tag="crypto">crypto</a><a class="tag" href="#" data-tag="macro">macro</a></p>
+      
+    </div>
+    <div class="acts"><span class="act st queue">triage</span><a class="act" href="https://arxiv.org/abs/2608.02475v1">Paper</a><a class="act" href="https://arxiv.org/pdf/2608.02475v1">PDF</a></div>
+  </article>
+
+  <article class="card" data-status="queue" data-search="path portfolio optimization: defect, lift, and the price of path complexity miquel noguer i alonso q-fin.pm portfolio factors queued">
+    <a class="fig" href="https://arxiv.org/abs/2608.02355v1"><img src="thumbs/2608.02355v1.jpg" alt="First page" loading="lazy"></a>
+    <div class="mid">
+      <h2><a href="https://arxiv.org/abs/2608.02355v1">Path Portfolio Optimization: Defect, Lift, and the Price of Path Complexity</a></h2>
+      <p class="abs">This paper builds Path Portfolio Optimization: portfolio theory on a path-first framework in which the signature is the universal coordinate of the price path, and asks whether it survives estimation. A portfolio is a linear functional of the signature, so the control lives in a truncated tensor algebra, the covariance of signature coordinates is the non-group-like part of the expected signature --- a defect form --- and the whole mean--variance problem becomes a linear system in one tensor. Two structural results follow. The lift is the execution convention: the gap between the Marcus and forward lifts, contracted with portfolio weights, is Fernholz&#x27;s excess growth rate exactly, so excess growth is the geometricity defect of the portfolio map. And the antisymmetric block at level two is lift-invariant pathwise, so directional signals are convention-free while variance signals and ruin are not. The empirical finding is a dimensional trade-off. With the expected signature known, quadratic path functionals raise the certainty equivalent elevenfold for a pair of assets and sixtyfold for a cross section of twenty; with it estimated, the unregularized policy is severely negative until the sample exceeds roughly six observations per parameter, and shrinkage flips from harmful in the pair to indispensable in the cross section. The entire gain sits in the symmetric block, which is convexity in the terminal increment rather than path-dependence; the path-dependent antisymmetric block earns nothing when the driver has no expected area. And the sample-size floor belongs to unstructured estimation rather than to path complexity: an estimator that fits only the generator of the driver and rebuilds the expected signature recovers almost all of the attainable value at barely one observation per parameter</p>
+      <p class="meta"><span class="org">q-fin.PM</span><span class="dot">&middot;</span>
+        Miquel Noguer i Alonso<span class="dot">&middot;</span>Published 2026-08-03</p>
+      <p class="tagrow"><a class="tag" href="#" data-tag="portfolio">portfolio</a><a class="tag" href="#" data-tag="factors">factors</a></p>
+      
+    </div>
+    <div class="acts"><span class="act st queue">queued</span><a class="act" href="https://arxiv.org/abs/2608.02355v1">Paper</a><a class="act" href="https://arxiv.org/pdf/2608.02355v1">PDF</a></div>
+  </article>
+
+  <article class="card" data-status="queue" data-search="ai governance for institutional readiness in finance irene aldridge, steve krawciw econ.em machine-learning risk triage">
+    <a class="fig" href="https://arxiv.org/abs/2608.02311v1"><img src="thumbs/2608.02311v1.jpg" alt="First page" loading="lazy"></a>
+    <div class="mid">
+      <h2><a href="https://arxiv.org/abs/2608.02311v1">AI Governance for Institutional Readiness in Finance</a></h2>
+      <p class="abs">Agentic AI is gaining acceptance in asset management, but governance has not kept pace: 88% of surveyed finance professionals report no operational governance framework for agentic AI despite universal awareness of its deployment, and only 24 of 75 large U.S. money managers disclosing AI use in Form ADV filings report a formal governance policy. We argue this gap is architectural, not cultural: governance built for deterministic systems assumes static validation. However, continuously retrained agentic policies violate static governance by design. We propose a four-layer framework (Policy, Engineering, Composition, Systemic) with computable instantiations: a regret-covariance statistic that detects policy drift from observed data alone, and a calibrated crowding model showing joint drawdown probability rising from 39.2% to 79.3% as institutions converge on correlated exposures. We support the framework with a study of a deployed LLM-embedding trading strategy and a contemporaneous discretionary fund blowup, clarifying which controls transfer across agentic and human-directed risk-taking. We also provide a 90-day framework implementation sequence for institutions.</p>
+      <p class="meta"><span class="org">econ.EM</span><span class="dot">&middot;</span>
+        Irene Aldridge, Steve Krawciw<span class="dot">&middot;</span>Published 2026-08-03</p>
+      <p class="tagrow"><a class="tag" href="#" data-tag="machine-learning">machine-learning</a><a class="tag" href="#" data-tag="risk">risk</a></p>
+      
+    </div>
+    <div class="acts"><span class="act st queue">triage</span><a class="act" href="https://arxiv.org/abs/2608.02311v1">Paper</a><a class="act" href="https://arxiv.org/pdf/2608.02311v1">PDF</a></div>
+  </article>
+
+  <article class="card" data-status="queue" data-search="hawkes-driven otc market making: volterra-riccati approximation alexander barzykin q-fin.rm quant-finance queued">
+    <a class="fig" href="https://arxiv.org/abs/2608.02002v1"><img src="thumbs/2608.02002v1.jpg" alt="First page" loading="lazy"></a>
+    <div class="mid">
+      <h2><a href="https://arxiv.org/abs/2608.02002v1">Hawkes-Driven OTC Market Making: Volterra-Riccati Approximation</a></h2>
+      <p class="abs">We formulate an over-the-counter (OTC) market-making problem in which request-for-quote (RFQ) arrivals are modelled by general Hawkes kernels and fills are controlled thinnings of the exogenous request flow. The modelling choice is motivated by spot-FX RFQ data: after filtering and transforming to seasonality-adjusted RFQ activity time, two-way activity in major currency pairs exhibits large fitted branching ratios and multi-scale persistence. For general Hawkes kernels the control problem is path-dependent: the relevant state contains the order-flow history, or equivalently the forward curve of conditional future RFQ intensities. Exact Markovian lifting is available for exponential kernels, but it becomes high-dimensional for mixtures of exponentials and impractical for long-memory kernels. We therefore develop a hierarchy of Volterra-Riccati approximations. The first level replaces random future request flow by its conditional Volterra forecast; the second adds a covariance correction for intensity uncertainty; the third updates the quote rule with the realized Hawkes memory, or equivalently with the post-request conditional forecast curve. The approximation hierarchy is validated in an exponential Hawkes benchmark, where the exact lifted HJB can be solved numerically. The state-feedback Volterra-Riccati policy closely tracks the exact benchmark, especially in directional regimes, while a memory-free Poisson policy suffers substantial regret. We then apply the same state-feedback rule to a power-law-like RFQ memory model. A directional RFQ burst changes the conditional forecast of future flow and is converted by the continuation-value shadow price into a persistent quote skew. The resulting endogenous OTC quote impact inherits the long-memory decay of the RFQ forecast response and improves inventory and P&amp;L risk control relative to a no-conditioning Poisson benchmark.</p>
+      <p class="meta"><span class="org">q-fin.RM</span><span class="dot">&middot;</span>
+        Alexander Barzykin<span class="dot">&middot;</span>Published 2026-08-03</p>
+      <p class="tagrow"><a class="tag" href="#" data-tag="quant-finance">quant-finance</a></p>
+      
+    </div>
+    <div class="acts"><span class="act st queue">queued</span><a class="act" href="https://arxiv.org/abs/2608.02002v1">Paper</a><a class="act" href="https://arxiv.org/pdf/2608.02002v1">PDF</a></div>
+  </article>
+
+  <article class="card" data-status="queue" data-search="ai financial advice: supply, demand, and life cycle implications taha choukhmane, tim de silva, weidong lin et al. econ.gn machine-learning triage">
+    <a class="fig" href="https://arxiv.org/abs/2608.01607v1"><img src="thumbs/2608.01607v1.jpg" alt="First page" loading="lazy"></a>
+    <div class="mid">
+      <h2><a href="https://arxiv.org/abs/2608.01607v1">AI Financial Advice: Supply, Demand, and Life Cycle Implications</a></h2>
+      <p class="abs">We ask a representative sample to write prompts seeking spending and investing advice from LLMs, then simulate the lifetime effects of following the advice under realistic asset and labor market conditions. Applying this method to GPT-5.2, we find following the advice would move respondents toward life cycle theory: broader participation in diversified equity funds, age-declining equity shares, and larger savings buffers. Recommendations vary systematically by gender, prior AI experience, and financial literacy. For gender, two-thirds of recommended equity-share differences arise from men and women writing different prompts (demand), while one-third arise from gender labels attached to otherwise identical prompts (supply).</p>
+      <p class="meta"><span class="org">econ.GN</span><span class="dot">&middot;</span>
+        Taha Choukhmane, Tim de Silva, Weidong Lin et al.<span class="dot">&middot;</span>Published 2026-08-03</p>
+      <p class="tagrow"><a class="tag" href="#" data-tag="machine-learning">machine-learning</a></p>
+      
+    </div>
+    <div class="acts"><span class="act st queue">triage</span><a class="act" href="https://arxiv.org/abs/2608.01607v1">Paper</a><a class="act" href="https://arxiv.org/pdf/2608.01607v1">PDF</a></div>
+  </article>
+
+  <article class="card" data-status="queue" data-search="p-bubbles, q-bubbles, and risk premia robert a. jarrow, simon s. kwok q-fin.mf crypto triage">
+    <a class="fig" href="https://arxiv.org/abs/2608.01554v1"><img src="thumbs/2608.01554v1.jpg" alt="First page" loading="lazy"></a>
+    <div class="mid">
+      <h2><a href="https://arxiv.org/abs/2608.01554v1">P-Bubbles, Q-Bubbles, and Risk Premia</a></h2>
+      <p class="abs">We develop a unified modeling framework that connects two distinct types of bubbles defined in the literature: the rational bubbles (aka P-bubbles), and the local martingale bubbles (aka Q-bubbles). We show that the local martingale bubble model includes the classical rational bubble as a special case. We relate both types of bubbles to an equity&#x27;s risk premium via a novel decomposition.</p>
+      <p class="meta"><span class="org">q-fin.MF</span><span class="dot">&middot;</span>
+        Robert A. Jarrow, Simon S. Kwok<span class="dot">&middot;</span>Published 2026-08-03</p>
+      <p class="tagrow"><a class="tag" href="#" data-tag="crypto">crypto</a></p>
+      
+    </div>
+    <div class="acts"><span class="act st queue">triage</span><a class="act" href="https://arxiv.org/abs/2608.01554v1">Paper</a><a class="act" href="https://arxiv.org/pdf/2608.01554v1">PDF</a></div>
+  </article>
+
+  <article class="card" data-status="queue" data-search="conformal kelly: conformal prediction intervals as the scale in fractional kelly position sizing robert jacob ryan q-fin.pm machine-learning portfolio risk queued">
+    <a class="fig" href="https://arxiv.org/abs/2608.01494v1"><img src="thumbs/2608.01494v1.jpg" alt="First page" loading="lazy"></a>
+    <div class="mid">
+      <h2><a href="https://arxiv.org/abs/2608.01494v1">Conformal Kelly: Conformal Prediction Intervals as the Scale in Fractional Kelly Position Sizing</a></h2>
+      <p class="abs">Conformal prediction has traditionally been used to quantify prediction uncertainty. We put that uncertainty to a second use, combining a 75% conformal interval with fractional Kelly to size portfolio positions: as the range widens we shrink the position, and as it narrows we grow it. On a six-year development window (2016-2021), with trading costs and strict leverage caps, this compounds at 28.5% annualised net log growth with a Sharpe ratio of 1.34 and a 27.7% maximum drawdown, versus 15.9% for holding the S&amp;P 500 and 21-22% for passive portfolios at the same leverage. Our main development-window finding runs against the literature&#x27;s advice for conformal prediction on time series. Every tweak that adapts the interval faster to market conditions costs 0.7 to 5.3 points of annual growth; the winner is the simplest method: slow, unweighted, per-asset rolling quantiles. When an interval sizes a position rather than describing one forecast, width stability beats local sharpness. It also beats the textbook standard deviation by 2.1 points at matched leverage. We also implement a risk control: when the intervals miss on the downside far more than their historical rate, we cut leverage. On the development window this cut maximum drawdown from 27.7% to 20.3% while raising the Sharpe ratio, beating all 40 placebo timings (rank-based p = 1/41). These numbers came from an autonomous LLM-agent search over 200 configurations, so we sealed all data from 2022 onward and pre-registered configurations, benchmarks, and interpretation rules before one evaluation. Calibration held (0.745 coverage against 0.750, weakest through 2022); growth did not: the two configurations earned 8.5% and 7.0% per year, below the passive benchmarks, and a pre-registered hindsight benchmark beat them on raw growth while taking a 46% drawdown. All outcomes are reported as pre-registered.</p>
+      <p class="meta"><span class="org">q-fin.PM</span><span class="dot">&middot;</span>
+        Robert Jacob Ryan<span class="dot">&middot;</span>Published 2026-08-02</p>
+      <p class="tagrow"><a class="tag" href="#" data-tag="machine-learning">machine-learning</a><a class="tag" href="#" data-tag="portfolio">portfolio</a><a class="tag" href="#" data-tag="risk">risk</a></p>
+      
+    </div>
+    <div class="acts"><span class="act st queue">queued</span><a class="act" href="https://arxiv.org/abs/2608.01494v1">Paper</a><a class="act" href="https://arxiv.org/pdf/2608.01494v1">PDF</a></div>
+  </article>
+
+  <article class="card" data-status="muted" data-search="the vix-derived volatility model: a vix-first joint spx-vix framework nicola f. zaugg, lech a. grzelak q-fin.mf volatility options crypto blocked">
+    <a class="fig" href="https://arxiv.org/abs/2608.01479v1"><img src="thumbs/2608.01479v1.jpg" alt="First page" loading="lazy"></a>
+    <div class="mid">
+      <h2><a href="https://arxiv.org/abs/2608.01479v1">The VIX-Derived Volatility Model: A VIX-first Joint SPX-VIX Framework</a></h2>
+      <p class="abs">We propose the VIX-derived volatility (VDV) model, a VIX-first framework for joint SPXVIX modeling. In the model, we define explicit dynamics for the VIX process to price VIX futures and options, yielding a VIX-side calibration that is independent of the SPX dynamics. Using the rolling-window definition of the VIX, we then derive a coupling function to obtain the SPX volatility process as a latent process consistent with the calibrated VIX dynamics. This produces a stochastic-volatility representation for SPX that can be further calibrated to SPX options without altering the VIX dynamics. Relative to existing joint-calibration approaches based on global optimization or highly flexible black-box dynamics, the method offers an interpretable and tractable decomposition of the joint problem by separating the calibration of the VIX from the calibration of the SPX. In a numerical experiment, we show that a VDV model with local volatility and mean-reverting dynamics for the VIX achieves a close model fit to the VIX futures market, VIX option market, and the SPX option market at the same time, providing a consistent joint framework.</p>
+      <p class="meta"><span class="org">q-fin.MF</span><span class="dot">&middot;</span>
+        Nicola F. Zaugg, Lech A. Grzelak<span class="dot">&middot;</span>Published 2026-08-02</p>
+      <p class="tagrow"><a class="tag" href="#" data-tag="volatility">volatility</a><a class="tag" href="#" data-tag="options">options</a><a class="tag" href="#" data-tag="crypto">crypto</a></p>
+      
+    </div>
+    <div class="acts"><span class="act st muted">blocked</span><a class="act" href="https://arxiv.org/abs/2608.01479v1">Paper</a><a class="act" href="https://arxiv.org/pdf/2608.01479v1">PDF</a></div>
+  </article>
+
+  <article class="card" data-status="queue" data-search="an information-geometric framework for bayesian credit risk monitoring lorenzo quirini q-fin.rm portfolio queued">
+    <a class="fig" href="https://arxiv.org/abs/2608.01294v1"><img src="thumbs/2608.01294v1.jpg" alt="First page" loading="lazy"></a>
+    <div class="mid">
+      <h2><a href="https://arxiv.org/abs/2608.01294v1">An Information-Geometric Framework for Bayesian Credit Risk Monitoring</a></h2>
+      <p class="abs">We propose an information-geometric framework for credit risk monitoring in which a bank&#x27;s knowledge of a borrower is represented by a posterior distribution over latent dimensions of creditworthiness and financial fragility. Under a linear-Gaussian specification, Bayesian updating maps observed behavioural scores into Gaussian posterior beliefs, which form a statistical manifold endowed with the Fisher information metric. In the common-covariance case, the induced geometry reduces to the Mahalanobis metric on posterior means, while borrower-specific covariance matrices allow informational distances to account for both expected risk and assessment uncertainty. Simulation exercises illustrate how Kullback-Leibler and Jeffreys divergences can be used to compare portfolio segments. The framework provides a geometric interpretation of credit monitoring as the evolution of posterior beliefs over borrower risk.</p>
+      <p class="meta"><span class="org">q-fin.RM</span><span class="dot">&middot;</span>
+        Lorenzo Quirini<span class="dot">&middot;</span>Published 2026-08-02</p>
+      <p class="tagrow"><a class="tag" href="#" data-tag="portfolio">portfolio</a></p>
+      
+    </div>
+    <div class="acts"><span class="act st queue">queued</span><a class="act" href="https://arxiv.org/abs/2608.01294v1">Paper</a><a class="act" href="https://arxiv.org/pdf/2608.01294v1">PDF</a></div>
+  </article>
+
+  <article class="card" data-status="muted" data-search="amortizing the calibration triple: a projection-consistent neural operator for local-stochastic volatility xiaozhen wang, anaïs després, martin dureau et al. q-fin.mf volatility machine-learning options blocked">
+    <a class="fig" href="https://arxiv.org/abs/2608.01217v1"><img src="thumbs/2608.01217v1.jpg" alt="First page" loading="lazy"></a>
+    <div class="mid">
+      <h2><a href="https://arxiv.org/abs/2608.01217v1">Amortizing the Calibration Triple: A Projection-Consistent Neural Operator for Local-Stochastic Volatility</a></h2>
+      <p class="abs">Local-stochastic volatility (LSV) combines vanilla marginals with richer smile dynamics, but calibration requires a slow, noisy and sequential McKean--Vlasov fixed point. We learn a projection-consistent operator for the calibration triple. Given finite quotes and a stochastic-volatility (SV) backbone, it jointly returns an implied-volatility surface subject to static-arbitrage constraints, its Dupire local volatility, LSV leverage and the conditional moment required by the projection identity. Starting from option-price marginals, we derive a division-free Dupire residual in log-implied-variance coordinates and a quotient Fokker--Planck equation after Gyöngy projection. Deep Operator Network (DeepONet) and Fourier Neural Operator (FNO) implementations enforce quote fit, static-arbitrage, Dupire and projection constraints. For the witness-augmented residual system, we prove conditional identification and empirical consistency under LSV existence and inverse residual stability. In controlled synthetic tests, forward-start and cliquet errors differ from a particle method by 0.1 and 0.2 percentage points, while calibration latency falls from 98.5 to 0.6 ms. Compared with the tested baselines, local-volatility root-mean-square error (RMSE) falls by 36% and leverage RMSE by 7-16%. These results support amortizing the LSV fixed point: the expensive solve moves offline, while online calibration reduces to a single projection-consistent operator evaluation.</p>
+      <p class="meta"><span class="org">q-fin.MF</span><span class="dot">&middot;</span>
+        Xiaozhen Wang, Anaïs Després, Martin Dureau et al.<span class="dot">&middot;</span>Published 2026-08-02</p>
+      <p class="tagrow"><a class="tag" href="#" data-tag="volatility">volatility</a><a class="tag" href="#" data-tag="machine-learning">machine-learning</a><a class="tag" href="#" data-tag="options">options</a></p>
+      
+    </div>
+    <div class="acts"><span class="act st muted">blocked</span><a class="act" href="https://arxiv.org/abs/2608.01217v1">Paper</a><a class="act" href="https://arxiv.org/pdf/2608.01217v1">PDF</a></div>
+  </article>
+
+  <article class="card" data-status="queue" data-search="climate-dyna deep hedging for xvas: model-based reinforcement learning, residual climate hva, and hedge-instrument discovery xiaozhen wang, francois buet-golfouse q-fin.mf machine-learning triage">
+    <a class="fig" href="https://arxiv.org/abs/2608.01208v1"><img src="thumbs/2608.01208v1.jpg" alt="First page" loading="lazy"></a>
+    <div class="mid">
+      <h2><a href="https://arxiv.org/abs/2608.01208v1">Climate-Dyna Deep Hedging for XVAs: Model-Based Reinforcement Learning, Residual Climate HVA, and Hedge-Instrument Discovery</a></h2>
+      <p class="abs">For a trading desk, residual climate hedging valuation adjustment (HVA) is the climate cost left after its inherited hedge and any admissible overlay have been taken into account; it therefore cannot be inferred from a stand-alone stress loss. We obtain this residual by comparing paired climate-on and baseline worlds and reoptimizing the overlay for each hedge universe, which also turns hedge-instrument discovery into a valuation problem: an instrument is useful to the extent that it lowers the optimized residual cost. The linear-Gaussian case has an exact finite-horizon Riccati solution; Climate-Dyna starts from that hedge and learns the remaining nonlinear correction from paired world-model rollouts, with an independent gate deciding whether to deploy the update. In a public-data-calibrated semi-synthetic EU ETS study, crediting the inherited hedge lowers the mean climate charge from 1.517 to 0.906, and the learned overlay lowers it to 0.831 against a 0.821 exact floor; residual Dyna cuts regret by 93% relative to replay with one quarter as many trajectories, while adaptation from only 25 target transitions retains 60.7% of the exact-assisted gain.</p>
+      <p class="meta"><span class="org">q-fin.MF</span><span class="dot">&middot;</span>
+        Xiaozhen Wang, Francois Buet-Golfouse<span class="dot">&middot;</span>Published 2026-08-02</p>
+      <p class="tagrow"><a class="tag" href="#" data-tag="machine-learning">machine-learning</a></p>
+      
+    </div>
+    <div class="acts"><span class="act st queue">triage</span><a class="act" href="https://arxiv.org/abs/2608.01208v1">Paper</a><a class="act" href="https://arxiv.org/pdf/2608.01208v1">PDF</a></div>
   </article></div>
   <p class="empty" id="empty" hidden>No papers match.</p>
+
   <footer>
     <a href="https://github.com/RezaSoleymanifar/alpha-archive">GitHub</a>
     <a href="https://github.com/RezaSoleymanifar/alpha-archive/blob/main/docs/methodology.md">Methodology</a>
     <a href="https://github.com/RezaSoleymanifar/vintage">Vintage</a>
     <a href="https://www.openassetpricing.com/">Open Source Asset Pricing</a>
-    <p>MIT licensed. No data redistributed, no paper text reproduced. Not affiliated with
-    arXiv, Papers with Code, or any cited author. Not investment advice.</p>
+    <p>Queued papers come from the arXiv q-fin feed and carry no results yet &mdash; the
+    status on each card says so. Thumbnails are the paper's own first page, rendered from
+    the openly distributed arXiv PDF. MIT licensed. No data redistributed. Not affiliated
+    with arXiv, Hugging Face, Papers with Code, or any cited author. Not investment advice.</p>
   </footer>
 </div>
 
@@ -168,34 +539,34 @@ footer a{margin-right:16px}
 var cards = [].slice.call(document.querySelectorAll('.card'));
 var q = document.getElementById('q'), count = document.getElementById('count'),
     empty = document.getElementById('empty'), filter = 'all';
+var DONE = {ok: 1, warn: 1, bad: 1};
 
 function apply() {
   var term = q.value.trim().toLowerCase(), shown = 0;
   cards.forEach(function (c) {
-    var okStatus = filter === 'all' || c.dataset.status === filter;
-    var okTerm = !term || c.dataset.search.indexOf(term) !== -1;
-    var show = okStatus && okTerm;
-    c.hidden = !show;
-    if (show) shown++;
+    var s = c.dataset.status, pass;
+    if (filter === 'all') pass = true;
+    else if (filter === 'done') pass = !!DONE[s];
+    else pass = s === filter;
+    var hit = !term || c.dataset.search.indexOf(term) !== -1;
+    c.hidden = !(pass && hit);
+    if (!c.hidden) shown++;
   });
   count.textContent = shown + (shown === 1 ? ' paper' : ' papers');
   empty.hidden = shown > 0;
 }
-
 q.addEventListener('input', apply);
-document.querySelectorAll('.f').forEach(function (b) {
+document.querySelectorAll('.tab[data-f]').forEach(function (b) {
   b.addEventListener('click', function () {
-    document.querySelectorAll('.f').forEach(function (x) { x.classList.remove('on'); });
-    b.classList.add('on');
-    filter = b.dataset.f;
-    apply();
+    document.querySelectorAll('.tab[data-f]').forEach(function (x) {
+      x.classList.remove('on');
+    });
+    b.classList.add('on'); filter = b.dataset.f; apply();
   });
 });
 document.querySelectorAll('.tag').forEach(function (t) {
   t.addEventListener('click', function (e) {
-    e.preventDefault();
-    q.value = t.dataset.tag;
-    apply();
+    e.preventDefault(); q.value = t.dataset.tag; apply();
   });
 });
 apply();
