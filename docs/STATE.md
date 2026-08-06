@@ -100,6 +100,31 @@ them `percentile_source: "local"`.
 - **Monthly.** Refresh citations so the ranking moves, and publish **one**
   replication with its gap table. The replication is the part nobody else has.
 
+## To do later — growth and collaborators
+
+Not built, deliberately parked. Recorded here so it is not lost.
+
+- **Find collaborators.** The archive needs people who replicate papers, not
+  people who star repos. Where they are: r/quant and QuantNet, the Quantitative
+  Finance Stack Exchange, QuantConnect and Nautilus Trader communities, the
+  OSAP and Open Source Finance circles, PhD students who already reran a paper
+  for a course and have the code sitting in a folder.
+- **Make starting easy.** A `CONTRIBUTING.md` that says: pick a paper from the
+  index, run it with Vintage, open a PR with the gap table. One worked example
+  (`jt1993.py`) plus a template replication file, so the first contribution is
+  a fill-in rather than a blank page.
+- **Good first issues.** Label 10–20 indexed papers as "replicate me" with the
+  data they need already named, so a newcomer can see in ten seconds whether
+  they can do it this weekend.
+- **Author outreach.** One email per replication, offering a right of reply
+  rendered on the card, with a public GitHub issue as the thread. Never a bulk
+  mail of the corpus.
+- **Credit line.** Show who — or what — implemented each replication:
+  `implemented by <model or person> · reviewed · commit <sha>`. Provenance next
+  to the result, not a headline claim.
+- **Weekly digest.** The 15–25 new arXiv papers that pass the gates, as a page
+  and a mailing list people opt into. That is the reason to come back.
+
 ## Open threads
 
 - The universe is a 500-paper draw, not an exhaustive sweep — each window was
