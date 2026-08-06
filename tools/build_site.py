@@ -22,6 +22,7 @@ that it has neither.
 from __future__ import annotations
 
 import glob
+import hashlib
 import html
 import json
 import os
@@ -284,7 +285,7 @@ def render_replication(rec: dict, cites: dict[str, int]) -> str:
     m = REPLICATED[rec["paper"]]
     label, cls = status_of(rec)
     n = int(cites.get(rec["paper"], 0))
-    t = (f'<img src="{m["thumb"]}" alt="First page of the paper" loading="lazy" '
+    t = (f'<img src="{thumb_src(m["thumb"])}" alt="First page of the paper" loading="lazy" '
          f'decoding="async" width="320" height="414">'
          if m["thumb"] else f'<div class="gen">{thumb.for_record(rec)}</div>')
     return card(
@@ -295,6 +296,26 @@ def render_replication(rec: dict, cites: dict[str, int]) -> str:
         body=detail(rec),
         search=" ".join([m["title"], m["authors"], m["venue"], *m["tags"], label]),
     )
+
+
+_THUMB_TAGS: dict[str, str] = {}
+
+
+def thumb_src(rel: str) -> str:
+    """Same filename, new bytes, is how a browser ends up showing yesterday's
+    page for a second. Hash the file into the URL so a changed thumbnail is a
+    different URL and nothing stale can be served."""
+    if rel in _THUMB_TAGS:
+        return _THUMB_TAGS[rel]
+    path = os.path.join(ROOT, "docs", rel)
+    tag = rel
+    try:
+        with open(path, "rb") as fh:
+            tag = f"{rel}?v={hashlib.md5(fh.read()).hexdigest()[:8]}"
+    except OSError:
+        pass
+    _THUMB_TAGS[rel] = tag
+    return tag
 
 
 def placeholder(p: dict) -> str:
@@ -362,7 +383,7 @@ QUEUE_STATUS = {
 
 def render_queued(p: dict) -> str:
     label, cls = QUEUE_STATUS.get(p["status"], ("triage", "queue"))
-    t = (f'<img src="{p["thumb"]}" alt="First page of the paper" loading="lazy" '
+    t = (f'<img src="{thumb_src(p["thumb"])}" alt="First page of the paper" loading="lazy" '
          f'decoding="async" width="320" height="414">'
          if p.get("thumb") else placeholder(p))
     # No status pill on a paper we have not run. A leaderboard that labels
@@ -413,10 +434,10 @@ PAGE = """<!doctype html>
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>α-Archive — trending quantitative finance research</title>
+<title>α-Archive — quantitative finance on arXiv, reproduced in notebooks</title>
 <meta name="description" content="Curated trending quantitative finance papers from arXiv q-fin, SSRN, NBER and the journals. Only work a desk can code, ranked by field-normalised citation impact.">
 <meta property="og:title" content="α-Archive">
-<meta property="og:description" content="Curated trending quantitative finance papers.">
+<meta property="og:description" content="Quantitative finance on arXiv, reproduced in notebooks and checked against the paper's own numbers.">
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='6' fill='%230d0d0d'/><text x='16' y='23' font-size='20' font-family='Georgia,serif' fill='%233ddc84' text-anchor='middle'>&#945;</text></svg>">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -620,8 +641,8 @@ footer a{margin-right:18px;color:var(--soft)}
 
 <div class="wrap">
   <div class="head">
-    <h1>Trending <em>Quant Research</em></h1>
-    <p class="sub">Curated trending quantitative finance papers.</p>
+    <h1>Quantitative finance <em>on arXiv</em></h1>
+    <p class="sub">Every paper we can rebuild in a notebook, checked against the numbers it printed.</p>
   </div>
 
   <div class="cols">
