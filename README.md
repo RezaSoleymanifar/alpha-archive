@@ -134,13 +134,17 @@ Until enabled, the workflow remains manually-triggered via the Actions tab ("Run
 
 ```
 [Paper sources]               [LLM layer]              [Backtest engine]        [Web UI]
-arXiv RSS / API     ─┐        ┌─ Triage              ┌─ Data: yfinance,        ┌─ Next.js
-SSRN scraper        ─┤  →     ├─ Spec extractor  →   │  EOD, FRED, grain  →   ├─ Per-paper page
-NBER RSS            ─┤        └─ Code generator     ├─ IC report card        ├─ Search / filter
-AlphaArchitect RSS  ─┘                              ├─ Purged CV + DSR       ├─ Submit paper
-Manual submission   ─┘                              ├─ Decay analysis        ├─ Discussion
-                                                    └─ Regime test           └─ API
+arXiv API           ─┐        ┌─ Triage              ┌─ Data: yfinance,        ┌─ Next.js
+SSRN via Crossref   ─┤  →     ├─ Spec extractor  →   │  EOD, FRED, grain  →   ├─ Per-paper page
+NBER via Crossref   ─┤        └─ Code generator     ├─ IC report card        ├─ Search / filter
+OpenAP catalog      ─┤                              ├─ Purged CV + DSR       ├─ Submit paper
+AlphaArchitect RSS  ─┘                              ├─ Decay analysis        ├─ Discussion
+Manual submission   ─┘                              └─ Regime test           └─ API
 ```
+
+NBER and SSRN block direct scraping; both routed through Crossref's free
+DOI registry (NBER prefix `10.3386`, SSRN prefix `10.2139`). OpenAlex
+client also wired as a fallback.
 
 See [docs/architecture.md](./docs/architecture.md) for full layout.
 
@@ -193,6 +197,20 @@ Per `scripts/audit_qfin_universe_coverage.py` (re-runnable): **the addressable h
 
 **Positioning is honest:** Alpha Archive replicates the addressable half of academic quant finance — the US equity asset pricing canon, ML applied to it, and portfolio construction methodology. Frontier research (multi-asset, derivatives, microstructure, alt-data) is gated by data licensing and intentionally out of scope.
 
+### Live paper-discovery sources (post-OpenAP cutoff)
+
+OpenAP is the calibration corpus. Live feeds catch new papers as they drop:
+
+| Source | Backend | Signal density | Free? |
+|---|---|---|---|
+| **arXiv q-fin** (last 30d) | direct API | ⭐ ~2-5% factor papers | ✅ |
+| **NBER working papers** | Crossref (DOI prefix `10.3386`) | ⭐⭐ ~25% factor papers | ✅ |
+| **SSRN Electronic Journal** | Crossref (DOI prefix `10.2139`) | ⭐⭐ noisy without keyword filter | ✅ |
+| **JF / JFE / RFS / JFQA** | Crossref (journal ISSN filter) — wireable | ⭐⭐⭐⭐ peer-reviewed gold | ✅ for metadata, paywalled for PDF |
+| **AQR research portal** (Asness/Frazzini/Pedersen) | RSS / scrape — wireable | ⭐⭐⭐⭐ | ✅ |
+
+Triage filters the firehose. Real funnel: ~200 raw papers/month → ~30 candidates after keyword filter → ~10 surviving LLM triage → ~5 backtest-ready specs.
+
 ### Reproducibility convention
 
 Every published replication pins its data vendor + version (academic standard since ~2005). Runtime config:
@@ -233,7 +251,7 @@ Key principles:
 
 See [docs/roadmap.md](./docs/roadmap.md). Phased:
 - **Phase 0** ✅ Repo skeleton, SQLite schema, six source pollers (arXiv, SSRN, NBER, AlphaArchitect, AQR, Two Sigma), Typer CLI
-- **Phase 0.5** ✅ **Fixture calibration** — 326 ground-truth fixtures bootstrapped from Open Source Asset Pricing (Chen+Zimmermann), plus hand-coded canonical anomalies (12-1 momentum). Meta-loop now F1-meaningful.
+- **Phase 0.5** ✅ **Fixture calibration** — 326 ground-truth fixtures bootstrapped from Open Source Asset Pricing (Chen+Zimmermann), plus 4 hand-coded canonical anomalies (12-1 momentum, low-vol Baker-Haugen, BAB Frazzini-Pedersen, MAX Bali-Cakici-Whitelaw) running end-to-end on grain prices. Live-feed pollers rewired through Crossref (NBER, SSRN) — both blocked direct scraping. Meta-loop now F1-meaningful.
 - **Phase 1** ✅ LLM triage + spec extraction + code generation, end-to-end demo on real arXiv paper (VP-MACD). Pluggable provider abstraction: `claude_code` (free via Max plan) | `anthropic` (API key) | `offline` (no LLM)
 - **Phase 2** 🟡 Backtest engine: purged CV, DSR, IC report, asymmetric verdict assignment shipped. Cost model + regime splits in progress.
 - **Phase 2.5** 🟡 **Meta-learning loop** — actor/critic/learn governance scaffolded under `meta/`; community layer (Tier-1 GitHub-issue-based crowdsourcing, Community-Notes-style bipartisan agreement) scaffolded under `alpha_archive/community/`
@@ -252,7 +270,7 @@ See [docs/roadmap.md](./docs/roadmap.md). Phased:
 
 ## Status
 
-**Phase 2** — pipeline operational end-to-end on real papers (proof-of-life: see [docs/demo_run.md](./docs/demo_run.md)). Meta-learning + community layers scaffolded. Pre-Streamlit. Not production. Not financial advice. Use at your own risk.
+**Phase 2** — pipeline operational end-to-end on real papers (proof-of-life: see [docs/demo_run.md](./docs/demo_run.md)). 4 hand-coded fixtures running on grain S&P 500 daily prices; momentum survives 2014-2026, low-vol/BAB/MAX correctly killed (regime decay consistent with McLean-Pontiff 2016 + HXZ 2018). Live-feed pollers (arXiv, NBER, SSRN) all returning real recent papers. Meta-learning + community layers scaffolded. Pre-Streamlit. Not production. Not financial advice. Use at your own risk.
 
 ## License
 

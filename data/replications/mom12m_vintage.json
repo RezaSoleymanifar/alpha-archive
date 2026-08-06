@@ -1,0 +1,49 @@
+{
+  "paper": "Mom12m",
+  "authors": "Jegadeesh and Titman",
+  "year": 1993,
+  "claimed_monthly_pct": 1.31,
+  "claimed_t_stat": 3.74,
+  "claimed_sample": "1964-1989",
+  "measured_monthly_pct": -0.0877,
+  "measured_t_stat": -0.327,
+  "measured_sharpe_annual": -0.072,
+  "measured_sample": "2006-02-28..2026-09-30",
+  "months": 248,
+  "umd_correlation": 0.74,
+  "umd_months_compared": 245,
+  "implementation_verdict": "validated \u2014 moves with the published factor",
+  "gap_monthly_pct": -1.398,
+  "verdict": "decayed \u2014 the published factor is also flat over this window, so this agrees with the literature rather than contradicting the paper",
+  "umd_by_era": {
+    "1964-1989 (paper sample)": {
+      "mean_monthly_pct": 0.8025,
+      "t_stat": 4.075,
+      "months": 312
+    },
+    "1990-2005 (post-publication)": {
+      "mean_monthly_pct": 0.9085,
+      "t_stat": 2.603,
+      "months": 192
+    },
+    "2006-2026 (our window)": {
+      "mean_monthly_pct": 0.1539,
+      "t_stat": 0.543,
+      "months": 246
+    },
+    "1927-2026 (full)": {
+      "mean_monthly_pct": 0.6267,
+      "t_stat": 4.628,
+      "months": 1194
+    }
+  },
+  "caveats": [
+    "Universe is survivor-biased: only currently-listed large caps. The delisted losers momentum would have shorted are structurally absent, which biases this test against the paper's result.",
+    "Sample is 2006-02-28..2026-09-30, not the paper's 1964-1989. This is a different experiment, not a refutation.",
+    "80 names versus all of NYSE/AMEX in the original, so deciles here are far coarser.",
+    "Costs charged at 10 bps on turnover; the paper reported gross.",
+    "Prices are Yahoo adjusted closes, which are adjusted retroactively."
+  ],
+  "universe_size": 80,
+  "generated_at": "2026-08-06T02:58:12+00:00"
+}

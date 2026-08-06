@@ -1,0 +1,19 @@
+{
+  "paper_id": "macd_demo_15",
+  "run_ts": "2026-05-01T23:13:23.842951+00:00",
+  "north_star_alignment_score": 0,
+  "asymmetric_loss": 0.0,
+  "findings": [
+    {
+      "severity": "HIGH",
+      "category": "process",
+      "claim": "Critic LLM call failed: RuntimeError",
+      "evidence": "claude CLI failed (exit 1):\nstderr: SessionEnd hook [export PATH=\"$HOME/.nvm/versions/node/v$(ls \\\"$HOME/.nvm/versions/node\\\" 2>/dev/null | sed 's/^v//' | sort -t. -k1,1n -k2,2n -k3,3n | tail -1)/bin:$HOME/.local/bin:/usr/local/bin:/opt/homebrew/bin:$PATH\"; _R=\"${CLAUDE_PLUGIN_ROOT}\"; [ -z \"$_R\" ] &",
+      "proposed_actor_change": ""
+    }
+  ],
+  "anti_patterns_triggered": [],
+  "open_questions": [
+    "LLM provider unavailable; rerun critic when fixed."
+  ]
+}

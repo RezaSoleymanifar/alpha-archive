@@ -1,72 +1,35 @@
-"""SSRN scraper. SSRN doesn't offer a clean API; we scrape the top-papers
-listing for the FEN (Financial Economics Network) finance ejournal.
+"""SSRN poller via Crossref.
 
-This module is a stub — fill in based on current SSRN HTML structure.
-SSRN periodically changes its layout; treat scraping as best-effort.
+SSRN itself blocks direct scraping (403/cloudflare). Crossref indexes
+all DOI-registered SSRN papers under the prefix 10.2139.
 """
 from __future__ import annotations
 
-import re
-from datetime import datetime
+from .crossref import search_crossref, DEFAULT_QUERY
 
-import httpx
-from bs4 import BeautifulSoup
-
-# Top SSRN ejournals for quant finance
-SSRN_TOP_FEN = "https://papers.ssrn.com/sol3/JELJOUR_Results.cfm?form_name=journalbrowse&journal_id=2755100"
-SSRN_DOWNLOAD = "https://papers.ssrn.com/sol3/papers.cfm?abstract_id={id}"
+SSRN_DOI_PREFIX = "10.2139"
 
 
-def poll_ssrn(limit: int = 50) -> list[dict]:
-    """Poll SSRN top-downloads page (best-effort scrape).
-    Returns list of paper dicts in standardized format.
-
-    NOTE: SSRN aggressively rate-limits and changes HTML layout.
-    Production deployment should use a proper SSRN data provider or
-    consume their RSS feeds where available.
-    """
-    headers = {
-        "User-Agent": (
-            "Mozilla/5.0 (compatible; AlphaArchive/0.1; +https://alpha-archive.io)"
-        )
-    }
-    try:
-        r = httpx.get(SSRN_TOP_FEN, headers=headers, timeout=20, follow_redirects=True)
-        r.raise_for_status()
-    except Exception as e:
-        print(f"[ssrn] fetch failed: {e}")
-        return []
-
-    soup = BeautifulSoup(r.text, "lxml")
-    out = []
-    for a in soup.select("a[href*='papers.cfm?abstract_id=']"):
-        href = a.get("href", "")
-        m = re.search(r"abstract_id=(\d+)", href)
-        if not m:
-            continue
-        aid = m.group(1)
-        title = a.get_text(strip=True)
-        if not title or len(title) < 10:
-            continue
-        out.append({
-            "source": "ssrn",
-            "external_id": aid,
-            "title": title,
-            "abstract": None,  # requires per-paper fetch; leave for triage stage
-            "authors": None,
-            "published_at": None,
-            "pdf_url": None,
-            "landing_url": SSRN_DOWNLOAD.format(id=aid),
-            "categories": "FEN",
-            "raw": {"href": href},
-        })
-        if len(out) >= limit:
-            break
-    return out
+def poll_ssrn(
+    limit: int = 50,
+    *,
+    query: str = DEFAULT_QUERY,
+    since_date: str | None = "2024-01-01",
+) -> list[dict]:
+    filters = [f"prefix:{SSRN_DOI_PREFIX}"]
+    if since_date:
+        filters.append(f"from-pub-date:{since_date}")
+    return search_crossref(
+        source="ssrn",
+        filters=filters,
+        query=query,
+        rows=min(limit, 1000),
+    )[:limit]
 
 
 if __name__ == "__main__":
     rows = poll_ssrn(limit=10)
+    print(f"fetched {len(rows)} SSRN papers")
     for r in rows:
-        print(f"- [{r['external_id']}] {r['title'][:80]}")
-    print(f"\ntotal: {len(rows)}")
+        pub = str(r["published_at"])[:10] if r["published_at"] else "?"
+        print(f"  [{r['external_id']}] {pub} {r['title'][:80]}")
