@@ -1,0 +1,130 @@
+[
+ {
+  "arxiv_id": "2607.28577v1",
+  "verdict": "drop",
+  "confidence": 0.93,
+  "data_needed": [
+   "Binance USD-M and COIN-M perpetual futures limit order book depth snapshots (10 bands, 30-second grid)",
+   "Binance 1-minute futures closes and 300-second forward transaction-price returns",
+   "Aug 2025 - Jul 2026, 8 underlyings, ~13M labeled examples"
+  ],
+  "reproducible_targets": [],
+  "method": "Shadow Before Swap: warm-refit a challenger model off the serving path each week and promote it over the maintained incumbent only when it wins a paired NLL margin on the same delayed labels.",
+  "reason": "Inputs are 40 order-book depth features per 30-second snapshot on Binance perpetual futures; Coinbase OHLCV cannot recreate the LOB panel or the 300-second tick-level labels."
+ },
+ {
+  "arxiv_id": "2607.28410v1",
+  "verdict": "drop",
+  "confidence": 0.96,
+  "data_needed": [
+   "Shenzhen Stock Exchange Level-1 quote and trade data",
+   "Intraday order-slicing simulator with market impact",
+   "LLM inference (GPT-class models)"
+  ],
+  "reproducible_targets": [],
+  "method": "PACE, a hierarchical LLM agent that splits parent-order execution into long-horizon volume planning and short-horizon child-order placement, benchmarked against TWAP and Almgren-Chriss.",
+  "reason": "Requires Chinese exchange Level-1 microstructure data and an execution simulator; nothing in the free stack supports intraday execution cost measured in basis points."
+ },
+ {
+  "arxiv_id": "2607.28230v2",
+  "verdict": "drop",
+  "confidence": 0.88,
+  "data_needed": [
+   "None - closed-form and exact lattice computation only"
+  ],
+  "reproducible_targets": [],
+  "method": "Finite-horizon binary multiplicative process with a lower absorbing boundary and residual value; exact lattice propagation gives the growth-optimal fixed exposure versus log distance to the boundary, horizon, and residual ratio.",
+  "reason": "Pure theory - all six figures come from lattice simulation with no market data, so there is no empirical result to check parity against."
+ },
+ {
+  "arxiv_id": "2607.28127v1",
+  "verdict": "drop",
+  "confidence": 0.85,
+  "data_needed": [
+   "Motley Fool and MarketWatch news article corpus, Feb 2015 - Jun 2021 (~355k articles)",
+   "Yahoo Finance daily prices for S&P 500 (available to us)",
+   "Llama-3-8B-Instruct with LoRA + GRPO reinforcement training on a GPU"
+  ],
+  "reproducible_targets": [],
+  "method": "FinSMART post-trains a financial LLM with GRPO using realized next-day open-to-open returns as the reward, then forms a daily long-short S&P 500 portfolio from the sentiment scores.",
+  "reason": "The price and portfolio leg is Yahoo-only and fine, but the signal is built from a scraped Motley Fool/MarketWatch news corpus plus RL post-training of an 8B LLM - neither is in the free stack."
+ },
+ {
+  "arxiv_id": "2607.27859v1",
+  "verdict": "drop",
+  "confidence": 0.97,
+  "data_needed": [
+   "On-chain wallet-level DeFi transaction traces (124,638 transactions, 1,073 labeled malicious wallets)",
+   "Protocol-level volume and sector mappings for a specific ecosystem",
+   "Proprietary live incentive-campaign allocation results"
+  ],
+  "reproducible_targets": [],
+  "method": "Composite percentile-normalized activity score with two-layer protocol/sector weighting, plus a four-layer sybil defense stack (integrity checks, autoencoder + isolation forest ensemble, behavioral memory, graph clustering).",
+  "reason": "Entirely blockchain wallet-graph and internal campaign data; Coinbase OHLCV gives no on-chain transactions and the sybil labels are proprietary."
+ },
+ {
+  "arxiv_id": "2607.27853v1",
+  "verdict": "drop",
+  "confidence": 0.95,
+  "data_needed": [
+   "Private point-in-time web corpus with a dense retrieval sandbox and cutoff-date access control",
+   "FinanceGym: 400 expert-validated research questions with rubrics",
+   "Frontier LLM inference plus an LLM judge for rubric scoring"
+  ],
+  "reproducible_targets": [],
+  "method": "A finance-specific deep-research agent harness (tools, workflows, reward model) evaluated on FinanceGym, a rubric benchmark that splits pre-cutoff evidence retrieval from post-cutoff reasoning.",
+  "reason": "Results are LLM rubric pass rates (25.3% to 32.4%), not market returns; needs a private PIT web corpus and expert-annotated rubrics, no price data involved."
+ },
+ {
+  "arxiv_id": "2607.27814v1",
+  "verdict": "drop",
+  "confidence": 0.94,
+  "data_needed": [
+   "German hourly day-ahead power prices, 2023-2024",
+   "German hourly wind and solar generation profiles",
+   "EEX power futures curves and monthly PPA strikes for 2025"
+  ],
+  "reproducible_targets": [],
+  "method": "Model-free decomposition of a pay-as-produced PPA strike into baseload forward, deterministic profile adjustment, and price-volume covariance term, with a Levy-driven bivariate MCARMA state-space model calibrated to German data for the semi-static hedge.",
+  "reason": "European hourly power prices, renewable generation, and power futures are outside the free stack entirely - FRED has no German intraday power or generation series."
+ },
+ {
+  "arxiv_id": "2607.27649v1",
+  "verdict": "drop",
+  "confidence": 0.97,
+  "data_needed": [
+   "None - constructed counterexample panels of call bid-ask quotes"
+  ],
+  "reproducible_targets": [],
+  "method": "Corrects the executable-versus-printed bid of a calendar-vertical basket, builds a minimal two-date counterexample showing the Gerhold-Gulum conditions are insufficient, and derives a closed-form two-date arbitrage-cone operator.",
+  "reason": "Pure mathematical finance with no empirical section; and any real version would need option chain bid-ask quotes, which we do not have."
+ },
+ {
+  "arxiv_id": "2607.27588v1",
+  "verdict": "drop",
+  "confidence": 0.97,
+  "data_needed": [
+   "None - theoretical SPDE analysis, no calibration data"
+  ],
+  "reproducible_targets": [],
+  "method": "Shows the Ito-Wentzell random-PDE reduction of the conditional density SPDE holds under local stochastic rough volatility, giving a pathwise Fokker-Planck equation with an explicit lognormal conditional density for rough Heston.",
+  "reason": "No empirical content at all; the implied application (Rao-Blackwellized calibration) would need option surfaces we cannot get."
+ },
+ {
+  "arxiv_id": "2607.27461v1",
+  "verdict": "keep",
+  "confidence": 0.78,
+  "data_needed": [
+   "Daily adjusted closes and volumes for S&P 500 constituents, 2005-Jul 2026 (Yahoo Finance; paper uses CRSP pre-2018 and Yahoo Finance 2018-Jul 2026)",
+   "Shares outstanding for market caps (SEC EDGAR XBRL)",
+   "Optional: size/beta/illiquidity/momentum covariates, all computable from prices; the paper's Compustat ratio panel is only used in the wider descriptive study"
+  ],
+  "reproducible_targets": [
+   "Headline Sharpe of 1.06 for the blended long-short + long-only book vs the market's 0.78 over Jan 2022 - Dec 2024, net of 5 bps costs and marked to market daily",
+   "Forward-test Sharpe of 1.32 vs the market's 1.14 over Jan 2025 - Jul 2026",
+   "Residual-distance-diversified variant lifting Sharpe to 1.08 and 1.44 and annualized return from 18% to 20% and 44% to 56% on the two windows"
+  ],
+  "method": "Three price-only matrices - an arccos correlation distance matrix plus monthly decile-rank Markov transition matrices for trailing return and trailing volatility - feed covariate-conditioned rank forecasts that drive a dollar-neutral momentum long-short blended with an opportunistic long-only sleeve.",
+  "reason": "Uses nothing but daily prices, volumes, and market caps on S&P 500 names, and the paper itself sources Yahoo Finance for the 2018-2026 span covering both out-of-sample windows."
+ }
+]

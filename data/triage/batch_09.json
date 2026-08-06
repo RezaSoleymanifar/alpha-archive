@@ -1,0 +1,82 @@
+[
+ {
+  "arxiv_id": "2607.09426v2",
+  "title": "The Quarter-Hour Effect: Periodic Algorithmic Trading and Return Predictability in Cryptocurrency Futures",
+  "url": "https://arxiv.org/abs/2607.09426v2",
+  "pdf": "https://arxiv.org/pdf/2607.09426v2",
+  "published": "2026-07-10",
+  "abstract": "Cryptocurrency markets exhibit periodic bursts in volatility and volume at one-minute, five-minute, and quarter-hour marks. Using trade data for six Binance perpetual contracts, we link these bursts to algorithmic participation: trade-size roundness declines sharply during them. The Autocorrelation Map, a clock-phase-resolved display, reveals serial dependence in order flow and returns at quarter-hour openings that conventional measures obscure. Opening returns are predictable out of sample, while opening order imbalance predicts returns over four to twelve hours, with much weaker effects at f"
+ },
+ {
+  "arxiv_id": "2607.09820v1",
+  "title": "Learning Predictive Ambiguity Sets for Decision-Focused Distributionally Robust Optimization",
+  "url": "https://arxiv.org/abs/2607.09820v1",
+  "pdf": "https://arxiv.org/pdf/2607.09820v1",
+  "published": "2026-07-10",
+  "abstract": "Predict-then-optimize systems usually compress uncertainty into a point forecast and then solve a downstream optimization problem as if the forecast were reliable. Distributionally robust optimization (DRO) offers protection against misspecification, but the ambiguity set is often centered at historical samples and uses a fixed radius. We propose \\emph{learned predictive ambiguity sets} (LPAS): a deep contextual model outputs a finite nominal scenario distribution, a state-dependent Wasserstein radius, and optionally an anisotropic ground metric. These outputs define a contextual ambiguity set"
+ },
+ {
+  "arxiv_id": "2607.08907v1",
+  "title": "Herding and Liquidity in Order-Book Markets. I. A Robust Liquidity-Stress Crossover and its Reflexive Mechanism",
+  "url": "https://arxiv.org/abs/2607.08907v1",
+  "pdf": "https://arxiv.org/pdf/2607.08907v1",
+  "published": "2026-07-09",
+  "abstract": "Agent-based models of markets readily produce emergent instabilities, but telling a genuine collective effect apart from a parameter artefact takes discipline. We apply Bouchaud's phase-diagram method to a continuous-double-auction order-book model. The method is to map the full phase diagram, test its robustness to rule changes, and rule out degenerate and numerical origins before we call any feature a tipping point. The model has fundamental-anchored zero-intelligence liquidity and a mid-anchored chartist herding layer, controlled by the fraction $\\varphi$ and the strength $\u03ba$ of herders. A "
+ },
+ {
+  "arxiv_id": "2607.08525v1",
+  "title": "Causal Effects of Protocol-Fee Changes on Liquidity Provision in Automated Market Makers",
+  "url": "https://arxiv.org/abs/2607.08525v1",
+  "pdf": "https://arxiv.org/pdf/2607.08525v1",
+  "published": "2026-07-09",
+  "abstract": "Automated market maker (AMM) fee rules are often evaluated by liquidity-provider (LP) welfare, but that objective mixes fee revenue, adverse-selection loss (loss-versus-rebalancing, LVR), routing response, and liquidity supply. Fixed-fee Uniswap v3 history cannot separate these channels or identify counterfactual trader-facing dynamic-fee rules. Real fee-related variation nonetheless exists: the Uniswap protocol-fee switch cut LP take-rates with tier-differentiated intensity while leaving trader-facing fees unchanged. Using a pre-specified matched-overlap event-study difference-in-differences "
+ },
+ {
+  "arxiv_id": "2607.08500v2",
+  "title": "Estimating the Stochastic Discount Factor from Option Prices and Predicting the Equity Premium",
+  "url": "https://arxiv.org/abs/2607.08500v2",
+  "pdf": "https://arxiv.org/pdf/2607.08500v2",
+  "published": "2026-07-09",
+  "abstract": "This paper proposes a stochastic discount factor (SDF) scaled by time-varying volatility. By utilizing prices and market data implied solely from S\\&P 500 options, the proposed framework recovers a stable, non-monotonic SDF that captures the pure forward-looking expectations of market participants while mitigating observation noise. Our empirical analysis reveals that the SDF exhibits a distinctive hump on the shallow put side, which transitions into a more clearly defined W-shape as the time to maturity increases, identifying maturity as a key factor influencing the intensity of the central h"
+ },
+ {
+  "arxiv_id": "2607.08199v2",
+  "title": "Volatility in Prediction Markets: A Structural Approach",
+  "url": "https://arxiv.org/abs/2607.08199v2",
+  "pdf": "https://arxiv.org/pdf/2607.08199v2",
+  "published": "2026-07-09",
+  "abstract": "Forward-looking volatility forecasts are central inputs to derivatives pricing, market making, risk management, and volatility-linked trading strategies, with ARCH and GARCH models serving as the canonical workhorses. Such models are natural in standard asset markets, where prices are positive-valued stochastic processes and volatility is typically inferred from return dynamics. Prediction markets have a different structure: prices are bounded probabilities, payoffs are binary, and contracts resolve at known deadlines. We develop and estimate a volatility model tailored to binary prediction ma"
+ },
+ {
+  "arxiv_id": "2607.07465v1",
+  "title": "Innovating Risk Modelling for Global Funds",
+  "url": "https://arxiv.org/abs/2607.07465v1",
+  "pdf": "https://arxiv.org/pdf/2607.07465v1",
+  "published": "2026-07-08",
+  "abstract": "Markowitz defined portfolio risk as an internal property, built from the covariance among a book's own holdings rather than the distance to any index. Seventy years of simplification reversed that. The market beta of CAPM, the fixed style and industry axes of Barra-type models, and the promotion of benchmark deviation to the definition of risk all traded the inward view for an external one. Risk became distance from an index. For a fund that fits no benchmark, that trade fails. A global book concentrated in a few markets and a few innovation sectors has no natural index to deviate from, and th"
+ },
+ {
+  "arxiv_id": "2607.06908v1",
+  "title": "Iterative detection of global factors near the BBP phase transition",
+  "url": "https://arxiv.org/abs/2607.06908v1",
+  "pdf": "https://arxiv.org/pdf/2607.06908v1",
+  "published": "2026-07-08",
+  "abstract": "Detecting the number of global factors in high-dimensional correlation matrices is a central problem in multivariate statistics and random matrix theory, with important implications for asset pricing and econophysics. When the number of variables $p$ is comparable to the number of observations $n$, signal-to-noise separation becomes difficult, especially near the Baik--Ben Arous--P\u00e9ch\u00e9 (BBP) transition, where weak factors may be confused with fluctuations at the Mar\u010denko--Pastur spectral edge. In this work, we characterize the participation-ratio (PR) structure of the Brown--Harding (BH) facto"
+ },
+ {
+  "arxiv_id": "2607.06702v1",
+  "title": "Dynamic Causal Portfolio Choice: Hedging the Rotation of the Common-Driver Manifold",
+  "url": "https://arxiv.org/abs/2607.06702v1",
+  "pdf": "https://arxiv.org/pdf/2607.06702v1",
+  "published": "2026-07-07",
+  "abstract": "When a portfolio is conditioned on a minimal set of observable drivers under which its assets become mutually independent over the investment horizon, the dynamic investment problem acquires a distinctive geometric structure. We study continuous-time portfolio choice in this setting. The conditioning representation, rather than the asset vector, becomes the natural state of the problem, and it moves: the sensitivity of returns to the drivers depends on the state, the conditioning set may itself change over time, and the induced information geometry both rotates and, at discrete instants, jumps"
+ },
+ {
+  "arxiv_id": "2607.06502v1",
+  "title": "What Useful Alphas?",
+  "url": "https://arxiv.org/abs/2607.06502v1",
+  "pdf": "https://arxiv.org/pdf/2607.06502v1",
+  "published": "2026-07-07",
+  "abstract": "This paper examines about 200 published long-short anomaly equity portfolios (Chen and Zimmermann, 2022). Over the period through 2005 (December 2005 and earlier) and across all stocks, their median zero-investment return was an impressive 48 bp per month. Using only post-2005 years (January 2006 onward) reduces this to 19 bp. Using only \"non-micro\" top-3,000 stocks in the top 90% of market capitalization reduces this to 26 bp. Using only post-2005 and non-micro stocks reduces this to 7 bp. Even modest allowances for luck or transaction costs would have eliminated even these 7 bp. The evidence"
+ }
+]

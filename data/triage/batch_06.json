@@ -1,0 +1,82 @@
+[
+ {
+  "arxiv_id": "2607.19497v1",
+  "title": "The Science and Practice of Trend-Following Systems",
+  "url": "https://arxiv.org/abs/2607.19497v1",
+  "pdf": "https://arxiv.org/pdf/2607.19497v1",
+  "published": "2026-07-21",
+  "abstract": "We present a unified approach to designing trend-following (TF) systems and classify them into European, American, and Time Series Momentum categories. For European TF systems, we derive an exact relationship between profit-and-loss, autocorrelation, and drift in volatility-normalized returns. We analyze the expected return under fractional ARFIMA processes and show that TF systems are profitable when the long-term autocorrelation is positive, even under short-term mean reversion. In the frequency domain, the expected return is represented as a Poisson-kernel reading of the analytical or empir"
+ },
+ {
+  "arxiv_id": "2607.19279v1",
+  "title": "Gaussian Boson Sampling for Asset Clustering in Statistical Arbitrage Portfolios",
+  "url": "https://arxiv.org/abs/2607.19279v1",
+  "pdf": "https://arxiv.org/pdf/2607.19279v1",
+  "published": "2026-07-21",
+  "abstract": "Gaussian Boson Sampling (GBS) provides a native photonic quantum heuristic for sampling dense subgraphs from adjacency matrices, offering a scalable physical approach to combinatorial graph search problems. Simultaneously, correlation matrix clustering algorithms, such as Spectral and SPONGE, have established robust benchmarks for identifying co-moving assets from correlation matrices in statistical arbitrage (StatArb) strategies. In this work, we map S&P 500 residual correlation data into GBS-compatible adjacency matrices. We benchmark those classical clustering algorithms against two quantum"
+ },
+ {
+  "arxiv_id": "2607.19218v1",
+  "title": "Denoising Subordinated Probabilistic Models: Diffusion with a Tempered-Stable Volatility Clock, and What the Noise Mechanism Actually Controls",
+  "url": "https://arxiv.org/abs/2607.19218v1",
+  "pdf": "https://arxiv.org/pdf/2607.19218v1",
+  "published": "2026-07-21",
+  "abstract": "Heavy-tailed diffusion models replace Gaussian noise by a Gaussian variance mixture: denoising Levy probabilistic models (DLPM) take the mixing variables i.i.d. across coordinates, while Student-t EDM shares one mixing variable per sample. Neither has dynamics, yet temporal dependence of the noise amplitude - volatility clustering - is the defining stylized fact of financial returns. We introduce the Denoising Subordinated Probabilistic Model (DSPM), whose mixing vector is a stationary AR(1) chain driven by tempered-stable subordinator increments (the discrete Barndorff-Nielsen-Shephard volati"
+ },
+ {
+  "arxiv_id": "2607.18815v1",
+  "title": "Cloud failure and cyber insurance: calibration of stress scenarios and diversification",
+  "url": "https://arxiv.org/abs/2607.18815v1",
+  "pdf": "https://arxiv.org/pdf/2607.18815v1",
+  "published": "2026-07-21",
+  "abstract": "The expansion of the cyber insurance market remains exposed to the threat of accumulation events that could simultaneously affect a large number of policyholders. Although few such catastrophes have been observed so far, apart from worldwide cyberattacks such as WannaCry and NotPetya in 2017, the nature of cyber risk makes their occurrence plausible. Stress-testing tools are therefore needed to assess whether an insurance portfolio can withstand such crises. In this perspective, the European Insurance and Occupational Pensions Authority (EIOPA) has identified cloud outage as one of the key sce"
+ },
+ {
+  "arxiv_id": "2607.18705v1",
+  "title": "Pathwise Portfolio Theory and Market Viability",
+  "url": "https://arxiv.org/abs/2607.18705v1",
+  "pdf": "https://arxiv.org/pdf/2607.18705v1",
+  "published": "2026-07-21",
+  "abstract": "The theory of portfolios, and its allied notions and fundamental results concerning growth optimality, the num\u00e9raire property, and ``market viability'' -- which rules out the possibility of financing nontrivial future liability streams starting with arbitrarily small initial capital -- is developed in a pathwise setting, completely devoid of probabilistic considerations. The approach replaces the familiar semimartingale decomposition of stochastic analysis for assets' returns, by decompositions generated through suitable trend extractors and their associated residual paths; then deploys F\u00f6llme"
+ },
+ {
+  "arxiv_id": "2607.18623v1",
+  "title": "Dead Reckoning: Counting Your Customers Who Never Say Goodbye",
+  "url": "https://arxiv.org/abs/2607.18623v1",
+  "pdf": "https://arxiv.org/pdf/2607.18623v1",
+  "published": "2026-07-21",
+  "abstract": "Firms in non-contractual commerce face the challenge of knowing how many customers they actually have because customers can stop buying without ever saying they have left. Buy-Till-You-Die models address this by estimating each customer's probability of being alive, a quantity called P(alive) and used in every major software tool for dashboards, churn, customer equity, and enterprise valuation. We show this practice confounds two distinct quantities. Within the beta-geometric family, P(alive) is the infinite-horizon limit of an observable family of finite-horizon repeat-purchase probabilities."
+ },
+ {
+  "arxiv_id": "2607.18624",
+  "title": "Fragility of Minimum-Variance Portfolios",
+  "url": "https://arxiv.org/abs/2607.18624",
+  "pdf": "https://arxiv.org/pdf/2607.18624",
+  "published": "2026-07-21",
+  "abstract": "Minimum-variance portfolios are well known to be highly sensitive to covariance estimation error. In this paper, we show that by imposing a block diagonal correlation structure, we can derive closed-form expressions for long-only minimum-variance portfolios that make this fragility explicit. These analytical solutions reveal that fragility is driven by threshold effects arising from the interaction between correlation structure and the assets' volatilities. Motivated by the latter insight, we propose robustification approaches that can be interpreted as structured shrinkage schemes that select"
+ },
+ {
+  "arxiv_id": "2607.19311",
+  "title": "GARTFIMA Models: A Class of Observation-Driven Models with Tempered Fractional Dynamics",
+  "url": "https://arxiv.org/abs/2607.19311",
+  "pdf": "https://arxiv.org/pdf/2607.19311",
+  "published": "2026-07-21",
+  "abstract": "This paper introduces a class of observation-driven models whose systematic component includes a tempered fractional differencing term. This specification generalizes long-range dependent models based on the fractional differencing operator, enabling a more general and robust model specification while offering theoretical advantages. We propose a partial maximum likelihood approach for parameter estimation and address hypothesis testing, confidence intervals, goodness-of-fit assessment, and both in-sample and out-of-sample forecasting. A Monte Carlo simulation study evaluates the finite-sample"
+ },
+ {
+  "arxiv_id": "2607.18001v1",
+  "title": "AlphaZeroBeta: Deep Reinforcement Learning for Market-Neutral Portfolios",
+  "url": "https://arxiv.org/abs/2607.18001v1",
+  "pdf": "https://arxiv.org/pdf/2607.18001v1",
+  "published": "2026-07-20",
+  "abstract": "Market-neutral portfolios aim to generate consistent returns while offsetting systematic market risk. Traditional approaches based on factor models or convex optimization often underperform during market regime shifts or when structural assumptions break down. We propose AlphaZeroBeta, a deep reinforcement learning framework designed to deliver benchmark-relative alpha (excess returns) with near-zero beta (market neutrality). AlphaZeroBeta combines a composite reward function that balances risk-adjusted excess return, benchmark correlation, and transaction costs with a CNN-GRU policy trained e"
+ },
+ {
+  "arxiv_id": "2607.17502v1",
+  "title": "Mean-field equilibrium price formation under single-default risk",
+  "url": "https://arxiv.org/abs/2607.17502v1",
+  "pdf": "https://arxiv.org/pdf/2607.17502v1",
+  "published": "2026-07-20",
+  "abstract": "We study equilibrium price formation in an incomplete financial market with a large population of agents, where stock prices are subject to a single-default event. Agents are assumed to be heterogeneous in their risk aversion and terminal liabilities, and maximize exponential utility of terminal net wealth. We first characterize each agent's optimal strategy by a quadratic-growth backward stochastic differential equation (BSDE) driven by Brownian motions and a compensated default martingale. We then formulate the market-clearing condition in terms of aggregate optimal demand and derive a mean-"
+ }
+]

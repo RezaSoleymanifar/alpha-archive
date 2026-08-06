@@ -1,0 +1,82 @@
+[
+ {
+  "arxiv_id": "2607.27070v1",
+  "title": "Where does the criticality live? Early-warning signals are event-heterogeneous across seven crypto-perpetual liquidation cascades",
+  "url": "https://arxiv.org/abs/2607.27070v1",
+  "pdf": "https://arxiv.org/pdf/2607.27070v1",
+  "published": "2026-07-29",
+  "abstract": "Do crypto perpetual-futures crashes carry a reproducible early-warning fingerprint of a critical transition, and in which state variable? We study seven major BTC liquidation cascades (2022-2025, including the record 19B USD event of 10 October 2025) using minute-level price and 5-minute leverage/order-flow data. On detrended residuals we compute rolling variance and lag-1 autocorrelation and test their pre-cascade trend with the Kendall-tau statistic, sweeping 39 analysis configurations per variable per event. No variable is event-invariant. Price carries the critical-slowing-down signature i"
+ },
+ {
+  "arxiv_id": "2607.27063v1",
+  "title": "Herding, Momentum, and Reversal in China's A-Share Market: An Agent-Based Network Model with Information Diffusion",
+  "url": "https://arxiv.org/abs/2607.27063v1",
+  "pdf": "https://arxiv.org/pdf/2607.27063v1",
+  "published": "2026-07-29",
+  "abstract": "This study develops an agent-based financial market model to explain stock-price momentum and reversal through the joint effects of local herding and delayed information diffusion. Investors form heterogeneous Gaussian beliefs about the next-period price, choose among buying, selling, and remaining inactive, and revise their action probabilities in response to neighboring investors. The local interaction structure is represented by von Neumann and Moore lattices and is later replaced by Erd\u0151s--R\u00e9nyi and Watts--Strogatz networks for robustness. A separate information process updates investor be"
+ },
+ {
+  "arxiv_id": "2607.27039v1",
+  "title": "Forcing and duality-corrected contracts for volatility control",
+  "url": "https://arxiv.org/abs/2607.27039v1",
+  "pdf": "https://arxiv.org/pdf/2607.27039v1",
+  "published": "2026-07-29",
+  "abstract": "In this paper, we revisit the construction of optimal incentives in continuous-time principal-agent problems with drift and volatility control. Originally, a general approach relying on dynamic programming and second-order backward stochastic differential equations (2BSDEs) was developed by Cvitani\u0107, Possama\u00ef, and Touzi (2018) [8] to determine the optimal form of contracts in this setting. More recently, Chiusolo and Hubert (2026) [5] proposed a BSDE-based approach by introducing an alternative `contractible-volatility' problem for the principal. In addition to the proposed new method, this wo"
+ },
+ {
+  "arxiv_id": "2607.26405v1",
+  "title": "Multi-Currency AMMs for Decentralized FOREX Markets: Feasibility & Optimal Design",
+  "url": "https://arxiv.org/abs/2607.26405v1",
+  "pdf": "https://arxiv.org/pdf/2607.26405v1",
+  "published": "2026-07-29",
+  "abstract": "Most currency pairs lack a direct liquid market, so international foreign exchange relies on routing transactions through a dominant vehicle currency. Multi-currency automated market makers (AMMs) offer an alternative by sharing liquidity across many currency pairs, facilitating direct cross-currency trade while exploiting liquidity consolidation. This paper studies a multi-currency pool design that minimizes trading cost. Under a constant-mean AMM architecture, equilibrium trading costs reflect the trade-off between reduced price impact from consolidated liquidity and increased impermanent lo"
+ },
+ {
+  "arxiv_id": "2607.26188v1",
+  "title": "Bitcoin Runs on a Clock: Why Every Price Indicator Dies and the Halving Clock Doesn't",
+  "url": "https://arxiv.org/abs/2607.26188v1",
+  "pdf": "https://arxiv.org/pdf/2607.26188v1",
+  "published": "2026-07-28",
+  "abstract": "Every widely followed Bitcoin cycle indicator (Pi Cycle, MVRV, Mayer, Puell) called turns precisely for a decade, then degraded in one sequence: precise, then early, then silent. This is one structural phenomenon. Across the four halving epochs (2011-2026), the per-cycle maxima of five top-calling oscillators decline monotonically while minima end higher, so any threshold calibrated on past cycles must stop firing; short-horizon indicators decay toward zero and several invert sign; yet Bitcoin's time structure stays fixed, with mature-cycle tops 525/546/534 days after their halvings and bottom"
+ },
+ {
+  "arxiv_id": "2607.25459v1",
+  "title": "Emergent Latent-State Computation under Stochastic Volatility",
+  "url": "https://arxiv.org/abs/2607.25459v1",
+  "pdf": "https://arxiv.org/pdf/2607.25459v1",
+  "published": "2026-07-28",
+  "abstract": "Mechanistic interpretability has largely focused on language models and deterministic toy tasks. Much less is known about how sequence models internally represent latent stochastic dynamics under noisy, partially observed observations. We study this question in a controlled multivariate stochastic volatility setting, where models observe only returns while the ground-truth latent volatility state is known to the researcher. This setting provides a useful benchmark for mechanistic interpretability under partial observability: the latent state is hidden from the model but directly available for "
+ },
+ {
+  "arxiv_id": "2607.25258v1",
+  "title": "Robust Hedging Valuation Adjustment for Deep Hedging Policies under Market Frictions",
+  "url": "https://arxiv.org/abs/2607.25258v1",
+  "pdf": "https://arxiv.org/pdf/2607.25258v1",
+  "published": "2026-07-28",
+  "abstract": "Hedging a derivative position under transaction costs and market frictions requires a trading rule that adapts to changing conditions. Deep hedging trains a neural policy for this task but policy training does not determine whether a trading desk can afford to run the policy. We apply robust hedging valuation adjustment (HVA) as a post-training valuation-adjustment layer that evaluates tracking-loss CVaR together with explicit funding and margin add-ons. The funding and margin add-ons share the same KL uncertainty set as HVA. For each policy, a single common-stress tilt computes HVA, funding a"
+ },
+ {
+  "arxiv_id": "2607.25199v2",
+  "title": "RIDGE: An Autonomous Framework for Validation and Method Discovery in LLM-Generated Option Pricing",
+  "url": "https://arxiv.org/abs/2607.25199v2",
+  "pdf": "https://arxiv.org/pdf/2607.25199v2",
+  "published": "2026-07-28",
+  "abstract": "Automated code generation is becoming an important tool in quantitative finance, where large language models can generate option pricing implementations directly from mathematical model specifications. Validating such implementations, however, requires considerably more than conventional software testing: numerical pricing methods must remain mathematically consistent, numerically stable, and reliable across a wide range of model parameters. We introduce RIDGE, an autonomous validation framework in which generated pricing implementations are subjected to structured no-arbitrage tests, stress t"
+ },
+ {
+  "arxiv_id": "2607.25189v1",
+  "title": "Long-memory GARCH via a two-dimensional Markov chain",
+  "url": "https://arxiv.org/abs/2607.25189v1",
+  "pdf": "https://arxiv.org/pdf/2607.25189v1",
+  "published": "2026-07-28",
+  "abstract": "This paper proposes a GARCH-type volatility model in which level-and-slope updates of a latent power-law kernel generate state-dependent decay of past shocks within a two-dimensional Markov state. We derive a joint Foster--Lyapunov condition and establish positive Harris recurrence and uniqueness of the invariant distribution. Simulations show substantial low-frequency persistence in log-squared innovations, especially near the diagnostic stability boundary. Empirically, the model captures a substantial portion of observed volatility persistence and delivers competitive out-of-sample forecast "
+ },
+ {
+  "arxiv_id": "2607.24680v1",
+  "title": "One Other Option Pricing Scheme",
+  "url": "https://arxiv.org/abs/2607.24680v1",
+  "pdf": "https://arxiv.org/pdf/2607.24680v1",
+  "published": "2026-07-27",
+  "abstract": "We present a distinctive approach to parameterizing the risk neutral distribution. Using parsimonious and interpretable parameters, the model provides direct and localized control over the shape of the implied volatility curve. It captures a wide variety of shapes, including those with local concavity. Empirical results demonstrate accurate calibration across a quarter million curves from a two-year Standard and Poor's 500 index option dataset. The fitted parameters exhibit stable patterns across tenors, enabling term structure interpolation and dynamic process construction without static arbi"
+ }
+]

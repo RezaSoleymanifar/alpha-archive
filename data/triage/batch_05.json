@@ -1,0 +1,82 @@
+[
+ {
+  "arxiv_id": "2607.21170v1",
+  "title": "Portfolio Optimization under Dynamic Rebalancing via Topological Data Analysis and News Sentiments",
+  "url": "https://arxiv.org/abs/2607.21170v1",
+  "pdf": "https://arxiv.org/pdf/2607.21170v1",
+  "published": "2026-07-23",
+  "abstract": "Understanding similarity among financial assets is essential for effective portfolio diversification. This paper proposes a novel sentiment-adjusted portfolio optimization framework that integrates Topological Data Analysis (TDA) with technical indicators and FinBERT-based sentiment scores extracted from financial news. A TDA-based distance measure is employed within an agglomerative clustering framework to identify topologically dissimilar assets for portfolio construction. By incorporating sentiment information, the framework captures rapid changes in market perception and investor behavior "
+ },
+ {
+  "arxiv_id": "2607.21109",
+  "title": "A Damped SWIFT Method for European Option Pricing: Coefficients Decay, Truncation, and Error Analysis",
+  "url": "https://arxiv.org/abs/2607.21109",
+  "pdf": "https://arxiv.org/pdf/2607.21109",
+  "published": "2026-07-23",
+  "abstract": "We introduce a damped variant of the Shannon Wavelet Inverse Fourier Technique (SWIFT) for pricing European options when the characteristic function of the underlying model is available. The key idea is to apply an exponential damping transformation to the payoff, which enables the direct computation of Fourier coefficients in the frequency domain without introducing an additional physical-domain truncation parameter. We provide a rigorous analysis of the decay of these coefficients by exploiting the singularity structure of the associated Fourier transforms. For light-tailed models, we obtain"
+ },
+ {
+  "arxiv_id": "2607.20877",
+  "title": "Testing for functional white noise in high dimensions",
+  "url": "https://arxiv.org/abs/2607.20877",
+  "pdf": "https://arxiv.org/pdf/2607.20877",
+  "published": "2026-07-23",
+  "abstract": "White noise testing is a fundamental problem in time series analysis. Yet it remains largely unsolved for high-dimensional functional time series, despite the growing attention this area has received in recent years, as existing tests are confined to either univariate functional time series or high-dimensional scalar time series. In this paper, we develop a general error-contamination framework for testing white noise in high-dimensional functional time series. We propose a supremum-type test statistic based on cross-autocovariance functions and develop a parametric bootstrap procedure to appr"
+ },
+ {
+  "arxiv_id": "2607.22760",
+  "title": "exdqlm: An R Package for Estimation and Analysis of Flexible Dynamic Quantile Linear Models",
+  "url": "https://arxiv.org/abs/2607.22760",
+  "pdf": "https://arxiv.org/pdf/2607.22760",
+  "published": "2026-07-23",
+  "abstract": "We present the R package exdqlm for Bayesian quantile regression, with primary emphasis on dynamic state-space quantile models for time series. The package is built around extended dynamic quantile linear models (exDQLMs), which use the extended asymmetric Laplace (exAL) family, a parametric extension of the asymmetric Laplace (AL) distribution commonly used in quantile regression. The software provides posterior simulation via Markov chain Monte Carlo (MCMC) and fast approximate posterior inference via Laplace-delta variational Bayes (LDVB), supporting posterior uncertainty quantification whi"
+ },
+ {
+  "arxiv_id": "2607.20762v1",
+  "title": "Quantifying Sub-Optimality in Routing for Automated Market Makers",
+  "url": "https://arxiv.org/abs/2607.20762v1",
+  "pdf": "https://arxiv.org/pdf/2607.20762v1",
+  "published": "2026-07-22",
+  "abstract": "We provide a large-scale empirical audit of DEX routing using 2.98 million WETH-USDC swaps on Ethereum. Comparing realized routes with optimized benchmarks, we measure an average shortfall of 2.02 bps per trade or \\$24 million. To attribute losses, we introduce three reproducible optimal benchmarks: a Support-Constrained Optimum (SCO) that evaluates split quality conditional on the pools actually used; a Full-Venue Optimum (FVO) that considers all available pools to quantify the value of broader pool access; and a Gas-Aware FVO (G-FVO) that augments FVO with gas costs to capture the trade-off "
+ },
+ {
+  "arxiv_id": "2607.20168v1",
+  "title": "Quantum Kernels and the Cross-Section of Stock Returns: Anatomy of a Vanishing Advantage",
+  "url": "https://arxiv.org/abs/2607.20168v1",
+  "pdf": "https://arxiv.org/pdf/2607.20168v1",
+  "published": "2026-07-22",
+  "abstract": "Do quantum kernels improve cross-sectional stock return prediction? We run a controlled horse race on the Chinese A-share market in which a quantum fidelity kernel, a projected quantum kernel, and a classical RBF control share identical training subsamples, solver, and tuning budgets, so that only the kernel is exchanged. On the main evaluation -- a point-in-time universe and 170 walk-forward windows (2012-2025) -- no quantum advantage exists: the fidelity kernel is indistinguishable from its RBF control ($\u0394$IC $=+0.005$, $p=0.42$), and a $2\\times2$ design crossing kernel type with training bu"
+ },
+ {
+  "arxiv_id": "2607.20093v1",
+  "title": "Retail Trader's Ruin: An Anatomy of Popular Signal Failure",
+  "url": "https://arxiv.org/abs/2607.20093v1",
+  "pdf": "https://arxiv.org/pdf/2607.20093v1",
+  "published": "2026-07-22",
+  "abstract": "We test whether five widely promoted retail signal families - trend, oscillator, candlestick, volume, and calendar rules - deliver a positive, economically meaningful, net-of-cost, and survivable edge. Practical viability is the conjunction of three predeclared gates: statistical edge after multiplicity correction, economic viability after trading costs, and finite-bankroll survival under leverage. Exposure-matched benchmarks, stationary-bootstrap confidence intervals, hierarchical Benjamini-Yekutieli control, one-sided claim-exclusion tests, and equivalence tests distinguish positive evidence"
+ },
+ {
+  "arxiv_id": "2607.19825",
+  "title": "Mens: Nonlinear shrinkage estimation in nonparanormal models for financial applications",
+  "url": "https://arxiv.org/abs/2607.19825",
+  "pdf": "https://arxiv.org/pdf/2607.19825",
+  "published": "2026-07-22",
+  "abstract": "We develop a theory of nonlinear shrinkage covariance estimation for nonparanormal (Gaussian-copula) models, in which each observed coordinate is an unknown strictly increasing transformation of a latent Gaussian vector. This model accommodates arbitrary marginal skewness and heavy marginal tails while retaining a Gaussian dependence structure, and it is the natural semiparametric setting for heavy-tailed, asymmetric financial returns. Our estimator, marginal-free nonlinear shrinkage (MENS), applies an oracle nonlinear shrinkage function to the eigenvalues of the normal-scores rank-covariance "
+ },
+ {
+  "arxiv_id": "2607.20373",
+  "title": "Embedding martingale diffusions as binary posteriors in sequential inference",
+  "url": "https://arxiv.org/abs/2607.20373",
+  "pdf": "https://arxiv.org/pdf/2607.20373",
+  "published": "2026-07-22",
+  "abstract": "Posterior probabilities are bounded martingales, but this fact alone does not identify the experiment that generates them. We show that every time-homogeneous martingale diffusion on $[0,1]$ with strictly positive $C^1$ volatility on the interior and absorbing endpoints, which we call an autonomous win-martingale, can be realized as the Bayesian posterior of an explicit binary sequential experiment observed through a scalar diffusion. Conversely, in a general binary diffusion experiment, the current time and observation are jointly sufficient for the hidden state precisely when the difference "
+ },
+ {
+  "arxiv_id": "2607.20576",
+  "title": "Restricted nonlinear shrinkage of high-dimensional residual covariance matrices in multivariate regressions",
+  "url": "https://arxiv.org/abs/2607.20576",
+  "pdf": "https://arxiv.org/pdf/2607.20576",
+  "published": "2026-07-22",
+  "abstract": "We study estimation of the p*p residual scatter (shape) matrix in a high-dimensional multivariate linear regression, where p and n grow proportionally. When the coefficient matrix obeys a known linear restriction of rank q < d, as in multivariate analysis of variance, growth-curve models, and reduced-rank regression, the restricted fit leaves additional residual degrees of freedom that sharpen estimation of the shape matrix. To accommodate heavy-tailed errors, we work with independent elliptically distributed rows under a mild scale condition, a finite second moment on the radii, which is far "
+ }
+]

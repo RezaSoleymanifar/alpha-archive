@@ -1,0 +1,134 @@
+[
+  {
+    "arxiv_id": "2607.09426v2",
+    "verdict": "drop",
+    "confidence": 0.95,
+    "data_needed": [
+      "Binance perpetual futures trade-by-trade tick data (six contracts)",
+      "signed order flow / order imbalance at second resolution",
+      "trade size roundness from individual prints"
+    ],
+    "reproducible_targets": [],
+    "method": "Clock-phase (quarter-hour) conditioning of intraday returns and order imbalance, displayed via an Autocorrelation Map, with out-of-sample prediction of opening returns and 4-12h returns from opening imbalance.",
+    "reason": "Entirely built on Binance trade-level microstructure (tick prints, trade size roundness, signed imbalance); Coinbase OHLCV bars cannot recover order flow or roundness."
+  },
+  {
+    "arxiv_id": "2607.09820v1",
+    "verdict": "keep",
+    "confidence": 0.72,
+    "data_needed": [
+      "daily adjusted closes for 20 named S&P 500 constituents (TMUS, PPG, LYB, ALB, GPC, STE, WRB, VRTX, BLK, VEEV, INCY, PAYX, TXT, CSCO, MOS, OXY, HON, MAS, AMGN, IEX), Jan 2018 - Jun 2026, Yahoo Finance"
+    ],
+    "reproducible_targets": [
+      "Table 2: LPAS-W out-of-sample annualized return 26.28%, Sharpe ratio 1.30, final wealth 1.61 over the 515-observation test window",
+      "Table 2 baseline rows: equal-weight, predict-then-optimize, and historical Wasserstein DRO metrics on the same 20-asset panel",
+      "Figures 1-2: cumulative wealth and drawdown paths of LPAS vs baselines over the 2018-2026 test period"
+    ],
+    "method": "A deep contextual network emits a nominal scenario distribution plus a state-dependent Wasserstein radius, defining a contextual ambiguity set for a distributionally robust portfolio choice trained with decision loss.",
+    "reason": "Universe, tickers, sample split and frequency are fully disclosed and the only input is daily equity returns available free from Yahoo Finance; exact parity depends on retraining a neural net, hence the moderate confidence."
+  },
+  {
+    "arxiv_id": "2607.08907v1",
+    "verdict": "drop",
+    "confidence": 0.85,
+    "data_needed": [
+      "none - synthetic continuous-double-auction simulation only"
+    ],
+    "reproducible_targets": [],
+    "method": "Agent-based limit order book with fundamental-anchored zero-intelligence liquidity plus a mid-anchored chartist herding layer, mapped over a phi-kappa phase diagram (7x6 grid, 336 runs) to locate a liquidity-stress crossover.",
+    "reason": "Pure order-book simulation with no market data, so there is nothing to check parity against using free datasets; results are properties of the authors' simulator, not of observable prices."
+  },
+  {
+    "arxiv_id": "2607.08525v1",
+    "verdict": "drop",
+    "confidence": 0.97,
+    "data_needed": [
+      "Uniswap v3 on-chain event logs (Mint/Burn/Swap) per pool and tick",
+      "Ethereum block-level protocol-fee switch timestamps",
+      "pool-level active liquidity and local depth reconstruction"
+    ],
+    "reproducible_targets": [],
+    "method": "Matched-overlap event-study difference-in-differences around the tier-differentiated Uniswap protocol-fee switch, estimating the LP-side take-rate elasticity of active liquidity and local depth.",
+    "reason": "Requires reconstructing a pool-tick liquidity panel from Ethereum on-chain logs; no equity, macro, or Coinbase OHLCV source in the stack can produce it."
+  },
+  {
+    "arxiv_id": "2607.08500v2",
+    "verdict": "drop",
+    "confidence": 0.97,
+    "data_needed": [
+      "S&P 500 index option prices across strikes and maturities (OptionMetrics-style surface)",
+      "risk-free / forward curve for option discounting"
+    ],
+    "reproducible_targets": [],
+    "method": "Recovers a volatility-scaled stochastic discount factor from the cross-section of SPX option prices and uses it to forecast the equity premium against the Martin lower bound.",
+    "reason": "The entire object is estimated from option chains, which are outside the free data stack; the equity-premium forecast cannot be rebuilt without the surface."
+  },
+  {
+    "arxiv_id": "2607.08199v2",
+    "verdict": "drop",
+    "confidence": 0.93,
+    "data_needed": [
+      "Kalshi contract-level hourly prices, volume and bid-ask spreads, Aug 2021 - Apr 2026",
+      "contract metadata (category, resolution deadline)"
+    ],
+    "reproducible_targets": [],
+    "method": "Structural volatility model for binary contracts combining a Wright-Fisher deadline-resolution term with a Glosten-Milgrom adverse-selection term driven by spread and volume, optionally layered with residual GARCH.",
+    "reason": "Needs an hourly Kalshi prediction-market panel with spreads and volume (~880k contract-hours); no prediction-market feed exists in the Vintage sources."
+  },
+  {
+    "arxiv_id": "2607.07465v1",
+    "verdict": "drop",
+    "confidence": 0.88,
+    "data_needed": [
+      "daily prices for an undisclosed 30-name global innovation book (US, Korea, Taiwan, Hong Kong, Japan, Europe)",
+      "the portfolio's USD position weights"
+    ],
+    "reproducible_targets": [],
+    "method": "PCA of a book's own return covariance, ranking components by risk contribution rather than variance, plus density clustering, a sign-invariant PCA Risk Score, a Bleed score and a trailing-return timing gate, with LLM-generated factor labels.",
+    "reason": "The paper explicitly withholds the 30 holdings and their weights, so the headline figures (+47.3% total return, 17.9% vol, Sharpe 2.04, -16.2% max drawdown, PC3 risk contribution 21.1%) cannot be matched even though the price data itself would be free."
+  },
+  {
+    "arxiv_id": "2607.06908v1",
+    "verdict": "keep",
+    "confidence": 0.8,
+    "data_needed": [
+      "daily adjusted closes for S&P 500 constituents, Jan 2005 - Dec 2022 (Yahoo Finance), filtered to the 417 names with under 5% missing data",
+      "optionally Ken French factor returns to regress the detected statistical factors on FF economic factors"
+    ],
+    "reproducible_targets": [
+      "Figure 7: IGF-detected factor count fluctuating roughly between 4 and 14 across the 185 moving windows while the Onatski test returns 1 factor in most windows",
+      "Median detected factor count of 7 at threshold tau = 0.3 over the 185 windows of 834 daily observations shifted by 20 trading days",
+      "Figure 8: sensitivity of the detected factor count to the participation-ratio threshold tau"
+    ],
+    "method": "Iterative global-factor (IGF) detection using the participation-ratio structure of Brown-Harding factor eigenvectors to separate weak factors from Marcenko-Pastur edge noise near the BBP transition.",
+    "reason": "Empirical panel is just daily S&P 500 log returns 2005-2022 with a stated missing-data filter and window scheme, all obtainable from Yahoo Finance; the only wrinkle is index-membership survivorship in the 417-name screen."
+  },
+  {
+    "arxiv_id": "2607.06702v1",
+    "verdict": "drop",
+    "confidence": 0.92,
+    "data_needed": [
+      "none - synthetic diffusion economies only"
+    ],
+    "reproducible_targets": [],
+    "method": "Continuous-time portfolio choice where assets are conditionally independent given a low-dimensional driver set, decomposing the optimal policy into a myopic allocation plus an intertemporal hedge against rotation and jumps of the conditioning manifold.",
+    "reason": "Theory paper whose 13 figures and 4 tables come from controlled synthetic diffusions, so there is no empirical result to reproduce against free data."
+  },
+  {
+    "arxiv_id": "2607.06502v1",
+    "verdict": "keep",
+    "confidence": 0.93,
+    "data_needed": [
+      "Open Source Asset Pricing (openassetpricing.com) long-short portfolio returns and predictor definitions for ~200 published anomalies",
+      "market capitalization breakpoints for the non-micro / top-3,000 screens",
+      "Ken French market factor for the CAPM alpha regressions"
+    ],
+    "reproducible_targets": [
+      "Median zero-investment long-short return of 48 bp/month through Dec 2005 (all stocks) falling to 19 bp post-2005, 26 bp for non-micro, and 7 bp for post-2005 non-micro",
+      "Post-2005 non-micro panel: median t-statistic 0.45, median CAPM alpha 9 bp/month with t-stat 0.64, median annualized Sharpe 0.11, interquartile range -4 to +18 bp, 67% of anomalies positive",
+      "Empirical Bayes shrinkage step: cross-anomaly variance of t-statistics of 1.09 implying a near-zero luck-adjusted return even for top-decile anomalies"
+    ],
+    "method": "Recomputes ~200 published long-short anomaly portfolios from the Chen-Zimmermann open-source signal library under alternative sample periods and size screens, then shrinks the cross-section of t-statistics for luck.",
+    "reason": "Built directly on the free openassetpricing.com dataset, which is a first-class Vintage source, and every headline statistic is a simple median over portfolio return series."
+  }
+]

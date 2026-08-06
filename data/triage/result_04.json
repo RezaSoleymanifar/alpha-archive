@@ -1,0 +1,135 @@
+[
+  {
+    "arxiv_id": "2607.24410v1",
+    "verdict": "drop",
+    "confidence": 0.75,
+    "data_needed": [
+      "S&P Global Compustat Xpressfeed firm fundamentals",
+      "RavenPack Edge company-level news analytics (volume, sentiment, buzz)",
+      "GICS sector and geographic/commodity revenue exposure",
+      "daily equity returns for 239 S&P 500 constituents, 2011-2024"
+    ],
+    "reproducible_targets": [
+      "Table 7 Stein loss of 302 for CD-DFM vs 309 IPCA / 309 GKX / 304 PCA",
+      "Table 7 global minimum-variance calibration ratio rho_gmv = 0.93 for CD-DFM vs 0.77 for IPCA and GKX",
+      "Table 7 reconstruction R2 of 0.526 for CD-DFM vs 0.514 for PCA"
+    ],
+    "method": "Non-linear latent factor model that maps firm characteristics (not return history) into factor exposures and a forward covariance forecast, trained end-to-end on a Stein covariance loss plus factor reconstruction.",
+    "reason": "Three of the 22 input characteristics are RavenPack Edge news analytics, a paid vendor feed with no free substitute, so the reported covariance and calibration numbers cannot be matched even though prices and fundamentals are obtainable from Yahoo and EDGAR."
+  },
+  {
+    "arxiv_id": "2607.24150v1",
+    "verdict": "drop",
+    "confidence": 0.95,
+    "data_needed": [
+      "proprietary insurer ALM / Solvency II cash-flow projection model",
+      "internally generated economic scenario generator paths",
+      "policyholder liability and Value-In-Force book data"
+    ],
+    "reproducible_targets": [],
+    "method": "Path-signature features of simulated economic scenarios used as regressors in a regularized linear surrogate for ALM outputs such as Value In Force and Best Estimate.",
+    "reason": "The target variable is the output of a proprietary insurer ALM engine run on internal balance-sheet and policyholder data; none of it exists in any free source."
+  },
+  {
+    "arxiv_id": "2607.24065v1",
+    "verdict": "drop",
+    "confidence": 0.85,
+    "data_needed": [
+      "unspecified Gaussian-process synthetic series calibrated to unnamed financial data",
+      "NARMA-10 synthetic nonlinear benchmark sequences",
+      "quantum circuit simulator / variational quantum hardware"
+    ],
+    "reproducible_targets": [
+      "NARMA-10 RMSE 0.056 +/- 0.013 for classical CRBM vs 0.119 +/- 0.028 for QQRBM",
+      "Gaussian-process task RMSE 584 +/- 511 for classical CRBM vs 1456 +/- 803 for QQRBM"
+    ],
+    "method": "Conditional restricted Boltzmann machines in classical, hybrid, and fully quantum variants trained with contrastive divergence for one-step time-series forecasting.",
+    "reason": "Both benchmarks are synthetic and the financial one is never identified by ticker, source, or period, so there is no market dataset to pull and the quantum variants need a circuit simulator rather than data."
+  },
+  {
+    "arxiv_id": "2607.24004",
+    "verdict": "drop",
+    "confidence": 0.97,
+    "data_needed": [],
+    "reproducible_targets": [],
+    "method": "Closed-loop solvability conditions for infinite-horizon stochastic LQ control of a Markov regime-switching jump-diffusion, with optimal feedback via coupled algebraic Riccati equations.",
+    "reason": "Pure stochastic control theory with a stylized lifetime wealth-tracking illustration and no dataset of any kind."
+  },
+  {
+    "arxiv_id": "2607.23161v1",
+    "verdict": "drop",
+    "confidence": 0.97,
+    "data_needed": [],
+    "reproducible_targets": [],
+    "method": "Wiener chaos and Malliavin calculus expansion of certainty equivalents that extends the Arrow-Pratt risk-premium approximation to higher order.",
+    "reason": "Pure mathematical theory illustrated only with quadratic Gaussian functionals and a Vasicek model; there is no empirical section to reproduce."
+  },
+  {
+    "arxiv_id": "2607.23068v1",
+    "verdict": "keep",
+    "confidence": 0.7,
+    "data_needed": [
+      "daily OHLCV and adjusted closes for US common equities and ADRs on NYSE/NASDAQ, 1990-2024 (Yahoo Finance)",
+      "daily market capitalization for the top-1000 universe screen (price x shares outstanding, shares from SEC EDGAR XBRL)",
+      "risk-free rate for Sharpe ratios (FRED DGS3MO / DTB3)"
+    ],
+    "reproducible_targets": [
+      "Table 1 Sharpe ratio of 1.12 for the compact neural network at leverage 3.0, vs 0.99 Average Oracle, 0.88 HRP, 0.86 equal-weight",
+      "Table 1 annualized volatility of 0.36 for the NN vs 0.53 HRP and 0.63 equal-weight, and max drawdown -0.77 vs -0.89 HRP, at leverage 3.0",
+      "Table 1 first forced-liquidation leverage threshold of 2.77 for the NN vs 2.73 Average Oracle, 2.66 HRP, 2.61 market-cap weighting"
+    ],
+    "method": "Compact end-to-end neural network for global minimum-variance weights: a five-parameter hyperbolic weighted moving average replaces the lag-transformation layer, a bidirectional GRU eigencleans the correlation matrix, and a marginal-volatility net rescales, all trained to minimize realized out-of-sample portfolio variance.",
+    "reason": "Everything the paper needs is daily adjusted closes plus a market-cap screen, so the whole benchmark ladder (equal weight, market cap, ERC, HRP, QIS shrinkage, the NN) is buildable from Yahoo and EDGAR; the only real friction is delisted tickers, since Yahoo lacks dead names and will leave a survivorship gap against their 1990-2024 universe."
+  },
+  {
+    "arxiv_id": "2607.22459v1",
+    "verdict": "drop",
+    "confidence": 0.9,
+    "data_needed": [
+      "hand-collected Settlement Modernisation Index of 809 reform events across 24 economies, 1993-2024",
+      "BIS Locational Banking Statistics cross-border claims",
+      "Bloomberg terminal broad money series for 14 economies",
+      "ECB TARGET2/T2S volume reports and CCP disclosures"
+    ],
+    "reproducible_targets": [
+      "Table 3 Column 3 cubic coefficients beta1 = 5.660, beta2 = -13.664, beta3 = 7.590 with within-R2 of 0.123 on 663 country-year observations",
+      "Turning points tau1 = 0.266 [0.188, 0.344] and tau2 = 0.934 [0.640, 1.228] in the inside-money elasticity S-curve"
+    ],
+    "method": "Country-year panel regression of log cross-border claims over M2 on a cubic in a hand-built settlement-modernisation index, with a T2S event study and synthetic control validation.",
+    "reason": "The key regressor is an original hand-coded legal event index that is not released, and the panel leans on BIS locational banking statistics and Bloomberg money series, none of which are in our free stack."
+  },
+  {
+    "arxiv_id": "2607.22085v1",
+    "verdict": "drop",
+    "confidence": 0.97,
+    "data_needed": [],
+    "reproducible_targets": [],
+    "method": "Axiomatic characterization of Neilson's weak versus strong loss aversion plus a generalized closed-form CPT utility function.",
+    "reason": "Axiomatic decision theory with no data, no estimation, and no empirical results section."
+  },
+  {
+    "arxiv_id": "2607.21826v1",
+    "verdict": "keep",
+    "confidence": 0.85,
+    "data_needed": [
+      "daily BTC-USD close prices, 1 Dec 2016 - 16 Jan 2018 (Coinbase OHLCV)",
+      "daily ETH-USD close prices, same window (Coinbase OHLCV)"
+    ],
+    "reproducible_targets": [
+      "Bitcoin LPPL critical-time estimates landing in mid-December 2017 and the first half of January 2018, ahead of the observed crashes",
+      "Ether LPPL bubble signal in mid-June 2017 anticipating the 12 June 2017 crash, plus the weaker signal around 12 January 2018",
+      "PSY BSADF and BSADF* date-stamping sequences against simulated 95% critical values over the 1 Dec 2016 - 16 Jan 2018 sample"
+    ],
+    "method": "Log-Periodic Power Law (JLS) fitted by OLS, GLS and MLE to detect super-exponential price growth, cross-checked with Phillips-Shi-Yu right-tailed BSADF explosive-root tests for bubble date stamping.",
+    "reason": "The only input is daily BTC and ETH closes over a 14-month window, which Coinbase covers in full, and both the LPPL fit and the PSY recursive ADF tests are pure-pandas/scipy notebook work."
+  },
+  {
+    "arxiv_id": "2607.21687v1",
+    "verdict": "drop",
+    "confidence": 0.97,
+    "data_needed": [],
+    "reproducible_targets": [],
+    "method": "HJB solution for an insurer maximizing exponential utility of surplus under CIR short rates with compound-Poisson exponential claims, allocating between a stock and a zero-coupon bond.",
+    "reason": "Closed-form stochastic control with parameter-sweep numerical illustrations only; no real market or claims data is ever used."
+  }
+]

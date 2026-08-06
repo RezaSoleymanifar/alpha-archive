@@ -1,0 +1,104 @@
+[
+ {
+  "arxiv_id": "2607.12479v2",
+  "verdict": "drop",
+  "confidence": 0.97,
+  "data_needed": ["none (pure theory)", "implied vol surfaces / vanilla option prices if ever calibrated"],
+  "reproducible_targets": [],
+  "method": "Ito-Wentzell-based conditional forward equation and stochastic Dupire PDE for local-stochastic-volatility, with a Rao-Blackwell leverage-function estimator.",
+  "reason": "Purely theoretical SPDE derivation with no empirical section, tables or figures; any application would need options/vol-surface data we do not have."
+ },
+ {
+  "arxiv_id": "2607.12407v1",
+  "verdict": "drop",
+  "confidence": 0.9,
+  "data_needed": ["simulated Merton / jump / SV-jump asset paths", "(for real validation) Moody's or S&P default histories"],
+  "reproducible_targets": [],
+  "method": "Derives chi-square asymptotics for Jensen-Shannon and KL divergence as model-monitoring drift statistics, then compares size and power against the Population Stability Index.",
+  "reason": "Authors state the demonstration relies entirely on simulated asset paths, not market or default data, so there is no free-data empirical result to check parity against."
+ },
+ {
+  "arxiv_id": "2607.12248v2",
+  "verdict": "keep",
+  "confidence": 0.8,
+  "data_needed": ["Yahoo Finance daily split/dividend-adjusted closes for NASDAQ-100 and S&P 500 constituents plus QQQ and the 11 SPDR sector ETFs, 2005-01-01 to 2026-01-01", "sector labels for the per-sector split (derivable from SPDR sector ETF membership)"],
+  "reproducible_targets": [
+   "Table 5 excess directional accuracy at h=128: -0.081 for pooled LoRA on NASDAQ-100 (base rate 0.710) and -0.017 on S&P 500 (base rate 0.658)",
+   "Figure 2 always-up base-rate curve versus raw pooled directional accuracy across horizons - reproducible from adjusted closes alone",
+   "Table 7 held-out MAE: pooled LoRA 25.15 vs zero-shot 26.44 vs always-up 24.91 on NASDAQ-100"
+  ],
+  "method": "LoRA fine-tune of the TimesFM foundation model on daily equity prices, benchmarked with expanding walk-forward folds and held-out tickers against always-up, random-walk, persistence and AR(1) baselines.",
+  "reason": "Every input is free daily adjusted-close equity data from Yahoo Finance, and the paper's core claim - that the ~80% accuracy is just a rising-market base rate - is checkable with prices alone; only the LoRA training run needs a GPU."
+ },
+ {
+  "arxiv_id": "2607.12156v2",
+  "verdict": "drop",
+  "confidence": 0.93,
+  "data_needed": ["Silicon Data GPU rental price indexes (A100/H100/B200/MI300X) via Bloomberg tickers", "Ornn GPU rental indexes (A100/H100/H200/B200/RTX 5090/RTX PRO 6000)", "synthetic compute futures term structure"],
+  "reproducible_targets": [],
+  "method": "Builds synthetic compute futures from term GPU rental contracts and measures hold-to-maturity returns to estimate a compute risk premium.",
+  "reason": "Entirely built on proprietary Silicon Data and Ornn GPU rental indexes distributed via Bloomberg; no equity, macro or crypto series in our stack can stand in."
+ },
+ {
+  "arxiv_id": "2607.11335v1",
+  "verdict": "drop",
+  "confidence": 0.95,
+  "data_needed": ["none - simulated two-asset GBM with hand-set parameters"],
+  "reproducible_targets": [],
+  "method": "Continuous-time portfolio choice penalizing expected discounted occupation time in benchmark-relative drawdown, solved via a one-dimensional HJB equation.",
+  "reason": "No real market data anywhere; the only figures are Monte Carlo underwater curves from invented parameters (sigma, mu, rho = 0.54), so there is nothing to reproduce against free data."
+ },
+ {
+  "arxiv_id": "2607.10960v1",
+  "verdict": "drop",
+  "confidence": 0.93,
+  "data_needed": ["none - synthetic closed-loop AMM simulator", "(if extended) on-chain DEX swap logs and CEX tick data"],
+  "reproducible_targets": [],
+  "method": "DQN execution agent trained inside a two-pool constant-product AMM simulator with a dynamic fee rule, fee-sensitive noise flow and closed-form CEX-AMM arbitrage.",
+  "reason": "The authors deliberately avoid historical data and evaluate only inside their own simulator (13.3 bps shortfall gain over 1,000 seeds), so no Vintage dataset is involved and parity would just be re-running their code."
+ },
+ {
+  "arxiv_id": "2607.10297v1",
+  "verdict": "keep",
+  "confidence": 0.82,
+  "data_needed": ["Yahoo Finance daily closes for 425 S&P 500 names, 3,271 trading days, 2010-01-01 to 2022-12-31", "Yahoo Finance daily closes for NIFTY 200 (140 names) and NIFTY 500 (312 names) via .NS tickers", "index level series for the benchmark Sharpe comparison"],
+  "reproducible_targets": [
+   "Table 1 spectral properties: 16 eigenmodes above the Marchenko-Pastur upper bound for S&P 500 (3.76% of eigenvalues), 10 for NIFTY 200 (7.14%), 12 for NIFTY 500 (3.85%)",
+   "Sharpe ratio of ~0.81 for the equal-weighted M=40 peripheral-asset portfolio versus ~0.51 for the market benchmark",
+   "Figures 5-6 core-periphery centralization Q^cp time series: 0.55-0.96 for structured networks versus 0.45-0.63 for randomized ones"
+  ],
+  "method": "Splits the empirical correlation matrix into a structured component (eigenvalues above the Marchenko-Pastur bound) and noise, builds networks from the denoised matrix, and forms equal-weighted portfolios from peripheral assets.",
+  "reason": "Needs only daily closes for liquid index constituents, all available free from Yahoo Finance, and the eigenvalue counts plus peripheral-portfolio Sharpe are crisp parity checks; only mild risk is reconstructing 2010-era constituent lists without survivorship bias."
+ },
+ {
+  "arxiv_id": "2607.09556v1",
+  "verdict": "keep",
+  "confidence": 0.72,
+  "data_needed": ["Yahoo Finance daily OHLCV for Dow Jones (29), CAC 40 (39) and EURO STOXX 50 (50) constituents plus the index levels, July 2018 to January 2024", "OR-Library index-tracking instances (free flat files, external to Vintage)", "a MILP solver - paper uses CPLEX, open HiGHS/CBC would substitute"],
+  "reproducible_targets": [
+   "Table 2 Dow Jones in-sample MAD tracking error: 0.00341 for the proposed model versus 0.0100 for Model 1 and 0.00324 for Model 3",
+   "Dow Jones out-of-sample MAD: 0.00402 proposed versus 0.00866 Model 1 and 0.00458 Model 3",
+   "Table 3 CAC 40 out-of-sample MAD: 0.00454 proposed versus 0.00458 Model 3"
+  ],
+  "method": "Robust mixed-integer linear program that picks a small no-rebalancing tracking basket, solved exactly with CPLEX and by a genetic-algorithm heuristic (GALB).",
+  "reason": "The headline tracking-error tables run on plain Yahoo Finance daily OHLCV for Dow Jones, CAC 40 and EURO STOXX 50, so the empirics are in scope; the discount is the commercial solver and the OR-Library instances, both replaceable but not exact."
+ },
+ {
+  "arxiv_id": "2607.09514v1",
+  "verdict": "drop",
+  "confidence": 0.88,
+  "data_needed": ["CryptoCompare pair-level daily volumes for USDT and USDC pairs across 14 centralized exchanges (Binance, OKX, Bybit, KuCoin, HTX, Bitget, Gate.io, MEXC, BitMart, Bitfinex, Bitstamp, Coinbase, Gemini, Kraken)", "exchange EEA-regulation classification"],
+  "reproducible_targets": [],
+  "method": "Difference-in-differences around the April 2025 MiCA USDT delisting, comparing USDC share and relative volume on regulated-facing versus globally oriented exchanges.",
+  "reason": "The identification is cross-exchange and needs CryptoCompare pair volumes for 14 venues; Vintage only carries Coinbase OHLCV, which is one control-group exchange and cannot support the DiD."
+ },
+ {
+  "arxiv_id": "2607.09505v1",
+  "verdict": "drop",
+  "confidence": 0.93,
+  "data_needed": ["none (pure theory)"],
+  "reproducible_targets": [],
+  "method": "Shows the log-wealth shortfall of a suboptimal portfolio versus Kelly equals the KL divergence to the measure under which it would be optimal, and the apparent outperformance equals the reverse KL.",
+  "reason": "A short analytic note with no empirical section, tables or figures, so there is nothing to reproduce or check parity against."
+ }
+]

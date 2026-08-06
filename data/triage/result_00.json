@@ -1,0 +1,138 @@
+[
+  {
+    "arxiv_id": "2608.04987v1",
+    "verdict": "keep",
+    "confidence": 0.85,
+    "data_needed": [
+      "daily closing prices for Nikkei 225, S&P 500, WTI crude, gold XAU/USD (Yahoo Finance: ^N225, ^GSPC, CL=F, GC=F), Jan 2011 - Nov 2023",
+      "no other data; synthetic ARFIMA / Markov-switching multifractal series are generated in-notebook"
+    ],
+    "reproducible_targets": [
+      "Figure 6 out-of-sample panel (a): average monthly drawdown in the 7.50-8.50% band across annual required returns 0-3%, with the proposed MMFC portfolio lowest at every re",
+      "Figure 5 in-sample panels (b) and (c): rolling-window average 10-day 99% VaR of 5.0-5.4% and 10-day 97.5% ES of 5.0-5.3%, MMFC smallest ES at every re",
+      "Table I synthetic benchmark: 50-seed average 10-period 99% VaR / 97.5% ES ranking MV > MD > MMFD > MC > MMFC (needs no data at all)"
+    ],
+    "method": "Replace the covariance matrix in mean-variance optimization with the sign-preserving MFCCA multifractal fluctuation matrix indexed by scale s and order q, solved as a QP with no-short-selling on a 520-day rolling window rebalanced monthly.",
+    "reason": "Everything is daily log returns of four liquid, Yahoo-covered series plus in-notebook simulation; the paper's histdata.com dealer quotes are close substitutes for Yahoo closes."
+  },
+  {
+    "arxiv_id": "2608.04832v1",
+    "verdict": "keep",
+    "confidence": 0.6,
+    "data_needed": [
+      "daily closes for S&P 100 constituents as of Dec 2015 (Yahoo Finance), fit window Jan 2006 - Dec 2015, backtest Jan 2016 - Dec 2025",
+      "point-in-time S&P 100 membership list (not in the stack, but approximable)",
+      "no real option data: payoffs are synthetic functions of the normalized spot path"
+    ],
+    "reproducible_targets": [
+      "Figure 10 left panel: log spectral-risk ratio vs the BS-HIST delta benchmark for each of the 10 payoffs, RLM improvement running up to roughly 0.5 and beating SLM on 6 of 10 payoffs",
+      "Fitted randomization prior on 128-day realized volatility from 2006-2015 S&P 100 windows: InvGamma MLE alpha-hat = 1.63, beta-hat = 0.07",
+      "Figure 10 right panel: same relative risk on the top 10% of windows ranked by max/min 21-day rolling realized variance, where BS-EWMA overtakes SLM on 5 of 10 payoffs"
+    ],
+    "method": "Train LSTM deep-hedging policies inside a GBM simulator whose volatility parameter is randomized under a 'refresh latent model' that keeps the filtering ambiguity stationary, then backtest the policy on real daily equity paths.",
+    "reason": "Only daily equity closes are required (option payoffs are simulated, not quoted), so the data is in reach; discounted for the heavy neural training and the point-in-time index-membership dependency."
+  },
+  {
+    "arxiv_id": "2608.04547v1",
+    "verdict": "drop",
+    "confidence": 0.9,
+    "data_needed": [
+      "confidential bank loan-level portfolio data and internal CCAR/CECL model runs"
+    ],
+    "reproducible_targets": [],
+    "method": "Formulate forecast-gap attribution between two CCAR/CECL model runs as a cooperative game and compare exact Shapley, nested/hierarchical Shapley, and sequential-replacement attributions.",
+    "reason": "Purely methodological with no results tables and an unfilled 'Data availability information will be added here' section; any real application needs proprietary bank portfolio and model-run data."
+  },
+  {
+    "arxiv_id": "2608.04532v1",
+    "verdict": "drop",
+    "confidence": 0.85,
+    "data_needed": [
+      "SOA Mortality Improvement Model MIM-2021-v4 mortality tables (not in the stack)",
+      "no market price data at all; financial parameters are taken from Munk and Sorensen (2010), not estimated"
+    ],
+    "reproducible_targets": [],
+    "method": "Martingale-approach closed-form mean-variance optimal stock/bond allocation and life-insurance coverage for a DC pension member under Vasicek rates and Gompertz-Makeham mortality with improvement.",
+    "reason": "No empirical asset-pricing result exists to check parity against; all figures are sensitivity plots of closed-form formulas under literature-calibrated parameters."
+  },
+  {
+    "arxiv_id": "2608.04305v1",
+    "verdict": "drop",
+    "confidence": 0.55,
+    "data_needed": [
+      "daily BTCUSDT closes, Feb 8 2018 - Jun 28 2026, 3059 obs (Coinbase BTC-USD is a close substitute and IS in the stack)",
+      "Crypto Fear and Greed Index from the alternative.me API (NOT in the stack)"
+    ],
+    "reproducible_targets": [],
+    "method": "Two-timescale CVaR risk-aware Q-learning over a 27-state discretization of BTC sentiment, sentiment momentum, and recent returns, with an adaptive finite-budget training controller.",
+    "reason": "Borderline: price side is fully covered by Coinbase, but two of the three state variables are built from the alternative.me Fear and Greed Index, which sits outside the seven listed sources; add that free feed and this flips to keep (targets would be Table 3 test Sharpe 0.9281 vs 0.5628 baseline and 0.4902 buy-and-hold, max drawdown 6.46%, cumulative return 23.61%)."
+  },
+  {
+    "arxiv_id": "2608.04200v1",
+    "verdict": "drop",
+    "confidence": 0.75,
+    "data_needed": [
+      "five financial text corpora: Financial PhraseBank, FOMC statements, SEntFiN 1.0, Twitter Financial News, NASDAQ news (33,549 labeled obs)",
+      "Benzinga analyst-ratings headline feed for 2019, 10,637 headlines / 13,115 headline-stock obs",
+      "daily S&P 100 open-to-open returns (this part IS covered by Yahoo)"
+    ],
+    "reproducible_targets": [],
+    "method": "QLoRA-finetune Qwen2.5/LLaMA3/Mistral for three-class headline sentiment, then form daily equal-weight top/bottom-15% long-short portfolios on the S&P 100 from the resulting scores.",
+    "reason": "The signal itself is built from a vendor headline feed (Benzinga) plus five external labeled text corpora, none of which are in the stack; only the price leg is reproducible, and the paper's headline finding is a null result anyway."
+  },
+  {
+    "arxiv_id": "2608.03925v1",
+    "verdict": "keep",
+    "confidence": 0.85,
+    "data_needed": [
+      "daily S&P 500 index levels Jan 1 2010 - Dec 31 2019, N = 2516 (paper uses CRSP; Yahoo ^GSPC is the same series)",
+      "no option chains: the authors explicitly defer empirical option-pricing evaluation to future research"
+    ],
+    "reproducible_targets": [
+      "Section 7 GMM table, full fVG at p = 2: Hurst H* approximately 0.45 (0.4511), sigma* 0.1398, theta* -0.5885, v* 0.0044",
+      "Nested-model comparison at p = 2: restricted fBSM H* 0.4659 and 0.3491 against the full specification, and the BSM/VG benchmarks estimated under the same GMM objective",
+      "Stability of H* across moment truncations p in {2,3,4,5} on the same 2010-2019 sample"
+    ],
+    "method": "Fractional Variance Gamma: fractional Brownian motion evaluated at a gamma activity-time change, estimated by two-stage feasible GMM on unconditional return moments across multiple horizons.",
+    "reason": "Despite being an option-pricing paper, the only empirical exercise is a GMM fit to ten years of daily S&P 500 closes, which Yahoo covers exactly; no option data is used."
+  },
+  {
+    "arxiv_id": "2608.02917v1",
+    "verdict": "keep",
+    "confidence": 0.7,
+    "data_needed": [
+      "daily adjusted closes for VBIAX, EQL, EDOW (Yahoo Finance)",
+      "daily adjusted closes for VTI and BND, the 11 Sector SPDR ETFs, and the 30 DJIA constituents",
+      "no on-chain or DEX data; arbitrage order flow is simulated"
+    ],
+    "reproducible_targets": [
+      "Table 1 dominance region for VBIAX on monthly tracking error against the economic mandate: fee gamma in [2.73%, 3.90%]",
+      "Table 1 dominance region for EQL on daily tracking error: gamma in [3.22%, 7.09%], over Jun 19 2018 - May 29 2026",
+      "Table 1 dominance region for EDOW on daily tracking error: gamma in [3.32%, 9.90%], over Nov 11 2024 - Jun 29 2026"
+    ],
+    "method": "Simulate a geometric-mean market maker (Balancer G3M) with a multi-asset fee band so arbitrage-only order flow enforces a target-weight portfolio, then compare its CAGR and tracking error to the incumbent funds.",
+    "reason": "The paper cites Bloomberg, but every series it needs (fund prices plus constituent total returns) is reconstructible from Yahoo adjusted closes; discounted because the Bloomberg total-return index benchmarks must be rebuilt from constituents."
+  },
+  {
+    "arxiv_id": "2608.02778v1",
+    "verdict": "drop",
+    "confidence": 0.85,
+    "data_needed": [
+      "none: synthetic PDE solutions on coarse and refined meshes, validated against closed-form Black-Scholes and a reference-mesh Heston solution"
+    ],
+    "reproducible_targets": [],
+    "method": "Neural Networks with Local Converging Inputs that locally correct a coarse-mesh PDE solution toward a refined-mesh one for multi-asset cash-or-nothing and barrier options.",
+    "reason": "Numerical-methods paper with zero market data; the RMSE tables (about 3x-12x improvement over the refined mesh) are mesh-convergence results, not an empirical finding to check parity against."
+  },
+  {
+    "arxiv_id": "2608.02355v1",
+    "verdict": "drop",
+    "confidence": 0.9,
+    "data_needed": [
+      "none: the paper states 'No market data is used anywhere. All parameters are invented and internally consistent.'"
+    ],
+    "reproducible_targets": [],
+    "method": "Portfolio as a linear functional of the truncated path signature, with the covariance of signature coordinates given by the non-group-like defect of the expected signature, turning mean-variance into one tensor linear system.",
+    "reason": "Explicitly simulation-only; the certainty-equivalent and Hawkes P&L tables (Sharpe about 1.27 and -1.50) are synthetic sample-complexity results with no market counterpart."
+  }
+]

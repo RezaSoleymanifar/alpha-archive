@@ -1,0 +1,82 @@
+[
+ {
+  "arxiv_id": "2607.28577v1",
+  "title": "Train Often, Deploy Selectively: Forward-Gated Model Replacement in Crypto Markets",
+  "url": "https://arxiv.org/abs/2607.28577v1",
+  "pdf": "https://arxiv.org/pdf/2607.28577v1",
+  "published": "2026-07-30",
+  "abstract": "Production forecasting systems retrain models regularly, but a retrained candidate does not necessarily outperform a continuously maintained incumbent that has continued to learn. We introduce Shadow Before Swap (SBS), a deployment policy that warm-refits a challenger off the serving path, evaluates it against the maintained incumbent on the same next week of delayed labels, and promotes it only after a fixed paired negative-log-likelihood (NLL) advantage. In historical replay over two nonoverlapping Binance episodes spanning 48 UTC weeks, three seeds, eight underlyings, and two perpetual-futu"
+ },
+ {
+  "arxiv_id": "2607.28410v1",
+  "title": "Can Large Language Models Execute Parent Orders?",
+  "url": "https://arxiv.org/abs/2607.28410v1",
+  "pdf": "https://arxiv.org/pdf/2607.28410v1",
+  "published": "2026-07-30",
+  "abstract": "Parent-order execution is a core problem in algorithmic trading, where the goal is to split a large order into smaller orders while reducing execution costs. Existing approaches either rely on pre-specified market assumptions that may not hold in practice, or require task-specific training that limits adaptability to new settings. To overcome these limitations, we present the first systematic study of large language models (LLMs) for parent-order execution. This extends the use of LLMs in finance from what to trade to how to execute. We propose PACE (Plan-Ahead Controlled Execution), a hierarc"
+ },
+ {
+  "arxiv_id": "2607.28230v2",
+  "title": "Boundary-Induced Apparent Risk Aversion in Nonergodic Multiplicative Growth",
+  "url": "https://arxiv.org/abs/2607.28230v2",
+  "pdf": "https://arxiv.org/pdf/2607.28230v2",
+  "published": "2026-07-30",
+  "abstract": "Observed risk-taking behavior is often rationalized through expected-utility curvature, yet the curvature required to fit choices in one context can differ sharply from the curvature required in another, a tension highlighted by calibration critiques of expected-utility theory. Finite multiplicative systems often cease to evolve when a lower continuation threshold is reached, whereas standard growth-optimal benchmarks assume uninterrupted continuation. We study a finite-horizon binary multiplicative process in which a fixed exposure is chosen ex ante and paths crossing an absorbing boundary ar"
+ },
+ {
+  "arxiv_id": "2607.28127v1",
+  "title": "FinSMART: Financial Sentiment Analysis for Algorithmic Trading through Market-Aligned Reinforcement Learning",
+  "url": "https://arxiv.org/abs/2607.28127v1",
+  "pdf": "https://arxiv.org/pdf/2607.28127v1",
+  "published": "2026-07-30",
+  "abstract": "Recent advances in Generative AI have substantially improved financial sentiment analysis through post-trained financial large language models (LLMs). However, existing approaches remain confined to a market-agnostic, supervised learning paradigm that relies on limited, static and human-annotated datasets, and thus are incapable of adapting to evolving market conditions. To address this limitation, we introduce FinSMART, the first market-aligned reinforcement learning framework for financial sentiment analysis, which directly optimizes sentiment signals using realized market outcomes. To deal "
+ },
+ {
+  "arxiv_id": "2607.27859v1",
+  "title": "ZAPs: A Reward Attribution Framework for DeFi Ecosystems with Adversarial-Robust Scoring via Parallel Anomaly Ensemble Detection",
+  "url": "https://arxiv.org/abs/2607.27859v1",
+  "pdf": "https://arxiv.org/pdf/2607.27859v1",
+  "published": "2026-07-30",
+  "abstract": "Incentive programs are central to user acquisition in decentralized finance, but many reward systems rely on raw volume, transaction count, and wallet count, making them vulnerable to bots and sybil operations. We present ZAPs, a reward attribution framework that combines economic contribution scoring with adversarial robustness. A composite activity score uses protocol-specific percentile normalization to limit whale dominance while preserving differentiation among users. A two-layer weighting mechanism combines protocol share within sector and sector share within the ecosystem, which reduces"
+ },
+ {
+  "arxiv_id": "2607.27853v1",
+  "title": "FinanceHarness: Autonomous Financial Deep Research Framework",
+  "url": "https://arxiv.org/abs/2607.27853v1",
+  "pdf": "https://arxiv.org/pdf/2607.27853v1",
+  "published": "2026-07-30",
+  "abstract": "Powered by advances in LLMs and autonomous agents, deep research has become one of the most widely adopted agentic products. However, most deep research systems write general-purpose reports, which are inadequate for financial deep research. Financial research demands specialized knowledge to analyze historical patterns and forecast upcoming events. Automating financial deep research therefore requires both a layered harness to drive the research agent and a verifiable, point-in-time benchmark that prevents leakage of future information. We present FinanceHarness, a harness that runs finance-o"
+ },
+ {
+  "arxiv_id": "2607.27814v1",
+  "title": "Pricing and Semi-static Hedging of Green Pay-as-produced Power Purchase Agreements",
+  "url": "https://arxiv.org/abs/2607.27814v1",
+  "pdf": "https://arxiv.org/pdf/2607.27814v1",
+  "published": "2026-07-30",
+  "abstract": "Pay-as-produced power purchase agreements (PPAs) expose buyers and sellers to the joint risk of power prices and renewable production. This paper develops a theoretical framework for hedging this exposure using a semi-static strategy: liquid futures hedge traded price risk dynamically, while a fixed portfolio of renewable-linked claims targets residual volume and covariance risk. The pricing and hedging decomposition is model-free, whereas the empirical implementation for German wind and solar generation uses a calibrated stochastic model. Conditional on a valuation measure, the fair strike is"
+ },
+ {
+  "arxiv_id": "2607.27649v1",
+  "title": "Multi-maturity consistency of option prices under bounded bid-ask spreads: a minimal obstruction and an exact two-date basket operator",
+  "url": "https://arxiv.org/abs/2607.27649v1",
+  "pdf": "https://arxiv.org/pdf/2607.27649v1",
+  "published": "2026-07-30",
+  "abstract": "Gerhold and G\u00fcl\u00fcm derived necessary calendar-vertical-basket conditions for finite call bid-ask quotes when the cash-settlement reference price lies inside a dynamically traded stock spread of bounded absolute width. We first distinguish the printed bid of a calendar-vertical basket from the executable bid dictated by the contract and the self-financing convention. After making this correction and adjoining the initial-spread and complete one-maturity conditions, we show that the resulting system is still insufficient. Thus, under the corrected executable reading, the sufficiency direction of "
+ },
+ {
+  "arxiv_id": "2607.27588v1",
+  "title": "Local Stochastic Rough Volatility: Pathwise Filtering and the Conditional Density Equation",
+  "url": "https://arxiv.org/abs/2607.27588v1",
+  "pdf": "https://arxiv.org/pdf/2607.27588v1",
+  "published": "2026-07-30",
+  "abstract": "This note studies the conditional-density equation and its pathwise transformation in local stochastic rough volatility models, with rough Heston (rHeston) as the main explicit example. Under the stated common-filtration, measurability, predictability and spatial-regularity assumptions, we show that the It\u00f4-Wentzell random-PDE reduction of the conditional density SPDE remains valid under local stochastic rough volatility. After fixing a common-environment realization and the associated stochastic flow, the transformed equation becomes a deterministic PDE with path-dependent coefficients. This "
+ },
+ {
+  "arxiv_id": "2607.27461v1",
+  "title": "Are Three Matrices All You Need To Beat the Market? Observable Matrix Dynamics for Portfolio Optimization",
+  "url": "https://arxiv.org/abs/2607.27461v1",
+  "pdf": "https://arxiv.org/pdf/2607.27461v1",
+  "published": "2026-07-29",
+  "abstract": "We present a simple framework for dynamic portfolio management that uses nothing but daily prices, trading volumes, and market capitalizations. Its state is three fixed-size matrices built from the price history: the distance matrix of the return correlations and the transition matrices of two Markov chains that rank the S\\&P 500 names monthly by trailing return and by trailing volatility. These three matrices rest on the price history alone, the same information Markowitz mean-variance optimization draws on, but they replace its expected-return vector and covariance matrix. Our method require"
+ }
+]

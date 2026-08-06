@@ -1,0 +1,82 @@
+[
+ {
+  "arxiv_id": "2608.02311v1",
+  "title": "AI Governance for Institutional Readiness in Finance",
+  "url": "https://arxiv.org/abs/2608.02311v1",
+  "pdf": "https://arxiv.org/pdf/2608.02311v1",
+  "published": "2026-08-03",
+  "abstract": "Agentic AI is gaining acceptance in asset management, but governance has not kept pace: 88% of surveyed finance professionals report no operational governance framework for agentic AI despite universal awareness of its deployment, and only 24 of 75 large U.S. money managers disclosing AI use in Form ADV filings report a formal governance policy. We argue this gap is architectural, not cultural: governance built for deterministic systems assumes static validation. However, continuously retrained agentic policies violate static governance by design. We propose a four-layer framework (Policy, Eng"
+ },
+ {
+  "arxiv_id": "2608.02002v1",
+  "title": "Hawkes-Driven OTC Market Making: Volterra-Riccati Approximation",
+  "url": "https://arxiv.org/abs/2608.02002v1",
+  "pdf": "https://arxiv.org/pdf/2608.02002v1",
+  "published": "2026-08-03",
+  "abstract": "We formulate an over-the-counter (OTC) market-making problem in which request-for-quote (RFQ) arrivals are modelled by general Hawkes kernels and fills are controlled thinnings of the exogenous request flow. The modelling choice is motivated by spot-FX RFQ data: after filtering and transforming to seasonality-adjusted RFQ activity time, two-way activity in major currency pairs exhibits large fitted branching ratios and multi-scale persistence. For general Hawkes kernels the control problem is path-dependent: the relevant state contains the order-flow history, or equivalently the forward curve "
+ },
+ {
+  "arxiv_id": "2608.01554v1",
+  "title": "P-Bubbles, Q-Bubbles, and Risk Premia",
+  "url": "https://arxiv.org/abs/2608.01554v1",
+  "pdf": "https://arxiv.org/pdf/2608.01554v1",
+  "published": "2026-08-03",
+  "abstract": "We develop a unified modeling framework that connects two distinct types of bubbles defined in the literature: the rational bubbles (aka P-bubbles), and the local martingale bubbles (aka Q-bubbles). We show that the local martingale bubble model includes the classical rational bubble as a special case. We relate both types of bubbles to an equity's risk premium via a novel decomposition."
+ },
+ {
+  "arxiv_id": "2608.01494v1",
+  "title": "Conformal Kelly: Conformal Prediction Intervals as the Scale in Fractional Kelly Position Sizing",
+  "url": "https://arxiv.org/abs/2608.01494v1",
+  "pdf": "https://arxiv.org/pdf/2608.01494v1",
+  "published": "2026-08-02",
+  "abstract": "Conformal prediction has traditionally been used to quantify prediction uncertainty. We put that uncertainty to a second use, combining a 75% conformal interval with fractional Kelly to size portfolio positions: as the range widens we shrink the position, and as it narrows we grow it. On a six-year development window (2016-2021), with trading costs and strict leverage caps, this compounds at 28.5% annualised net log growth with a Sharpe ratio of 1.34 and a 27.7% maximum drawdown, versus 15.9% for holding the S&P 500 and 21-22% for passive portfolios at the same leverage. Our main development-w"
+ },
+ {
+  "arxiv_id": "2608.01479v1",
+  "title": "The VIX-Derived Volatility Model: A VIX-first Joint SPX-VIX Framework",
+  "url": "https://arxiv.org/abs/2608.01479v1",
+  "pdf": "https://arxiv.org/pdf/2608.01479v1",
+  "published": "2026-08-02",
+  "abstract": "We propose the VIX-derived volatility (VDV) model, a VIX-first framework for joint SPXVIX modeling. In the model, we define explicit dynamics for the VIX process to price VIX futures and options, yielding a VIX-side calibration that is independent of the SPX dynamics. Using the rolling-window definition of the VIX, we then derive a coupling function to obtain the SPX volatility process as a latent process consistent with the calibrated VIX dynamics. This produces a stochastic-volatility representation for SPX that can be further calibrated to SPX options without altering the VIX dynamics. Rela"
+ },
+ {
+  "arxiv_id": "2608.01294v1",
+  "title": "An Information-Geometric Framework for Bayesian Credit Risk Monitoring",
+  "url": "https://arxiv.org/abs/2608.01294v1",
+  "pdf": "https://arxiv.org/pdf/2608.01294v1",
+  "published": "2026-08-02",
+  "abstract": "We propose an information-geometric framework for credit risk monitoring in which a bank's knowledge of a borrower is represented by a posterior distribution over latent dimensions of creditworthiness and financial fragility. Under a linear-Gaussian specification, Bayesian updating maps observed behavioural scores into Gaussian posterior beliefs, which form a statistical manifold endowed with the Fisher information metric. In the common-covariance case, the induced geometry reduces to the Mahalanobis metric on posterior means, while borrower-specific covariance matrices allow informational dis"
+ },
+ {
+  "arxiv_id": "2608.00761v1",
+  "title": "AI and Exchange Rate Predictability",
+  "url": "https://arxiv.org/abs/2608.00761v1",
+  "pdf": "https://arxiv.org/pdf/2608.00761v1",
+  "published": "2026-08-01",
+  "abstract": "I revisit the exchange rate disconnect puzzle, first documented by Meese and Rogoff (1983), using generative artificial intelligence (AI) to forecast currency returns based on economic fundamentals. Using ChatGPT and DeepSeek, I analyze a comprehensive dataset of economic data releases for major currency pairs and measure the fundamental strength of each currency. These AI-powered fundamentals exhibit significant cross-sectional predictive power. A simple trading strategy that goes long currencies with strong fundamentals and short currencies with weak fundamentals generates a Sharpe ratio exc"
+ },
+ {
+  "arxiv_id": "2608.00647v1",
+  "title": "Axient: On-Chain Credit and Loss Allocation for Leveraged Event Markets: A Venue-Agnostic Protocol for Traders, Credit Providers, Market Makers, and Liquidation Backstops",
+  "url": "https://arxiv.org/abs/2608.00647v1",
+  "pdf": "https://arxiv.org/pdf/2608.00647v1",
+  "published": "2026-08-01",
+  "abstract": "A physically backed leveraged event position requires real credit: if collateral C receives leverage L, the protocol supplies (L-1)C and uses the combined amount to acquire recognized event exposure. This paper develops a venue-agnostic on-chain credit architecture for that capital layer and an endogenous model of its capital market. It separates traders, Senior Credit LPs, market makers, liquidators, and Liquidation Backstop Providers; formalizes pool and debt shares, utilization- and risk-sensitive interest, collateral-locked position accounts, venue capabilities, market-maker commitments, w"
+ },
+ {
+  "arxiv_id": "2607.29583v1",
+  "title": "Fund Competition under Conflicting ESG Rating Methodologies",
+  "url": "https://arxiv.org/abs/2607.29583v1",
+  "pdf": "https://arxiv.org/pdf/2607.29583v1",
+  "published": "2026-07-31",
+  "abstract": "Competing ESG rating providers reward different portfolio attributes. This paper models funds that choose portfolios and fees for investors with heterogeneous ESG priorities. Portfolio changes can improve both providers' scores or favour one methodology over the other, and investor demand determines which methodology each fund targets. Greater disagreement makes provider-specific positioning more productive but common improvement less productive. Funds therefore specialise more, yet both provider scores, investor participation, and equilibrium fees fall in the benchmark equilibrium. Investor h"
+ },
+ {
+  "arxiv_id": "2608.00127v1",
+  "title": "Drawdown Risk Beyond Brownian Motion: A Monte-Carlo Framework, Non-Gaussian Extensions, and Long Memory",
+  "url": "https://arxiv.org/abs/2608.00127v1",
+  "pdf": "https://arxiv.org/pdf/2608.00127v1",
+  "published": "2026-07-31",
+  "abstract": "How deep and how long should the drawdowns of a systematic trading strategy run, given its Sharpe ratio and the statistical structure of its returns? Building on the drawdown framework of Rej, Seager and Bouchaud (2017), we develop the answer in three steps. We first reframe their closed-form results as a transparent Monte-Carlo experiment, validate it against their analytic benchmarks, and extend the mapping from drawdowns to four decision-relevant measures: maximum drawdown, maximum loss, final negative time and longest recovery time. We then relax the Gaussian assumption, holding the true S"
+ }
+]

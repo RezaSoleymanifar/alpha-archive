@@ -1,0 +1,100 @@
+[
+  {
+    "arxiv_id": "2607.17428v2",
+    "verdict": "drop",
+    "confidence": 0.95,
+    "data_needed": ["none - pure theory", "prediction-market AMM pool state (hypothetical)"],
+    "reproducible_targets": [],
+    "method": "Characterizes 'uniform AMMs' whose instantaneous loss-versus-rebalancing is proportional to pool value and independent of token price, for win-martingale belief processes.",
+    "reason": "Purely theoretical - proofs and canonical examples only, no empirical section, no dataset and no numbers to check parity against."
+  },
+  {
+    "arxiv_id": "2607.17427v1",
+    "verdict": "drop",
+    "confidence": 0.88,
+    "data_needed": ["Warsaw Stock Exchange WIG20+mWIG40 weekly prices", "author's proprietary funduszai.pl analyst briefs and frozen debate transcripts", "vLLM serving of Gemma-4-26B-A4B-it and Qwen3-30B-A3B plus huihui-ai abliterated checkpoints"],
+    "reproducible_targets": [],
+    "method": "Replays 21,600 weekly up/down calls on 60 WSE equities through base vs abliterated LLM decision layers and measures optimism rate, confidence and confession length deltas.",
+    "reason": "Core inputs are proprietary analyst briefs from the author's production pipeline plus heavy local serving of four 26-30B checkpoints; only the price leg is free, so nothing meaningful reproduces."
+  },
+  {
+    "arxiv_id": "2607.17381v1",
+    "verdict": "drop",
+    "confidence": 0.93,
+    "data_needed": ["granular Iranian bank balance-sheet data", "Basel III LCR/NSFR regulatory inputs"],
+    "reproducible_targets": [],
+    "method": "Continuous-time structural HJB model of joint liquidity and credit risk that solves for a bank's endogenous insolvency boundary under Basel III constraints.",
+    "reason": "Calibrated to non-public granular Iranian bank balance sheets; no US filings, price or macro series can stand in, so the 2 tables and 8 figures are unreachable."
+  },
+  {
+    "arxiv_id": "2607.16970v1",
+    "verdict": "drop",
+    "confidence": 0.92,
+    "data_needed": ["none - synthetic agent-based limit order book simulation"],
+    "reproducible_targets": [],
+    "method": "Two coupled continuous double-auction agent-based markets with anchored liquidity providers and momentum herders, sweeping anchor strength and six stress-transmission channels.",
+    "reason": "Pure order-book simulation with explicitly no calibration to empirical markets; all parameters are model-internal, so none of our data sources touch it and there is no real-data parity check."
+  },
+  {
+    "arxiv_id": "2607.15414v1",
+    "verdict": "drop",
+    "confidence": 0.85,
+    "data_needed": ["Yahoo Finance daily OHLCV for 50 S&P 500 constituents, Jan-Dec 2023", "hourly intraday OHLCV", "paid API access to GPT-4 Turbo, Claude 3 Opus, Gemini 1.5 Pro, Llama 3 70B and FinGPT", "FinQA and FinanceBench benchmark splits"],
+    "reproducible_targets": [],
+    "method": "Prompts five LLMs with 30-day OHLCV windows plus RSI/MACD/Bollinger values to emit BUY/SELL/HOLD signals, then backtests an equal-weighted 50-stock long-only book against the S&P 500.",
+    "reason": "Tables 3-6 and Figures 1-3 are captioned 'Simulated / Illustrative Data' by the authors themselves, so the Sharpe of 1.42 and 31.2% return are not measured results - there is no genuine parity target even though the price data is free."
+  },
+  {
+    "arxiv_id": "2607.15195v1",
+    "verdict": "keep",
+    "confidence": 0.7,
+    "data_needed": ["Yahoo Finance daily OHLCV for 14 ETFs (SPY, IWM, QQQ, DIA, EEM, EFA, FXE, FXI, TLT, HYG, SLV, GLD, USO, VNQ), 2019-01-01 to 2025-12-31", "average daily volume from the same OHLCV (spreads reconstructed via Corwin-Schultz, no vendor feed needed)"],
+    "reproducible_targets": [
+      "Table 4 out-of-sample Sharpe of 1.489 for the Gibbs policy vs 1.074 equal-weight and 0.937 behavioral (T=31 days, q=0.2, 120 episodes)",
+      "Table 5 out-of-sample Sharpe of 0.526 for Gibbs vs 0.126 equal-weight and 0.025 behavioral (T=63 days, q=0.2)",
+      "Table 3 out-of-sample Sharpe 1.120 with annualized return 0.090 and turnover 0.5414 (T=31, q=0.1, R2=0.0501)"
+    ],
+    "method": "Offline physics-informed RL: a pathwise Hamilton-Jacobi equation is fit by a PINN on realized ETF trajectories to learn a Gibbs target-holdings policy under a quadratic price-impact cost model, driven by a synthetic oracle alpha with controlled out-of-sample R-squared.",
+    "reason": "Every input is free Yahoo Finance daily OHLCV on 14 liquid ETFs and the alpha signal is synthetic by construction, so the whole experiment plus its Sharpe tables can be rebuilt in a notebook."
+  },
+  {
+    "arxiv_id": "2607.14518v1",
+    "verdict": "drop",
+    "confidence": 0.95,
+    "data_needed": ["none - synthetic lognormal basket distributions", "quantum circuit simulator / QAE stack"],
+    "reproducible_targets": [],
+    "method": "Uses tensor-train rank structure to design shallow variational quantum state-preparation circuits for amplitude-estimation-based basket option pricing.",
+    "reason": "Quantum computing methods paper with no market data and no cross-sectional signal; the 6 tables measure circuit depth and pricing error on synthetic distributions, outside our scope."
+  },
+  {
+    "arxiv_id": "2607.13929v1",
+    "verdict": "drop",
+    "confidence": 0.9,
+    "data_needed": ["Dukascopy one-minute FX and spot-metal OHLCV aggregated to 1-hour bars for 11 pairs (AUDUSD, EURUSD, GBPUSD, NZDUSD, USDCAD, USDCNY, USDHKD, USDJPY, USDSGD, XAGUSD, XAUUSD), pre-2024 through 2026"],
+    "reproducible_targets": [],
+    "method": "Decoder-only Transformer taking continuous multivariate event vectors and emitting a categorical distribution over volatility-normalized next-return buckets on hourly FX bars.",
+    "reason": "Needs long-history hourly FX and spot-metal bars from Dukascopy; we have neither intraday FX nor that vendor, so the Table 3 bits-per-event comparison against LightGBM cannot be matched."
+  },
+  {
+    "arxiv_id": "2607.13353v2",
+    "verdict": "drop",
+    "confidence": 0.97,
+    "data_needed": ["none"],
+    "reproducible_targets": [],
+    "method": "Position note arguing that Buehler-style deep hedging qualifies as reinforcement learning under a Monte Carlo policy-gradient reading of RL.",
+    "reason": "Short conceptual rebuttal with no experiments, no data and no tables or figures to reproduce."
+  },
+  {
+    "arxiv_id": "2607.13112v1",
+    "verdict": "keep",
+    "confidence": 0.85,
+    "data_needed": ["Ken French daily returns for the four 2x3 bivariate sorts (Size-BM, Size-OP, Size-INV, Size-Momentum), d=24 portfolios, from 1973-07-02", "Open Source Asset Pricing anomaly panel for the robustness check"],
+    "reproducible_targets": [
+      "Cumulative anchored variation explained on the Fama-French 24-portfolio daily panel: 64.6% at 3 components, 76.3% at 5, 86.4% at 8 and 91.1% at 10",
+      "Mean relative error of the capped-excess and normalized VaR approximations: 3.4% at rank 5, 1.9% at rank 8, 1.25% at rank 10, 0.84% at rank 12",
+      "Figure 3 both panels (explained variation curve and average relative portfolio error vs rank, with bootstrap 95% bands) on the top 5% radii tail sample"
+    ],
+    "method": "Anchored geodesic component analysis - dimension reduction of the extremal angular measure via great subspheres through a balanced complete-dependence anchor, reducing to eigenanalysis of a second-moment matrix of anchored tangent departures.",
+    "reason": "The entire real-data application runs on Ken French daily 2x3 portfolios with an Open Source Asset Pricing robustness panel, both directly in our stack; the eigenanalysis is a few lines of numpy on rank-Pareto standardized tail angles."
+  }
+]

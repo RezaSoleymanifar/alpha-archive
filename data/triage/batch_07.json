@@ -1,0 +1,82 @@
+[
+ {
+  "arxiv_id": "2607.17428v2",
+  "title": "Uniform-Loss Automated Market Making for Prediction Markets",
+  "url": "https://arxiv.org/abs/2607.17428v2",
+  "pdf": "https://arxiv.org/pdf/2607.17428v2",
+  "published": "2026-07-19",
+  "abstract": "Automated market makers (AMMs) for prediction markets descend from market scoring rules, where a mechanism operator subsidizes a market to aggregate beliefs about uncertain events. The existing literature has focused on bounding the total worst-case loss to the subsidizer, but has not addressed how that loss is distributed across price states or over time. We use the framework of loss-versus-rebalancing (LVR) to study this distribution and introduce \\textit{uniform AMMs}, defined by the property that instantaneous LVR is proportional to pool value and independent of the current token price. In"
+ },
+ {
+  "arxiv_id": "2607.17427v1",
+  "title": "Abliteration Is Not a Scalpel: Off-Target Effects of Refusal Removal on Decision Disposition Across Model Families",
+  "url": "https://arxiv.org/abs/2607.17427v1",
+  "pdf": "https://arxiv.org/pdf/2607.17427v1",
+  "published": "2026-07-19",
+  "abstract": "Abliteration - deleting a model's refusal direction from its weights - is the standard recipe behind popular \"uncensored\" open-weight models. We show the surgery is not clean. As a disposition probe we use 21,600 decisions under uncertainty - weekly up/down calls on 60 Warsaw Stock Exchange equities over 18 weeks, replayed through a frozen pipeline so the decision-layer model is the only variable. The task elicits no refusals at all, so any between-arm delta is pure side effect. Holding provenance constant (official BF16 checkpoints, a single abliteration author, an identical serving stack, on"
+ },
+ {
+  "arxiv_id": "2607.17381v1",
+  "title": "Determining Insolvency Regions in Banks: A Stochastic Dynamic Approach Integrating Liquidity and Credit Risk",
+  "url": "https://arxiv.org/abs/2607.17381v1",
+  "pdf": "https://arxiv.org/pdf/2607.17381v1",
+  "published": "2026-07-19",
+  "abstract": "We develop a continuous-time structural dynamic model to determine the exact insolvency regions of banks arising from the non-linear interaction between liquidity and credit risk. While existing literature predominantly treats these risks in isolation or via reduced-form specifications, we explicitly model the feedback loop where funding shocks and regulatory constraints force balance-sheet adjustments that can lead to endogenous insolvency. By incorporating Basel III regulatory requirements (LCR and NSFR) into a stochastic optimal control framework, we solve for the exact insolvency boundary "
+ },
+ {
+  "arxiv_id": "2607.16970v1",
+  "title": "Herding and Liquidity in Order-Book Markets. II. Fundamental Anchoring and the Resilience of Liquidity",
+  "url": "https://arxiv.org/abs/2607.16970v1",
+  "pdf": "https://arxiv.org/pdf/2607.16970v1",
+  "published": "2026-07-18",
+  "abstract": "An order-book market whose liquidity provision is anchored to a fundamental value carries a restoring force: the price mean-reverts to value and the book refills after a shock. We show this restoring force is a robust intrinsic stabiliser and identify it causally-dialling the anchor down removes the mean-reversion, and a leverage-driven fire-sale then self-sustains. Separately, we ask whether a stressed market transmits its liquidity stress to a coupled calmer one, and find that it cannot: across six transmission channels of increasing strength-cross-market herding, arbitrage flow, and market-"
+ },
+ {
+  "arxiv_id": "2607.15414v1",
+  "title": "AI Trading: Evaluating Large Language Models for Technical Market Analysis",
+  "url": "https://arxiv.org/abs/2607.15414v1",
+  "pdf": "https://arxiv.org/pdf/2607.15414v1",
+  "published": "2026-07-16",
+  "abstract": "Large Language Models (LLMs) have emerged as powerful tools for processing the heterogeneous information environments of modern financial markets. This paper presents a systematic, comparative evaluation of five prominent LLMs: GPT-4 Turbo, Claude 3 Opus, Gemini 1.5 Pro, Llama 3 70B, and the domain-specialized FinGPT, with respect to their capacity for technical market analysis. The evaluation spans four structured tasks: candlestick pattern recognition from OHLCV data, directional signal generation (BUY/SELL/HOLD), backtesting of signal quality through a simulated execution pipeline, and fina"
+ },
+ {
+  "arxiv_id": "2607.15195v1",
+  "title": "SciPhy Reinforcement Learning for Portfolio Optimization",
+  "url": "https://arxiv.org/abs/2607.15195v1",
+  "pdf": "https://arxiv.org/pdf/2607.15195v1",
+  "published": "2026-07-16",
+  "abstract": "This paper introduces a dynamic portfolio optimization framework for large institutional investors using Scientific Physics-Informed Reinforcement Learning (SciPhyRL). Formulated in continuous time over an extended state space that includes explicit cumulative costs, the approach leverages offline historical data to learn optimal, distribution-aware strategies. A core innovation reduces the optimization challenge to solving an HJB equation by projecting it onto observed trajectories as a pathwise Hamilton-Jacobi equation. This is solved directly from data using PINN in a single offline sweep, "
+ },
+ {
+  "arxiv_id": "2607.14518v1",
+  "title": "Structure-Aware Variational State Preparation for Quantum Basket Option Pricing",
+  "url": "https://arxiv.org/abs/2607.14518v1",
+  "pdf": "https://arxiv.org/pdf/2607.14518v1",
+  "published": "2026-07-16",
+  "abstract": "Basket option pricing often relies on Monte Carlo estimation, for which quantum amplitude estimation (QAE) provides a quadratic speed-up. However, the practical benefit of QAE can be limited by the depth of the state-preparation circuit. We propose a structure-aware quantum state-preparation framework for QAE-based basket option pricing. The framework uses tensor-train (TT) rank information to design shallow variational state-preparation circuits. In the independent regime, TT ranks remove unnecessary entangling links from a hardware-efficient ansatz. In correlated basket settings, we instead "
+ },
+ {
+  "arxiv_id": "2607.13929v1",
+  "title": "VAIOM: Continuous-Input, Discrete-Output Decoder-Only Financial Sequence Modeling",
+  "url": "https://arxiv.org/abs/2607.13929v1",
+  "pdf": "https://arxiv.org/pdf/2607.13929v1",
+  "published": "2026-07-15",
+  "abstract": "Financial observations are continuous, heterogeneous, and noisy, whereas decoder-only next-token models are usually built around discrete symbolic inputs. We introduce Vector-Input Autoregressive Inference for Ordinal-Return Modeling (VAIOM), a decoder-only Transformer for probabilistic next-return modeling on one-hour foreign-exchange bars. VAIOM separates input representation from output likelihood: continuous multivariate financial-event vectors preserve numerical structure at the input, while a categorical distribution over the next volatility-normalized return bucket supports cross-entrop"
+ },
+ {
+  "arxiv_id": "2607.13353v2",
+  "title": "Is Deep Hedging Reinforcement Learning?",
+  "url": "https://arxiv.org/abs/2607.13353v2",
+  "pdf": "https://arxiv.org/pdf/2607.13353v2",
+  "published": "2026-07-15",
+  "abstract": "The deep hedging framework of Buehler et al. (2019) trains a neural network policy, via Monte Carlo simulation of price paths and stochastic gradient descent, to minimize a risk measure applied to the terminal hedging error. In a recent stream of papers, my coauthors and I have described this technique as reinforcement learning (RL). Several peers have, on occasion, expressed the view that deep hedging does not constitute genuine RL, on two grounds, among others: first, that because feedback is generated only at the terminal date, with no intermediate reward signal, the method cannot constitut"
+ },
+ {
+  "arxiv_id": "2607.13112v1",
+  "title": "Anchored Geodesic Analysis for Multivariate Extremes",
+  "url": "https://arxiv.org/abs/2607.13112v1",
+  "pdf": "https://arxiv.org/pdf/2607.13112v1",
+  "published": "2026-07-14",
+  "abstract": "Extremal dependence is naturally described by the angular law of large multivariate observations. We introduce anchored geodesic component analysis (AGCA), a dimension-reduction method for extremal angular laws on the positive unit sphere. AGCA approximates angular variation by great subspheres constrained to pass through a chosen reference direction, with balanced complete dependence as the default anchor. Under a bounded sine-squared geodesic loss, the population and empirical problems reduce exactly to eigenanalysis of a second-moment matrix of anchored tangent departures. The resulting sco"
+ }
+]

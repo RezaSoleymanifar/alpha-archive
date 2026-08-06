@@ -1,0 +1,82 @@
+[
+ {
+  "arxiv_id": "2608.04987v1",
+  "title": "Portfolio Allocation under Heterogeneous Scales and Multifractality",
+  "url": "https://arxiv.org/abs/2608.04987v1",
+  "pdf": "https://arxiv.org/pdf/2608.04987v1",
+  "published": "2026-08-05",
+  "abstract": "Cross-correlations between financial signals are neither scale-free nor amplitude-independent: they vary with the time scale over which they are measured and with the magnitude of the fluctuations that dominate the average. We exploit this structure to construct a portfolio allocation model in which the risk functional is the signed fluctuation function of multifractal cross-correlation analysis (MFCCA), indexed by a scale $s$ and a fluctuation order $q$. Unlike MFDCCA-type criteria, which rectify local detrended covariances before aggregation, MFCCA retains their sign, so that co-moving and c"
+ },
+ {
+  "arxiv_id": "2608.04832v1",
+  "title": "Robust Control under Stationary Ambiguity",
+  "url": "https://arxiv.org/abs/2608.04832v1",
+  "pdf": "https://arxiv.org/pdf/2608.04832v1",
+  "published": "2026-08-05",
+  "abstract": "Control policies optimized in simulation can perform poorly in the real system when the parameters $x$ of the simulator are estimated from limited data but the resulting parameter uncertainty is not represented inside the simulation. A common way to incorporate such ambiguity is to simulate each trajectory of the system under a randomly drawn value for $x$. Since the policy cannot observe the drawn value, it must initially choose controls that perform well across many possible parameter values. However, if the policy progressively observes the system, it can often gradually infer the value of "
+ },
+ {
+  "arxiv_id": "2608.04547v1",
+  "title": "Attributing Differences Between Forecast Runs to Input Changes, With Applications to CCAR and CECL Exercises",
+  "url": "https://arxiv.org/abs/2608.04547v1",
+  "pdf": "https://arxiv.org/pdf/2608.04547v1",
+  "published": "2026-08-05",
+  "abstract": "Forecasting systems used in the Comprehensive Capital Analysis and Review (CCAR) and Current Expected Credit Losses (CECL) processes combine portfolio data, macroeconomic scenarios, model specifications, business assump- tions, and management adjustments. When the forecast changes from one run to the next, practitioners need an attribu- tion that reconciles to the total change without depending on an arbitrary sequence of input replacements. This paper formulates forecast-gap attribution as a cooperative game and examines several approaches: the exact Shapley value, hierarchical or nested Shap"
+ },
+ {
+  "arxiv_id": "2608.04532v1",
+  "title": "Optimal Life Insurance Decision in Mean-Variance DC Management with Mortality Improvements",
+  "url": "https://arxiv.org/abs/2608.04532v1",
+  "pdf": "https://arxiv.org/pdf/2608.04532v1",
+  "published": "2026-08-05",
+  "abstract": "This paper studies the investment and insurance strategies of defined-contribution (DC) pension plans under the mean-variance framework. We consider a stochastic environment with time-varying interest rates, contributions, and mortality risk. The DC plan members are allowed to decide their bond and stock allocations, as well as their life insurance coverage. Adopting the martingale approach, we derive the closed-form optimal strategies and the mean-variance efficient frontier. Further numerical analysis investigates how mortality improvements affect investment and insurance decisions, as well "
+ },
+ {
+  "arxiv_id": "2608.04305v1",
+  "title": "Adaptive Finite-Budget Training for CVaR Risk-Aware Q-Learning",
+  "url": "https://arxiv.org/abs/2608.04305v1",
+  "pdf": "https://arxiv.org/pdf/2608.04305v1",
+  "published": "2026-08-05",
+  "abstract": "Risk-aware Q-learning (RaQL) provides a model-free, two-timescale estimator for dynamic risk objectives, but its finite-budget behavior remains fragile: fixed inner-loop hyperparameters can produce unstable value estimates, persistent Bellman residuals, and inefficient sample reuse. This paper proposes an adaptive training controller for Conditional Value-at-Risk (CVaR) RaQL and evaluates it on a daily Bitcoin trading task. The controller preserves the original CVaR estimator and Bellman fixed point; instead, it redesigns the training procedure through six coordinated mechanisms: per-cell inne"
+ },
+ {
+  "arxiv_id": "2608.04200v1",
+  "title": "From Financial Sentiment Classification to Return Predictability: A QLoRA Benchmark of Large Language Models",
+  "url": "https://arxiv.org/abs/2608.04200v1",
+  "pdf": "https://arxiv.org/pdf/2608.04200v1",
+  "published": "2026-08-04",
+  "abstract": "Financial sentiment classifiers are commonly evaluated against human labels, but strong linguistic performance does not necessarily imply economically useful return predictability. This study separates these questions through two experiments. First, we construct a unified three-class benchmark from five financial text datasets and compare TF--IDF Naive Bayes, off-the-shelf FinBERT and Financial-RoBERTa encoders, zero-shot Qwen2.5-7B, and QLoRA-adapted Qwen2.5-7B, LLaMA3-8B, and Mistral-7B models. Mistral-7B achieves the best test accuracy (0.8840) and macro-F1 (0.8771), while QLoRA raises Qwen"
+ },
+ {
+  "arxiv_id": "2608.03925v1",
+  "title": "Option Pricing with Time-Changed Fractional Brownian Motion: A Fractional Variance Gamma Model",
+  "url": "https://arxiv.org/abs/2608.03925v1",
+  "pdf": "https://arxiv.org/pdf/2608.03925v1",
+  "published": "2026-08-04",
+  "abstract": "Fractional Brownian motion (fBm) exhibits attractive features for financial modeling, including long-range dependence, path roughness, and anomalous diffusion. However, its non-semimartingale nature precludes the use of conventional no-arbitrage approaches to option pricing. We address this limitation by introducing a time-changed fBm, obtained by evaluating fBm at stochastic gamma activity time, where activity time represents cumulative executed trading time. The resulting process retains the defining properties of fBm while recovering the semimartingale structure. Building on this constructi"
+ },
+ {
+  "arxiv_id": "2608.02917v1",
+  "title": "Mandate without Managers: Automated Market Makers as Verifiable Portfolio Products",
+  "url": "https://arxiv.org/abs/2608.02917v1",
+  "pdf": "https://arxiv.org/pdf/2608.02917v1",
+  "published": "2026-08-03",
+  "abstract": "Automated market makers (AMMs) are typically interpreted and evaluated as decentralized exchanges. Herein, we take the perspective envisioned by Balancer that an AMM can also be viewed as a portfolio technology that programmatically enforces an economic mandate. In particular, we follow the geometric mean market maker (G3M) invariant employed by that protocol in order to enforce a target-weighted portfolio. We introduce a multi-asset fee structure to the G3M under which competitive arbitrage implements a band-rebalancing strategy with mis-weighting bounded ex ante, allowing compliance with the"
+ },
+ {
+  "arxiv_id": "2608.02778v1",
+  "title": "Neural Networks with Local Converging Inputs for Efficient Options Pricing Models",
+  "url": "https://arxiv.org/abs/2608.02778v1",
+  "pdf": "https://arxiv.org/pdf/2608.02778v1",
+  "published": "2026-08-03",
+  "abstract": "We present a novel application of Neural Networks with Local Converging Inputs (NNLCI) to improve the efficiency of existing numerical methods for pricing multi-asset options. The most concise input format for NNLCI has been introduced, offering substantial convenience and efficiency. NNLCI uses a neural network to locally correct solutions from a coarse mesh and a refined mesh (relative to the coarse one), requiring only a minimal amount of high-fidelity training data. We demonstrate this approach on cash-or-nothing options under the Black-Scholes equation in one, two, and three spatial dimen"
+ },
+ {
+  "arxiv_id": "2608.02355v1",
+  "title": "Path Portfolio Optimization: Defect, Lift, and the Price of Path Complexity",
+  "url": "https://arxiv.org/abs/2608.02355v1",
+  "pdf": "https://arxiv.org/pdf/2608.02355v1",
+  "published": "2026-08-03",
+  "abstract": "This paper builds Path Portfolio Optimization: portfolio theory on a path-first framework in which the signature is the universal coordinate of the price path, and asks whether it survives estimation. A portfolio is a linear functional of the signature, so the control lives in a truncated tensor algebra, the covariance of signature coordinates is the non-group-like part of the expected signature --- a defect form --- and the whole mean--variance problem becomes a linear system in one tensor. Two structural results follow. The lift is the execution convention: the gap between the Marcus and for"
+ }
+]

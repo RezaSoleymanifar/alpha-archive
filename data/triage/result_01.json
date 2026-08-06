@@ -1,0 +1,157 @@
+[
+  {
+    "arxiv_id": "2608.02311v1",
+    "verdict": "drop",
+    "confidence": 0.92,
+    "data_needed": [
+      "self-selected LinkedIn survey of finance professionals (May 2026)",
+      "Form ADV filings for 100 large US money managers (SEC IAPD, not EDGAR)",
+      "synthetic agent return paths with partially specified parameters"
+    ],
+    "reproducible_targets": [
+      "Table 3 regret-covariance monitor summary statistics on the synthetic drift example",
+      "Figure 3 joint drawdown probability rising from 39.2% to 79.3% as agents crowd"
+    ],
+    "method": "Four-layer AI governance framework plus a regret-covariance drift detector and a two-agent crowding simulation.",
+    "reason": "Drop: the only numbers are a private LinkedIn poll, hand-coded Form ADV disclosures, and synthetic simulations with no market-data anchor to check parity against."
+  },
+  {
+    "arxiv_id": "2608.02002v1",
+    "verdict": "drop",
+    "confidence": 0.97,
+    "data_needed": [
+      "HSBC internal anonymised spot-FX RFQ event stream (EURUSD, GBPUSD, USDJPY, ~500k events/pair, 3 years)",
+      "client-level fill ratios and RFQ notionals",
+      "numerical HJB solver benchmark"
+    ],
+    "reproducible_targets": [
+      "Table 1 fitted Hawkes branching ratios (EURUSD 0.880, GBPUSD 0.895, USDJPY 0.862)",
+      "Table 3 relative regret vs exact HJB in the directional regime (Poisson 27.312%, mean-VR 2.498%, state-feedback VR 0.170%)"
+    ],
+    "method": "Optimal OTC market making with Hawkes-driven RFQ arrivals, solved via a hierarchy of Volterra-Riccati approximations.",
+    "reason": "Drop: the entire calibration rests on proprietary HSBC RFQ tick-level data that has no free substitute in our stack."
+  },
+  {
+    "arxiv_id": "2608.01554v1",
+    "verdict": "drop",
+    "confidence": 0.95,
+    "data_needed": [
+      "none - no data used"
+    ],
+    "reproducible_targets": [],
+    "method": "Theoretical unification of rational (P) bubbles and local-martingale (Q) bubbles with a risk premium decomposition.",
+    "reason": "Drop: purely theoretical - propositions and one symbolic AR(1) example, with no empirical section, tables, or numbers to reproduce."
+  },
+  {
+    "arxiv_id": "2608.01494v1",
+    "verdict": "keep",
+    "confidence": 0.93,
+    "data_needed": [
+      "daily adjusted closes for 8 US ETFs: SPY, QQQ, DIA, MDY, GLD, SLV, USO, DBC (Yahoo Finance), May 2006 - Sep 2024",
+      "nothing else - no options, tick, intraday, or vendor data"
+    ],
+    "reproducible_targets": [
+      "DEV window (2016-2021) Config A: 28.45% annualised log growth, Sharpe 1.336, max drawdown 27.68%, Calmar 1.127",
+      "DEV window Config B: 25.84% log growth, Sharpe 1.386, max drawdown 20.26%; SPY buy-and-hold benchmark 15.94% growth, Sharpe 0.98, 33.7% max drawdown",
+      "LOCKBOX (2022+) out-of-sample results of 8.5% and 7.0% annualised for the two pre-registered configurations"
+    ],
+    "method": "Ridge forecast on 21/63/252-day momentum plus EWMA(20) vol, then position size = fractional Kelly scaled by the width of a 75% conformal prediction interval.",
+    "reason": "Keep: daily adjusted closes on eight liquid ETFs is the only input, the paper sources them from a public Kaggle snapshot that Yahoo Finance reproduces, and every parameter (ridge lambda=10, horizons, 5bp costs, leverage caps, train/dev/lockbox splits) is stated."
+  },
+  {
+    "arxiv_id": "2608.01479v1",
+    "verdict": "drop",
+    "confidence": 0.98,
+    "data_needed": [
+      "SPX option chains (Thetadata snapshot, 2026-04-27 close, 304-494 quotes across six expiries)",
+      "VIX option chains (37-45 quotes across six expiries)",
+      "CBOE VIX futures settlement prices"
+    ],
+    "reproducible_targets": [
+      "Table 3 quote counts and max relative bid-ask spreads (VIX options 16.81%-21.90%, SPX options 6.06%-8.82%)",
+      "Figure 7 VIX option model-vs-market fit inside bid-ask",
+      "Figure 9 SPX implied volatility model-vs-market fit"
+    ],
+    "method": "VIX-first joint SPX-VIX stochastic volatility model: calibrate VIX dynamics to VIX futures/options, then derive SPX volatility through a coupling function.",
+    "reason": "Drop: every result is an options-surface calibration requiring paid SPX/VIX option chains and CBOE futures settlements, none of which we have."
+  },
+  {
+    "arxiv_id": "2608.01294v1",
+    "verdict": "drop",
+    "confidence": 0.8,
+    "data_needed": [
+      "synthetic borrower behavioural scores (no real data)",
+      "exogenously chosen matrices A, Sigma and functions m(z), P(z) not fully reported in text",
+      "author's R scripts"
+    ],
+    "reproducible_targets": [
+      "Table 1 KL divergences under common covariance (High-Medium 7.84, High-Low 27.52, Medium-Low 6.00)",
+      "Table 3 Jeffreys divergences (High-Medium 20.52, High-Low 72.40, Medium-Low 16.50)"
+    ],
+    "method": "Linear-Gaussian Bayesian updating of latent creditworthiness, with borrower distance measured by Fisher/KL/Jeffreys geometry on the posterior manifold.",
+    "reason": "Drop: the author states the simulations are illustrative rather than an empirical calibration, the generating parameters are not fully published, and there is no market-data target to check parity against."
+  },
+  {
+    "arxiv_id": "2608.00761v1",
+    "verdict": "drop",
+    "confidence": 0.93,
+    "data_needed": [
+      "Bloomberg end-of-day London spot and one-month forward rates for 10 G-10 currencies, 1996-2024",
+      "Investing.com economic calendar: 544 indicators, 174,820 releases with consensus forecasts and previous values",
+      "ChatGPT and DeepSeek API scoring of each release"
+    ],
+    "reproducible_targets": [
+      "Table 3 strategy performance by lookback (Sharpe above 0.7 headline, 0.604 at the 42-month lookback)",
+      "Table 4 regression alpha of the AIFX strategy against carry, momentum and value currency factors",
+      "Table 1 frequency of positive/negative/neutral releases by currency"
+    ],
+    "method": "LLMs read each macro release versus consensus to score currency fundamental strength; go long strong, short weak currencies cross-sectionally.",
+    "reason": "Drop: needs Bloomberg FX spot and forwards plus a scraped multi-country release calendar with consensus forecasts - we have no FX rates, no forwards, and no non-US release consensus."
+  },
+  {
+    "arxiv_id": "2608.00647v1",
+    "verdict": "drop",
+    "confidence": 0.96,
+    "data_needed": [
+      "none - synthetic agent-based simulation with author-specified behaviour",
+      "no live Axient or venue data"
+    ],
+    "reproducible_targets": [
+      "the 28 exact fixtures and 31,082 deterministic protocol checks",
+      "fixed-seed agent experiments reporting zero invariant failures across 70,207,488 evaluations"
+    ],
+    "method": "On-chain credit and loss-allocation protocol for leveraged event markets, with an endogenous model of its capital market.",
+    "reason": "Drop: a protocol specification whose numbers are self-generated invariant checks, not empirical asset-pricing results - the authors explicitly say the results are synthetic mechanism comparisons."
+  },
+  {
+    "arxiv_id": "2607.29583v1",
+    "verdict": "drop",
+    "confidence": 0.93,
+    "data_needed": [
+      "none original - cites MSCI-IVA / Sustainalytics / LSEG disagreement results from other papers",
+      "calibrated model parameters only (t=kappa=1, m=0.8, alpha=0.5)"
+    ],
+    "reproducible_targets": [
+      "Figure 2 endogenous-fee equilibrium: fees, participation and holdings-based ESG exposure falling in disagreement, normalised to 1.0 at delta=0.05",
+      "Figure 3 welfare under outcome weights eta in {0, 0.5, 1.5}"
+    ],
+    "method": "Game-theoretic model of funds choosing portfolios and fees when two ESG rating providers reward different attributes.",
+    "reason": "Drop: pure theory - the figures are comparative statics of a calibrated model with no dataset, and the empirical implications in Section 6.2 are left to future work."
+  },
+  {
+    "arxiv_id": "2608.00127v1",
+    "verdict": "keep",
+    "confidence": 0.82,
+    "data_needed": [
+      "none - fully synthetic Monte Carlo (Brownian, non-Gaussian archetypes, fractional Brownian motion)",
+      "optionally free daily returns for a real-strategy calibration extension (Ken French factors or Yahoo Finance ETF returns)"
+    ],
+    "reproducible_targets": [
+      "Table 1 Gaussian decision panel: at Sharpe 1 over 3 years, median max drawdown 1.16 vol and 90th percentile 1.88 vol; median recovery time 0.86 years, 90th percentile 1.82 years",
+      "Table 4 one-day-fixed fBm risk at H=0.8: 8.01x max drawdown and 13.13x max loss versus the Brownian baseline",
+      "Figure 4 validation of the Monte-Carlo drawdown depth and length against the Rej-Seager-Bouchaud closed forms at the 5% level"
+    ],
+    "method": "Monte-Carlo mapping from Sharpe ratio and return structure to four drawdown risk measures, extended to skewed/fat-tailed archetypes and fractional Brownian long memory.",
+    "reason": "Keep: every table is simulation output from a fully specified generator, so a notebook reproduces it with numpy alone and needs none of the paid datasets - the only caveat is there is no real-data parity check, just analytic benchmarks."
+  }
+]

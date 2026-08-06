@@ -1,0 +1,82 @@
+[
+ {
+  "arxiv_id": "2607.24410v1",
+  "title": "The Fundamental Structure of Risk: From Characteristics to Covariance",
+  "url": "https://arxiv.org/abs/2607.24410v1",
+  "pdf": "https://arxiv.org/pdf/2607.24410v1",
+  "published": "2026-07-27",
+  "abstract": "Estimating the covariance structure of financial assets typically relies on historical returns, making risk models dependent on noisy and asset-specific time series. We propose the Characteristic-Driven Dynamic Factor Model (CD-DFM), a non-linear latent factor model that instead constructs a representation of the asset cross-section directly from observable firm characteristics, primarily company fundamentals. The learned latent space jointly determines interpretable factor exposures and a forward covariance estimator, and is trained end to end on an objective that combines a Stein covariance "
+ },
+ {
+  "arxiv_id": "2607.24150v1",
+  "title": "Approximation of stochastic insurer balance-sheet results using signatures of economic scenarios",
+  "url": "https://arxiv.org/abs/2607.24150v1",
+  "pdf": "https://arxiv.org/pdf/2607.24150v1",
+  "published": "2026-07-27",
+  "abstract": "In the insurance industry, Asset and Liability Management (ALM) models are key tools for numerous applications, including Solvency Capital Requirement (SCR) computation and asset allocation optimization. However, their use often entails a significant computational cost, especially when a large number of sensitivities or stressed balance-sheet evaluations must be performed. In this work, we propose an approximation framework for the outputs of an ALM model, such as the Value In Force or the Best Estimate, based on the theory of path signatures. More precisely, the proposed approach consists of "
+ },
+ {
+  "arxiv_id": "2607.24065v1",
+  "title": "Variational Quantum Conditional Boltzmann Machines for Time-Series Forecasting: Architectures, Symmetric Hyperparameter Evaluation, and a Nonlinear Benchmark",
+  "url": "https://arxiv.org/abs/2607.24065v1",
+  "pdf": "https://arxiv.org/pdf/2607.24065v1",
+  "published": "2026-07-27",
+  "abstract": "In this study, we developed and evaluated four conditional energy-based forecasting architectures: a classical Gaussian-Bernoulli CRBM, a hybrid quantum-classical QCRBM, a full-register QQRBM, and a lag-feature QFeatureQRBM with complete derivations of their conditional distributions, Contrastive-Divergence gradients, and hybrid training, bridging the energy-based formulation and the implementation-level quantum computation. Unlike prior comparisons, our evaluation enforces symmetric hyperparameter optimisation: classical and quantum-specific hyperparameters receive an equally thorough grid se"
+ },
+ {
+  "arxiv_id": "2607.24004",
+  "title": "Closed-loop solvability of infinite-horizon stochastic linear-quadratic problem for Markov regime-switching jump-diffusion system",
+  "url": "https://arxiv.org/abs/2607.24004",
+  "pdf": "https://arxiv.org/pdf/2607.24004",
+  "published": "2026-07-27",
+  "abstract": "This paper investigates a class of stochastic linear-quadratic (SLQ) control problems over an infinite horizon for Markov regime-switching jump-diffusion systems. Unlike classical diffusion models modulated by a Markov chain, we assume that the state process undergoes abrupt jumps that are synchronous with the regime switches of the Markov chain. In contrast to conventional Poisson jump-diffusion models, the jumps in the state process are entirely induced by the state transitions of the Markov chain, which can be interpreted as losses or gains of state process incurred during regime changes. U"
+ },
+ {
+  "arxiv_id": "2607.23161v1",
+  "title": "Risk Aversion in the Small and in the Large: Beyond Arrow-Pratt A Wiener Chaos Hierarchy of Dynamic Risk Premia",
+  "url": "https://arxiv.org/abs/2607.23161v1",
+  "pdf": "https://arxiv.org/pdf/2607.23161v1",
+  "published": "2026-07-25",
+  "abstract": "The Arrow-Pratt approximation is one of the cornerstones of expected utility theory, providing the classical local approximation of certainty equivalents and risk premia in terms of absolute risk aversion. Despite its widespread use, its mathematical scope and relationship to higher-order risk preferences remain only partially understood. This paper develops a new framework for the analysis of certainty equivalents and dynamic risk premia based on Malliavin calculus and Wiener chaos analysis. We first show that the classical Arrow-Pratt approximation is not asymptotically valid for arbitrary s"
+ },
+ {
+  "arxiv_id": "2607.23068v1",
+  "title": "Neural Network-Driven Volatility Drag Mitigation under Aggressive Leverage",
+  "url": "https://arxiv.org/abs/2607.23068v1",
+  "pdf": "https://arxiv.org/pdf/2607.23068v1",
+  "published": "2026-07-25",
+  "abstract": "This paper introduces a compact reformulation of a modular end-to-end neural network for global minimum-variance portfolio optimization that decouples model complexity from both look-back window length and universe size. A five-parameter hyperbolic weighted moving average combined with a saturating exponential replaces the original 2,400-parameter lag-transformation layer, and a bidirectional gated-recurrent-unit eigencleaning module together with a streamlined marginal-volatility network reduce total learnable parameters from 39,586 to just 2,175. In out-of-sample tests against state-of-the-a"
+ },
+ {
+  "arxiv_id": "2607.22459v1",
+  "title": "Settlement Infrastructure, Inside Money Elasticity, and the Network Economics of Distributed Ledger Technology",
+  "url": "https://arxiv.org/abs/2607.22459v1",
+  "pdf": "https://arxiv.org/pdf/2607.22459v1",
+  "published": "2026-07-24",
+  "abstract": "We construct the Settlement Modernisation Index, a panel dataset of 809 reform events across 24 advanced economies between 1993 and 2024, decomposed into three economic channels and three adoption phases. We document an S-curve in inside money elasticity with two interior turning points at SMI = 0.27 and 0.93, separating a liberation phase, a post-global-financial-crisis compliance valley, and a mature-infrastructure recovery phase. We show that settlement modernisation generates network-conditional balance sheet efficiencies through a T2S event-study with year-by-year EMIR decomposition (satu"
+ },
+ {
+  "arxiv_id": "2607.22085v1",
+  "title": "Neilson's Weak vs. Strong Loss Aversion: A Characterization and a Generalized CPT-Utility Function",
+  "url": "https://arxiv.org/abs/2607.22085v1",
+  "pdf": "https://arxiv.org/pdf/2607.22085v1",
+  "published": "2026-07-24",
+  "abstract": "In multi-objective and multi-criteria decision-making under risk, especially in settings involving individual behavior, risk-aware analysis based on subjective evaluation has become increasingly important. Moving beyond risk-neutral modeling and the constraints of Expected Utility Theory (EUT), Cumulative Prospect Theory (CPT) provides a behaviorally grounded framework for capturing how individuals perceive and evaluate risky prospects. This paper conducts a rigorous theoretical analysis of Neilson's definitions of aversion. We provide a gamble-based interpretation, sharpen key conceptual dist"
+ },
+ {
+  "arxiv_id": "2607.21826v1",
+  "title": "Are cryptocurrencies real financial bubbles? Evidence from quantitative analyses",
+  "url": "https://arxiv.org/abs/2607.21826v1",
+  "pdf": "https://arxiv.org/pdf/2607.21826v1",
+  "published": "2026-07-23",
+  "abstract": "The growth of peer-to-peer exchanges and the blockchain technology has led to a proliferation of cryptocurrencies and to a massive increase in the number of investors who actually negotiate digital money. Cryptocurrencies trade at prices mainly driven by investor sentiment, becoming a potential source of financial bubbles and instabilities. In this work, we apply quantitative models to the study of Bitcoin and Ether, two of the most famous cryptocurrencies. Our bubble detection methodology combines the Log Periodic Power Law (LPPL) model, originally created by Johansen, Ledoit and Sornette (JL"
+ },
+ {
+  "arxiv_id": "2607.21687v1",
+  "title": "Optimal Surplus Management for Insurers under Stochastic Interest Rates and Jump-Driven Liabilities",
+  "url": "https://arxiv.org/abs/2607.21687v1",
+  "pdf": "https://arxiv.org/pdf/2607.21687v1",
+  "published": "2026-07-23",
+  "abstract": "This paper investigates the optimal surplus management problem of an insurance company operating in a financial market with stochastic interest rates and jump-driven liabilities. The insurer dynamically allocates its surplus between a risky stock and a risk-free zero-coupon bond while facing insurance claims modeled by a compound Poisson process with exponentially distributed claim sizes. The short term interest rate follows a Cox-Ingersoll-Ross (CIR) process, which captures mean-reverting dynamics commonly observed in term structure models. The insurer maximizes the expected exponential utili"
+ }
+]

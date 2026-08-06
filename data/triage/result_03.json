@@ -1,0 +1,129 @@
+[
+  {
+    "arxiv_id": "2607.27070v1",
+    "verdict": "drop",
+    "confidence": 0.88,
+    "data_needed": [
+      "Binance USD-M perpetual BTCUSDT 1-minute klines (data.binance.vision)",
+      "Binance 5-minute metrics dumps: open interest USD, top-trader long/short ratio, global long/short account ratio, taker buy/sell volume ratio",
+      "daily derivatives panel: funding rates and long/short liquidation notionals 2022-2025"
+    ],
+    "reproducible_targets": [],
+    "method": "Rolling variance and lag-1 autocorrelation of detrended residuals on price, open interest and taker order flow before seven BTC liquidation cascades, trend-tested with Kendall-tau across 39 configurations per variable per event.",
+    "reason": "The headline result (taker order-flow variance compression, p ~ 5e-6) lives entirely in Binance perpetual-futures leverage and order-flow metrics; Vintage has only spot Coinbase OHLCV, so open interest, long/short ratios and liquidation notionals are unavailable."
+  },
+  {
+    "arxiv_id": "2607.27063v1",
+    "verdict": "drop",
+    "confidence": 0.82,
+    "data_needed": [
+      "China A-share daily prices, SSE 50 universe, 2015-2024 (CSMAR/Wind/Tushare class vendor)",
+      "trade-level buy/sell classification for the LSV herding measure",
+      "cross-sectional A-share returns for CSAD"
+    ],
+    "reproducible_targets": [],
+    "method": "Lattice/network agent-based model where investors form Gaussian beliefs, herd on neighbours and receive delayed information, generating momentum then reversal; empirically compared against CSAD, LSV and a Johnson S_U tail-based herding indicator.",
+    "reason": "80-85% is pure simulation with no data, and the 15-20% empirical part needs Chinese A-share panel data plus trade-level buy/sell classification for LSV, none of which Vintage covers (Yahoo has no reliable SSE 50 constituent history)."
+  },
+  {
+    "arxiv_id": "2607.27039v1",
+    "verdict": "drop",
+    "confidence": 0.97,
+    "data_needed": [],
+    "reproducible_targets": [],
+    "method": "Theoretical construction of optimal principal-agent contracts under drift and volatility control, generalising 2BSDE and BSDE approaches via a new contract class parametrised by a function psi.",
+    "reason": "Pure mathematical finance: proofs, propositions and no empirical section, numerical experiment, table or figure to reproduce."
+  },
+  {
+    "arxiv_id": "2607.26405v1",
+    "verdict": "drop",
+    "confidence": 0.9,
+    "data_needed": [
+      "IMF Exchange Rates dataset, monthly period-average USD per domestic currency, 43 currencies 2002-2023",
+      "IMF Direction of Trade / International Trade in Goods, monthly bilateral goods exports FOB in USD"
+    ],
+    "reproducible_targets": [],
+    "method": "Constant-mean multi-currency AMM whose pool membership is chosen by hierarchical agglomerative clustering on FX covariance and bilateral trade weights, evaluated on realized trading cost versus vehicle-currency routing.",
+    "reason": "Both inputs are IMF panel datasets (FX rates for 43 currencies and bilateral goods-export volumes); FRED carries only a handful of USD FX pairs and no bilateral trade matrix, so Table 3's ~13% / USD 2.5bn cost saving cannot be rebuilt."
+  },
+  {
+    "arxiv_id": "2607.26188v1",
+    "verdict": "keep",
+    "confidence": 0.72,
+    "data_needed": [
+      "Bitcoin daily OHLC (paper uses Bitstamp 2011-2026; Coinbase BTC-USD from Dec 2014 covers the three mature halving epochs)",
+      "known halving dates / block heights at 210k, 420k, 630k, 840k (public constants)",
+      "FRED M2 for the liquidity-versus-clock comparison (Figure 8)",
+      "optional and NOT in Vintage: Coin Metrics CapMVRVCur and IssTotUSD for the MVRV and Puell indicators"
+    ],
+    "reproducible_targets": [
+      "Figure 1 / Table 1: mature-cycle tops at 525, 546 and 534 days after the 2016, 2020 and 2024 halvings, and bottoms at 406/364/366 days after each top",
+      "Figure 3 turn-timing null: 0 of 10,000 block-bootstrap paths reproduce the top clustering, p in the 5e-6 to 1e-3 range",
+      "Figure 2 power-law trend on log price versus log time with fitted exponent of approximately 5.6"
+    ],
+    "method": "Dates each cycle's top and bottom mechanically, measures the elapsed days from each halving, and tests the clustering against a block-bootstrap null; separately shows Pi Cycle (111d SMA / 2x350d SMA), Mayer (price / 200d SMA), MVRV and Puell extremes decay monotonically across epochs.",
+    "reason": "The headline claim - the halving clock - is pure daily BTC price plus fixed halving dates, so Coinbase OHLCV and FRED M2 reproduce Figures 1, 2, 3, 8 and 9; only the MVRV/Puell columns of Table 3 need Coin Metrics on-chain series Vintage does not serve."
+  },
+  {
+    "arxiv_id": "2607.25459v1",
+    "verdict": "drop",
+    "confidence": 0.75,
+    "data_needed": [
+      "none - fully synthetic multivariate stochastic-volatility simulation (6 assets, 6,000 windows of length 22)"
+    ],
+    "reproducible_targets": [],
+    "method": "Trains a one-layer Transformer and an MLP on returns from a simulated MSV process with known latent log-volatility, then uses ridge probes, stage-wise decodability and output-head interventions to locate the latent state inside the network.",
+    "reason": "Mechanistic-interpretability study on entirely synthetic data with GPU training and no market data at all, so it exercises none of the Vintage sources and belongs outside a free-data reproduction index."
+  },
+  {
+    "arxiv_id": "2607.25258v1",
+    "verdict": "drop",
+    "confidence": 0.88,
+    "data_needed": [
+      "none - simulated Merton jump-diffusion price paths under three synthetic liquidity regimes"
+    ],
+    "reproducible_targets": [],
+    "method": "Post-training valuation-adjustment layer that scores a trained deep-hedging neural policy on tracking-loss CVaR plus funding and margin add-ons under a shared KL uncertainty set.",
+    "reason": "All 15 tables come from Monte Carlo on a simulated Merton jump-diffusion with hand-set friction parameters; there is no market data to source and no empirical result for Vintage to check parity against."
+  },
+  {
+    "arxiv_id": "2607.25199v2",
+    "verdict": "drop",
+    "confidence": 0.9,
+    "data_needed": [
+      "none - synthetic strike/maturity grids and analytical benchmarks for Heston, Bates, rough Heston, Heston-Hull-White and G-SVJD"
+    ],
+    "reproducible_targets": [],
+    "method": "Autonomous agentic loop that generates option-pricing code from a model spec, then scores it with no-arbitrage tests, stress tests and degeneration-limit checks, feeding diagnostics back into a method repository.",
+    "reason": "An LLM code-generation and validation framework run on synthetic parameter grids with no market prices; the results (Tables 5-8 category scores) are agent-run artefacts, not data-driven empirics."
+  },
+  {
+    "arxiv_id": "2607.25189v1",
+    "verdict": "keep",
+    "confidence": 0.62,
+    "data_needed": [
+      "daily open-to-close returns for SPX, FTSE 100, DAX, Nikkei 225, KOSPI, Jan 2000 - Jun 2018 (Yahoo Finance ^GSPC, ^FTSE, ^GDAXI, ^N225, ^KS11 has open and close)",
+      "Bitcoin daily returns 2012-2025 (Coinbase from Dec 2014; paper uses Bitstamp)",
+      "NOT in Vintage: Oxford-Man Institute 5-minute realized variance, needed only for the QLIKE and HAR-RV benchmark"
+    ],
+    "reproducible_targets": [
+      "Table 2 parameter estimates and fitted stability factors ranging from 0.732 for Bitcoin to 0.905 for KOSPI",
+      "Table 4 in-sample log-likelihoods: LM-GARCH within +/-8 points of GARCH(1,1) and 13-25 points behind FIGARCH across all five indices",
+      "Figure 6 Nikkei 225 squared-return autocorrelation out to lag 200, empirical versus LM-GARCH-implied versus GARCH(1,1)-implied"
+    ],
+    "method": "GARCH variant where level-and-slope updates of a latent power-law kernel sit in a two-dimensional Markov state, giving state-dependent decay of past shocks and long memory; estimated by Gaussian QMLE on three parameters.",
+    "reason": "Estimation, likelihood comparison and long-memory diagnostics run purely on daily returns Yahoo and Coinbase provide, so Tables 2-4 and Figure 6 are checkable; only the QLIKE/HAR-RV out-of-sample tables (5 and 6) need Oxford-Man realized variance we do not have."
+  },
+  {
+    "arxiv_id": "2607.24680v1",
+    "verdict": "drop",
+    "confidence": 0.96,
+    "data_needed": [
+      "Bloomberg SPX and SPXW option quotes, 2024-01-01 to 2025-12-31, 502 trading days, 4,969,256 option pairs",
+      "implied volatility curves with bid/ask spreads across 54 tenors"
+    ],
+    "reproducible_targets": [],
+    "method": "Parsimonious three-segment parametrisation of the risk-neutral distribution giving localised control of the implied-volatility curve shape, calibrated curve by curve and interpolated across the term structure.",
+    "reason": "Every result is a fit to roughly a quarter-million Bloomberg SPX implied-volatility curves; option chains with quotes and spreads are a vendor dataset Vintage does not carry."
+  }
+]

@@ -1,0 +1,161 @@
+[
+ {
+  "arxiv_id": "2607.21170v1",
+  "verdict": "drop",
+  "confidence": 0.85,
+  "data_needed": [
+   "LSEG Refinitiv Workspace daily OHLC for 493 S&P 500 constituents, 2025-01-01 to 2025-12-31",
+   "Refinitiv daily news headlines per ticker (for FinBERT sentiment scores)",
+   "FinBERT model weights (free)"
+  ],
+  "reproducible_targets": [
+   "Table 4 (3-month in-sample, 3-day rebalance): (DRMV)APLS Sharpe 0.89, mean return 0.48%, cumulative return 77.61%",
+   "Table 5 (5-day rebalance): (DRMV)AWDS Sharpe 0.75, mean return 0.38%, vs baseline (DRMV)A Sharpe 0.63",
+   "Clustering stability: average Adjusted Rand Index 0.70-0.81, average Silhouette 0.22-0.28"
+  ],
+  "method": "Four-dimensional per-asset feature vectors (RSI, stochastic oscillator, MACD, FinBERT news sentiment) fed into persistent-homology distances (average Wasserstein / persistence landscape) for agglomerative clustering, then a dynamic-rebalancing mean-variance optimizer over the selected topologically dissimilar assets.",
+  "reason": "The headline results are the sentiment-augmented variants, and the sentiment inputs are ticker-level Refinitiv news headlines - a paid vendor feed with no free substitute; only the no-sentiment TDA variants would survive, which is not the paper's claim."
+ },
+ {
+  "arxiv_id": "2607.21109",
+  "verdict": "drop",
+  "confidence": 0.92,
+  "data_needed": [
+   "none - synthetic model parameters only (GBM sigma=0.2, Variance Gamma, S0=K=100, r=0.1)"
+  ],
+  "reproducible_targets": [
+   "Table 1 GBM call/put absolute errors of order 1e-14 to 1e-15 at fewer coefficients than undamped SWIFT",
+   "Table 3 T=100 call: undamped SWIFT error exceeding 1e29-1e32 vs damped SWIFT error ~1e-12"
+  ],
+  "method": "A damped variant of the Shannon Wavelet Inverse Fourier Technique that applies an exponential damping transform to the payoff so Fourier coefficients are computed directly in the frequency domain without a physical-domain truncation parameter.",
+  "reason": "Pure numerical-analysis paper on option-pricing quadrature - no market data and no empirical cross-sectional or time-series result to check parity against, so it does not belong in an index of data-reproducible empirical work."
+ },
+ {
+  "arxiv_id": "2607.20877",
+  "verdict": "drop",
+  "confidence": 0.9,
+  "data_needed": [
+   "Bloomberg terminal end-of-week sovereign zero-coupon yield curves for 22 countries, from January 2023",
+   "A demographic dataset (age-specific mortality rate curves)"
+  ],
+  "reproducible_targets": [
+   "Section 5.1 yield-curve white-noise test statistic and bootstrap p-value across p=22 countries (lag order L=2, 1000 bootstrap replications)",
+   "Section 5 demography dataset white-noise test p-value",
+   "Table 3/4 empirical size and power at n=50 and n=100 (e.g. size 2.6/1.9/1.8, power 100/100/100)"
+  ],
+  "method": "A supremum-type statistic built from cross-autocovariance functions of high-dimensional functional time series, with a parametric bootstrap for the null distribution, applied under a general error-contamination framework.",
+  "reason": "The real-data section runs on Bloomberg-terminal sovereign zero-coupon curves for 22 countries plus a mortality panel - neither is in the free stack (FRED carries US Treasury yields only, not 22-country zero-coupon curves)."
+ },
+ {
+  "arxiv_id": "2607.22760",
+  "verdict": "drop",
+  "confidence": 0.95,
+  "data_needed": [
+   "R datasets package: Lake Huron annual water levels 1875-1972; yearly sunspot counts 1700-1988",
+   "USGS San Lorenzo River gauge monthly flow, Jan 1987-Dec 2022",
+   "NOAA Northern Oscillation Index and Atlantic Multidecadal Oscillation series"
+  ],
+  "reproducible_targets": [
+   "Table 7 sunspots p0=0.85 comparison: exDQLM-MCMC CRPS 5.111 and PPLC 2190.8 vs DQLM-LDVB CRPS 8.517 and PPLC 3843.1",
+   "Lake Huron median-quantile posterior mean gamma -0.063 (95% CrI -0.484 to 0.282) and sigma 0.372 (95% CrI 0.281-0.472)",
+   "Big Tree transfer-function decay rate lambda = 0.85 selected from grid 0.70-0.99"
+  ],
+  "method": "Bayesian dynamic quantile linear models using the extended asymmetric Laplace family, fit by MCMC and by Laplace-delta variational Bayes, with dynamic transfer-function components for nonlinear covariate effects.",
+  "reason": "A software paper whose four case studies are hydrology, climate and sunspot series with zero financial market data, and the reference implementation is an R package rather than a notebook."
+ },
+ {
+  "arxiv_id": "2607.20762v1",
+  "verdict": "drop",
+  "confidence": 0.96,
+  "data_needed": [
+   "Ethereum mainnet on-chain swap events, blocks 19,500,000 to 23,000,000 (Mar 2024 - Jul 2025)",
+   "Per-block Uniswap v2/v3 WETH-USDC pool reserve and tick-liquidity state across four fee tiers",
+   "Transaction-level gas costs and router labels (Universal Router, CoWSwap, 1inch v4/v5, Odos v2)"
+  ],
+  "reproducible_targets": [
+   "Headline mean shortfall of 2.02 bps per trade / $24.20 million aggregate under the Gas-Aware Full-Venue Optimum",
+   "SCO shortfall $6.58 million (0.0547 bps) vs FVO $21.39 million",
+   "One-block staleness cost 1.29 bps (~$15.5M) under FVO and 1.78 bps (~$21.4M) under G-FVO"
+  ],
+  "method": "Replays 2.98M realized WETH-USDC swaps against three optimal-routing benchmarks (support-constrained, full-venue, gas-aware full-venue) solved by a bisection algorithm over pool splits, and attributes the execution shortfall.",
+  "reason": "Needs block-level Ethereum on-chain pool state and gas data; Coinbase OHLCV bars carry none of the AMM liquidity or routing information the entire analysis depends on."
+ },
+ {
+  "arxiv_id": "2607.20168v1",
+  "verdict": "drop",
+  "confidence": 0.88,
+  "data_needed": [
+   "Chinese A-share daily prices, turnover, valuation ratios and float market cap, Jan 2010 - Mar 2026",
+   "Chinese quarterly financial statements with point-in-time announcement dates (for 27-31 characteristics)",
+   "Point-in-time A-share listing/universe membership"
+  ],
+  "reproducible_targets": [
+   "Table 3 mean IC ranking: Poly(2) ridge 0.0499, ridge 0.0494, QKRR fidelity 0.0254, KRR-RBF control 0.0208",
+   "Headline null result: fidelity QKRR vs RBF control delta-IC = +0.005, p = 0.42 over 170 walk-forward windows",
+   "Portfolio Sharpe comparison: quantum kernel 0.13, equal-weight benchmark 0.15, top-8 ridge 0.31"
+  ],
+  "method": "Quantum kernel ridge regression (fidelity and projected quantum kernels) versus a classical RBF control on 27 firm characteristics, predicting 20-day forward returns in a 170-window walk-forward with kernel type as the only swapped component.",
+  "reason": "Entirely a Chinese A-share study needing CN prices plus point-in-time quarterly fundamentals; EDGAR is US-only and Yahoo has no usable point-in-time A-share fundamental panel."
+ },
+ {
+  "arxiv_id": "2607.20093v1",
+  "verdict": "keep",
+  "confidence": 0.72,
+  "data_needed": [
+   "Daily OHLCV for NASDAQ-100 index (trend, oscillator families) and SPY (calendar family) - Yahoo Finance",
+   "Daily OHLCV for a US cross-section (volume, candlestick, momentum families) - Yahoo Finance",
+   "Ken French momentum factor as an external parity check on the Jegadeesh-Titman 12-1 calibration"
+  ],
+  "reproducible_targets": [
+   "Table 2 gate (a) Sharpe-gap 95% CIs vs delta_S=0.20: trend [-0.234, 0.265], oscillator [-0.608, -0.175], calendar [-0.618, 0.000]",
+   "Table 3 gate (b) CAGR-gap 95% CIs vs delta_R=0.01: oscillator [-0.149, -0.044], calendar [-0.131, -0.026], momentum [-0.044, 0.130]",
+   "Table 4 gate (c) quarterly liquidation probabilities at 2x leverage: trend 0.009 [0.0065, 0.0124], oscillator 0.013 [0.0097, 0.0167], volume 0.000 [0.000, 0.001]"
+  ],
+  "method": "Runs five retail signal families (50/200 SMA crossover, RSI-14 / MACD / Bollinger, on-balance-volume, sell-in-May calendar rules, seven candlestick patterns) against exposure-matched benchmarks at 10bps round-trip cost, then applies three predeclared gates: stationary-bootstrap Sharpe-gap CIs with Benjamini-Yekutieli control, net-of-cost CAGR-gap CIs, and a finite-bankroll ruin simulation.",
+  "reason": "The whole apparatus is daily OHLCV plus textbook technical indicators, and the index-level families (NASDAQ-100 trend/oscillator, SPY calendar) reproduce exactly from Yahoo; only the Russell 3000 / S&P 500 point-in-time cross-sections and Shumway delisting correction need approximating, which caps confidence rather than killing it."
+ },
+ {
+  "arxiv_id": "2607.19825",
+  "verdict": "keep",
+  "confidence": 0.93,
+  "data_needed": [
+   "Daily closing prices for S&P 500 constituents, 2013-02-08 to 2018-02-07 (paper uses a public CSV panel of 505 tickers; Yahoo Finance daily closes are a direct substitute)",
+   "Dollar volume from the same daily OHLCV to pick the p=200 most liquid names"
+  ],
+  "reproducible_targets": [
+   "Table 3 MENS row: annualized out-of-sample volatility 0.0945, annualized return 0.0633, Sharpe 0.670, median condition number 339, median lambda_min 0.201, turnover 1.50",
+   "Table 3 Ledoit-Wolf linear-shrinkage row: annualized volatility 0.1105, return 0.0741, Sharpe 0.671, condition number 1126, lambda_min 0.054, turnover 2.55",
+   "Figure 6(a) cumulative out-of-sample GMV wealth curve 2014-2018 (MENS 9.4% vs LW 11.0% annualized vol) and Figure 6(b) rolling condition-number curve"
+  ],
+  "method": "MENS applies the Ledoit-Wolf analytic nonlinear-shrinkage function to the eigenvalues of the normal-scores rank-covariance matrix, rescaled by MAD marginal volatilities, and plugs the result into a global minimum-variance portfolio.",
+  "reason": "Clean free-data reproduction: 470 complete-history S&P 500 names over a fixed five-year window, p=200 most liquid, 252-day rolling estimation, 21-day rebalance, 47 rebalances / 987 OOS days, and the authors publish R reference code plus the exact public price CSV."
+ },
+ {
+  "arxiv_id": "2607.20373",
+  "verdict": "drop",
+  "confidence": 0.97,
+  "data_needed": [
+   "none - purely theoretical, no dataset"
+  ],
+  "reproducible_targets": [
+   "Closed-form characterizations for the worked examples only (absorbed Brownian motion, Wright-Fisher diffusion, Aldous martingale) - no empirical quantity"
+  ],
+  "method": "Shows every time-homogeneous martingale diffusion on [0,1] with strictly positive C^1 interior volatility and absorbing endpoints ('autonomous win-martingale') is the Bayesian posterior of an explicit binary sequential experiment observed through a scalar diffusion.",
+  "reason": "Pure probability theory with no data, no backtest and no empirical table - there is nothing to check parity against."
+ },
+ {
+  "arxiv_id": "2607.20576",
+  "verdict": "drop",
+  "confidence": 0.94,
+  "data_needed": [
+   "Communities and Crime dataset (Redmond and Baveja 2002): N=2,214 US communities, p=102 socioeconomic responses, d=4 census-region covariates",
+   "Yeoh et al. (2002) pediatric ALL microarray expression data: N=248 patients, p=120 probes, d=6 cytogenetic subtypes"
+  ],
+  "reproducible_targets": [
+   "Communities and Crime: mean excess kurtosis ~89, sample covariance failing in ~66% of replications, robust estimator four to ten orders of magnitude better conditioned",
+   "Leukemia: sample covariance condition number 5e5; held-out multivariate-t log-likelihood -95.6 (n=130) for the robust estimator vs -109.0 for covariance-based methods"
+  ],
+  "method": "Nonlinear shrinkage applied to a scale-invariant Tyler-type scatter of restricted regression residuals, exploiting the extra residual degrees of freedom left by a rank-q linear restriction on the coefficient matrix, with a spectrum that is distribution-free across the elliptical family.",
+  "reason": "Despite the finance-adjacent covariance machinery, both real-data analyses are criminology and microarray gene expression - no market returns anywhere, so nothing in the paper touches the free financial data stack."
+ }
+]
