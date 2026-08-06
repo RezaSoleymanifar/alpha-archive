@@ -278,7 +278,7 @@ def card(*, thumb_html: str, title: str, url: str, abstract: str, venue: str,
            f'<span>quant appeal</span></div>' if appeal else '')
         + (f'<div class="stat"><b>{e(tier)}</b><span>effort</span></div>'
            f'<div class="stat"><b class="{"hot" if confidence >= 0.9 else ""}">'
-           f'{confidence:.2f}</b><span>confidence</span></div>' if tier else '')
+           f'{confidence:.2f}</b><span>est. reproducible</span></div>' if tier else '')
         + '</div>')
 
     links = "".join(f'<a class="act" href="{href}">{e(text)}</a>'
@@ -484,10 +484,10 @@ PAGE = """<!doctype html>
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>α-Archive — quantitative finance on arXiv, reproduced in notebooks</title>
-<meta name="description" content="Curated trending quantitative finance papers from arXiv q-fin, SSRN, NBER and the journals. Only work a desk can code, ranked by field-normalised citation impact.">
-<meta property="og:title" content="α-Archive">
-<meta property="og:description" content="Quantitative finance on arXiv, reproduced in notebooks and checked against the paper's own numbers.">
+<title>Quantitative Finance with Code — papers rebuilt and checked against their own numbers</title>
+<meta name="description" content="Quantitative finance papers rebuilt in code and scored against the numbers they printed. Every paper read in full, its data traced to a free source, its targets written down before anything was run.">
+<meta property="og:title" content="Quantitative Finance with Code">
+<meta property="og:description" content="Papers rebuilt in code and scored against the numbers they printed.">
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='6' fill='%230d0d0d'/><text x='16' y='23' font-size='20' font-family='Georgia,serif' fill='%233ddc84' text-anchor='middle'>&#945;</text></svg>">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -714,12 +714,12 @@ footer a{margin-right:18px;color:var(--soft)}
   </div>
 </nav>
 
-<div class="strip">__NPAPERS__ papers &mdash; refreshed weekly from arXiv q-fin, ranked monthly on citations. __NSPEC__ classic predictors carry a published spec, __NCODE__ have been rerun here &mdash; <a href="__REPO__/blob/main/docs/selection.md">how they were chosen</a></div>
+<div class="strip"><b>__NCODE__ of __NPAPERS__ rebuilt so far.</b> Every paper here has been read in full and its data traced to a free source. Nothing else has been run yet, and the scores below are judgements about what is reproducible, not results &mdash; <a href="__REPO__/blob/main/docs/selection.md">how they were chosen</a></div>
 
 <div class="wrap">
   <div class="head">
-    <h1>Quantitative finance <em>on arXiv</em></h1>
-    <p class="sub">Every paper we can rebuild in a notebook, checked against the numbers it printed.</p>
+    <h1>Quantitative finance <em>with code</em></h1>
+    <p class="sub">Papers rebuilt in code and scored against the numbers they printed.</p>
   </div>
 
   <div class="cols">
