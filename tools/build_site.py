@@ -614,7 +614,7 @@ details.spec .note{font-size:12px;color:var(--dim);margin-top:10px}
 @media(max-width:1079px){.side{order:2}}
 
 /* -------------------------------------------------------------------- bar */
-.bar{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:6px}
+.bar{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:6px}
 .tab{font-family:var(--mono);font-size:12.5px;color:var(--soft);background:none;
   border:0;border-radius:7px;padding:8px 13px;cursor:pointer}
 .tab:hover{color:var(--ink)}
@@ -624,9 +624,18 @@ details.spec .note{font-size:12px;color:var(--dim);margin-top:10px}
 /* The window buttons sat on the right and wrapped to their own line at
    most widths, which put two rows of controls on two different left
    edges. They get their own row, starting where the sorts start. */
-.bar .right{flex-basis:100%;display:flex;gap:6px;flex-wrap:wrap;
-  margin:2px 0 0;padding-top:8px;border-top:1px solid var(--line)}
-.bar .right .tab{font-family:var(--sans);font-size:13px}
+/* The time windows belong on the same line as the sort tabs, pushed right.
+   On their own row they read as a second, unrelated control. */
+.bar .right{margin-left:auto;display:flex;gap:2px;flex-wrap:nowrap;
+  justify-content:flex-end;flex-shrink:0}
+@media (max-width:900px){
+  .bar .right{margin-left:0;flex-basis:100%;justify-content:flex-start}
+}
+/* Smaller and tighter than the sort tabs, so the whole row fits on one
+   line and so the windows read as a secondary control rather than a
+   competing set of the same thing. */
+.bar .right .tab{font-family:var(--sans);font-size:12px;padding:5px 9px;
+  white-space:nowrap}
 
 .count{color:var(--dim);font-size:12.5px;font-family:var(--mono);padding:16px 0 4px}
 .note{color:var(--warn);font-size:13px;margin:0 0 12px}
