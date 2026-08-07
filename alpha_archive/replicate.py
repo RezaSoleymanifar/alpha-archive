@@ -13,6 +13,7 @@ from .backtest import run_signal_backtest, BacktestResult
 from .extract.pdf import download_pdf, extract_text
 from .extract.spec import extract_spec, extract_spec_offline, SignalSpec
 from .extract.codegen import generate_signal_code, validate_code, fallback_code
+from .claims import Claim
 from .extract.sandbox import run_inline
 
 
@@ -30,6 +31,9 @@ class ReplicationReport:
     backtest: Optional[dict] = None
     verdict: Optional[str] = None
     verdict_reasoning: list[str] = field(default_factory=list)
+    # What the paper claimed, next to what we got, next to what survives the
+    # corrections the paper did not run. See claims.py.
+    claim_check: Optional[dict] = None
     pipeline_status: str = "pending"   # pending | spec_failed | codegen_failed | sandbox_failed | backtest_failed | done
     pipeline_errors: list[str] = field(default_factory=list)
 
@@ -84,6 +88,22 @@ def _run_backtest(spec: SignalSpec, code: str, fixture_metadata: dict | None = N
     return result, None
 
 
+def _check_claim(result: BacktestResult, claim: "Claim | None") -> Optional[dict]:
+    """Score the replication against the paper, if we know what it claimed.
+
+    Reproducing a number is the easy half. This is the other half: whether the
+    published result survives a Newey-West t, every held-out stretch of the
+    sample, and the trial count behind it.
+    """
+    if claim is None or not result.daily_returns:
+        return None
+    try:
+        from .claims import verify
+        return verify(claim, result.daily_returns, trials=1).as_dict()
+    except Exception as exc:  # noqa: BLE001 - a failed check must not sink the run
+        return {"status": "ERROR", "reasons": [f"{type(exc).__name__}: {exc}"]}
+
+
 def replicate(
     paper_id: str,
     pdf_url: str,
@@ -91,6 +111,7 @@ def replicate(
     *,
     use_llm: bool = True,
     fixture_metadata: dict | None = None,
+    claim: "Claim | None" = None,
 ) -> ReplicationReport:
     """End-to-end: download PDF, extract spec, generate code, run backtest.
     Set use_llm=False to run with offline-extract + fallback-code (testing path).
@@ -180,6 +201,7 @@ def replicate(
         }
         rpt.verdict = result.verdict
         rpt.verdict_reasoning = result.verdict_reasoning
+        rpt.claim_check = _check_claim(result, claim)
         rpt.pipeline_status = "done"
     except Exception as e:
         rpt.pipeline_status = "backtest_failed"
