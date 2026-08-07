@@ -32,6 +32,7 @@ dependencies = [
     "python-dotenv>=1.0.0",
     "pyyaml>=6.0",
     "mcp>=2.0.0",
+    "vintage-mcp>=0.9.0",
 ]
 
 [project.scripts]
@@ -51,3 +52,6 @@ target-version = "py311"
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
+
+[tool.uv.sources]
+vintage-mcp = { path = "../vintage", editable = true }

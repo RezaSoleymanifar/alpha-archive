@@ -284,11 +284,19 @@ CELLS = [
          "ax.spines[['top', 'right']].set_visible(False)",
          "fig.tight_layout()"),
 
-    md("## Sensitivity to k, which the paper does not plot",
+    md("## Figure 4, as published: sensitivity to k",
        "",
-       "k is the number of predictors in each subset, and every subset of that size "
-       "is fitted and averaged. The paper reports k = 1, 2, 3 and 7 and calls "
-       "performance non-monotone in k. Here is the whole range."),
+       "![Figure 4 as published](paper_figures/Figure4.png)",
+       "",
+       "This is the exhibit to sit with. The paper plots terminal wealth against k "
+       "for every strategy, and its own CSM line runs 124, 155, **182**, then falls "
+       "to 97 at k=4 before climbing back to 168 at k=7. The headline is the peak of "
+       "a curve that the authors drew themselves.",
+       "",
+       "That is worth saying plainly, because the obvious accusation would be that "
+       "the paper cherry-picked k=3 and hid the rest. It did not. The instability is "
+       "Figure 4, it is discussed in the text, and performance is described as "
+       "non-monotone in k. The reader is told."),
 
     code("sweep = D.sweep(frame)",
          "sweep"),
@@ -309,17 +317,22 @@ CELLS = [
          "ax.spines[['top', 'right']].set_visible(False)",
          "fig.tight_layout()"),
 
-    md("### Reading the two exhibits together",
+    md("### Reading the two curves together",
        "",
-       "Table 6 at k=3 shows the decomposition and plain subset regression within "
-       "two dollars of each other, where the paper has them $83 apart. On its own "
-       "that reads as a failure to replicate.",
+       "Both are non-monotone in k. That much replicates, and it is the honest "
+       "headline of this whole exercise.",
        "",
-       "The sweep says otherwise. The decomposition beats subset regression at "
-       "every k above one and the gap grows monotonically to over $110. The "
-       "mechanism is real and reproduces cleanly. It just does not appear at the k "
-       "the paper reports, and our best k reaches $158.37, within thirteen per cent "
-       "of their headline."),
+       "Where they differ is the location of the peak. The paper's CSM tops out at "
+       "k=3 at $182 with a collapse to $97 at k=4. Ours is flatter through k=1 to 5 "
+       "and peaks at k=6 at $158.37, within thirteen per cent of their number but "
+       "three subset sizes away.",
+       "",
+       "So the fair statement is not that the paper cherry-picked. It is that the "
+       "method's answer moves by a factor of two depending on one integer, both in "
+       "their hands and in ours, and the integer that wins is not stable across "
+       "implementations. A reader deciding whether to trade this should take the "
+       "range seriously and not the peak, which is exactly what plotting the curve "
+       "invites them to do."),
 
     md("## Final report",
        "",
