@@ -57,6 +57,7 @@ h1{font-family:var(--serif);font-size:clamp(24px,3.4vw,36px);line-height:1.2;
 
 .cols{display:grid;grid-template-columns:minmax(0,1fr) 320px;gap:34px;
   padding:26px 0 60px;align-items:start}
+.cols.solo{grid-template-columns:minmax(0,760px)}
 @media(max-width:900px){.cols{grid-template-columns:1fr}}
 
 h2{font-family:var(--serif);font-size:20px;font-weight:600;margin:30px 0 10px}
@@ -116,7 +117,7 @@ footer{border-top:1px solid var(--line);padding:22px 0 40px;color:var(--dim);
     <div class="badges"></div>
   </header>
 
-  <div class="cols">
+  <div class="cols solo">
     <main>
 <h2>What this is</h2>
 <p>Alpha Archive is a quantitative research replication platform. We take
@@ -204,29 +205,10 @@ Where a replication reaches outside that, the notebook says so.</p>
 table. A replication that fails is as useful as one that holds, and considerably
 more useful than one that was never attempted.</p>
 </main>
-    <aside>
-<div class="panel"><h3>In short</h3>
-  <div class="kv"><span>papers indexed</span><span>96</span></div>
-  <div class="kv"><span>with results</span><span>2</span></div>
-  <div class="kv"><span>gates a paper must clear</span><span>3</span></div>
-  <div class="kv"><span>checks after replication</span><span>5</span></div>
-</div>
-<div class="panel"><h3>Read further</h3>
-  <div class="files">
-    <a href="https://github.com/RezaSoleymanifar/alpha-archive/blob/main/docs/selection.md"><span class="k">selection</span>
-      <span class="v">.md</span></a>
-    <a href="https://github.com/RezaSoleymanifar/alpha-archive/blob/main/docs/methodology.md"><span class="k">methodology</span>
-      <span class="v">.md</span></a>
-    <a href="https://github.com/RezaSoleymanifar/alpha-archive/blob/main/docs/sources.md"><span class="k">sources</span>
-      <span class="v">.md</span></a>
-    <a href="https://github.com/RezaSoleymanifar/alpha-archive"><span class="k">the code</span><span class="v">github</span></a>
-  </div>
-</div>
-</aside>
+    <aside></aside>
   </div>
 
-  <footer>Every threshold on this page was written down before the run.
-  <a href="https://github.com/RezaSoleymanifar/alpha-archive/blob/main/docs/methodology.md">How a paper is judged</a>.</footer>
+  <footer></footer>
 </div>
 
 <script>

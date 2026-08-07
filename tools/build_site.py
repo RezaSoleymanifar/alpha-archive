@@ -263,22 +263,32 @@ def card(*, thumb_html: str, title: str, url: str, abstract: str, venue: str,
                f"{top_pct:.2f}%")
     rail = (
         f'<div class="rail">'
-        f'<div class="stat"><svg viewBox="0 0 24 24" width="15" height="15" fill="none" '
-        f'stroke="currentColor" stroke-width="1.8"><path d="M3 20h18M6 16l4-6 4 3 5-8"/></svg>'
-        f'<b>{"\u2191" if citations else ""}{citations:,}</b><span>citations</span></div>'
-        f'<div class="stat"><b class="{"hot" if top1 else ""}">{pct_txt}</b>'
-        f'<span>top percentile</span></div>'
+        # Only numbers that exist. A top percentile computed from zero
+        # citations, a "quant appeal" score, an effort letter and an estimated
+        # reproducibility were all invented here, and a made-up number on a
+        # page about reproducibility is the worst possible place for one.
+        + (f'<div class="stat"><svg viewBox="0 0 24 24" width="15" height="15" '
+           f'fill="none" stroke="currentColor" stroke-width="1.8">'
+           f'<path d="M3 20h18M6 16l4-6 4 3 5-8"/></svg>'
+           f'<b>{citations:,}</b><span>citations</span></div>' if citations else '')
         + (f'<div class="stat"><b>{influential:,}</b><span>influential</span></div>'
            if influential else '')
         + (f'<div class="stat"><b class="hot">t={e(spec_tstat)}</b>'
            f'<span>paper claim</span></div>' if spec_tstat else '')
-        # Effort and how sure we are it is reproducible, on the face rather than
-        # folded away. Without these every card looks equally ready to build.
-        + (f'<div class="stat"><b class="{"hot" if appeal >= 70 else ""}">{appeal}</b>'
-           f'<span>quant appeal</span></div>' if appeal else '')
-        + (f'<div class="stat"><b>{e(tier)}</b><span>effort</span></div>'
-           f'<div class="stat"><b class="{"hot" if confidence >= 0.9 else ""}">'
-           f'{confidence:.2f}</b><span>est. reproducible</span></div>' if tier else '')
+        + (f'<div class="stat"><b>{e(date[:4])}</b><span>published</span></div>'
+           if date else '')
+        + f'<div class="stat"><b class="{cls}">{e(label)}</b><span>status</span></div>'
+        + (f'<div class="stat gh"><svg viewBox="0 0 16 16" width="15" height="15" '
+           f'fill="currentColor"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 '
+           f'5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49'
+           f'-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 '
+           f'1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2'
+           f'-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 '
+           f'.67-.21 2.2.82.64-.18 1.32-.27 2-.27s1.36.09 2 .27c1.53-1.04 2.2-.82 '
+           f'2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 '
+           f'3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46'
+           f'.55.38A8.01 8.01 0 0 0 16 8c0-4.42-3.58-8-8-8Z"/></svg>'
+           f'<b>code</b><span>implementation</span></div>' if body else '')
         + '</div>')
 
     links = "".join(f'<a class="act" href="{href}">{e(text)}</a>'
@@ -965,6 +975,7 @@ h1{font-family:var(--serif);font-size:clamp(24px,3.4vw,36px);line-height:1.2;
 
 .cols{display:grid;grid-template-columns:minmax(0,1fr) 320px;gap:34px;
   padding:26px 0 60px;align-items:start}
+.cols.solo{grid-template-columns:minmax(0,760px)}
 @media(max-width:900px){.cols{grid-template-columns:1fr}}
 
 h2{font-family:var(--serif);font-size:20px;font-weight:600;margin:30px 0 10px}
@@ -1024,13 +1035,12 @@ footer{border-top:1px solid var(--line);padding:22px 0 40px;color:var(--dim);
     <div class="badges">__BADGES__</div>
   </header>
 
-  <div class="cols">
+  <div class="cols__SOLO__">
     <main>__BODY__</main>
     <aside>__ASIDE__</aside>
   </div>
 
-  <footer>Every threshold on this page was written down before the run.
-  <a href="__REPO__/blob/main/docs/methodology.md">How a paper is judged</a>.</footer>
+  <footer>__FOOTER__</footer>
 </div>
 
 <script>
@@ -1132,8 +1142,12 @@ def paper_page(*, slug: str, title: str, byline: str, badges: str,
             .replace("__TITLE__", html.escape(html.unescape(title)))
             .replace("__BYLINE__", byline)
             .replace("__BADGES__", badges)
+            .replace("__SOLO__", "" if aside else " solo")
             .replace("__BODY__", body)
             .replace("__ASIDE__", aside)
+            .replace("__FOOTER__", ""
+                     if not aside else
+                     'Every threshold on this page was written down before the run.')
             .replace("__SLUG__", html.escape(slug))
             .replace("__BLURB__", html.escape(html.unescape(blurb))[:280])
             .replace("__REPO__", REPO))
@@ -1348,8 +1362,7 @@ def build_about(n_papers: int, n_code: int) -> None:
         byline="What this is, what gets in, and how a paper is judged.",
         badges="",
         body=ABOUT_BODY,
-        aside=ABOUT_ASIDE.replace("__NPAPERS__", f"{n_papers:,}")
-                         .replace("__NCODE__", str(n_code)),
+        aside="",
         blurb=("Alpha Archive is a quantitative research replication platform. "
                "We take quantitative finance research and turn it into "
                "reproducible implementations."),
