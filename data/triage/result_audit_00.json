@@ -1,0 +1,15 @@
+[
+ {
+  "arxiv_id": "2608.04305",
+  "verdict": "keep",
+  "confidence": 0.82,
+  "gap": "",
+  "method": "Two-timescale CVaR risk-aware Q-learning over a 27-state discretization of BTC sentiment, sentiment momentum and price state, trading spot Bitcoin.",
+  "reason": "OVERTURNED ON AUDIT. Originally dropped at confidence 0.55 because two of three state variables come from the alternative.me Fear and Greed Index, which the judgement called outside the free stack. It is not: https://api.alternative.me/fng/?limit=0 returns 3,106 daily observations back to 2018-02 with no key and no rate limit, verified 2026-08-07. Coinbase already covers the price side, so every input is reachable.",
+  "data_needed": [
+   "BTC-USD daily OHLCV from Coinbase, 2018-02 onward",
+   "alternative.me Crypto Fear and Greed Index, daily, https://api.alternative.me/fng/?limit=0, free and keyless, 3,106 observations from 2018-02-01"
+  ],
+  "reproducible_targets": []
+ }
+]
