@@ -30,6 +30,8 @@ from __future__ import annotations
 import itertools
 import os
 
+import warnings
+
 import numpy as np
 import pandas as pd
 
@@ -43,7 +45,11 @@ SUBSET_K = 3
 
 
 def load() -> pd.DataFrame:
-    m = pd.read_excel(DATA, sheet_name="Monthly")
+    # openpyxl warns about a header it cannot parse in Goyal's workbook.
+    # It is cosmetic, and it lands in the middle of an exhibit.
+    with warnings.catch_warnings():
+        warnings.simplefilter("ignore", UserWarning)
+        m = pd.read_excel(DATA, sheet_name="Monthly")
     m["date"] = pd.to_datetime(m["yyyymm"].astype(str), format="%Y%m")
     m = m.set_index("date")
 
@@ -262,6 +268,91 @@ TABLE6_PAPER = {
     "Momentum 6m":         {"TW": 48.71,  "AV": 10.26, "SD": 11.30, "SR": 0.17, "MDD": 0.23},
     "Momentum 12m":        {"TW": 100.21, "AV": 12.15, "SD": 12.15, "SR": 0.20, "MDD": 0.30},
 }
+
+
+
+# ---------------------------------------------------- the paper's own shape
+
+# Table 6 exactly as the paper lays it out: these rows, in this order, across
+# these four subset sizes. Rows we cannot compute stay in the table as blanks.
+# Deleting them would make the reproduction look more complete than it is.
+TABLE6_ROWS = [
+    ("Buy and hold", "buy_and_hold"),
+    ("Momentum 3-month", "mom3"),
+    ("Momentum 6-month", "mom6"),
+    ("Momentum 12-month", "mom12"),
+    ("Linear model", None),
+    ("CSR approach", "csr"),
+    ("GARCH-M model", None),
+    ("MS model", None),
+    ("Copula, Gaussian", None),
+    ("Copula, Frank", None),
+    ("Copula, Clayton", None),
+    ("Copula, FGM", None),
+    ("CSM, Baseline", "csm"),
+    ("CSM, Poly", None),
+]
+
+TABLE6_KS = (1, 2, 3, 7)
+TABLE6_COLS = ("TW", "AV", "SD", "SR", "MDD")
+
+# Why each blank row is blank, so the gap is a statement rather than an absence.
+TABLE6_MISSING = {
+    "Linear model": "not attempted: a plain predictive regression benchmark",
+    "GARCH-M model": "not attempted: needs a GARCH-in-mean fit",
+    "MS model": "not attempted: needs a Markov-switching fit",
+    "Copula, Gaussian": "not attempted: the copula family is a separate model",
+    "Copula, Frank": "not attempted: the copula family is a separate model",
+    "Copula, Clayton": "not attempted: the copula family is a separate model",
+    "Copula, FGM": "not attempted: the copula family is a separate model",
+    "CSM, Poly": "not attempted: the polynomial variant of the decomposition",
+}
+
+
+def table6_shaped(frame: pd.DataFrame, ks: tuple[int, ...] = TABLE6_KS) -> pd.DataFrame:
+    """Table 6 in the printed layout: every row, every k, five columns each.
+
+    The point of holding the shape is that the paper's page and this frame can
+    be read against each other cell by cell instead of translated first. A row
+    we cannot produce is present and empty, which is the honest way to show
+    that this reproduction covers six of fourteen strategies.
+    """
+    per_k: dict[int, dict[str, dict[str, float]]] = {}
+    for k in ks:
+        prob, mu = forecast(frame, k=k)
+        book = trade(frame, prob, mu)
+        rf = book["rf"]
+        per_k[k] = {
+            "buy_and_hold": summarise(book["market"], rf),
+            "csm": summarise(book["net"], rf),
+            "csr": summarise(switch_on(frame, subset_regression(frame, k)), rf),
+            "mom3": summarise(momentum_switch(frame, 3), rf),
+            "mom6": summarise(momentum_switch(frame, 6), rf),
+            "mom12": summarise(momentum_switch(frame, 12), rf),
+        }
+
+    columns = pd.MultiIndex.from_product([[f"k = {k}" for k in ks], TABLE6_COLS])
+    data = []
+    for label, key in TABLE6_ROWS:
+        row = []
+        for k in ks:
+            stats = per_k[k].get(key) if key else None
+            row += [round(stats[c], 2) if stats else float("nan") for c in TABLE6_COLS]
+        data.append(row)
+    return pd.DataFrame(data, index=[label for label, _ in TABLE6_ROWS], columns=columns)
+
+
+# Figure 4's own series list, with the paper's line styling, so the two charts
+# can be laid on top of each other. `None` means we do not compute it.
+FIGURE4_SERIES = [
+    ("CSM (Baseline)", "decomposition", {"color": "#2222cc", "marker": "*",
+                                         "ls": "-", "ms": 9}),
+    ("CSR", "subset_regression", {"color": "#1a7f2e", "marker": "^",
+                                  "ls": "-.", "ms": 6}),
+    ("Clayton", None, {}),
+    ("GARCH-M", None, {}),
+    ("Linear", None, {}),
+]
 
 
 def wealth_paths(frame: pd.DataFrame, k: int = SUBSET_K) -> pd.DataFrame:

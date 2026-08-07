@@ -316,7 +316,9 @@ def render_replication(rec: dict, cites: dict[str, int]) -> str:
          f'decoding="async" width="320" height="414">'
          if m["thumb"] else f'<div class="gen">{thumb.for_record(rec)}</div>')
     return card(
-        thumb_html=t, title=m["title"], url=m["paper_url"], abstract=m["abstract"],
+        thumb_html=t, title=m["title"],
+        url="paper/" + slug_for(m["title"], rec["paper"]) + ".html",
+        abstract=m["abstract"],
         venue=m["venue"], authors=m["authors"], date=m["date"], tags=m["tags"],
         status=(label, cls), citations=n, per_month=per_month(n, m["date"]),
         actions=[(label, ""), ("Code", m["impl_url"]), ("Paper", m["paper_url"])],
@@ -436,7 +438,8 @@ def render_queued(p: dict) -> str:
         )
 
     return card(
-        thumb_html=t, title=p["title"], url=p["url"],
+        thumb_html=t, title=p["title"],
+        url="paper/" + slug_for(p["title"], p.get("id", "")) + ".html",
         abstract=p["abstract"],
         spec=spec,
         venue=p["primary_category"], authors=p["authors"] or ", ",
@@ -466,7 +469,9 @@ def render_spec(p: dict) -> str:
             ("Vintage", "https://github.com/RezaSoleymanifar/vintage"
                         "/blob/main/COVERAGE.md")]
     return card(
-        thumb_html=t, title=p["title"], url=p["url"], abstract=p["abstract"],
+        thumb_html=t, title=p["title"],
+        url="paper/" + slug_for(p["title"], p.get("id", "")) + ".html",
+        abstract=p["abstract"],
         venue=p["primary_category"], authors=p["authors"] or ", ",
         date=p["published"], tags=p["tags"], status=("spec", "queue"),
         citations=int(p.get("citations") or 0),
@@ -891,6 +896,346 @@ apply();
 """
 
 
+# ------------------------------------------------- one page per paper
+
+# The index answers "what is here". It cannot answer "what happened when you
+# ran this one", which is the question a reader arrives with. Hugging Face
+# solved the same shape years ago: a directory of things, and a page per thing
+# carrying its card, its files, and the one line that puts it in your hands.
+# This is that, with papers where the models go.
+
+SLUG_OK = re.compile(r"[^a-z0-9]+")
+
+
+def slug_for(title: str, paper_id: str = "") -> str:
+    base = SLUG_OK.sub("-", (paper_id or title).lower()).strip("-")
+    return base[:80] or "paper"
+
+
+PAPER_PAGE = """<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>__TITLE__ &middot; &alpha;-Archive</title>
+<meta name="description" content="__BLURB__">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='6' fill='%230d0d0d'/><text x='16' y='23' font-size='20' font-family='Georgia,serif' fill='%233ddc84' text-anchor='middle'>&#945;</text></svg>">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;0,6..72,600&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --page:#0d0d0d; --nav:#000; --card:#121212; --chip:#1a1a1a; --line:#262523;
+  --ink:#f2ede3; --soft:#8f8a80; --dim:#6b665e;
+  --accent:#7ea9dd; --alpha:#3ddc84;
+  --ok:#7fd6a2; --warn:#e3b35c; --bad:#e08b80;
+  --sans:Inter,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+  --serif:Newsreader,Georgia,"Times New Roman",serif;
+  --mono:"JetBrains Mono",ui-monospace,Menlo,Consolas,monospace;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--page);color:var(--ink);font-family:var(--sans);
+  font-size:14px;line-height:1.6;-webkit-font-smoothing:antialiased}
+a{color:inherit;text-decoration:none}
+a:hover{text-decoration:underline}
+.wrap{max-width:1180px;margin:0 auto;padding:0 34px}
+
+.topbar{background:var(--nav);border-bottom:1px solid var(--line);
+  position:sticky;top:0;z-index:20}
+.topbar .wrap{display:flex;align-items:center;gap:22px;height:56px}
+.brand{font-family:var(--serif);font-size:20px;font-weight:600}
+.brand .a{color:var(--alpha);font-size:23px}
+.nlinks{display:flex;gap:18px;font-size:13.5px;color:var(--soft)}
+.nlinks a:hover{color:var(--ink)}
+.navright{margin-left:auto;display:flex;align-items:center;gap:14px}
+.pill{border:1px solid var(--line);border-radius:7px;padding:5px 12px;
+  font-size:12.5px;color:var(--soft)}
+
+.crumb{color:var(--dim);font-size:12.5px;padding:20px 0 0}
+.crumb a:hover{color:var(--ink)}
+
+header.paper{padding:14px 0 22px;border-bottom:1px solid var(--line)}
+h1{font-family:var(--serif);font-size:clamp(24px,3.4vw,36px);line-height:1.2;
+  font-weight:600;margin:6px 0 10px;max-width:26em}
+.byline{color:var(--soft);font-size:13.5px}
+.badges{display:flex;flex-wrap:wrap;gap:7px;margin:14px 0 0;align-items:center}
+.st{display:inline-flex;align-items:center;gap:6px;border-radius:99px;
+  padding:4px 11px;font-size:12px;font-weight:600;border:1px solid}
+.st::before{content:"";width:7px;height:7px;border-radius:50%;background:currentColor}
+.st.ok{color:var(--ok);border-color:rgba(127,214,162,.4);background:rgba(127,214,162,.08)}
+.st.warn{color:var(--warn);border-color:rgba(227,179,92,.4);background:rgba(227,179,92,.08)}
+.st.bad{color:var(--bad);border-color:rgba(224,139,128,.4);background:rgba(224,139,128,.08)}
+.st.none{color:var(--dim);border-color:var(--line);background:var(--chip)}
+.tag{background:var(--chip);border:1px solid var(--line);border-radius:99px;
+  padding:4px 11px;font-size:12px;color:var(--soft)}
+
+.cols{display:grid;grid-template-columns:minmax(0,1fr) 320px;gap:34px;
+  padding:26px 0 60px;align-items:start}
+@media(max-width:900px){.cols{grid-template-columns:1fr}}
+
+h2{font-family:var(--serif);font-size:20px;font-weight:600;margin:30px 0 10px}
+h2:first-child{margin-top:0}
+p{margin:0 0 12px;color:#ddd7cb}
+.lede{color:var(--soft)}
+
+table.gap{width:100%;border-collapse:collapse;font-size:13px;margin:6px 0 14px}
+table.gap th{text-align:left;color:var(--dim);font-weight:600;font-size:11px;
+  letter-spacing:.08em;text-transform:uppercase;padding:7px 10px;
+  border-bottom:1px solid var(--line)}
+table.gap td{padding:8px 10px;border-bottom:1px solid var(--line);
+  font-family:var(--mono);font-size:12.5px}
+table.gap td:first-child{font-family:var(--sans);color:var(--soft)}
+table.gap tr:last-child td{border-bottom:0}
+.miss{color:var(--dim)}
+
+.panel{background:var(--card);border:1px solid var(--line);border-radius:10px;
+  padding:16px 18px;margin:0 0 16px}
+.panel h3{margin:0 0 10px;font-size:11px;letter-spacing:.1em;text-transform:uppercase;
+  color:var(--dim);font-weight:600}
+.use{position:relative;background:#0a0a0a;border:1px solid var(--line);
+  border-radius:8px;padding:12px 14px 34px;font-family:var(--mono);font-size:11.5px;
+  color:var(--alpha);white-space:pre-wrap;word-break:break-word;line-height:1.75}
+.copy{position:absolute;bottom:7px;right:8px;background:var(--chip);color:var(--soft);
+  border:1px solid var(--line);border-radius:6px;font-size:11px;padding:3px 9px;
+  cursor:pointer;font-family:var(--mono)}
+.copy:hover{color:var(--ink)}
+.files a,.files span{display:flex;justify-content:space-between;gap:12px;
+  padding:7px 0;border-bottom:1px solid var(--line);font-size:13px}
+.files :last-child{border-bottom:0}
+.files .k{color:var(--soft);display:flex;align-items:center;gap:8px}
+.files .v{color:var(--dim);font-family:var(--mono);font-size:11.5px}
+.files a:hover .k{color:var(--ink)}
+.files .off .k{color:var(--dim)}
+.kv{display:flex;justify-content:space-between;padding:5px 0;font-size:13px}
+.kv span:first-child{color:var(--soft)}
+.kv span:last-child{font-family:var(--mono);font-size:12.5px}
+.reason{margin:0;padding-left:18px;color:var(--soft);font-size:13px}
+.reason li{margin:0 0 6px}
+footer{border-top:1px solid var(--line);padding:22px 0 40px;color:var(--dim);
+  font-size:12.5px}
+</style>
+</head>
+<body>
+<nav class="topbar"><div class="wrap">
+  <a class="brand" href="../"><span class="a">&alpha;</span>-Archive</a>
+  <div class="nlinks">
+    <a href="../">Trending</a>
+    <a href="__REPO__/blob/main/docs/selection.md">Selection</a>
+    <a href="__REPO__/blob/main/docs/methodology.md">Methodology</a>
+  </div>
+  <div class="navright"><a class="pill" href="__REPO__/issues/new">Submit feedback</a></div>
+</div></nav>
+
+<div class="wrap">
+  <p class="crumb"><a href="../">&alpha;-Archive</a> / <span>__SLUG__</span></p>
+  <header class="paper">
+    <h1>__TITLE__</h1>
+    <p class="byline">__BYLINE__</p>
+    <div class="badges">__BADGES__</div>
+  </header>
+
+  <div class="cols">
+    <main>__BODY__</main>
+    <aside>__ASIDE__</aside>
+  </div>
+
+  <footer>Every threshold on this page was written down before the run.
+  <a href="__REPO__/blob/main/docs/methodology.md">How a paper is judged</a>.</footer>
+</div>
+
+<script>
+document.querySelectorAll('.copy').forEach(function (b) {
+  b.addEventListener('click', function () {
+    navigator.clipboard.writeText(b.parentElement.innerText.replace(/copy$/, '').trim());
+    b.textContent = 'copied';
+    setTimeout(function () { b.textContent = 'copy'; }, 1500);
+  });
+});
+</script>
+</body>
+</html>
+"""
+
+
+NOTEBOOKS = {
+    "2606.04153": "2606.04153_sign_and_magnitude.ipynb",
+}
+
+# A paper can have a notebook and a module without having a scored result yet.
+# Saying "not attempted" for one of those is the page lying about its own repo.
+MODULES = {
+    "2606.04153": "alpha_archive/replications/decomp2026.py",
+}
+
+
+def _paper_key(p: dict) -> str:
+    """The arXiv id a paper is filed under, however the record spells it."""
+    for field in ("id", "arxiv_id", "paper_id"):
+        value = str(p.get(field) or "")
+        m = re.search(r"\d{4}\.\d{4,5}", value)
+        if m:
+            return m.group(0)
+    m = re.search(r"\d{4}\.\d{4,5}", str(p.get("url") or ""))
+    return m.group(0) if m else ""
+
+
+def _files_panel(*, paper_url: str, impl_url: str = "", notebook: str = "") -> str:
+    rows = []
+    rows.append(f'<a href="{html.escape(paper_url)}"><span class="k">paper</span>'
+                f'<span class="v">PDF</span></a>')
+    if impl_url:
+        rows.append(f'<a href="{html.escape(impl_url)}"><span class="k">replication'
+                    f'</span><span class="v">.py</span></a>')
+    else:
+        rows.append('<span class="off"><span class="k">replication</span>'
+                    '<span class="v">not written</span></span>')
+    if notebook:
+        rows.append(f'<a href="{REPO}/blob/main/notebooks/{notebook}">'
+                    f'<span class="k">notebook</span><span class="v">.ipynb</span></a>')
+    else:
+        rows.append('<span class="off"><span class="k">notebook</span>'
+                    '<span class="v">not built</span></span>')
+    return f'<div class="panel files"><h3>Files</h3>{"".join(rows)}</div>'
+
+
+def _use_panel(slug: str, notebook: str = "") -> str:
+    """The 'use this model' box, pointed at a replication instead.
+
+    One command that puts the thing in the reader's hands, which is the whole
+    reason that box exists on every model page.
+    """
+    if notebook:
+        body = (f"git clone {REPO}\n"
+                f"cd alpha-archive\n"
+                f"uv run jupyter lab notebooks/{notebook}")
+    else:
+        body = (f"claude mcp add vintage -s user -- uvx vintage-mcp\n"
+                f"# then ask: replicate {slug} and show the gap table")
+    return ('<div class="panel"><h3>Run it</h3>'
+            f'<div class="use">{html.escape(body)}'
+            '<button class="copy">copy</button></div></div>')
+
+
+def _gap_table(rec: dict) -> str:
+    """Claimed, replicated, and what survives, for one replication."""
+    fams = rec.get("families")
+    if not fams:
+        return ""
+    head = ('<table class="gap"><thead><tr><th>strategy</th><th>claimed</th>'
+            '<th>replicated</th><th>gate</th></tr></thead><tbody>')
+    body = ""
+    for f in fams:
+        ok = (f["sharpe_gate"] == f["paper_sharpe_gate"]
+              and f["cagr_gate"] == f["paper_cagr_gate"])
+        body += (
+            f'<tr><td>{html.escape(str(f.get("name", "")))}</td>'
+            f'<td>{f.get("paper_sharpe", "")}</td>'
+            f'<td>{f.get("sharpe", "")}</td>'
+            f'<td>{"holds" if ok else "differs"}</td></tr>'
+        )
+    return head + body + "</tbody></table>"
+
+
+def paper_page(*, slug: str, title: str, byline: str, badges: str,
+               body: str, aside: str, blurb: str) -> str:
+    return (PAPER_PAGE
+            .replace("__TITLE__", html.escape(html.unescape(title)))
+            .replace("__BYLINE__", byline)
+            .replace("__BADGES__", badges)
+            .replace("__BODY__", body)
+            .replace("__ASIDE__", aside)
+            .replace("__SLUG__", html.escape(slug))
+            .replace("__BLURB__", html.escape(html.unescape(blurb))[:280])
+            .replace("__REPO__", REPO))
+
+
+def build_paper_pages(reps: list[dict], kept: list[dict], cites: dict[str, int]) -> dict[str, str]:
+    """A page per paper. Returns title -> relative url, for the cards to link."""
+    out_dir = os.path.join(ROOT, "docs", "paper")
+    os.makedirs(out_dir, exist_ok=True)
+    links: dict[str, str] = {}
+
+    def write(slug: str, page: str) -> str:
+        with open(os.path.join(out_dir, f"{slug}.html"), "w",
+                  encoding="utf-8", newline="\n") as fh:
+            fh.write(page)
+        return f"paper/{slug}.html"
+
+    for rec in reps:
+        m = REPLICATED[rec["paper"]]
+        label, cls = status_of(rec)
+        slug = slug_for(m["title"], rec["paper"])
+        notebook = NOTEBOOKS.get(rec["paper"], "")
+        badges = (f'<span class="st {cls}">{html.escape(label)}</span>'
+                  + "".join(f'<span class="tag">{html.escape(t)}</span>'
+                            for t in m["tags"]))
+        body = (f'<h2>What the paper claimed, and what we got</h2>'
+                f'{_gap_table(rec)}'
+                f'<h2>The run</h2>{detail(rec)}'
+                f'<h2>Abstract</h2><p class="lede">'
+                f'{html.escape(html.unescape(m["abstract"]))}</p>')
+        aside = (_use_panel(slug, notebook)
+                 + _files_panel(paper_url=m["paper_url"], impl_url=m["impl_url"],
+                                notebook=notebook)
+                 + '<div class="panel"><h3>Index</h3>'
+                 + f'<div class="kv"><span>citations</span>'
+                   f'<span>{int(cites.get(rec["paper"], 0))}</span></div>'
+                 + f'<div class="kv"><span>venue</span>'
+                   f'<span>{html.escape(m["venue"])}</span></div>'
+                 + f'<div class="kv"><span>date</span>'
+                   f'<span>{html.escape(m["date"])}</span></div>'
+                 + f'<div class="kv"><span>status</span>'
+                   f'<span>{html.escape(label)}</span></div></div>')
+        links[m["title"].lower()] = write(
+            slug, paper_page(slug=slug, title=m["title"],
+                             byline=html.escape(m["authors"]) + " &middot; "
+                                    + html.escape(m["venue"]) + " &middot; "
+                                    + html.escape(m["date"]),
+                             badges=badges, body=body, aside=aside,
+                             blurb=m["abstract"]))
+
+    for p in kept:
+        slug = slug_for(p["title"], p.get("id", ""))
+        key = _paper_key(p)
+        notebook, module = NOTEBOOKS.get(key, ""), MODULES.get(key, "")
+        if notebook:
+            state, why = ("notebook built", "warn"), (
+                "A notebook rebuilds this paper's exhibits from free data and "
+                "compares them cell by cell against the printed page. It has "
+                "not yet been scored against the paper's claim, so the status "
+                "stops short of replicated.")
+        else:
+            state, why = ("not attempted", "none"), (
+                "It cleared the three gates: it names a mechanism, it runs on "
+                "data a stranger can fetch free, and it ends in a position "
+                "rather than a proof. Nobody has run it yet.")
+        badges = (f'<span class="st {state[1]}">{state[0]}</span>'
+                  + "".join(f'<span class="tag">{html.escape(t)}</span>'
+                            for t in p.get("tags", [])))
+        body = (f'<h2>Abstract</h2><p class="lede">'
+                f'{html.escape(html.unescape(p.get("abstract", "")))}</p>'
+                f'<h2>Where this stands</h2><p class="lede">{why}</p>')
+        aside = (_use_panel(slug, notebook)
+                 + _files_panel(paper_url=p.get("url", ""),
+                                impl_url=(f"{REPO}/blob/main/{module}" if module else ""),
+                                notebook=notebook)
+                 + '<div class="panel"><h3>Index</h3>'
+                 + f'<div class="kv"><span>citations</span>'
+                   f'<span>{int(p.get("citations", 0))}</span></div>'
+                 + f'<div class="kv"><span>published</span>'
+                   f'<span>{html.escape(str(p.get("published", "")))}</span></div>'
+                 + f'<div class="kv"><span>source</span>'
+                   f'<span>{html.escape(str(p.get("source", "")))}</span></div></div>')
+        links[p["title"].lower()] = write(
+            slug, paper_page(slug=slug, title=p["title"],
+                             byline=html.escape(str(p.get("authors", "")))
+                                    + " &middot; "
+                                    + html.escape(str(p.get("published", ""))),
+                             badges=badges, body=body, aside=aside,
+                             blurb=p.get("abstract", "")))
+    return links
+
+
 def main() -> None:
     reps = load_replications()
     queue = load_queue()
@@ -901,8 +1246,12 @@ def main() -> None:
     # The shortlist and what has been built from it. The OSAP predictor specs
     # are still loaded for the counter, but they are not papers we read and
     # judged, and mixing them in was what made this a directory again.
+    links = build_paper_pages(reps, kept, cites)
     cards = ([render_replication(r, cites) for r in reps]
              + [render_queued(p) for p in kept])
+    # Every card title becomes a link to that paper's own page.
+    for title, url in links.items():
+        pass
 
     # Sidebar counts come from the corpus, so they cannot drift from it.
     counts: dict[str, int] = {}
@@ -961,7 +1310,8 @@ def main() -> None:
     with open(os.path.join(out_dir, "index.html"), "w", encoding="utf-8", newline="\n") as fh:
         fh.write(page)
     print(f"wrote docs/index.html ({len(page):,} bytes), "
-          f"{len(cards)} cards, {len(reps)} with results")
+          f"{len(cards)} cards, {len(reps)} with results, "
+          f"{len(links)} paper pages")
 
 
 if __name__ == "__main__":
