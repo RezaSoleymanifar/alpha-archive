@@ -1,0 +1,2205 @@
+{
+ "paper": "2606.04153",
+ "blocks": [
+  {
+   "exhibit": "F1",
+   "label": "Figure 1",
+   "caption": "Figure 1: Out-of-sample R2 as a function of the number of predictors (k)",
+   "image": "evidence/2606.04153/F1.png",
+   "module": "",
+   "symbol": "",
+   "code": "",
+   "columns": [
+    "row",
+    "metric",
+    "printed",
+    "ours",
+    "gap"
+   ],
+   "rows": [],
+   "no_numbers": "A plot of the Table 3 R-squared values against k. Every point in it is a cell scored above, so the figure carries no number of its own.",
+   "cells": 0,
+   "shown": 0,
+   "tally": {}
+  },
+  {
+   "exhibit": "F2",
+   "label": "Figure 2",
+   "caption": "Figure 2: Wealth growth for the CSM (Baseline, k = 3), buy-and-hold, and momentum strategies",
+   "image": "evidence/2606.04153/F2.png",
+   "module": "",
+   "symbol": "",
+   "code": "",
+   "columns": [
+    "row",
+    "metric",
+    "printed",
+    "ours",
+    "gap"
+   ],
+   "rows": [],
+   "no_numbers": "A wealth-growth plot. The endpoints are Table 6's terminal wealth, scored above; the path between them is not printed as numbers.",
+   "cells": 0,
+   "shown": 0,
+   "tally": {}
+  },
+  {
+   "exhibit": "F3",
+   "label": "Figure 3",
+   "caption": "Figure 3: Wealth growth for the CSM (Baseline), copula-based, GARCH-M, CSR, and linear strategies, each with k = 3",
+   "image": "evidence/2606.04153/F3.png",
+   "module": "",
+   "symbol": "",
+   "code": "",
+   "columns": [
+    "row",
+    "metric",
+    "printed",
+    "ours",
+    "gap"
+   ],
+   "rows": [],
+   "no_numbers": "As Figure 2, across the copula and benchmark strategies.",
+   "cells": 0,
+   "shown": 0,
+   "tally": {}
+  },
+  {
+   "exhibit": "F4",
+   "label": "Figure 4",
+   "caption": "Figure 4: Terminal wealth as a function of the number of predictors (k) for CSM (Baseline), Clayton, GARCH-M, CSR, and linear models",
+   "image": "evidence/2606.04153/F4.png",
+   "module": "",
+   "symbol": "",
+   "code": "",
+   "columns": [
+    "row",
+    "metric",
+    "printed",
+    "ours",
+    "gap"
+   ],
+   "rows": [],
+   "no_numbers": "A plot of terminal wealth against k. Every point is a cell of Table 6 or B1, both scored above.",
+   "cells": 0,
+   "shown": 0,
+   "tally": {}
+  },
+  {
+   "exhibit": "FA1",
+   "label": "Figure A1",
+   "caption": "Figure A1: Out-of-sample R2 as a function of the number of predictors (k): MSE-based selection",
+   "image": "evidence/2606.04153/FA1.png",
+   "module": "",
+   "symbol": "",
+   "code": "",
+   "columns": [
+    "row",
+    "metric",
+    "printed",
+    "ours",
+    "gap"
+   ],
+   "rows": [],
+   "no_numbers": "As Figure 1, for MSE-based selection.",
+   "cells": 0,
+   "shown": 0,
+   "tally": {}
+  },
+  {
+   "exhibit": "FC1",
+   "label": "Figure C1",
+   "caption": "Figure C1: Wealth growth during the Global Financial Crisis: 3-month momentum, CSR, GARCH-M, and buy-and-hold, together with the CSM (Baseline) and FGM copula strate- gies. The CSM (Baseline) and FGM wealth paths coincide and therefore overlap.",
+   "image": "evidence/2606.04153/FC1.png",
+   "module": "",
+   "symbol": "",
+   "code": "",
+   "columns": [
+    "row",
+    "metric",
+    "printed",
+    "ours",
+    "gap"
+   ],
+   "rows": [],
+   "no_numbers": "The crisis wealth paths, whose endpoints are Table C1's terminal wealth.",
+   "cells": 0,
+   "shown": 0,
+   "tally": {}
+  },
+  {
+   "exhibit": "FC2",
+   "label": "Figure C2",
+   "caption": "Figure C2: Wealth growth during the COVID crisis period: 3-month momentum, CSM (Poly), FGM copula, CSR, GARCH-M, and buy-and-hold. The FGM and buy-and-hold wealth paths coincide, as do the CSR and CSM (Poly) paths, and the corresponding curves therefore overlap.",
+   "image": "evidence/2606.04153/FC2.png",
+   "module": "",
+   "symbol": "",
+   "code": "",
+   "columns": [
+    "row",
+    "metric",
+    "printed",
+    "ours",
+    "gap"
+   ],
+   "rows": [],
+   "no_numbers": "As Figure C1, for the COVID window.",
+   "cells": 0,
+   "shown": 0,
+   "tally": {}
+  },
+  {
+   "exhibit": "FD1",
+   "label": "Figure D1",
+   "caption": "Figure D1: Wealth growth for CSM (Baseline), copula-based (Clayton, Gaussian), CSR, and MS strategies with nine predictors (including momentum).",
+   "image": "evidence/2606.04153/FD1.png",
+   "module": "",
+   "symbol": "",
+   "code": "",
+   "columns": [
+    "row",
+    "metric",
+    "printed",
+    "ours",
+    "gap"
+   ],
+   "rows": [],
+   "no_numbers": "The nine-predictor wealth paths, whose endpoints are Table D1's.",
+   "cells": 0,
+   "shown": 0,
+   "tally": {}
+  },
+  {
+   "exhibit": "T1",
+   "label": "Table 1",
+   "caption": "Table 1: Sample correlations",
+   "image": "evidence/2606.04153/T1.png",
+   "module": "alpha_archive/replications/decomp2026_eval.py",
+   "symbol": "correlations",
+   "code": "def correlations(frame: pd.DataFrame) -> dict[str, float]:\n    \"\"\"Table 1, all three panels, over the whole 887-month sample (p.11).\n\n    The decomposition is the paper's own: r is the raw excess return, s its\n    sign and m its magnitude, each correlated against predictors already lagged\n    one month by `load`. Panel C is the predictor block on its own, printed as\n    an upper triangle, so only the cells the page actually fills are emitted.\n    \"\"\"\n    r = frame[\"xs\"].to_numpy()\n    s = (r > 0).astype(float)\n    m = np.abs(r)\n    x = {p: frame[p].to_numpy() for p in PREDICTORS}\n\n    def rho(a: np.ndarray, b: np.ndarray) -> float:\n        return float(np.corrcoef(a, b)[0, 1])\n\n    out: dict[str, float] = {}\n\n    pa = \"T1/Panel A: Between r and x\"\n    out[f\"{pa}/r/r\"] = 1.0\n    for p in PREDICTORS:\n        out[f\"{pa}/r/{p}\"] = rho(r, x[p])\n\n    pb = \"T1/Panel B: Between s , m , and x\"\n    series = {\"s\": s, \"m\": m}\n    out[f\"{pb}/s/s\"] = 1.0\n    out[f\"{pb}/s/m\"] = rho(s, m)\n    out[f\"{pb}/m/m\"] = 1.0\n    for row, values in series.items():\n        for p in PREDICTORS:\n            out[f\"{pb}/{row}/{p}\"] = rho(values, x[p])\n\n    # Panel C prints the upper triangle only: the cell below the diagonal is\n    # the same number and the page leaves it blank, so writing it would invent\n    # an address the paper never used.\n    pc = \"T1/Panel C: Among x\"\n    for i, a in enumerate(PREDICTORS):\n        out[f\"{pc}/{a}/{a}\"] = 1.0\n        for b in PREDICTORS[i + 1:]:\n            out[f\"{pc}/{a}/{b}\"] = rho(x[a], x[b])\n    return out",
+   "columns": [
+    "row",
+    "metric",
+    "printed",
+    "ours",
+    "gap"
+   ],
+   "rows": [
+    {
+     "row": "Panel A: Between r and x, r",
+     "metric": "r",
+     "printed": 1.0,
+     "ours": "1.0",
+     "gap": "0.0",
+     "state": "REPRODUCED"
+    },
+    {
+     "row": "Panel A: Between r and x, r",
+     "metric": "dp",
+     "printed": 0.059,
+     "ours": "0.059",
+     "gap": "0.000",
+     "state": "REPRODUCED"
+    },
+    {
+     "row": "Panel A: Between r and x, r",
+     "metric": "dfy",
+     "printed": 0.022,
+     "ours": "0.022",
+     "gap": "0.000",
+     "state": "REPRODUCED"
+    },
+    {
+     "row": "Panel A: Between r and x, r",
+     "metric": "tms",
+     "printed": 0.058,
+     "ours": "0.057",
+     "gap": "0.001",
+     "state": "MISSED"
+    },
+    {
+     "row": "Panel A: Between r and x, r",
+     "metric": "tbl",
+     "printed": -0.097,
+     "ours": "-0.098",
+     "gap": "0.001",
+     "state": "MISSED"
+    },
+    {
+     "row": "Panel A: Between r and x, r",
+     "metric": "ltr",
+     "printed": 0.045,
+     "ours": "0.085",
+     "gap": "0.040",
+     "state": "MISSED"
+    },
+    {
+     "row": "Panel A: Between r and x, r",
+     "metric": "dfr",
+     "printed": 0.038,
+     "ours": "0.038",
+     "gap": "0.000",
+     "state": "REPRODUCED"
+    },
+    {
+     "row": "Panel A: Between r and x, r",
+     "metric": "ntis",
+     "printed": -0.018,
+     "ours": "-0.017",
+     "gap": "0.001",
+     "state": "MISSED"
+    },
+    {
+     "row": "Panel A: Between r and x, r",
+     "metric": "infl",
+     "printed": -0.069,
+     "ours": "-0.069",
+     "gap": "0.000",
+     "state": "REPRODUCED"
+    },
+    {
+     "row": "Panel B: Between s , m , and x, s",
+     "metric": "s",
+     "printed": 1.0,
+     "ours": "1.0",
+     "gap": "0.0",
+     "state": "REPRODUCED"
+    },
+    {
+     "row": "Panel B: Between s , m , and x, s",
+     "metric": "m",
+     "printed": -0.011,
+     "ours": "-0.011",
+     "gap": "0.000",
+     "state": "REPRODUCED"
+    },
+    {
+     "row": "Panel B: Between s , m , and x, s",
+     "metric": "dp",
+     "printed": 0.006,
+     "ours": "0.006",
+     "gap": "0.000",
+     "state": "REPRODUCED"
+    },
+    {
+     "row": "Panel B: Between s , m , and x, s",
+     "metric": "dfy",
+     "printed": -0.025,
+     "ours": "-0.025",
+     "gap": "0.000",
+     "state": "REPRODUCED"
+    },
+    {
+     "row": "Panel B: Between s , m , and x, s",
+     "metric": "tms",
+     "printed": 0.059,
+     "ours": "0.059",
+     "gap": "0.000",
+     "state": "REPRODUCED"
+    },
+    {
+     "row": "Panel B: Between s , m , and x, s",
+     "metric": "tbl",
+     "printed": -0.143,
+     "ours": "-0.143",
+     "gap": "0.000",
+     "state": "REPRODUCED"
+    },
+    {
+     "row": "Panel B: Between s , m , and x, s",
+     "metric": "ltr",
+     "printed": 0.026,
+     "ours": "0.026",
+     "gap": "0.000",
+     "state": "REPRODUCED"
+    }
+   ],
+   "no_numbers": "",
+   "cells": 64,
+   "shown": 16,
+   "tally": {
+    "REPRODUCED": 39,
+    "MISSED": 25
+   }
+  },
+  {
+   "exhibit": "T2",
+   "label": "Table 2",
+   "caption": "Table 2: Best subset selection based on AUC criterion",
+   "image": "evidence/2606.04153/T2.png",
+   "module": "",
+   "symbol": "",
+   "code": "",
+   "columns": [
+    "row",
+    "metric",
+    "printed",
+    "ours",
+    "gap"
+   ],
+   "rows": [],
+   "no_numbers": "A grid of asterisks marking which predictors each model selected at each k. Our selections are computed and printed in the notebook, but the checklist harvested no numeric cells from it, so there is nothing here to score against.",
+   "cells": 0,
+   "shown": 0,
+   "tally": {}
+  },
+  {
+   "exhibit": "T3",
+   "label": "Table 3",
+   "caption": "Table 3: Out-of-sample R2 values by subset size (k) and loss function",
+   "image": "evidence/2606.04153/T3.png",
+   "module": "alpha_archive/replications/decomp2026_eval.py",
+   "symbol": "r2_oos",
+   "code": "def r2_oos(actual: np.ndarray, model: np.ndarray, benchmark: np.ndarray,\n           absolute: bool = False) -> float:\n    \"\"\"Campbell-Thompson R2 against the rolling historical average, in percent.\"\"\"\n    em, eb = actual - model, actual - benchmark\n    loss = (np.abs if absolute else np.square)\n    return float(100.0 * (1.0 - loss(em).sum() / loss(eb).sum()))",
+   "columns": [
+    "row",
+    "metric",
+    "printed",
+    "ours",
+    "gap"
+   ],
+   "rows": [
+    {
+     "row": "Linear model, k = 1",
+     "metric": "Squared",
+     "printed": -0.24,
+     "ours": "-0.24",
+     "gap": "0.00",
+     "state": "MISSED"
+    },
+    {
+     "row": "Linear model, k = 1",
+     "metric": "Absolute",
+     "printed": 0.91,
+     "ours": "0.91",
+     "gap": "0.00",
+     "state": "MISSED"
+    },
+    {
+     "row": "Linear model, k = 2",
+     "metric": "Squared",
+     "printed": -0.56,
+     "ours": "-0.56",
+     "gap": "0.00",
+     "state": "MISSED"
+    },
+    {
+     "row": "Linear model, k = 2",
+     "metric": "Absolute",
+     "printed": 0.42,
+     "ours": "0.42",
+     "gap": "0.00",
+     "state": "MISSED"
+    },
+    {
+     "row": "Linear model, k = 3",
+     "metric": "Squared",
+     "printed": -1.52,
+     "ours": "-1.52",
+     "gap": "0.00",
+     "state": "MISSED"
+    },
+    {
+     "row": "Linear model, k = 3",
+     "metric": "Absolute",
+     "printed": -0.26,
+     "ours": "-0.26",
+     "gap": "0.00",
+     "state": "MISSED"
+    },
+    {
+     "row": "Linear model, k = 4",
+     "metric": "Squared",
+     "printed": -2.28,
+     "ours": "-2.28",
+     "gap": "0.00",
+     "state": "MISSED"
+    },
+    {
+     "row": "Linear model, k = 4",
+     "metric": "Absolute",
+     "printed": -1.0,
+     "ours": "-1.0",
+     "gap": "0.0",
+     "state": "MISSED"
+    },
+    {
+     "row": "CSR approach, k = 1",
+     "metric": "Squared",
+     "printed": 0.37,
+     "ours": "0.37",
+     "gap": "0.00",
+     "state": "MISSED"
+    },
+    {
+     "row": "CSR approach, k = 1",
+     "metric": "Absolute",
+     "printed": 0.24,
+     "ours": "0.24",
+     "gap": "0.00",
+     "state": "MISSED"
+    },
+    {
+     "row": "CSR approach, k = 2",
+     "metric": "Squared",
+     "printed": 0.51,
+     "ours": "0.51",
+     "gap": "0.00",
+     "state": "MISSED"
+    },
+    {
+     "row": "CSR approach, k = 2",
+     "metric": "Absolute",
+     "printed": 0.18,
+     "ours": "0.19",
+     "gap": "0.01",
+     "state": "MISSED"
+    },
+    {
+     "row": "CSR approach, k = 3",
+     "metric": "Squared",
+     "printed": 0.4,
+     "ours": "0.4",
+     "gap": "0.0",
+     "state": "MISSED"
+    },
+    {
+     "row": "CSR approach, k = 3",
+     "metric": "Absolute",
+     "printed": 0.02,
+     "ours": "0.02",
+     "gap": "0.00",
+     "state": "MISSED"
+    },
+    {
+     "row": "CSR approach, k = 4",
+     "metric": "Squared",
+     "printed": 0.11,
+     "ours": "0.11",
+     "gap": "0.00",
+     "state": "MISSED"
+    },
+    {
+     "row": "CSR approach, k = 4",
+     "metric": "Absolute",
+     "printed": -0.21,
+     "ours": "-0.21",
+     "gap": "0.00",
+     "state": "MISSED"
+    }
+   ],
+   "no_numbers": "",
+   "cells": 160,
+   "shown": 16,
+   "tally": {
+    "MISSED": 126,
+    "NOT_ATTEMPTED": 32,
+    "REPRODUCED": 2
+   }
+  },
+  {
+   "exhibit": "T4",
+   "label": "Table 4",
+   "caption": "Table 4: Out-of-sample model performance comparison using MCS procedure with squared loss",
+   "image": "evidence/2606.04153/T4.png",
+   "module": "alpha_archive/replications/decomp2026_eval.py",
+   "symbol": "mcs_pvalues",
+   "code": "def mcs_pvalues(losses: dict[str, np.ndarray], boot: int = 5000,\n                block: int = 2, seed: int = 20260204) -> dict[str, float]:\n    \"\"\"Hansen, Lunde and Nason (2011), the T_max variant of Section 3.1.2.\n\n    The paper reports p-values from the R MCS package and states neither the\n    block length nor the number of replications, so the package's own defaults\n    are used and recorded as an assumption. The seed is fixed because a p-value\n    that moves between runs cannot be scored against a printed one.\n    \"\"\"\n    names = list(losses)\n    L = np.column_stack([losses[n] for n in names])\n    n, m = L.shape\n    rng = np.random.default_rng(seed)\n\n    # Stationary bootstrap indices, shared across models so the resampling\n    # cannot favour one of them.\n    idx = np.empty((boot, n), dtype=np.int64)\n    for b in range(boot):\n        i, pos = rng.integers(0, n), 0\n        while pos < n:\n            run = min(rng.geometric(1.0 / block), n - pos)\n            take = (np.arange(i, i + run) % n)\n            idx[b, pos:pos + run] = take\n            pos += run\n            i = rng.integers(0, n)\n\n    alive = list(range(m))\n    pvals: dict[str, float] = {}\n    running = 0.0\n    while len(alive) > 1:\n        sub = L[:, alive]\n        d = sub - sub.mean(axis=1, keepdims=True)   # loss vs the live average\n        dbar = d.mean(axis=0)\n        boot_mean = d[idx].mean(axis=1)             # (boot, alive)\n        var = boot_mean.var(axis=0, ddof=1)\n        var = np.where(var < 1e-18, 1e-18, var)\n        tstat = dbar / np.sqrt(var)\n        tboot = (boot_mean - dbar) / np.sqrt(var)\n\n        tmax, tmax_boot = tstat.max(), tboot.max(axis=1)\n        p = float((tmax_boot >= tmax).mean())\n        running = max(running, p)\n\n        worst = int(np.argmax(tstat))\n        pvals[names[alive[worst]]] = running\n        alive.pop(worst)\n\n    pvals[names[alive[0]]] = 1.0\n    return pvals",
+   "columns": [
+    "row",
+    "metric",
+    "printed",
+    "ours",
+    "gap"
+   ],
+   "rows": [
+    {
+     "row": "Historical average, k = 1",
+     "metric": "MSE",
+     "printed": 0.189,
+     "ours": "0.189",
+     "gap": "0.000",
+     "state": "REPRODUCED"
+    },
+    {
+     "row": "Historical average, k = 1",
+     "metric": "MCS p-value",
+     "printed": 0.999,
+     "ours": "0.875",
+     "gap": "0.124",
+     "state": "MISSED"
+    },
+    {
+     "row": "Historical average, k = 2",
+     "metric": "MSE",
+     "printed": 0.189,
+     "ours": "0.189",
+     "gap": "0.000",
+     "state": "REPRODUCED"
+    },
+    {
+     "row": "Historical average, k = 2",
+     "metric": "MCS p-value",
+     "printed": 0.97,
+     "ours": "0.84",
+     "gap": "0.13",
+     "state": "MISSED"
+    },
+    {
+     "row": "Historical average, k = 3",
+     "metric": "MSE",
+     "printed": 0.189,
+     "ours": "0.189",
+     "gap": "0.000",
+     "state": "REPRODUCED"
+    },
+    {
+     "row": "Historical average, k = 3",
+     "metric": "MCS p-value",
+     "printed": 0.953,
+     "ours": "0.839",
+     "gap": "0.114",
+     "state": "MISSED"
+    },
+    {
+     "row": "Historical average, k = 4",
+     "metric": "MSE",
+     "printed": 0.189,
+     "ours": "0.189",
+     "gap": "0.000",
+     "state": "REPRODUCED"
+    },
+    {
+     "row": "Historical average, k = 4",
+     "metric": "MCS p-value",
+     "printed": 0.946,
+     "ours": "0.864",
+     "gap": "0.082",
+     "state": "MISSED"
+    },
+    {
+     "row": "Linear model, k = 1",
+     "metric": "MSE",
+     "printed": 0.189,
+     "ours": "0.189",
+     "gap": "0.000",
+     "state": "REPRODUCED"
+    },
+    {
+     "row": "Linear model, k = 1",
+     "metric": "MCS p-value",
+     "printed": 0.292,
+     "ours": "0.496",
+     "gap": "0.204",
+     "state": "MISSED"
+    },
+    {
+     "row": "Linear model, k = 2",
+     "metric": "MSE",
+     "printed": 0.189,
+     "ours": "0.190",
+     "gap": "0.001",
+     "state": "MISSED"
+    },
+    {
+     "row": "Linear model, k = 2",
+     "metric": "MCS p-value",
+     "printed": 0.593,
+     "ours": "0.806",
+     "gap": "0.213",
+     "state": "MISSED"
+    },
+    {
+     "row": "Linear model, k = 3",
+     "metric": "MSE",
+     "printed": 0.191,
+     "ours": "0.191",
+     "gap": "0.000",
+     "state": "REPRODUCED"
+    },
+    {
+     "row": "Linear model, k = 3",
+     "metric": "MCS p-value",
+     "printed": 0.0,
+     "ours": "0.6",
+     "gap": "0.6",
+     "state": "MISSED"
+    },
+    {
+     "row": "Linear model, k = 4",
+     "metric": "MSE",
+     "printed": 0.193,
+     "ours": "0.193",
+     "gap": "0.000",
+     "state": "REPRODUCED"
+    },
+    {
+     "row": "Linear model, k = 4",
+     "metric": "MCS p-value",
+     "printed": 0.0,
+     "ours": "0.0",
+     "gap": "0.0",
+     "state": "MISSED"
+    }
+   ],
+   "no_numbers": "",
+   "cells": 176,
+   "shown": 16,
+   "tally": {
+    "REPRODUCED": 49,
+    "MISSED": 95,
+    "NOT_ATTEMPTED": 32
+   }
+  },
+  {
+   "exhibit": "T5",
+   "label": "Table 5",
+   "caption": "Table 5: Out-of-sample model performance comparison using MCS procedure with absolute loss",
+   "image": "evidence/2606.04153/T5.png",
+   "module": "alpha_archive/replications/decomp2026_eval.py",
+   "symbol": "mcs_pvalues",
+   "code": "def mcs_pvalues(losses: dict[str, np.ndarray], boot: int = 5000,\n                block: int = 2, seed: int = 20260204) -> dict[str, float]:\n    \"\"\"Hansen, Lunde and Nason (2011), the T_max variant of Section 3.1.2.\n\n    The paper reports p-values from the R MCS package and states neither the\n    block length nor the number of replications, so the package's own defaults\n    are used and recorded as an assumption. The seed is fixed because a p-value\n    that moves between runs cannot be scored against a printed one.\n    \"\"\"\n    names = list(losses)\n    L = np.column_stack([losses[n] for n in names])\n    n, m = L.shape\n    rng = np.random.default_rng(seed)\n\n    # Stationary bootstrap indices, shared across models so the resampling\n    # cannot favour one of them.\n    idx = np.empty((boot, n), dtype=np.int64)\n    for b in range(boot):\n        i, pos = rng.integers(0, n), 0\n        while pos < n:\n            run = min(rng.geometric(1.0 / block), n - pos)\n            take = (np.arange(i, i + run) % n)\n            idx[b, pos:pos + run] = take\n            pos += run\n            i = rng.integers(0, n)\n\n    alive = list(range(m))\n    pvals: dict[str, float] = {}\n    running = 0.0\n    while len(alive) > 1:\n        sub = L[:, alive]\n        d = sub - sub.mean(axis=1, keepdims=True)   # loss vs the live average\n        dbar = d.mean(axis=0)\n        boot_mean = d[idx].mean(axis=1)             # (boot, alive)\n        var = boot_mean.var(axis=0, ddof=1)\n        var = np.where(var < 1e-18, 1e-18, var)\n        tstat = dbar / np.sqrt(var)\n        tboot = (boot_mean - dbar) / np.sqrt(var)\n\n        tmax, tmax_boot = tstat.max(), tboot.max(axis=1)\n        p = float((tmax_boot >= tmax).mean())\n        running = max(running, p)\n\n        worst = int(np.argmax(tstat))\n        pvals[names[alive[worst]]] = running\n        alive.pop(worst)\n\n    pvals[names[alive[0]]] = 1.0\n    return pvals",
+   "columns": [
+    "row",
+    "metric",
+    "printed",
+    "ours",
+    "gap"
+   ],
+   "rows": [
+    {
+     "row": "Historical average, k = 1",
+     "metric": "MAE",
+     "printed": 3.269,
+     "ours": "3.269",
+     "gap": "0.000",
+     "state": "REPRODUCED"
+    },
+    {
+     "row": "Historical average, k = 1",
+     "metric": "MCS p-value",
+     "printed": 0.0,
+     "ours": "0.1",
+     "gap": "0.1",
+     "state": "MISSED"
+    },
+    {
+     "row": "Historical average, k = 2",
+     "metric": "MAE",
+     "printed": 3.269,
+     "ours": "3.269",
+     "gap": "0.000",
+     "state": "REPRODUCED"
+    },
+    {
+     "row": "Historical average, k = 2",
+     "metric": "MCS p-value",
+     "printed": 0.559,
+     "ours": "0.231",
+     "gap": "0.328",
+     "state": "MISSED"
+    },
+    {
+     "row": "Historical average, k = 3",
+     "metric": "MAE",
+     "printed": 3.268,
+     "ours": "3.269",
+     "gap": "0.001",
+     "state": "MISSED"
+    },
+    {
+     "row": "Historical average, k = 3",
+     "metric": "MCS p-value",
+     "printed": 0.322,
+     "ours": "0.344",
+     "gap": "0.022",
+     "state": "MISSED"
+    },
+    {
+     "row": "Historical average, k = 4",
+     "metric": "MAE",
+     "printed": 3.268,
+     "ours": "3.269",
+     "gap": "0.001",
+     "state": "MISSED"
+    },
+    {
+     "row": "Historical average, k = 4",
+     "metric": "MCS p-value",
+     "printed": 0.731,
+     "ours": "0.310",
+     "gap": "0.421",
+     "state": "MISSED"
+    },
+    {
+     "row": "Linear model, k = 1",
+     "metric": "MAE",
+     "printed": 3.239,
+     "ours": "3.239",
+     "gap": "0.000",
+     "state": "REPRODUCED"
+    },
+    {
+     "row": "Linear model, k = 1",
+     "metric": "MCS p-value",
+     "printed": 0.805,
+     "ours": "0.183",
+     "gap": "0.622",
+     "state": "MISSED"
+    },
+    {
+     "row": "Linear model, k = 2",
+     "metric": "MAE",
+     "printed": 3.255,
+     "ours": "3.255",
+     "gap": "0.000",
+     "state": "REPRODUCED"
+    },
+    {
+     "row": "Linear model, k = 2",
+     "metric": "MCS p-value",
+     "printed": 0.878,
+     "ours": "0.518",
+     "gap": "0.360",
+     "state": "MISSED"
+    },
+    {
+     "row": "Linear model, k = 3",
+     "metric": "MAE",
+     "printed": 3.277,
+     "ours": "3.277",
+     "gap": "0.000",
+     "state": "REPRODUCED"
+    },
+    {
+     "row": "Linear model, k = 3",
+     "metric": "MCS p-value",
+     "printed": 0.0,
+     "ours": "0.3",
+     "gap": "0.3",
+     "state": "MISSED"
+    },
+    {
+     "row": "Linear model, k = 4",
+     "metric": "MAE",
+     "printed": 3.301,
+     "ours": "3.301",
+     "gap": "0.000",
+     "state": "REPRODUCED"
+    },
+    {
+     "row": "Linear model, k = 4",
+     "metric": "MCS p-value",
+     "printed": 0.0,
+     "ours": "0.0",
+     "gap": "0.0",
+     "state": "MISSED"
+    }
+   ],
+   "no_numbers": "",
+   "cells": 176,
+   "shown": 16,
+   "tally": {
+    "REPRODUCED": 29,
+    "MISSED": 115,
+    "NOT_ATTEMPTED": 32
+   }
+  },
+  {
+   "exhibit": "T6",
+   "label": "Table 6",
+   "caption": "Table 6: Out-of-sample performance statistics for the trading strategies for k = 1, 2, 3, 7",
+   "image": "evidence/2606.04153/T6.png",
+   "module": "alpha_archive/replications/decomp2026_eval.py",
+   "symbol": "switching",
+   "code": "def switching(forecast: np.ndarray, mkt: np.ndarray, rf: np.ndarray) -> dict:\n    \"\"\"The paper's switching rule, and everything Table 6 reports about it.\"\"\"\n    equity = forecast > 0\n    ret = np.where(equity, mkt, rf)\n\n    # Nothing is held before the first decision, so the first allocation is not\n    # a switch. Charging it would put a cost on buy-and-hold, whose printed\n    # 104.63 is exactly the uncosted compounding of the index.\n    switched = np.empty(len(equity), dtype=bool)\n    switched[0] = False\n    switched[1:] = equity[1:] != equity[:-1]\n\n    wealth = np.cumprod((1.0 + ret) * np.where(switched, 1.0 - COST, 1.0))\n    peak = np.maximum.accumulate(wealth)\n    return {\n        \"returns\": ret,\n        \"excess\": ret - rf,\n        \"wealth\": wealth,\n        \"TW\": float(wealth[-1]),\n        \"AV\": float(ret.mean() * MONTHS * 100.0),\n        \"SD\": float(ret.std(ddof=1) * np.sqrt(MONTHS) * 100.0),\n        \"SR\": float((ret - rf).mean() / ret.std(ddof=1)),\n        \"MDD\": float(np.max(1.0 - wealth / peak)),\n        \"switches\": int(switched.sum()),\n    }",
+   "columns": [
+    "row",
+    "metric",
+    "printed",
+    "ours",
+    "gap"
+   ],
+   "rows": [
+    {
+     "row": "Buy and hold, k =1",
+     "metric": "TW",
+     "printed": 104.63,
+     "ours": "104.62",
+     "gap": "0.01",
+     "state": "MISSED"
+    },
+    {
+     "row": "Buy and hold, k =1",
+     "metric": "AV",
+     "printed": 12.65,
+     "ours": "12.65",
+     "gap": "0.00",
+     "state": "REPRODUCED"
+    },
+    {
+     "row": "Buy and hold, k =1",
+     "metric": "SD",
+     "printed": 15.0,
+     "ours": "15.0",
+     "gap": "0.0",
+     "state": "REPRODUCED"
+    },
+    {
+     "row": "Buy and hold, k =1",
+     "metric": "SR",
+     "printed": 0.17,
+     "ours": "0.17",
+     "gap": "0.00",
+     "state": "REPRODUCED"
+    },
+    {
+     "row": "Buy and hold, k =1",
+     "metric": "MDD",
+     "printed": 0.5,
+     "ours": "0.5",
+     "gap": "0.0",
+     "state": "REPRODUCED"
+    },
+    {
+     "row": "Buy and hold, k =2",
+     "metric": "TW",
+     "printed": 104.63,
+     "ours": "104.62",
+     "gap": "0.01",
+     "state": "MISSED"
+    },
+    {
+     "row": "Buy and hold, k =2",
+     "metric": "AV",
+     "printed": 12.65,
+     "ours": "12.65",
+     "gap": "0.00",
+     "state": "REPRODUCED"
+    },
+    {
+     "row": "Buy and hold, k =2",
+     "metric": "SD",
+     "printed": 15.0,
+     "ours": "15.0",
+     "gap": "0.0",
+     "state": "REPRODUCED"
+    },
+    {
+     "row": "Buy and hold, k =2",
+     "metric": "SR",
+     "printed": 0.17,
+     "ours": "0.17",
+     "gap": "0.00",
+     "state": "REPRODUCED"
+    },
+    {
+     "row": "Buy and hold, k =2",
+     "metric": "MDD",
+     "printed": 0.5,
+     "ours": "0.5",
+     "gap": "0.0",
+     "state": "REPRODUCED"
+    },
+    {
+     "row": "Momentum, 3-month, k =1",
+     "metric": "TW",
+     "printed": 32.39,
+     "ours": "40.49",
+     "gap": "8.10",
+     "state": "MISSED"
+    },
+    {
+     "row": "Momentum, 3-month, k =1",
+     "metric": "AV",
+     "printed": 9.18,
+     "ours": "10.07",
+     "gap": "0.89",
+     "state": "MISSED"
+    },
+    {
+     "row": "Momentum, 3-month, k =1",
+     "metric": "SD",
+     "printed": 10.69,
+     "ours": "11.28",
+     "gap": "0.59",
+     "state": "MISSED"
+    },
+    {
+     "row": "Momentum, 3-month, k =1",
+     "metric": "SR",
+     "printed": 0.15,
+     "ours": "0.16",
+     "gap": "0.01",
+     "state": "MISSED"
+    },
+    {
+     "row": "Momentum, 3-month, k =1",
+     "metric": "MDD",
+     "printed": 0.23,
+     "ours": "0.32",
+     "gap": "0.09",
+     "state": "MISSED"
+    },
+    {
+     "row": "Momentum, 3-month, k =2",
+     "metric": "TW",
+     "printed": 32.39,
+     "ours": "40.49",
+     "gap": "8.10",
+     "state": "MISSED"
+    }
+   ],
+   "no_numbers": "",
+   "cells": 280,
+   "shown": 16,
+   "tally": {
+    "MISSED": 155,
+    "REPRODUCED": 85,
+    "NOT_ATTEMPTED": 40
+   }
+  },
+  {
+   "exhibit": "T7",
+   "label": "Table 7",
+   "caption": "Table 7: CER gains against historical average for γ = 5",
+   "image": "evidence/2606.04153/T7.png",
+   "module": "alpha_archive/replications/decomp2026_eval.py",
+   "symbol": "cer_mean_variance",
+   "code": "def cer_mean_variance(ret: np.ndarray) -> float:\n    return float(ret.mean() - 0.5 * GAMMA * ret.var(ddof=1))",
+   "columns": [
+    "row",
+    "metric",
+    "printed",
+    "ours",
+    "gap"
+   ],
+   "rows": [
+    {
+     "row": "Panel A: Mean-variance preferences, 3-month momentum",
+     "metric": "k = 1",
+     "printed": -0.706,
+     "ours": "-0.139",
+     "gap": "0.567",
+     "state": "MISSED"
+    },
+    {
+     "row": "Panel A: Mean-variance preferences, 3-month momentum",
+     "metric": "k = 2",
+     "printed": -0.706,
+     "ours": "-0.139",
+     "gap": "0.567",
+     "state": "MISSED"
+    },
+    {
+     "row": "Panel A: Mean-variance preferences, 3-month momentum",
+     "metric": "k = 3",
+     "printed": -0.706,
+     "ours": "-0.139",
+     "gap": "0.567",
+     "state": "MISSED"
+    },
+    {
+     "row": "Panel A: Mean-variance preferences, 3-month momentum",
+     "metric": "k = 7",
+     "printed": -0.706,
+     "ours": "-0.139",
+     "gap": "0.567",
+     "state": "MISSED"
+    },
+    {
+     "row": "Panel A: Mean-variance preferences, 6-month momentum",
+     "metric": "k = 1",
+     "printed": 0.042,
+     "ours": "0.054",
+     "gap": "0.012",
+     "state": "MISSED"
+    },
+    {
+     "row": "Panel A: Mean-variance preferences, 6-month momentum",
+     "metric": "k = 2",
+     "printed": 0.042,
+     "ours": "0.054",
+     "gap": "0.012",
+     "state": "MISSED"
+    },
+    {
+     "row": "Panel A: Mean-variance preferences, 6-month momentum",
+     "metric": "k = 3",
+     "printed": 0.042,
+     "ours": "0.054",
+     "gap": "0.012",
+     "state": "MISSED"
+    },
+    {
+     "row": "Panel A: Mean-variance preferences, 6-month momentum",
+     "metric": "k = 7",
+     "printed": 0.042,
+     "ours": "0.054",
+     "gap": "0.012",
+     "state": "MISSED"
+    },
+    {
+     "row": "Panel A: Mean-variance preferences, 12-month momentum",
+     "metric": "k = 1",
+     "printed": 1.436,
+     "ours": "1.047",
+     "gap": "0.389",
+     "state": "MISSED"
+    },
+    {
+     "row": "Panel A: Mean-variance preferences, 12-month momentum",
+     "metric": "k = 2",
+     "printed": 1.436,
+     "ours": "1.047",
+     "gap": "0.389",
+     "state": "MISSED"
+    },
+    {
+     "row": "Panel A: Mean-variance preferences, 12-month momentum",
+     "metric": "k = 3",
+     "printed": 1.436,
+     "ours": "1.047",
+     "gap": "0.389",
+     "state": "MISSED"
+    },
+    {
+     "row": "Panel A: Mean-variance preferences, 12-month momentum",
+     "metric": "k = 7",
+     "printed": 1.436,
+     "ours": "1.047",
+     "gap": "0.389",
+     "state": "MISSED"
+    },
+    {
+     "row": "Panel A: Mean-variance preferences, Linear model",
+     "metric": "k = 1",
+     "printed": 0.127,
+     "ours": "0.134",
+     "gap": "0.007",
+     "state": "MISSED"
+    },
+    {
+     "row": "Panel A: Mean-variance preferences, Linear model",
+     "metric": "k = 2",
+     "printed": 0.403,
+     "ours": "0.436",
+     "gap": "0.033",
+     "state": "MISSED"
+    },
+    {
+     "row": "Panel A: Mean-variance preferences, Linear model",
+     "metric": "k = 3",
+     "printed": 0.854,
+     "ours": "0.949",
+     "gap": "0.095",
+     "state": "MISSED"
+    },
+    {
+     "row": "Panel A: Mean-variance preferences, Linear model",
+     "metric": "k = 7",
+     "printed": 1.384,
+     "ours": "1.507",
+     "gap": "0.123",
+     "state": "MISSED"
+    }
+   ],
+   "no_numbers": "",
+   "cells": 104,
+   "shown": 16,
+   "tally": {
+    "MISSED": 87,
+    "REPRODUCED": 1,
+    "NOT_ATTEMPTED": 16
+   }
+  },
+  {
+   "exhibit": "T8",
+   "label": "Table 8",
+   "caption": "Table 8: CER gains against CSM (Baseline) for γ = 5",
+   "image": "evidence/2606.04153/T8.png",
+   "module": "alpha_archive/replications/decomp2026_eval.py",
+   "symbol": "cer_crra",
+   "code": "def cer_crra(ret: np.ndarray) -> float:\n    power = np.power(1.0 + ret, 1.0 - GAMMA)\n    return float(np.mean(power) ** (1.0 / (1.0 - GAMMA)) - 1.0)",
+   "columns": [
+    "row",
+    "metric",
+    "printed",
+    "ours",
+    "gap"
+   ],
+   "rows": [
+    {
+     "row": "Panel A: Mean-variance preferences, Gaussian",
+     "metric": "k = 1",
+     "printed": -0.087,
+     "ours": "0.000",
+     "gap": "0.087",
+     "state": "MISSED"
+    },
+    {
+     "row": "Panel A: Mean-variance preferences, Gaussian",
+     "metric": "k = 2",
+     "printed": -0.504,
+     "ours": "0.061",
+     "gap": "0.565",
+     "state": "MISSED"
+    },
+    {
+     "row": "Panel A: Mean-variance preferences, Gaussian",
+     "metric": "k = 3",
+     "printed": -0.288,
+     "ours": "0.109",
+     "gap": "0.397",
+     "state": "MISSED"
+    },
+    {
+     "row": "Panel A: Mean-variance preferences, Gaussian",
+     "metric": "k = 7",
+     "printed": 0.14,
+     "ours": "-0.10",
+     "gap": "0.24",
+     "state": "MISSED"
+    },
+    {
+     "row": "Panel A: Mean-variance preferences, Frank",
+     "metric": "k = 1",
+     "printed": -0.041,
+     "ours": "-3.723",
+     "gap": "3.682",
+     "state": "MISSED"
+    },
+    {
+     "row": "Panel A: Mean-variance preferences, Frank",
+     "metric": "k = 2",
+     "printed": 0.0,
+     "ours": "-4.9",
+     "gap": "4.9",
+     "state": "MISSED"
+    },
+    {
+     "row": "Panel A: Mean-variance preferences, Frank",
+     "metric": "k = 3",
+     "printed": -0.288,
+     "ours": "-5.139",
+     "gap": "4.851",
+     "state": "MISSED"
+    },
+    {
+     "row": "Panel A: Mean-variance preferences, Frank",
+     "metric": "k = 7",
+     "printed": 0.078,
+     "ours": "-7.889",
+     "gap": "7.967",
+     "state": "MISSED"
+    },
+    {
+     "row": "Panel A: Mean-variance preferences, Clayton",
+     "metric": "k = 1",
+     "printed": -0.054,
+     "ours": "0.054",
+     "gap": "0.108",
+     "state": "MISSED"
+    },
+    {
+     "row": "Panel A: Mean-variance preferences, Clayton",
+     "metric": "k = 2",
+     "printed": -0.802,
+     "ours": "0.048",
+     "gap": "0.850",
+     "state": "MISSED"
+    },
+    {
+     "row": "Panel A: Mean-variance preferences, Clayton",
+     "metric": "k = 3",
+     "printed": -1.464,
+     "ours": "0.109",
+     "gap": "1.573",
+     "state": "MISSED"
+    },
+    {
+     "row": "Panel A: Mean-variance preferences, Clayton",
+     "metric": "k = 7",
+     "printed": 0.11,
+     "ours": "-0.19",
+     "gap": "0.30",
+     "state": "MISSED"
+    },
+    {
+     "row": "Panel A: Mean-variance preferences, FGM",
+     "metric": "k = 1",
+     "printed": -0.041,
+     "ours": "0.000",
+     "gap": "0.041",
+     "state": "MISSED"
+    },
+    {
+     "row": "Panel A: Mean-variance preferences, FGM",
+     "metric": "k = 2",
+     "printed": -0.363,
+     "ours": "0.061",
+     "gap": "0.424",
+     "state": "MISSED"
+    },
+    {
+     "row": "Panel A: Mean-variance preferences, FGM",
+     "metric": "k = 3",
+     "printed": -0.288,
+     "ours": "0.071",
+     "gap": "0.359",
+     "state": "MISSED"
+    },
+    {
+     "row": "Panel A: Mean-variance preferences, FGM",
+     "metric": "k = 7",
+     "printed": 0.078,
+     "ours": "-0.058",
+     "gap": "0.136",
+     "state": "MISSED"
+    }
+   ],
+   "no_numbers": "",
+   "cells": 40,
+   "shown": 16,
+   "tally": {
+    "MISSED": 40
+   }
+  },
+  {
+   "exhibit": "TA1",
+   "label": "Table A1",
+   "caption": "Table A1: Best subset selection based on MSE criterion",
+   "image": "evidence/2606.04153/TA1.png",
+   "module": "",
+   "symbol": "",
+   "code": "",
+   "columns": [
+    "row",
+    "metric",
+    "printed",
+    "ours",
+    "gap"
+   ],
+   "rows": [],
+   "no_numbers": "As Table 2, for MSE-based selection rather than AUC.",
+   "cells": 0,
+   "shown": 0,
+   "tally": {}
+  },
+  {
+   "exhibit": "TA2",
+   "label": "Table A2",
+   "caption": "Table A2: Out-of-sample R2 values (in %) for different models, loss functions, and subset sizes (k)",
+   "image": "evidence/2606.04153/TA2.png",
+   "module": "",
+   "symbol": "",
+   "code": "",
+   "columns": [
+    "row",
+    "metric",
+    "printed",
+    "ours",
+    "gap"
+   ],
+   "rows": [
+    {
+     "row": "Linear model, k = 1",
+     "metric": "Squared",
+     "printed": -0.88,
+     "ours": "—",
+     "gap": "—",
+     "state": "NOT_ATTEMPTED"
+    },
+    {
+     "row": "Linear model, k = 1",
+     "metric": "Absolute",
+     "printed": -1.74,
+     "ours": "—",
+     "gap": "—",
+     "state": "NOT_ATTEMPTED"
+    },
+    {
+     "row": "Linear model, k = 2",
+     "metric": "Squared",
+     "printed": -1.37,
+     "ours": "—",
+     "gap": "—",
+     "state": "NOT_ATTEMPTED"
+    },
+    {
+     "row": "Linear model, k = 2",
+     "metric": "Absolute",
+     "printed": -0.1,
+     "ours": "—",
+     "gap": "—",
+     "state": "NOT_ATTEMPTED"
+    },
+    {
+     "row": "Linear model, k = 3",
+     "metric": "Squared",
+     "printed": -2.58,
+     "ours": "—",
+     "gap": "—",
+     "state": "NOT_ATTEMPTED"
+    },
+    {
+     "row": "Linear model, k = 3",
+     "metric": "Absolute",
+     "printed": -1.92,
+     "ours": "—",
+     "gap": "—",
+     "state": "NOT_ATTEMPTED"
+    },
+    {
+     "row": "Linear model, k = 4",
+     "metric": "Squared",
+     "printed": -2.58,
+     "ours": "—",
+     "gap": "—",
+     "state": "NOT_ATTEMPTED"
+    },
+    {
+     "row": "Linear model, k = 4",
+     "metric": "Absolute",
+     "printed": -2.66,
+     "ours": "—",
+     "gap": "—",
+     "state": "NOT_ATTEMPTED"
+    },
+    {
+     "row": "CSR approach, k = 1",
+     "metric": "Squared",
+     "printed": 0.37,
+     "ours": "—",
+     "gap": "—",
+     "state": "NOT_ATTEMPTED"
+    },
+    {
+     "row": "CSR approach, k = 1",
+     "metric": "Absolute",
+     "printed": 0.24,
+     "ours": "—",
+     "gap": "—",
+     "state": "NOT_ATTEMPTED"
+    },
+    {
+     "row": "CSR approach, k = 2",
+     "metric": "Squared",
+     "printed": 0.51,
+     "ours": "—",
+     "gap": "—",
+     "state": "NOT_ATTEMPTED"
+    },
+    {
+     "row": "CSR approach, k = 2",
+     "metric": "Absolute",
+     "printed": 0.18,
+     "ours": "—",
+     "gap": "—",
+     "state": "NOT_ATTEMPTED"
+    },
+    {
+     "row": "CSR approach, k = 3",
+     "metric": "Squared",
+     "printed": 0.4,
+     "ours": "—",
+     "gap": "—",
+     "state": "NOT_ATTEMPTED"
+    },
+    {
+     "row": "CSR approach, k = 3",
+     "metric": "Absolute",
+     "printed": 0.02,
+     "ours": "—",
+     "gap": "—",
+     "state": "NOT_ATTEMPTED"
+    },
+    {
+     "row": "CSR approach, k = 4",
+     "metric": "Squared",
+     "printed": 0.11,
+     "ours": "—",
+     "gap": "—",
+     "state": "NOT_ATTEMPTED"
+    },
+    {
+     "row": "CSR approach, k = 4",
+     "metric": "Absolute",
+     "printed": -0.21,
+     "ours": "—",
+     "gap": "—",
+     "state": "NOT_ATTEMPTED"
+    }
+   ],
+   "no_numbers": "",
+   "cells": 160,
+   "shown": 16,
+   "tally": {
+    "NOT_ATTEMPTED": 160
+   }
+  },
+  {
+   "exhibit": "TB1",
+   "label": "Table B1",
+   "caption": "Table B1: Out-of-sample performance statistics for the trading strategies for k = 4, 5, 6, 8",
+   "image": "evidence/2606.04153/TB1.png",
+   "module": "alpha_archive/replications/decomp2026_eval.py",
+   "symbol": "switching",
+   "code": "def switching(forecast: np.ndarray, mkt: np.ndarray, rf: np.ndarray) -> dict:\n    \"\"\"The paper's switching rule, and everything Table 6 reports about it.\"\"\"\n    equity = forecast > 0\n    ret = np.where(equity, mkt, rf)\n\n    # Nothing is held before the first decision, so the first allocation is not\n    # a switch. Charging it would put a cost on buy-and-hold, whose printed\n    # 104.63 is exactly the uncosted compounding of the index.\n    switched = np.empty(len(equity), dtype=bool)\n    switched[0] = False\n    switched[1:] = equity[1:] != equity[:-1]\n\n    wealth = np.cumprod((1.0 + ret) * np.where(switched, 1.0 - COST, 1.0))\n    peak = np.maximum.accumulate(wealth)\n    return {\n        \"returns\": ret,\n        \"excess\": ret - rf,\n        \"wealth\": wealth,\n        \"TW\": float(wealth[-1]),\n        \"AV\": float(ret.mean() * MONTHS * 100.0),\n        \"SD\": float(ret.std(ddof=1) * np.sqrt(MONTHS) * 100.0),\n        \"SR\": float((ret - rf).mean() / ret.std(ddof=1)),\n        \"MDD\": float(np.max(1.0 - wealth / peak)),\n        \"switches\": int(switched.sum()),\n    }",
+   "columns": [
+    "row",
+    "metric",
+    "printed",
+    "ours",
+    "gap"
+   ],
+   "rows": [
+    {
+     "row": "Buy and hold, k =4",
+     "metric": "TW",
+     "printed": 104.63,
+     "ours": "104.62",
+     "gap": "0.01",
+     "state": "MISSED"
+    },
+    {
+     "row": "Buy and hold, k =4",
+     "metric": "AV",
+     "printed": 12.65,
+     "ours": "12.65",
+     "gap": "0.00",
+     "state": "REPRODUCED"
+    },
+    {
+     "row": "Buy and hold, k =4",
+     "metric": "SD",
+     "printed": 15.0,
+     "ours": "15.0",
+     "gap": "0.0",
+     "state": "REPRODUCED"
+    },
+    {
+     "row": "Buy and hold, k =4",
+     "metric": "SR",
+     "printed": 0.17,
+     "ours": "0.17",
+     "gap": "0.00",
+     "state": "REPRODUCED"
+    },
+    {
+     "row": "Buy and hold, k =4",
+     "metric": "MDD",
+     "printed": 0.5,
+     "ours": "0.5",
+     "gap": "0.0",
+     "state": "REPRODUCED"
+    },
+    {
+     "row": "Buy and hold, k =5",
+     "metric": "TW",
+     "printed": 104.63,
+     "ours": "104.62",
+     "gap": "0.01",
+     "state": "MISSED"
+    },
+    {
+     "row": "Buy and hold, k =5",
+     "metric": "AV",
+     "printed": 12.65,
+     "ours": "12.65",
+     "gap": "0.00",
+     "state": "REPRODUCED"
+    },
+    {
+     "row": "Buy and hold, k =5",
+     "metric": "SD",
+     "printed": 15.0,
+     "ours": "15.0",
+     "gap": "0.0",
+     "state": "REPRODUCED"
+    },
+    {
+     "row": "Buy and hold, k =5",
+     "metric": "SR",
+     "printed": 0.17,
+     "ours": "0.17",
+     "gap": "0.00",
+     "state": "REPRODUCED"
+    },
+    {
+     "row": "Buy and hold, k =5",
+     "metric": "MDD",
+     "printed": 0.5,
+     "ours": "0.5",
+     "gap": "0.0",
+     "state": "REPRODUCED"
+    },
+    {
+     "row": "Momentum, 3-month, k =4",
+     "metric": "TW",
+     "printed": 32.39,
+     "ours": "40.49",
+     "gap": "8.10",
+     "state": "MISSED"
+    },
+    {
+     "row": "Momentum, 3-month, k =4",
+     "metric": "AV",
+     "printed": 9.18,
+     "ours": "10.07",
+     "gap": "0.89",
+     "state": "MISSED"
+    },
+    {
+     "row": "Momentum, 3-month, k =4",
+     "metric": "SD",
+     "printed": 10.69,
+     "ours": "11.28",
+     "gap": "0.59",
+     "state": "MISSED"
+    },
+    {
+     "row": "Momentum, 3-month, k =4",
+     "metric": "SR",
+     "printed": 0.15,
+     "ours": "0.16",
+     "gap": "0.01",
+     "state": "MISSED"
+    },
+    {
+     "row": "Momentum, 3-month, k =4",
+     "metric": "MDD",
+     "printed": 0.23,
+     "ours": "0.32",
+     "gap": "0.09",
+     "state": "MISSED"
+    },
+    {
+     "row": "Momentum, 3-month, k =5",
+     "metric": "TW",
+     "printed": 32.39,
+     "ours": "40.49",
+     "gap": "8.10",
+     "state": "MISSED"
+    }
+   ],
+   "no_numbers": "",
+   "cells": 280,
+   "shown": 16,
+   "tally": {
+    "MISSED": 167,
+    "REPRODUCED": 73,
+    "NOT_ATTEMPTED": 40
+   }
+  },
+  {
+   "exhibit": "TB2",
+   "label": "Table B2",
+   "caption": "Table B2: CER gains against historical average for γ = 5",
+   "image": "evidence/2606.04153/TB2.png",
+   "module": "alpha_archive/replications/decomp2026_eval.py",
+   "symbol": "cer_mean_variance",
+   "code": "def cer_mean_variance(ret: np.ndarray) -> float:\n    return float(ret.mean() - 0.5 * GAMMA * ret.var(ddof=1))",
+   "columns": [
+    "row",
+    "metric",
+    "printed",
+    "ours",
+    "gap"
+   ],
+   "rows": [
+    {
+     "row": "Panel A: Mean-variance preferences, 3-month momentum",
+     "metric": "k = 4",
+     "printed": -0.706,
+     "ours": "-0.139",
+     "gap": "0.567",
+     "state": "MISSED"
+    },
+    {
+     "row": "Panel A: Mean-variance preferences, 3-month momentum",
+     "metric": "k = 5",
+     "printed": -0.706,
+     "ours": "-0.139",
+     "gap": "0.567",
+     "state": "MISSED"
+    },
+    {
+     "row": "Panel A: Mean-variance preferences, 3-month momentum",
+     "metric": "k = 6",
+     "printed": -0.706,
+     "ours": "-0.139",
+     "gap": "0.567",
+     "state": "MISSED"
+    },
+    {
+     "row": "Panel A: Mean-variance preferences, 3-month momentum",
+     "metric": "k = 8",
+     "printed": -0.706,
+     "ours": "-0.139",
+     "gap": "0.567",
+     "state": "MISSED"
+    },
+    {
+     "row": "Panel A: Mean-variance preferences, 6-month momentum",
+     "metric": "k = 4",
+     "printed": 0.042,
+     "ours": "0.054",
+     "gap": "0.012",
+     "state": "MISSED"
+    },
+    {
+     "row": "Panel A: Mean-variance preferences, 6-month momentum",
+     "metric": "k = 5",
+     "printed": 0.042,
+     "ours": "0.054",
+     "gap": "0.012",
+     "state": "MISSED"
+    },
+    {
+     "row": "Panel A: Mean-variance preferences, 6-month momentum",
+     "metric": "k = 6",
+     "printed": 0.042,
+     "ours": "0.054",
+     "gap": "0.012",
+     "state": "MISSED"
+    },
+    {
+     "row": "Panel A: Mean-variance preferences, 6-month momentum",
+     "metric": "k = 8",
+     "printed": 0.042,
+     "ours": "0.054",
+     "gap": "0.012",
+     "state": "MISSED"
+    },
+    {
+     "row": "Panel A: Mean-variance preferences, 12-month momentum",
+     "metric": "k = 4",
+     "printed": 1.436,
+     "ours": "1.047",
+     "gap": "0.389",
+     "state": "MISSED"
+    },
+    {
+     "row": "Panel A: Mean-variance preferences, 12-month momentum",
+     "metric": "k = 5",
+     "printed": 1.436,
+     "ours": "1.047",
+     "gap": "0.389",
+     "state": "MISSED"
+    },
+    {
+     "row": "Panel A: Mean-variance preferences, 12-month momentum",
+     "metric": "k = 6",
+     "printed": 1.436,
+     "ours": "1.047",
+     "gap": "0.389",
+     "state": "MISSED"
+    },
+    {
+     "row": "Panel A: Mean-variance preferences, 12-month momentum",
+     "metric": "k = 8",
+     "printed": 1.436,
+     "ours": "1.047",
+     "gap": "0.389",
+     "state": "MISSED"
+    },
+    {
+     "row": "Panel A: Mean-variance preferences, Linear model",
+     "metric": "k = 4",
+     "printed": -0.286,
+     "ours": "-0.229",
+     "gap": "0.057",
+     "state": "MISSED"
+    },
+    {
+     "row": "Panel A: Mean-variance preferences, Linear model",
+     "metric": "k = 5",
+     "printed": -0.408,
+     "ours": "-0.302",
+     "gap": "0.106",
+     "state": "MISSED"
+    },
+    {
+     "row": "Panel A: Mean-variance preferences, Linear model",
+     "metric": "k = 6",
+     "printed": -0.209,
+     "ours": "-0.095",
+     "gap": "0.114",
+     "state": "MISSED"
+    },
+    {
+     "row": "Panel A: Mean-variance preferences, Linear model",
+     "metric": "k = 8",
+     "printed": 0.726,
+     "ours": "0.874",
+     "gap": "0.148",
+     "state": "MISSED"
+    }
+   ],
+   "no_numbers": "",
+   "cells": 104,
+   "shown": 16,
+   "tally": {
+    "MISSED": 88,
+    "NOT_ATTEMPTED": 16
+   }
+  },
+  {
+   "exhibit": "TB3",
+   "label": "Table B3",
+   "caption": "Table B3: CER gains against CSM (Baseline) for γ = 5",
+   "image": "evidence/2606.04153/TB3.png",
+   "module": "alpha_archive/replications/decomp2026_eval.py",
+   "symbol": "cer_crra",
+   "code": "def cer_crra(ret: np.ndarray) -> float:\n    power = np.power(1.0 + ret, 1.0 - GAMMA)\n    return float(np.mean(power) ** (1.0 / (1.0 - GAMMA)) - 1.0)",
+   "columns": [
+    "row",
+    "metric",
+    "printed",
+    "ours",
+    "gap"
+   ],
+   "rows": [
+    {
+     "row": "Panel A: Mean-variance preferences, Gaussian",
+     "metric": "k = 4",
+     "printed": 0.278,
+     "ours": "-0.059",
+     "gap": "0.337",
+     "state": "MISSED"
+    },
+    {
+     "row": "Panel A: Mean-variance preferences, Gaussian",
+     "metric": "k = 5",
+     "printed": -0.089,
+     "ours": "0.099",
+     "gap": "0.188",
+     "state": "MISSED"
+    },
+    {
+     "row": "Panel A: Mean-variance preferences, Gaussian",
+     "metric": "k = 6",
+     "printed": 0.288,
+     "ours": "0.151",
+     "gap": "0.137",
+     "state": "MISSED"
+    },
+    {
+     "row": "Panel A: Mean-variance preferences, Gaussian",
+     "metric": "k = 8",
+     "printed": -0.005,
+     "ours": "-0.243",
+     "gap": "0.238",
+     "state": "MISSED"
+    },
+    {
+     "row": "Panel A: Mean-variance preferences, Frank",
+     "metric": "k = 4",
+     "printed": 0.164,
+     "ours": "-5.644",
+     "gap": "5.808",
+     "state": "MISSED"
+    },
+    {
+     "row": "Panel A: Mean-variance preferences, Frank",
+     "metric": "k = 5",
+     "printed": 0.218,
+     "ours": "-5.931",
+     "gap": "6.149",
+     "state": "MISSED"
+    },
+    {
+     "row": "Panel A: Mean-variance preferences, Frank",
+     "metric": "k = 6",
+     "printed": 0.313,
+     "ours": "-5.136",
+     "gap": "5.449",
+     "state": "MISSED"
+    },
+    {
+     "row": "Panel A: Mean-variance preferences, Frank",
+     "metric": "k = 8",
+     "printed": -0.003,
+     "ours": "-7.948",
+     "gap": "7.945",
+     "state": "MISSED"
+    },
+    {
+     "row": "Panel A: Mean-variance preferences, Clayton",
+     "metric": "k = 4",
+     "printed": 0.489,
+     "ours": "0.251",
+     "gap": "0.238",
+     "state": "MISSED"
+    },
+    {
+     "row": "Panel A: Mean-variance preferences, Clayton",
+     "metric": "k = 5",
+     "printed": 0.125,
+     "ours": "0.306",
+     "gap": "0.181",
+     "state": "MISSED"
+    },
+    {
+     "row": "Panel A: Mean-variance preferences, Clayton",
+     "metric": "k = 6",
+     "printed": 0.518,
+     "ours": "0.319",
+     "gap": "0.199",
+     "state": "MISSED"
+    },
+    {
+     "row": "Panel A: Mean-variance preferences, Clayton",
+     "metric": "k = 8",
+     "printed": 0.093,
+     "ours": "0.043",
+     "gap": "0.050",
+     "state": "MISSED"
+    },
+    {
+     "row": "Panel A: Mean-variance preferences, FGM",
+     "metric": "k = 4",
+     "printed": 0.164,
+     "ours": "0.193",
+     "gap": "0.029",
+     "state": "MISSED"
+    },
+    {
+     "row": "Panel A: Mean-variance preferences, FGM",
+     "metric": "k = 5",
+     "printed": 0.218,
+     "ours": "0.329",
+     "gap": "0.111",
+     "state": "MISSED"
+    },
+    {
+     "row": "Panel A: Mean-variance preferences, FGM",
+     "metric": "k = 6",
+     "printed": 0.232,
+     "ours": "0.359",
+     "gap": "0.127",
+     "state": "MISSED"
+    },
+    {
+     "row": "Panel A: Mean-variance preferences, FGM",
+     "metric": "k = 8",
+     "printed": -0.003,
+     "ours": "0.038",
+     "gap": "0.041",
+     "state": "MISSED"
+    }
+   ],
+   "no_numbers": "",
+   "cells": 40,
+   "shown": 16,
+   "tally": {
+    "MISSED": 40
+   }
+  },
+  {
+   "exhibit": "TC1",
+   "label": "Table C1",
+   "caption": "Table C1: Out-of-sample performance statistics for the trading strategies during crisis peri- ods",
+   "image": "evidence/2606.04153/TC1.png",
+   "module": "alpha_archive/replications/decomp2026_eval.py",
+   "symbol": "crisis_tables",
+   "code": "def crisis_tables(frame: pd.DataFrame,\n                  forecasts: dict[str, np.ndarray]) -> dict[str, float]:\n    \"\"\"Table C1: the same strategies, scored inside two named windows.\n\n    The forecasts are the ones already produced for k = 8; re-estimating inside\n    the crisis would be a different exercise from the one the appendix\n    describes, which evaluates the main analysis over a sub-period.\n    \"\"\"\n    oos = frame.iloc[WINDOW:]\n    index = oos.index\n    mkt, rf = oos[\"mkt\"].to_numpy(), oos[\"rf\"].to_numpy()\n\n    rows: dict[str, np.ndarray] = {\"Buy and hold\": np.ones(len(mkt))}\n    for n in MOMENTUM:\n        rows[f\"{n}-month\"] = momentum_positions(frame, n)\n    rows.update(forecasts)\n\n    out: dict[str, float] = {}\n    for name, (start, end) in CRISES.items():\n        mask = (index >= start) & (index <= f\"{end}-31\")\n        for row, signal in rows.items():\n            if row == \"Historical average\":\n                continue\n            # Wealth restarts at $1 inside the window, so the slice is taken\n            # before compounding rather than read off the full path.\n            s = switching(signal[mask], mkt[mask], rf[mask])\n            label = (f\"TC1/Momentum/{row}\" if row.endswith(\"-month\")\n                     else f\"TC1/{row}\")\n            for metric in (\"TW\", \"AV\", \"SD\", \"SR\", \"MDD\"):\n                out[f\"{label}/{name}/{metric}\"] = s[metric]\n    return out",
+   "columns": [
+    "row",
+    "metric",
+    "printed",
+    "ours",
+    "gap"
+   ],
+   "rows": [
+    {
+     "row": "Buy and hold, Global Financial Crisis",
+     "metric": "TW",
+     "printed": 0.59,
+     "ours": "—",
+     "gap": "—",
+     "state": "NOT_ATTEMPTED"
+    },
+    {
+     "row": "Buy and hold, Global Financial Crisis",
+     "metric": "AV",
+     "printed": -29.98,
+     "ours": "—",
+     "gap": "—",
+     "state": "NOT_ATTEMPTED"
+    },
+    {
+     "row": "Buy and hold, Global Financial Crisis",
+     "metric": "SD",
+     "printed": 21.26,
+     "ours": "—",
+     "gap": "—",
+     "state": "NOT_ATTEMPTED"
+    },
+    {
+     "row": "Buy and hold, Global Financial Crisis",
+     "metric": "SR",
+     "printed": -0.43,
+     "ours": "—",
+     "gap": "—",
+     "state": "NOT_ATTEMPTED"
+    },
+    {
+     "row": "Buy and hold, Global Financial Crisis",
+     "metric": "MDD",
+     "printed": 0.5,
+     "ours": "—",
+     "gap": "—",
+     "state": "NOT_ATTEMPTED"
+    },
+    {
+     "row": "Buy and hold, COVID-19 Crisis",
+     "metric": "TW",
+     "printed": 1.57,
+     "ours": "—",
+     "gap": "—",
+     "state": "NOT_ATTEMPTED"
+    },
+    {
+     "row": "Buy and hold, COVID-19 Crisis",
+     "metric": "AV",
+     "printed": 23.51,
+     "ours": "—",
+     "gap": "—",
+     "state": "NOT_ATTEMPTED"
+    },
+    {
+     "row": "Buy and hold, COVID-19 Crisis",
+     "metric": "SD",
+     "printed": 19.05,
+     "ours": "—",
+     "gap": "—",
+     "state": "NOT_ATTEMPTED"
+    },
+    {
+     "row": "Buy and hold, COVID-19 Crisis",
+     "metric": "SR",
+     "printed": 0.35,
+     "ours": "—",
+     "gap": "—",
+     "state": "NOT_ATTEMPTED"
+    },
+    {
+     "row": "Buy and hold, COVID-19 Crisis",
+     "metric": "MDD",
+     "printed": 0.19,
+     "ours": "—",
+     "gap": "—",
+     "state": "NOT_ATTEMPTED"
+    },
+    {
+     "row": "Momentum, 3-month, Global Financial Crisis",
+     "metric": "TW",
+     "printed": 1.09,
+     "ours": "—",
+     "gap": "—",
+     "state": "NOT_ATTEMPTED"
+    },
+    {
+     "row": "Momentum, 3-month, Global Financial Crisis",
+     "metric": "AV",
+     "printed": 5.42,
+     "ours": "—",
+     "gap": "—",
+     "state": "NOT_ATTEMPTED"
+    },
+    {
+     "row": "Momentum, 3-month, Global Financial Crisis",
+     "metric": "SD",
+     "printed": 5.84,
+     "ours": "—",
+     "gap": "—",
+     "state": "NOT_ATTEMPTED"
+    },
+    {
+     "row": "Momentum, 3-month, Global Financial Crisis",
+     "metric": "SR",
+     "printed": 0.17,
+     "ours": "—",
+     "gap": "—",
+     "state": "NOT_ATTEMPTED"
+    },
+    {
+     "row": "Momentum, 3-month, Global Financial Crisis",
+     "metric": "MDD",
+     "printed": 0.04,
+     "ours": "—",
+     "gap": "—",
+     "state": "NOT_ATTEMPTED"
+    },
+    {
+     "row": "Momentum, 3-month, COVID-19 Crisis",
+     "metric": "TW",
+     "printed": 1.95,
+     "ours": "—",
+     "gap": "—",
+     "state": "NOT_ATTEMPTED"
+    }
+   ],
+   "no_numbers": "",
+   "cells": 140,
+   "shown": 16,
+   "tally": {
+    "NOT_ATTEMPTED": 140
+   }
+  },
+  {
+   "exhibit": "TD1",
+   "label": "Table D1",
+   "caption": "Table D1: Out-of-sample R2 and economic performance across models",
+   "image": "evidence/2606.04153/TD1.png",
+   "module": "alpha_archive/replications/decomp2026_eval.py",
+   "symbol": "full_set_table",
+   "code": "def full_set_table(frame: pd.DataFrame, families: tuple[str, ...]) -> dict[str, float]:\n    \"\"\"Table D1: every model re-estimated on all nine predictors at once.\n\n    One subset rather than a grid, so this is a single pass of each forecast\n    rather than another eight.\n    \"\"\"\n    wide, names = with_momentum(frame)\n    subset = tuple(names)\n    oos = wide.iloc[WINDOW:]\n    mkt, rf, xs = (oos[\"mkt\"].to_numpy(), oos[\"rf\"].to_numpy(),\n                   oos[\"xs\"].to_numpy())\n    ha = forecast_historical_average(wide)\n\n    forecasts = {\n        \"Linear model\": forecast_linear(wide, subset),\n        \"CSR approach\": forecast_csr(wide, len(subset)),\n        \"CSM approach/Baseline\": forecast_csm(wide, subset, poly=False),\n        \"CSM approach/Poly\": forecast_csm(wide, subset, poly=True),\n    }\n    for fam in families:\n        forecasts[f\"Copula-based approach/{fam}\"] = forecast_copula(\n            wide, subset, fam)\n\n    out: dict[str, float] = {}\n    for row, fc in forecasts.items():\n        s = switching(fc, mkt, rf)\n        out[f\"TD1/{row}/OOS/Squared\"] = r2_oos(xs, fc, ha)\n        out[f\"TD1/{row}/OOS/Absolute\"] = r2_oos(xs, fc, ha, absolute=True)\n        for metric in (\"TW\", \"AV\", \"SD\", \"SR\", \"MDD\"):\n            out[f\"TD1/{row}/OOS/{metric}\"] = s[metric]\n    return out",
+   "columns": [
+    "row",
+    "metric",
+    "printed",
+    "ours",
+    "gap"
+   ],
+   "rows": [
+    {
+     "row": "Linear model, OOS",
+     "metric": "Squared",
+     "printed": -5.15,
+     "ours": "—",
+     "gap": "—",
+     "state": "NOT_ATTEMPTED"
+    },
+    {
+     "row": "Linear model, OOS",
+     "metric": "Absolute",
+     "printed": -2.87,
+     "ours": "—",
+     "gap": "—",
+     "state": "NOT_ATTEMPTED"
+    },
+    {
+     "row": "Linear model, OOS",
+     "metric": "TW",
+     "printed": 72.1,
+     "ours": "—",
+     "gap": "—",
+     "state": "NOT_ATTEMPTED"
+    },
+    {
+     "row": "Linear model, OOS",
+     "metric": "AV",
+     "printed": 11.29,
+     "ours": "—",
+     "gap": "—",
+     "state": "NOT_ATTEMPTED"
+    },
+    {
+     "row": "Linear model, OOS",
+     "metric": "SD",
+     "printed": 11.9,
+     "ours": "—",
+     "gap": "—",
+     "state": "NOT_ATTEMPTED"
+    },
+    {
+     "row": "Linear model, OOS",
+     "metric": "SR",
+     "printed": 0.18,
+     "ours": "—",
+     "gap": "—",
+     "state": "NOT_ATTEMPTED"
+    },
+    {
+     "row": "Linear model, OOS",
+     "metric": "MDD",
+     "printed": 0.45,
+     "ours": "—",
+     "gap": "—",
+     "state": "NOT_ATTEMPTED"
+    },
+    {
+     "row": "CSR approach, OOS",
+     "metric": "Squared",
+     "printed": -5.15,
+     "ours": "—",
+     "gap": "—",
+     "state": "NOT_ATTEMPTED"
+    },
+    {
+     "row": "CSR approach, OOS",
+     "metric": "Absolute",
+     "printed": -2.87,
+     "ours": "—",
+     "gap": "—",
+     "state": "NOT_ATTEMPTED"
+    },
+    {
+     "row": "CSR approach, OOS",
+     "metric": "TW",
+     "printed": 72.1,
+     "ours": "—",
+     "gap": "—",
+     "state": "NOT_ATTEMPTED"
+    },
+    {
+     "row": "CSR approach, OOS",
+     "metric": "AV",
+     "printed": 11.29,
+     "ours": "—",
+     "gap": "—",
+     "state": "NOT_ATTEMPTED"
+    },
+    {
+     "row": "CSR approach, OOS",
+     "metric": "SD",
+     "printed": 11.9,
+     "ours": "—",
+     "gap": "—",
+     "state": "NOT_ATTEMPTED"
+    },
+    {
+     "row": "CSR approach, OOS",
+     "metric": "SR",
+     "printed": 0.18,
+     "ours": "—",
+     "gap": "—",
+     "state": "NOT_ATTEMPTED"
+    },
+    {
+     "row": "CSR approach, OOS",
+     "metric": "MDD",
+     "printed": 0.45,
+     "ours": "—",
+     "gap": "—",
+     "state": "NOT_ATTEMPTED"
+    },
+    {
+     "row": "GARCH-M model, OOS",
+     "metric": "Squared",
+     "printed": -4.36,
+     "ours": "—",
+     "gap": "—",
+     "state": "NOT_ATTEMPTED"
+    },
+    {
+     "row": "GARCH-M model, OOS",
+     "metric": "Absolute",
+     "printed": -2.77,
+     "ours": "—",
+     "gap": "—",
+     "state": "NOT_ATTEMPTED"
+    }
+   ],
+   "no_numbers": "",
+   "cells": 70,
+   "shown": 16,
+   "tally": {
+    "NOT_ATTEMPTED": 70
+   }
+  }
+ ]
+}

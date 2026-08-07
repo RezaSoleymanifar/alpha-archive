@@ -272,6 +272,49 @@ def badge(icon_name: str, text: str, *, href: str = "", cls: str = "") -> str:
     return f'<span class="{klass}">{inner}</span>'
 
 
+def pdf_for(paper_url: str) -> str:
+    """The PDF beside a landing page, when one is free to link.
+
+    Only arXiv is derivable: /abs/ID and /pdf/ID are the same document. A DOI
+    resolves wherever the publisher decides, which is often a paywall, so we
+    do not invent a link and the badge simply does not appear.
+    """
+    m = re.match(r"^https?://arxiv\.org/abs/([\w.\-/]+)$", str(paper_url).strip())
+    return f"https://arxiv.org/pdf/{m.group(1)}" if m else ""
+
+
+def action_icon(text: str, href: str) -> str:
+    """Which mark a rail badge wears, decided by where it actually points.
+
+    The destination is the fact; the label is whatever we happened to call it.
+    A link to github.com gets the GitHub mark even if the button says "Code",
+    and a link that ends in .pdf gets the PDF mark even if it says "Paper".
+    """
+    label, target = text.lower(), href.lower()
+    if "github.com" in target or "code" in label or "github" in label:
+        return "github"
+    if target.endswith(".pdf") or "/pdf/" in target or "pdf" in label:
+        return "pdf"
+    return "paper"
+
+
+MONTHS_ABBR = ("Jan", "Feb", "Mar", "Apr", "May", "Jun",
+               "Jul", "Aug", "Sep", "Oct", "Nov", "Dec")
+
+
+def month_year(date: str) -> str:
+    """"2026-07-22" -> "Jul 2026". A bare year stays a bare year.
+
+    Two papers a month apart look like the same vintage when the badge prints
+    only the year, and on a preprint archive a month is most of the signal.
+    """
+    text = str(date)[:10]
+    m = re.match(r"^(\d{4})-(\d{2})", text)
+    if m:
+        return f"{MONTHS_ABBR[int(m.group(2)) - 1]} {m.group(1)}"
+    return text[:4]
+
+
 def tag_class(tag: str) -> str:
     """Stable colour per tag, so a reader learns the palette."""
     palette = ["t-green", "t-blue", "t-pink", "t-purple", "t-amber", "t-teal"]
@@ -283,7 +326,7 @@ def card(*, thumb_html: str, title: str, url: str, abstract: str, venue: str,
          actions: list[tuple[str, str]], citations: int = 0, per_month: float = 0.0,
          percentile: float = 0.0, top1: bool = False, influential: int = 0,
          open_access: bool = False, spec_tstat: str = "",
-         body: str = "", spec: str = "", confidence: float = 0.0,
+         body: str = "", confidence: float = 0.0,
          tier: str = "", digits: int = 0, appeal: int = 0,
          one_liner: str = "", search: str = "") -> str:
     def e(text: str) -> str:
@@ -317,11 +360,9 @@ def card(*, thumb_html: str, title: str, url: str, abstract: str, venue: str,
         + (badge("cite", f"{citations:,} citations") if citations else '')
         + (badge("spark", f"{influential:,} influential") if influential else '')
         + (badge("flask", f"t = {e(spec_tstat)}", cls="hot") if spec_tstat else '')
-        + (badge("calendar", date[:4]) if date else '')
+        + (badge("calendar", month_year(date)) if date else '')
         + badge("check" if cls == "ok" else "build", label, cls=cls)
-        + "".join(badge("github" if "code" in text.lower() or "github" in href
-                        else "pdf" if "pdf" in text.lower() else "paper",
-                        text, href=href)
+        + "".join(badge(action_icon(text, href), text, href=href)
                   for text, href in actions if href)
         + '</div>')
 
@@ -343,7 +384,6 @@ def card(*, thumb_html: str, title: str, url: str, abstract: str, venue: str,
       {result}
       <p class="tagrow">{tagrow}</p>
       {f'<details><summary>Full result</summary>{body}</details>' if body else ''}
-      {f'<details class="spec"><summary>What a replication must match</summary>{spec}</details>' if spec else ''}
     </div>
     {rail}
   </article>"""
@@ -362,7 +402,8 @@ def render_replication(rec: dict, cites: dict[str, int]) -> str:
         abstract=m["abstract"],
         venue=m["venue"], authors=m["authors"], date=m["date"], tags=m["tags"],
         status=(label, cls), citations=n, per_month=per_month(n, m["date"]),
-        actions=[(label, ""), ("Code", m["impl_url"]), ("Paper", m["paper_url"])],
+        actions=[(label, ""), ("Code", m["impl_url"]), ("Paper", m["paper_url"]),
+                 ("PDF", pdf_for(m["paper_url"]))],
         body=detail(rec),
         search=" ".join([m["title"], m["authors"], m["venue"], *m["tags"], label]),
     )
@@ -459,30 +500,13 @@ def render_queued(p: dict) -> str:
          if p.get("thumb") else placeholder(p))
     # No status pill on a paper we have not run. A leaderboard that labels
     # Sharpe "blocked" is describing our backlog, not the paper.
-    acts = [("Paper", p["url"])]
-    if p.get("pdf"):
-        acts.append(("PDF", p["pdf"]))
-
-    # What a replication has to land on, and what it will cost to try. Both come
-    # from the PDF read, so neither is a guess.
-    spec = ""
-    if p.get("targets") or p.get("data_needed"):
-        rows = "".join(f"<li>{html.escape(html.unescape(t))}</li>"
-                       for t in (p.get("targets") or [])[:6])
-        data = "".join(f"<li>{html.escape(html.unescape(d))}</li>"
-                       for d in (p.get("data_needed") or [])[:5])
-        spec = (
-            "<h4>Must land on</h4><ul>" + (rows or "<li>, </li>") + "</ul>"
-            + ("<h4>Free data it needs</h4><ul>" + data + "</ul>" if data else "")
-            + f"<p class=\"note\">Effort <b>{p['tier']}</b>, {html.escape(p['tier_why'])}."
-              f" Judged reproducible at confidence {p['confidence']:.2f}.</p>"
-        )
+    acts = [("Paper", p["url"]),
+            ("PDF", p.get("pdf") or pdf_for(p["url"]))]
 
     return card(
         thumb_html=t, title=p["title"],
         url="paper/" + slug_for(p["title"], p.get("id", "")) + ".html",
         abstract=p["abstract"],
-        spec=spec,
         venue=p["primary_category"], authors=p["authors"] or ", ",
         date=p["published"], tags=p["tags"], status=(label, cls),
         citations=int(p.get("citations") or 0),
@@ -637,15 +661,6 @@ h1 em{font-style:italic;color:var(--accent)}
    written to get published; this is written to be skimmed. */
 .finding{margin:8px 0 6px;font-size:14.5px;line-height:1.55;color:var(--ink);
   border-left:2px solid var(--accent);padding-left:11px}
-details.spec{margin-top:9px}
-details.spec>summary{cursor:pointer;font-size:12px;color:var(--dim);
-  font-family:var(--mono);letter-spacing:.02em}
-details.spec>summary:hover{color:var(--accent)}
-details.spec h4{margin:12px 0 5px;font-size:10.5px;letter-spacing:.1em;
-  text-transform:uppercase;color:var(--dim)}
-details.spec ul{margin:0;padding-left:17px}
-details.spec li{font-size:12.5px;line-height:1.55;margin-bottom:4px}
-details.spec .note{font-size:12px;color:var(--dim);margin-top:10px}
 .side .more{display:inline-block;margin-top:10px;font-family:var(--serif);
   font-style:italic;font-size:14px;color:var(--soft)}
 @media(max-width:1079px){.side{order:2}}
@@ -1036,7 +1051,10 @@ h1{font-family:var(--serif);font-size:clamp(24px,3.4vw,36px);line-height:1.2;
 .cols{display:grid;grid-template-columns:minmax(0,1fr) 320px;gap:34px;
   padding:26px 0 60px;align-items:start}
 .cols.solo{grid-template-columns:minmax(0,760px)}
-@media(max-width:900px){.cols{grid-template-columns:1fr}}
+/* minmax(0,1fr), not 1fr: a bare 1fr track floors at its content's min-content
+   width, so one wide table pushed the whole page into horizontal scroll below
+   about 600px. */
+@media(max-width:900px){.cols{grid-template-columns:minmax(0,1fr)}}
 
 h2{font-family:var(--serif);font-size:20px;font-weight:600;margin:30px 0 10px}
 h2:first-child{margin-top:0}
@@ -1081,6 +1099,70 @@ table.lead td.bad{color:var(--bad)}
 .kv span:last-child{font-family:var(--mono);font-size:12.5px}
 .reason{margin:0;padding-left:18px;color:var(--soft);font-size:13px}
 .reason li{margin:0 0 6px}
+
+/* The banner summary. Two paragraphs a reader outside the field can finish:
+   what the paper says, then what happened when we ran it. */
+.claim{font-family:var(--serif);font-size:17.5px;line-height:1.5;color:var(--ink);
+  margin:16px 0 8px;max-width:60ch}
+.verdict{font-size:14px;line-height:1.65;color:var(--soft);max-width:72ch;margin:0}
+.verdict b{color:var(--ink);font-weight:600;font-family:var(--mono);font-size:13px}
+
+/* Artifact statistics. Counts first, then the same counts as one bar, because
+   a ratio is easier to disbelieve than a picture of it. */
+.stats{display:flex;flex-wrap:wrap;gap:10px;margin:4px 0 14px}
+.stat{flex:1 1 128px;background:var(--card);border:1px solid var(--line);
+  border-radius:10px;padding:12px 14px}
+.stat .n{font-family:var(--mono);font-size:21px;line-height:1.25;color:var(--ink)}
+.stat .l{font-size:11px;letter-spacing:.06em;text-transform:uppercase;
+  color:var(--dim);margin-top:3px}
+.stat.ok .n{color:var(--ok)}
+.stat.bad .n{color:var(--bad)}
+.bar{display:flex;height:9px;border-radius:99px;overflow:hidden;
+  background:var(--chip);border:1px solid var(--line)}
+.bar .seg.ok{background:var(--ok)}
+.bar .seg.bad{background:var(--bad)}
+.bar .seg.none{background:#2f2d29}
+.barkey{display:flex;gap:16px;margin:8px 0 0;font-size:11.5px;color:var(--dim)}
+.barkey .k{display:inline-flex;align-items:center;gap:6px}
+.barkey .k::before{content:"";width:8px;height:8px;border-radius:2px;
+  background:currentColor}
+.barkey .k.ok{color:var(--ok)}
+.barkey .k.bad{color:var(--bad)}
+.barkey .k.none{color:#6b665e}
+
+/* The side-by-side. The paper's own page on the left, our numbers on the
+   right, the code underneath. This is the whole argument in one frame. */
+.ev{margin:0 0 34px}
+.ev h3{font-family:var(--serif);font-size:17px;font-weight:600;margin:0 0 4px}
+.sbs{display:grid;grid-template-columns:1fr 1fr;gap:18px;align-items:start;
+  margin-top:10px}
+@media(max-width:820px){.sbs{grid-template-columns:1fr}}
+.sbs figure{margin:0;min-width:0}
+.sbs figcaption{font-size:10.5px;letter-spacing:.09em;text-transform:uppercase;
+  color:var(--dim);font-weight:600;padding-bottom:7px}
+/* A 1300px table scan rendered into a 370px column is 4px type: an image of
+   evidence rather than evidence. The blocks break out of the reading column,
+   and every scan links to its full-size file. */
+.ev{margin-left:calc(-1 * min(180px, 6vw));margin-right:calc(-1 * min(180px, 6vw))}
+@media(max-width:1100px){.ev{margin-left:0;margin-right:0}}
+.sbs a.zoom{display:block;cursor:zoom-in}
+.sbs img{width:100%;height:auto;border:1px solid var(--line);border-radius:6px;
+  background:#f7f5f0}
+.sbs a.zoom:hover img{border-color:var(--accent)}
+.scroll{overflow-x:auto;border:1px solid var(--line);border-radius:6px;
+  background:var(--card);padding:2px 10px}
+.scroll table.gap{margin:0}
+.scroll td.m{color:var(--dim);font-size:11.5px}
+table.gap td.ok{color:var(--ok)}
+table.gap td.bad{color:var(--bad)}
+.note{font-size:11.5px;color:var(--dim);margin:7px 0 0}
+details.code{margin-top:12px}
+details.code>summary{cursor:pointer;font-size:12px;color:var(--soft);
+  font-family:var(--mono)}
+details.code>summary:hover{color:var(--accent)}
+details.code pre{background:#0a0a0a;border:1px solid var(--line);border-radius:8px;
+  padding:13px 15px;overflow:auto;max-height:420px;font-family:var(--mono);
+  font-size:11.5px;line-height:1.7;color:#cfe6d8;margin:8px 0 0}
 footer{border-top:1px solid var(--line);padding:22px 0 40px;color:var(--dim);
   font-size:12.5px}
 </style>
@@ -1098,6 +1180,7 @@ footer{border-top:1px solid var(--line);padding:22px 0 40px;color:var(--dim);
     <h1>__TITLE__</h1>
     <p class="byline">__BYLINE__</p>
     <div class="badges">__BADGES__</div>
+    __SUMMARY__
   </header>
 
   <div class="cols__SOLO__">
@@ -1201,12 +1284,263 @@ def _gap_table(rec: dict) -> str:
     return head + body + "</tbody></table>"
 
 
+# ------------------------------------------------- the scored record, on a page
+
+def load_scored(paper: str) -> dict:
+    """The artifact file `score_replication.py` wrote, if there is one."""
+    path = os.path.join(ROOT, "data", "artifacts", f"{paper}.json")
+    if not paper or not os.path.exists(path):
+        return {}
+    with open(path, encoding="utf-8") as fh:
+        return json.load(fh)
+
+
+def load_evidence(paper: str) -> dict:
+    """The side-by-side blocks `build_evidence.py` assembled, if there are any."""
+    path = os.path.join(ROOT, "data", "evidence", f"{paper}.json")
+    if not paper or not os.path.exists(path):
+        return {}
+    with open(path, encoding="utf-8") as fh:
+        return json.load(fh)
+
+
+def _counts(art: dict) -> dict:
+    t = art.get("tally", {})
+    printed = len(art.get("artifacts", []))
+    matched = int(t.get("REPRODUCED", 0))
+    missed = int(t.get("MISSED", 0))
+    return {
+        "printed": printed,
+        "matched": matched,
+        "missed": missed,
+        "checked": matched + missed,
+        "not_built": int(t.get("NOT_ATTEMPTED", 0)),
+        "unobtainable": int(t.get("UNOBTAINABLE", 0)),
+    }
+
+
+def plain_english(claim: str, art: dict) -> str:
+    """What the paper says and what we found, for someone outside the field.
+
+    Written from the counts rather than about them: a reader who knows no
+    econometrics should still be able to tell whether the paper survived
+    contact with its own data, and by how much.
+    """
+    if not art:
+        return ""
+    c = _counts(art)
+    if not c["checked"]:
+        return ""
+
+    share = 100.0 * c["matched"] / c["checked"]
+    if share >= 95:
+        verdict = ("Nearly everything we checked came back the same, so the "
+                   "paper's numbers stand up where we could reach them.")
+    elif share >= 60:
+        verdict = ("Most of what we checked came back the same. The rest did "
+                   "not, and those gaps are listed below rather than averaged "
+                   "away.")
+    elif share >= 25:
+        verdict = ("Roughly half of what we checked came back the same. That is "
+                   "enough to say the method works and not enough to say the "
+                   "printed table is reproducible as written.")
+    else:
+        verdict = ("Most of what we checked did not come back the same. Every "
+                   "disagreement is listed below with the printed value beside "
+                   "ours.")
+
+    coverage = ("" if not c["not_built"] else
+                f" A further {c['not_built']:,} we did not attempt, usually "
+                f"because the paper describes a model without writing down the "
+                f"equation needed to run it.")
+
+    return (
+        f'<p class="claim">{html.escape(html.unescape(claim))}</p>'
+        f'<p class="verdict">The paper prints <b>{c["printed"]:,}</b> numbers. '
+        f'We rebuilt <b>{c["checked"]:,}</b> of them from data anyone can '
+        f'download and put each one next to the page: <b>{c["matched"]:,}</b> '
+        f'matched to the last digit printed, <b>{c["missed"]:,}</b> did not. '
+        f'{verdict}{coverage}</p>')
+
+
+def _stats_panel(art: dict) -> str:
+    """The four numbers that decide whether any of the rest is worth reading."""
+    if not art:
+        return ""
+    c = _counts(art)
+    if not c["printed"]:
+        return ""
+
+    def stat(value: str, label: str, cls: str = "") -> str:
+        return (f'<div class="stat {cls}"><div class="n">{value}</div>'
+                f'<div class="l">{html.escape(label)}</div></div>')
+
+    total = max(1, c["printed"])
+    bar = ""
+    for share, cls, name in ((c["matched"], "ok", "matched"),
+                             (c["missed"], "bad", "missed"),
+                             (c["not_built"] + c["unobtainable"], "none",
+                              "not built")):
+        if share:
+            bar += (f'<span class="seg {cls}" style="width:{100.0*share/total:.4f}%" '
+                    f'title="{share:,} {name}"></span>')
+
+    share = 0.0 if not c["checked"] else 100.0 * c["matched"] / c["checked"]
+    rate = "—" if not c["checked"] else f"{share:.0f}%"
+    # The rate tile is coloured by what the rate is, not by what we wish it
+    # were. Painting 23% green is the page congratulating itself.
+    rate_cls = "ok" if share >= 75 else "bad" if share < 40 else ""
+    return (
+        '<div class="stats">'
+        + stat(f'{c["printed"]:,}', "numbers printed")
+        + stat(f'{c["checked"]:,}', "rebuilt and checked")
+        + stat(f'{c["matched"]:,}', "matched", "ok" if c["matched"] else "")
+        + stat(f'{c["missed"]:,}', "missed", "bad")
+        + stat(rate, "of what we checked", rate_cls)
+        + '</div>'
+        + f'<div class="bar">{bar}</div>'
+        + '<p class="barkey"><span class="k ok">matched</span>'
+          '<span class="k bad">missed</span>'
+          '<span class="k none">not built</span></p>')
+
+
+EXHIBIT_KINDS = {"T": "Table", "F": "Figure"}
+
+
+def exhibit_label(exhibit: str) -> str:
+    """"T6" -> "Table 6", "TB1" -> "Table B1".
+
+    Addresses are keyed the way the checklist harvested them off the page; the
+    appendix letter rides between the kind and the number, which is how the
+    paper prints it too.
+    """
+    m = re.match(r"^([A-Z])([A-Z]?)(\d+)$", exhibit)
+    if not m:
+        return exhibit
+    kind, letter, number = m.group(1), m.group(2), m.group(3)
+    return f"{EXHIBIT_KINDS.get(kind, kind)} {letter}{number}"
+
+
+def _exhibit_table(art: dict, ev: dict | None = None) -> str:
+    """Per exhibit, so a reader can see which table we actually got to."""
+    if not art:
+        return ""
+    rows: dict[str, dict] = {}
+
+    # Seed from the exhibits the paper actually has, not from the ones that
+    # happen to carry scored cells. Otherwise the ten exhibits with no printed
+    # numbers vanish from the coverage table and the page silently narrows the
+    # thing it claims to be measuring.
+    for block in (ev or {}).get("blocks", []):
+        rows[block["exhibit"]] = {"printed": 0, "matched": 0, "missed": 0,
+                                  "not_built": 0}
+
+    for a in art.get("artifacts", []):
+        key = a["cell"].split("/")[0]
+        row = rows.setdefault(key, {"printed": 0, "matched": 0, "missed": 0,
+                                    "not_built": 0})
+        row["printed"] += 1
+        if a["state"] == "REPRODUCED":
+            row["matched"] += 1
+        elif a["state"] == "MISSED":
+            row["missed"] += 1
+        else:
+            row["not_built"] += 1
+    if not rows:
+        return ""
+
+    order = sorted(rows, key=lambda k: (-rows[k]["matched"] - rows[k]["missed"], k))
+    body = ""
+    for key in order:
+        r = rows[key]
+        checked = r["matched"] + r["missed"]
+        if not r["printed"]:
+            body += (f'<tr><td>{html.escape(exhibit_label(key))}</td>'
+                     f'<td class="miss" colspan="6">no printed numbers</td></tr>')
+            continue
+        rate = "—" if not checked else f'{100.0 * r["matched"] / checked:.0f}%'
+        # A zero is not a good number, so it does not get the good colour.
+        body += (f'<tr><td>{html.escape(exhibit_label(key))}</td>'
+                 f'<td>{r["printed"]:,}</td>'
+                 f'<td>{checked:,}</td>'
+                 f'<td class="{"ok" if r["matched"] else "miss"}">{r["matched"]:,}</td>'
+                 f'<td class="bad">{r["missed"] or ""}</td>'
+                 f'<td class="miss">{r["not_built"] or ""}</td>'
+                 f'<td>{rate}</td></tr>')
+    return ('<table class="gap lead"><thead><tr><th>exhibit</th><th>printed</th>'
+            '<th>checked</th><th>matched</th><th>missed</th><th>not built</th>'
+            '<th>rate</th></tr></thead><tbody>' + body + '</tbody></table>')
+
+
+def _evidence_html(ev: dict) -> str:
+    """The paper's own exhibit, ours beside it, and the code that made ours."""
+    blocks = (ev or {}).get("blocks") or []
+    if not blocks:
+        return ""
+
+    out = ""
+    for b in blocks:
+        rows = ""
+        for r in b["rows"]:
+            cls = {"REPRODUCED": "ok", "MISSED": "bad"}.get(r["state"], "miss")
+            mark = {"REPRODUCED": "match", "MISSED": "differs"}.get(r["state"], "—")
+            rows += (f'<tr><td>{html.escape(str(r["row"]))}</td>'
+                     f'<td class="m">{html.escape(str(r["metric"]))}</td>'
+                     f'<td>{html.escape(str(r["printed"]))}</td>'
+                     f'<td class="{cls}">{html.escape(str(r["ours"]))}</td>'
+                     f'<td class="{cls}">{mark}</td></tr>')
+
+        more = ("" if b["shown"] >= b["cells"] else
+                f'<p class="note">{b["shown"]} of {b["cells"]:,} cells shown.</p>')
+
+        # An exhibit the paper prints no numbers in gets its reason instead of
+        # an empty grid, which would read as a rebuild that produced nothing.
+        if not rows:
+            reason = b.get("no_numbers") or "No printed numbers to reproduce."
+            right = f'<p class="note">{html.escape(reason)}</p>'
+        else:
+            right = (f'<div class="scroll"><table class="gap"><thead><tr><th></th>'
+                     f'<th></th><th>printed</th><th>ours</th><th></th></tr></thead>'
+                     f'<tbody>{rows}</tbody></table></div>{more}')
+        # Evidence paths are recorded relative to docs/; these pages live one
+        # directory down in docs/paper/, so they climb back out.
+        src = f'../{html.escape(b["image"])}'
+        left = (f'<a class="zoom" href="{src}" target="_blank" '
+                f'rel="noopener" title="open full size">'
+                f'<img src="{src}" loading="lazy" decoding="async" '
+                f'alt="{html.escape(b["label"])} as the paper printed it"></a>'
+                if b.get("image") else
+                '<p class="note">No page image for this exhibit.</p>')
+        code = ""
+        if b.get("code"):
+            # Open by default. The code is the claim here: a table of numbers
+            # behind a disclosure triangle is a result you are asked to trust.
+            code = ('<details class="code" open><summary>the code that produced '
+                    'the right-hand column</summary>'
+                    f'<p class="note">{html.escape(b["module"])} '
+                    f'&middot; {html.escape(b["symbol"])}()</p>'
+                    f'<pre>{html.escape(b["code"])}</pre></details>')
+
+        out += f"""
+<section class="ev">
+  <h3>{html.escape(b["label"])}</h3>
+  <p class="lede">{html.escape(b["caption"])}</p>
+  <div class="sbs">
+    <figure><figcaption>as the paper printed it</figcaption>{left}</figure>
+    <figure><figcaption>rebuilt from free data</figcaption>{right}</figure>
+  </div>
+  {code}
+</section>"""
+    return out
+
+
 def paper_page(*, slug: str, title: str, byline: str, badges: str,
-               body: str, aside: str, blurb: str) -> str:
+               body: str, aside: str, blurb: str, summary: str = "") -> str:
     return (PAPER_PAGE
             .replace("__TITLE__", html.escape(html.unescape(title)))
             .replace("__BYLINE__", byline)
             .replace("__BADGES__", badges)
+            .replace("__SUMMARY__", summary)
             .replace("__SOLO__", "" if aside else " solo")
             .replace("__BODY__", body)
             .replace("__ASIDE__", aside)
@@ -1281,9 +1615,38 @@ def build_paper_pages(reps: list[dict], kept: list[dict], cites: dict[str, int])
         badges = (f'<span class="st {state[1]}">{state[0]}</span>'
                   + "".join(f'<span class="tag">{html.escape(t)}</span>'
                             for t in p.get("tags", [])))
-        body = (f'<h2>Abstract</h2><p class="lede">'
-                f'{html.escape(html.unescape(p.get("abstract", "")))}</p>'
-                f'<h2>Where this stands</h2><p class="lede">{why}</p>')
+
+        # A scored record turns this page from a description of a plan into a
+        # report on a run, so everything it can supply takes precedence over
+        # the standing copy above.
+        art = load_scored(key)
+        ev = load_evidence(key)
+        summary = plain_english(str(p.get("one_liner") or ""), art)
+        stats, exhibits = _stats_panel(art), _exhibit_table(art, ev)
+        evidence = _evidence_html(ev)
+
+        body = ""
+        if stats:
+            body += f'<h2>What we checked</h2>{stats}'
+        if evidence:
+            body += ('<h2>The paper&rsquo;s numbers, and ours</h2>'
+                     '<p class="lede">Left is the exhibit as it appears in the '
+                     'paper. Right is the same cells recomputed from free data, '
+                     'each beside the printed value.</p>' + evidence)
+        if exhibits:
+            body += ('<h2>Exhibit by exhibit</h2>'
+                     '<p class="lede">Where the coverage actually is, so a table '
+                     'we never reached cannot pass for one that agreed.</p>'
+                     + exhibits)
+        # Once a scored record exists the standing copy above is out of date by
+        # construction: it was written for a page that had nothing to show.
+        if art:
+            why = ("Every number above was scored against a tolerance written "
+                   "down before any of these models produced a value. A miss is "
+                   "recorded as a miss; nothing was widened to clear a bar.")
+        body += (f'<h2>Abstract</h2><p class="lede">'
+                 f'{html.escape(html.unescape(p.get("abstract", "")))}</p>'
+                 f'<h2>Where this stands</h2><p class="lede">{why}</p>')
         aside = (_use_panel(slug, notebook)
                  + _files_panel(paper_url=p.get("url", ""),
                                 impl_url=(f"{REPO}/blob/main/{module}" if module else ""),
@@ -1300,7 +1663,8 @@ def build_paper_pages(reps: list[dict], kept: list[dict], cites: dict[str, int])
                              byline=html.escape(str(p.get("authors", "")))
                                     + " &middot; "
                                     + html.escape(str(p.get("published", ""))),
-                             badges=badges, body=body, aside=aside,
+                             badges=badges, summary=summary,
+                             body=body, aside=aside,
                              blurb=p.get("abstract", "")))
     return links
 

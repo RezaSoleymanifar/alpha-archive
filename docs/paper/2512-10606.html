@@ -58,7 +58,10 @@ h1{font-family:var(--serif);font-size:clamp(24px,3.4vw,36px);line-height:1.2;
 .cols{display:grid;grid-template-columns:minmax(0,1fr) 320px;gap:34px;
   padding:26px 0 60px;align-items:start}
 .cols.solo{grid-template-columns:minmax(0,760px)}
-@media(max-width:900px){.cols{grid-template-columns:1fr}}
+/* minmax(0,1fr), not 1fr: a bare 1fr track floors at its content's min-content
+   width, so one wide table pushed the whole page into horizontal scroll below
+   about 600px. */
+@media(max-width:900px){.cols{grid-template-columns:minmax(0,1fr)}}
 
 h2{font-family:var(--serif);font-size:20px;font-weight:600;margin:30px 0 10px}
 h2:first-child{margin-top:0}
@@ -103,6 +106,70 @@ table.lead td.bad{color:var(--bad)}
 .kv span:last-child{font-family:var(--mono);font-size:12.5px}
 .reason{margin:0;padding-left:18px;color:var(--soft);font-size:13px}
 .reason li{margin:0 0 6px}
+
+/* The banner summary. Two paragraphs a reader outside the field can finish:
+   what the paper says, then what happened when we ran it. */
+.claim{font-family:var(--serif);font-size:17.5px;line-height:1.5;color:var(--ink);
+  margin:16px 0 8px;max-width:60ch}
+.verdict{font-size:14px;line-height:1.65;color:var(--soft);max-width:72ch;margin:0}
+.verdict b{color:var(--ink);font-weight:600;font-family:var(--mono);font-size:13px}
+
+/* Artifact statistics. Counts first, then the same counts as one bar, because
+   a ratio is easier to disbelieve than a picture of it. */
+.stats{display:flex;flex-wrap:wrap;gap:10px;margin:4px 0 14px}
+.stat{flex:1 1 128px;background:var(--card);border:1px solid var(--line);
+  border-radius:10px;padding:12px 14px}
+.stat .n{font-family:var(--mono);font-size:21px;line-height:1.25;color:var(--ink)}
+.stat .l{font-size:11px;letter-spacing:.06em;text-transform:uppercase;
+  color:var(--dim);margin-top:3px}
+.stat.ok .n{color:var(--ok)}
+.stat.bad .n{color:var(--bad)}
+.bar{display:flex;height:9px;border-radius:99px;overflow:hidden;
+  background:var(--chip);border:1px solid var(--line)}
+.bar .seg.ok{background:var(--ok)}
+.bar .seg.bad{background:var(--bad)}
+.bar .seg.none{background:#2f2d29}
+.barkey{display:flex;gap:16px;margin:8px 0 0;font-size:11.5px;color:var(--dim)}
+.barkey .k{display:inline-flex;align-items:center;gap:6px}
+.barkey .k::before{content:"";width:8px;height:8px;border-radius:2px;
+  background:currentColor}
+.barkey .k.ok{color:var(--ok)}
+.barkey .k.bad{color:var(--bad)}
+.barkey .k.none{color:#6b665e}
+
+/* The side-by-side. The paper's own page on the left, our numbers on the
+   right, the code underneath. This is the whole argument in one frame. */
+.ev{margin:0 0 34px}
+.ev h3{font-family:var(--serif);font-size:17px;font-weight:600;margin:0 0 4px}
+.sbs{display:grid;grid-template-columns:1fr 1fr;gap:18px;align-items:start;
+  margin-top:10px}
+@media(max-width:820px){.sbs{grid-template-columns:1fr}}
+.sbs figure{margin:0;min-width:0}
+.sbs figcaption{font-size:10.5px;letter-spacing:.09em;text-transform:uppercase;
+  color:var(--dim);font-weight:600;padding-bottom:7px}
+/* A 1300px table scan rendered into a 370px column is 4px type: an image of
+   evidence rather than evidence. The blocks break out of the reading column,
+   and every scan links to its full-size file. */
+.ev{margin-left:calc(-1 * min(180px, 6vw));margin-right:calc(-1 * min(180px, 6vw))}
+@media(max-width:1100px){.ev{margin-left:0;margin-right:0}}
+.sbs a.zoom{display:block;cursor:zoom-in}
+.sbs img{width:100%;height:auto;border:1px solid var(--line);border-radius:6px;
+  background:#f7f5f0}
+.sbs a.zoom:hover img{border-color:var(--accent)}
+.scroll{overflow-x:auto;border:1px solid var(--line);border-radius:6px;
+  background:var(--card);padding:2px 10px}
+.scroll table.gap{margin:0}
+.scroll td.m{color:var(--dim);font-size:11.5px}
+table.gap td.ok{color:var(--ok)}
+table.gap td.bad{color:var(--bad)}
+.note{font-size:11.5px;color:var(--dim);margin:7px 0 0}
+details.code{margin-top:12px}
+details.code>summary{cursor:pointer;font-size:12px;color:var(--soft);
+  font-family:var(--mono)}
+details.code>summary:hover{color:var(--accent)}
+details.code pre{background:#0a0a0a;border:1px solid var(--line);border-radius:8px;
+  padding:13px 15px;overflow:auto;max-height:420px;font-family:var(--mono);
+  font-size:11.5px;line-height:1.7;color:#cfe6d8;margin:8px 0 0}
 footer{border-top:1px solid var(--line);padding:22px 0 40px;color:var(--dim);
   font-size:12.5px}
 </style>
@@ -120,6 +187,7 @@ footer{border-top:1px solid var(--line);padding:22px 0 40px;color:var(--dim);
     <h1>Local and Global Balance in Financial Correlation Networks: an Application to Investment Decisions</h1>
     <p class="byline">Paolo Bartesaghi, Rosanna Grassi, Pierpaolo Uberti &middot; 2025-12-11</p>
     <div class="badges"><span class="st none">not attempted</span><span class="tag">Portfolio Optimization</span><span class="tag">Correlation Structure</span></div>
+    
   </header>
 
   <div class="cols">

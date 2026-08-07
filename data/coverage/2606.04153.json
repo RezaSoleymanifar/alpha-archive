@@ -7,10 +7,12 @@
   "evidence": "Accepted for publication in the Journal of Banking and Finance",
   "journal_year": 2026
  },
- "numbers": 1794,
- "checked": 13,
- "reproduced": 6,
- "coverage": 0.0072,
+ "verdict": "holds in part",
+ "checks": 13,
+ "lands": 6,
+ "differs": 7,
+ "blocked": 0,
+ "printed": 1794,
  "exhibits_total": 23,
  "exhibits_touched": 2,
  "exhibits": [

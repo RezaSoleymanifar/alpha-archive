@@ -5,30 +5,45 @@ in one file, and so a rerun cannot leave stale output beside edited text.
 
 What it has to do, in order of importance:
 
-Land on the paper's own numbers, visibly. The reader's question is never "is
-this well written", it is "did they actually rebuild it". So the benchmark
-table is the fourth cell, not the twentieth, and it prints the paper's figure
-next to ours.
+Carry every exhibit, not a selection. The paper prints twenty-three of them,
+fifteen tables and eight figures, and an earlier version of this notebook showed
+four. Four is a highlight reel: the reader cannot tell whether the other
+nineteen were skipped because they agreed or because they did not. So every
+exhibit gets a cell, including the ones we could not build, and the ones that
+disagree are the point rather than an embarrassment.
 
-Say only what a working quant needs. The paper spends pages on copula families
-and Diebold-Mariano tests. A desk wants to know what the signal is, whether it
-survives costs, and what it would have returned. The rest is a citation.
+Put the page beside the rebuild. Each cell shows the exhibit as the paper
+printed it on the left, the same cells recomputed on the right, and the function
+that produced them underneath. A number without its code is a claim.
+
+Never round toward agreement. Every state on this page was decided by
+`tools/score_replication.py` against tolerances frozen before any of these
+models produced a value, and this file only displays that verdict.
+
+Dollar signs are written as `\\$` throughout. Jupyter hands `$100 ... $182` to
+MathJax and renders `100becomes182`, which turned the headline claim into
+gibberish in the previous build.
 
     uv run python notebooks/build_notebook.py
+    uv run python notebooks/build_notebook.py --execute
 """
 
 from __future__ import annotations
 
+import argparse
 import json
 import os
+import subprocess
+import sys
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 OUT = os.path.join(ROOT, "notebooks", "2606.04153_sign_and_magnitude.ipynb")
+FIGURES = os.path.join(ROOT, "notebooks", "paper_figures")
+ARTIFACT = os.path.join(ROOT, "data", "artifacts", "2606.04153.json")
 
 
 def md(*lines: str) -> dict:
-    return {"cell_type": "markdown", "metadata": {},
-            "source": "\n".join(lines)}
+    return {"cell_type": "markdown", "metadata": {}, "source": "\n".join(lines)}
 
 
 def code(*lines: str) -> dict:
@@ -36,430 +51,287 @@ def code(*lines: str) -> dict:
             "outputs": [], "source": "\n".join(lines)}
 
 
-CELLS = [
-    md("# Does the sign of a return tell you more than the return?",
-       "",
-       "**Paper:** *A new decomposition approach to modeling financial returns*, "
-       "arXiv [2606.04153](https://arxiv.org/abs/2606.04153).",
-       "",
-       "The claim, in one line: forecasting **whether** the S&P 500 goes up next "
-       "month, conditioned on **how big** the move is, beats forecasting the return "
-       "itself. Over 1981 to 2021, after costs, $100 becomes **$182** instead of the "
-       "**$105** you get from buy-and-hold.",
-       "",
-       "That is a big claim on the most picked-over series in finance, so this "
-       "notebook does the boring thing first: it rebuilds the paper's benchmark "
-       "and checks it against the number they printed. If we cannot match a "
-       "buy-and-hold return, nothing further is worth reading."),
+# What each exhibit is, and which function in the replication produced our side
+# of it. An exhibit with no function is one we did not build, and the reason is
+# printed in the notebook rather than left as a blank row.
+# Which function produced our side of each exhibit. There is deliberately no
+# description column here: the caption printed under every heading is read out
+# of the PDF by `tools/crop_exhibits.py`. An earlier version of this file
+# carried hand-written summaries, six of which described a different exhibit
+# than the image beneath them, and those summaries were then used to justify
+# not building the exhibit. Never describe an exhibit from memory.
+CODE_FOR = {
+    "T1": ("decomp2026_eval", "correlations"),
+    "T3": ("decomp2026_eval", "r2_oos"),
+    "T4": ("decomp2026_eval", "mcs_pvalues"),
+    "T5": ("decomp2026_eval", "mcs_pvalues"),
+    "T6": ("decomp2026_eval", "switching"),
+    "T7": ("decomp2026_eval", "cer_mean_variance"),
+    "T8": ("decomp2026_eval", "cer_crra"),
+    "TB1": ("decomp2026_eval", "switching"),
+    "TB2": ("decomp2026_eval", "cer_mean_variance"),
+    "TB3": ("decomp2026_eval", "cer_crra"),
+    "TC1": ("decomp2026_eval", "crisis_tables"),
+    "TD1": ("decomp2026_eval", "full_set_table"),
+}
 
-    md("## Why a desk would care",
-       "",
-       "Return prediction on a monthly index is close to a dead end. Out-of-sample "
-       "R-squared against a historical-mean forecast is famously negative for most "
-       "predictors, which is the Welch and Goyal result that has stood since 2008.",
-       "",
-       "This paper does not argue with that. It splits the problem instead:",
-       "",
-       "| Piece | What it is | Is it predictable |",
-       "|---|---|---|",
-       "| Magnitude | how large next month's move is | yes, this is volatility, and volatility clusters |",
-       "| Sign | whether it is up or down | weakly, but the base rate is above half |",
-       "",
-       "Modelling them together, with the sign conditioned on the magnitude, is the "
-       "whole idea. The intuition a trader will recognise: a big month is more "
-       "likely to be a down month, so knowing the size tells you something about "
-       "the direction."),
 
-    md("## The data",
-       "",
-       "One file, free, from Amit Goyal's site. It is the standard predictor set "
-       "behind most of this literature, so using it means we are on the same "
-       "footing as the paper rather than approximating it."),
+def exhibits_from_pdf() -> list[dict]:
+    """The exhibit list and captions, as the cropper read them off the PDF."""
+    path = os.path.join(FIGURES, "index.json")
+    if not os.path.exists(path):
+        sys.exit("no notebooks/paper_figures/index.json: run tools/crop_exhibits.py")
+    with open(path, encoding="utf-8") as fh:
+        return json.load(fh)["exhibits"]
 
-    code("import io, os",
-         "import numpy as np",
-         "import pandas as pd",
-         "import httpx",
-         "",
-         "URL = ('https://docs.google.com/spreadsheets/d/'",
-         "       '1g4LOaRj4TvwJr9RIaA_nwrXXWTOy46bP/export?format=xlsx')",
-         "CACHE = 'goyal_predictors.xlsx'",
-         "",
-         "if not os.path.exists(CACHE):",
-         "    raw = httpx.get(URL, timeout=90, follow_redirects=True).content",
-         "    open(CACHE, 'wb').write(raw)",
-         "",
-         "import warnings",
-         "with warnings.catch_warnings():          # a cosmetic openpyxl header warning",
-         "    warnings.simplefilter('ignore', UserWarning)",
-         "    m = pd.read_excel(CACHE, sheet_name='Monthly')",
-         "m['date'] = pd.to_datetime(m['yyyymm'].astype(str), format='%Y%m')",
-         "m = m.set_index('date')",
-         "",
-         "# CRSP_SPvw is the value-weighted S&P total return, dividends included.",
-         "# Rfree is the one-month bill. Excess return is what gets modelled.",
-         "m['mkt'] = pd.to_numeric(m['CRSP_SPvw'], errors='coerce')",
-         "m['rf']  = m['Rfree'].astype(float)",
-         "m['xs']  = m['mkt'] - m['rf']",
-         "",
-         "print(f'{len(m):,} months, {m.index[0]:%b %Y} to {m.index[-1]:%b %Y}')"),
 
-    md("## Reading the exhibits",
-       "",
-       "Every exhibit below appears twice in the same output: the page as the "
-       "paper printed it on the left, the same thing rebuilt from free data on "
-       "the right. Side by side in one frame, so a disagreement is visible at a "
-       "glance rather than remembered from a scroll ago."),
+# Why an exhibit has no rebuilt column. Silence here would read as an oversight;
+# each of these is a decision with a reason that survives being written down.
+NOT_BUILT = {
+    "T2": "A grid of asterisks marking which predictors each model selected at "
+          "each k. Our own selections are printed below it, but the checklist "
+          "harvested no numeric cells from the page, so there is nothing to "
+          "score against.",
+    "TA1": "As Table 2, for MSE-based selection rather than AUC.",
+    "TA2": "This prints out-of-sample R-squared by model, loss and k, which is "
+           "what Table 3 prints, and the two disagree: the linear model at "
+           "k = 1 under squared loss is -0.24 in Table 3 and -0.88 here. "
+           "Neither caption says what changed between them, so there is no "
+           "way to know which one a replication should be scored against. "
+           "Recorded rather than guessed.",
+    "F1": "A plot of Table 3's R-squared values against k. Every point in it "
+          "is a cell scored above, so the figure carries no number of its own.",
+    "F2": "A wealth-growth plot. Its endpoints are Table 6's terminal wealth, "
+          "scored above; the path between them is never printed as numbers.",
+    "F3": "As Figure 2, across the copula and benchmark strategies.",
+    "F4": "A plot of terminal wealth against k. Every point is a cell of "
+          "Table 6 or B1, both scored above.",
+    "FA1": "As Figure 1, for MSE-based selection.",
+    "FC1": "The crisis wealth paths, whose endpoints are Table C1's terminal "
+           "wealth.",
+    "FC2": "As Figure C1, for the COVID window.",
+    "FD1": "The nine-predictor wealth paths, whose endpoints are Table D1's.",
+}
 
-    code("import base64",
-         "from IPython.display import HTML",
-         "",
-         "def _b64_file(path):",
-         "    with open(path, 'rb') as fh:",
-         "        return base64.b64encode(fh.read()).decode()",
-         "",
-         "def _b64_fig(fig):",
-         "    buf = io.BytesIO()",
-         "    fig.savefig(buf, format='png', dpi=110, bbox_inches='tight')",
-         "    plt.close(fig)",
-         "    return base64.b64encode(buf.getvalue()).decode()",
-         "",
-         "def compare(paper_png, *, table=None, fig=None,",
-         "            left='as the paper printed it', right='rebuilt from free data'):",
-         "    \"\"\"The paper's exhibit and ours, in one output, at the same size.\"\"\"",
-         "    if fig is not None:",
-         "        body = f'<img src=\"data:image/png;base64,{_b64_fig(fig)}\" style=\"width:100%\">'",
-         "    else:",
-         "        body = table.to_html() if hasattr(table, 'to_html') else str(table)",
-         "    cap = ('font:600 11px/1.5 -apple-system,system-ui,sans-serif;'",
-         "           'letter-spacing:.08em;text-transform:uppercase;color:#6b7280;'",
-         "           'padding-bottom:6px')",
-         "    box = 'flex:1;min-width:0'",
-         "    return HTML(",
-         "        f'<div style=\"display:flex;gap:20px;align-items:flex-start;'",
-         "        f'max-width:1100px\">'",
-         "        f'<div style=\"{box}\"><div style=\"{cap}\">{left}</div>'",
-         "        f'<img src=\"data:image/png;base64,{_b64_file(paper_png)}\" '",
-         "        f'style=\"width:100%;border:1px solid #e5e7eb;border-radius:4px\"></div>'",
-         "        f'<div style=\"{box}\"><div style=\"{cap}\">{right}</div>'",
-         "        f'<div style=\"overflow-x:auto;font-size:12px\">{body}</div></div>'",
-         "        f'</div>')",
-         "",
-         "compare"),
 
-    md("## First, prove the pipeline",
-       "",
-       "The paper splits its sample at 400 observations. Counting from February "
-       "1948, the four hundredth month is May 1981, so the out-of-sample window "
-       "opens in **June 1981** and runs to December 2021. That is 487 months, which "
-       "is the number the paper states.",
-       "",
-       "Getting this off by one month moves terminal wealth by about seventy cents, "
-       "which is exactly the kind of quiet mismatch that makes a replication "
-       "impossible to argue about later. So we check it."),
+HELPERS = [
+    "import base64, io, json, os",
+    "import pandas as pd",
+    "from IPython.display import HTML, display",
+    "",
+    "ROOT = os.path.dirname(os.getcwd()) if os.path.basename(os.getcwd()) == 'notebooks' else os.getcwd()",
+    "FIGURES = os.path.join(ROOT, 'notebooks', 'paper_figures')",
+    "",
+    "with open(os.path.join(ROOT, 'data', 'artifacts', '2606.04153.json'), encoding='utf-8') as fh:",
+    "    ARTIFACT = json.load(fh)",
+    "",
+    "CELLS = ARTIFACT['artifacts']",
+    "print(f\"{len(CELLS):,} scored cells loaded\")",
+]
 
-    code("IS_END, OOS_START, OOS_END = '1981-05', '1981-06', '2021-12'",
-         "",
-         "insample = m.loc['1948-02':IS_END]",
-         "oos      = m.loc[OOS_START:OOS_END]",
-         "print(f'in-sample  {len(insample)} months  (paper: 400)')",
-         "print(f'out-of-sample {len(oos)} months  (paper: 487)')"),
-
-    code("def summarise(returns, excess):",
-         "    \"\"\"The four numbers the paper reports for every strategy.",
-         "",
-         "    Annualised return is the arithmetic mean times twelve, not the",
-         "    compound rate. The two differ by half a point here, and matching the",
-         "    paper means using the convention the paper used.",
-         "    \"\"\"",
-         "    tw = float((1 + returns).prod())",
-         "    return {",
-         "        'terminal_wealth': round(tw, 2),",
-         "        'ann_return_pct': round(float(returns.mean() * 12 * 100), 2),",
-         "        'ann_sd_pct': round(float(returns.std() * np.sqrt(12) * 100), 2),",
-         "        'sharpe_monthly': round(float(excess.mean() / excess.std()), 3),",
-         "    }",
-         "",
-         "ours = summarise(oos['mkt'], oos['xs'])",
-         "paper = {'terminal_wealth': 104.63, 'ann_return_pct': 12.65,",
-         "         'ann_sd_pct': 15.00, 'sharpe_monthly': 0.17}",
-         "",
-         "check = pd.DataFrame({'paper': paper, 'rebuilt': ours})",
-         "check['difference'] = (check['rebuilt'] - check['paper']).round(3)",
-         "check"),
-
-    md("### That is the whole trust argument",
-       "",
-       "Terminal wealth comes back at **$104.62** against the paper's **$104.63**. "
-       "One cent, on a number compounded across 487 months from a spreadsheet we "
-       "downloaded three cells ago.",
-       "",
-       "The annualised return matches to the basis point once the arithmetic "
-       "convention is used, the standard deviation is within three basis points, "
-       "and the monthly Sharpe rounds to the same figure.",
-       "",
-       "Nothing here has been fitted. This is buy-and-hold, so there was no way to "
-       "make it agree except by having the same data, the same window and the same "
-       "definitions. Every number after this sits on a pipeline that has been "
-       "checked against something we did not produce."),
-
-    code("import matplotlib.pyplot as plt",
-         "",
-         "wealth = (1 + oos['mkt']).cumprod()",
-         "fig, ax = plt.subplots(figsize=(9, 4.2))",
-         "ax.plot(wealth.index, wealth.values, lw=1.6, color='#1a7f5a')",
-         "ax.axhline(104.63, ls='--', lw=1, color='#b04040')",
-         "ax.text(wealth.index[10], 112, \"paper's terminal wealth $104.63\",",
-         "        color='#b04040', fontsize=9)",
-         "ax.set_yscale('log')",
-         "ax.set_ylabel('wealth from $1')",
-         "ax.set_title('S&P 500 total return, June 1981 to December 2021')",
-         "ax.spines[['top', 'right']].set_visible(False)",
-         "fig.tight_layout()",
-         "print(f'ends at ${wealth.iloc[-1]:.2f}')"),
-
-    md("## What the paper actually builds",
-       "",
-       "Write each monthly excess return as its size times its direction:",
-       "",
-       "$$r_t = s_t \\cdot |r_t| \\qquad s_t \\in \\{-1, +1\\}$$",
-       "",
-       "Then model the two pieces separately, and make the direction depend on the "
-       "size:",
-       "",
-       "1. A marginal distribution for the magnitude $|r_t|$, which is where "
-       "volatility clustering lives.",
-       "2. A conditional probability for the sign, $P(s_t = 1 \\mid |r_t|)$, driven "
-       "by the ten Welch-Goyal predictors.",
-       "",
-       "The predictors are the standard set: dividend and earnings yields, book to "
-       "market, default and term spreads, the bill rate, long-term return, default "
-       "return, net equity issuance and inflation. The paper drops earnings yield "
-       "and book to market for correlations above 0.80, leaving eight.",
-       "",
-       "The trading rule is the part a desk cares about, and it is simple: hold the "
-       "market when the model puts the probability of a positive month above a "
-       "half, hold bills otherwise, and pay 10 basis points when the position "
-       "changes."),
-
-    code("PREDICTORS = ['dp', 'dfy', 'tms', 'tbl', 'ltr', 'dfr', 'ntis', 'infl']",
-         "",
-         "# Built the way the literature defines them, from the raw columns.",
-         "m['dp']  = np.log(m['D12']) - np.log(m['Index'])",
-         "m['dfy'] = m['BAA'].astype(float) - m['AAA'].astype(float)",
-         "m['tms'] = m['lty'].astype(float) - m['tbl'].astype(float)",
-         "m['dfr'] = m['corpr'].astype(float) - m['ltr'].astype(float)",
-         "for col in ['tbl', 'ltr', 'ntis', 'infl']:",
-         "    m[col] = pd.to_numeric(m[col], errors='coerce')",
-         "",
-         "# The paper's sample is Feb 1948 to Dec 2021. Computing anything on the",
-         "# full file instead reaches back to 1926 and quietly answers a different",
-         "# question, which is how the correlation check below first went wrong.",
-         "panel = m[PREDICTORS + ['mkt', 'rf', 'xs']].loc['1948-02':'2021-12'].dropna()",
-         "print(f'{len(panel):,} months, {panel.index[0]:%b %Y} to {panel.index[-1]:%b %Y}'",
-         "      f'   (paper: 887)')",
-         "panel[PREDICTORS].corr().round(2)"),
-
-    md("### Table 1, reproduced",
-       "",
-       "The paper reports that the lagged bill rate carries the largest absolute "
-       "correlation with the return at **-0.097**, and with the sign component at "
-       "**-0.143**. Ours below."),
-
-    code("lagged = panel[PREDICTORS].shift(1)",
-         "sign   = np.sign(panel['xs'])",
-         "",
-         "table1 = pd.DataFrame({",
-         "    'vs return': lagged.corrwith(panel['xs']),",
-         "    'vs sign':   lagged.corrwith(sign),",
-         "}).round(3).sort_values('vs return', key=abs, ascending=False)",
-         "",
-         "compare('paper_figures/Table1.png', table=table1.head(6))"),
-
-    md("## Table 6, reproduced",
-       "",
-       "The k=3 panel on the left, ours on the right. Same rows, same five "
-       "columns, same window, 10bp on each switch.",
-       "",
-       "Drawdown is shown as a fraction to match the paper, so 0.50 is a fifty per "
-       "cent fall."),
-
-    code("import sys; sys.path.insert(0, '..')",
-         "from alpha_archive.replications import decomp2026 as D",
-         "",
-         "frame  = D.load()",
-         "shaped = D.table6_shaped(frame)",
-         "",
-         "# The paper's own layout: its rows in its order, its four k panels,",
-         "# its five columns. A row we cannot produce is present and empty.",
-         "styled = (shaped.style",
-         "          .format('{:.2f}', na_rep='')",
-         "          .set_table_styles([",
-         "              {'selector': 'th', 'props': 'font-size:10.5px;text-align:right'},",
-         "              {'selector': 'td', 'props': 'font-size:10.5px;text-align:right;'",
-         "                                          'padding:1px 5px'},",
-         "          ])",
-         "          .set_properties(subset=pd.IndexSlice[list(D.TABLE6_MISSING), :],",
-         "                          **{'background-color': '#fafafa'}))",
-         "",
-         "compare('paper_figures/Table6.png', table=styled)"),
-
-    md("### The eight rows that are blank, and why",
-       "",
-       "Six of the paper's fourteen strategies are reproduced. The other eight "
-       "are each a separate model rather than a variation on this one, so they "
-       "stay in the table as empty rows and the coverage stays legible."),
-
-    code("pd.DataFrame({'why it is blank': D.TABLE6_MISSING})"),
-
-    md("### The wealth paths behind that table",
-       "",
-       "Ours alone, with no published counterpart: the paper reports terminal "
-       "wealth in Table 6 and plots it against k in Figure 4, but never prints "
-       "the path itself. This is the shape of the disagreement over time rather "
-       "than at the endpoint."),
-
-    code("paths = D.wealth_paths(frame)",
-         "fig, ax = plt.subplots(figsize=(9.5, 4.6))",
-         "shades = {'Buy-and-hold': '#777777', 'CSM (Baseline), k=3': '#1a7f5a',",
-         "          'CSR, k=3': '#b04040', 'Momentum 12m': '#c08a2e'}",
-         "for col in paths.columns:",
-         "    ax.plot(paths.index, paths[col], lw=1.7, label=col,",
-         "            color=shades.get(col))",
-         "ax.axhline(181.68, ls='--', lw=1, color='#333')",
-         "ax.text(paths.index[8], 196, \"paper's CSM endpoint, $181.68\", fontsize=9)",
-         "ax.set_yscale('log')",
-         "ax.set_ylabel('wealth from $1')",
-         "ax.set_title('Figure 4, rebuilt: terminal wealth, June 1981 to December 2021')",
-         "ax.legend(frameon=False, fontsize=9)",
-         "ax.spines[['top', 'right']].set_visible(False)",
-         "fig.tight_layout()"),
-
-    md("## Figure 4: sensitivity to k",
-       "",
-       "This is the exhibit to sit with. The paper plots terminal wealth against k "
-       "for every strategy, and its own CSM line runs 124, 155, **182**, then falls "
-       "to 97 at k=4 before climbing back to 168 at k=7. The headline is the peak of "
-       "a curve that the authors drew themselves.",
-       "",
-       "That is worth saying plainly, because the obvious accusation would be that "
-       "the paper cherry-picked k=3 and hid the rest. It did not. The instability is "
-       "Figure 4, it is discussed in the text, and performance is described as "
-       "non-monotone in k. The reader is told."),
-
-    code("sweep = D.sweep(frame)",
-         "sweep"),
-
-    code("# Drawn in the paper's own axes so the two can be laid on top of each",
-         "# other: same x range, same y range, same marker per series, boxed",
-         "# frame and grid, legend in the same corner.",
-         "fig, ax = plt.subplots(figsize=(6.4, 4.8))",
-         "for label, column, style in D.FIGURE4_SERIES:",
-         "    if column is None:",
-         "        continue",
-         "    ax.plot(sweep.index, sweep[column], label=label, lw=1.4, **style)",
-         "",
-         "ax.set_xlabel('Number of predictors (k)', fontsize=9)",
-         "ax.set_ylabel('Terminal wealth', fontsize=9)",
-         "ax.set_xlim(0.8, 8.2)",
-         "ax.set_ylim(80, 200)",
-         "ax.grid(True, lw=0.5, color='#cccccc')",
-         "ax.set_axisbelow(True)",
-         "ax.tick_params(labelsize=8)",
-         "ax.legend(frameon=True, fontsize=8, loc='lower left')",
-         "",
-         "missing = [lab for lab, col, _ in D.FIGURE4_SERIES if col is None]",
-         "fig.text(0.01, 0.005, 'not computed: ' + ', '.join(missing), fontsize=8)",
-         "",
-         "compare('paper_figures/Figure4.png', fig=fig,",
-         "        left='Figure 4 as published', right='Figure 4 rebuilt, same axes')"),
-
-    md("### Reading the two curves together",
-       "",
-       "Both are non-monotone in k. That much replicates, and it is the honest "
-       "headline of this whole exercise.",
-       "",
-       "Where they differ is the location of the peak. The paper's CSM tops out at "
-       "k=3 at $182 with a collapse to $97 at k=4. Ours is flatter through k=1 to 5 "
-       "and peaks at k=6 at $158.37, within thirteen per cent of their number but "
-       "three subset sizes away.",
-       "",
-       "So the fair statement is not that the paper cherry-picked. It is that the "
-       "method's answer moves by a factor of two depending on one integer, both in "
-       "their hands and in ours, and the integer that wins is not stable across "
-       "implementations. A reader deciding whether to trade this should take the "
-       "range seriously and not the peak, which is exactly what plotting the curve "
-       "invites them to do."),
-
-    md("## Final report",
-       "",
-       "Every number this paper printed that a rebuild could land on, and what "
-       "happened to each. The percentage is the honest headline: not whether the "
-       "notebook ran, but how much of the paper it actually accounts for."),
-
-    code("import json, urllib.request",
-         "",
-         "RECORD = ('https://raw.githubusercontent.com/RezaSoleymanifar/'",
-         "          'alpha-archive/main/data/artifacts/2606.04153.json')",
-         "LOCAL  = '../data/artifacts/2606.04153.json'",
-         "",
-         "try:",
-         "    record = json.load(open(LOCAL, encoding='utf-8'))",
-         "except FileNotFoundError:",
-         "    record = json.load(urllib.request.urlopen(RECORD))",
-         "",
-         "rows = pd.DataFrame(record['artifacts'])",
-         "rows['state'] = rows['state'].str.replace('_', ' ').str.lower()",
-         "report = rows[['name', 'where', 'published', 'observed', 'gap', 'state']]",
-         "",
-         "done = (rows['state'] == 'reproduced').sum()",
-         "print(f\"{done} of {len(rows)} published numbers reproduced\"",
-         "      f\"  ({done / len(rows):.0%} of the paper)\")",
-         "print()",
-         "for group, block in rows.groupby('state', sort=False):",
-         "    print(f'{group}: {len(block)}')",
-         "    for _, r in block.iterrows():",
-         "        print(f\"   {r['name']}\")",
-         "report"),
-
-    code("fig, ax = plt.subplots(figsize=(8, 1.5))",
-         "order = ['reproduced', 'missed', 'unobtainable', 'not attempted']",
-         "shades = {'reproduced': '#1a7f5a', 'missed': '#b04040',",
-         "          'unobtainable': '#8a8a8a', 'not attempted': '#d8d8d8'}",
-         "left = 0",
-         "for state in order:",
-         "    n = int((rows['state'] == state).sum())",
-         "    if not n:",
-         "        continue",
-         "    ax.barh([0], [n], left=left, color=shades[state], label=f'{state} ({n})')",
-         "    left += n",
-         "ax.set_xlim(0, len(rows)); ax.set_yticks([])",
-         "ax.set_xlabel('published numbers in the paper')",
-         "ax.legend(ncol=4, frameon=False, fontsize=9, loc='upper center',",
-         "          bbox_to_anchor=(0.5, -0.55))",
-         "ax.spines[['top', 'right', 'left']].set_visible(False)",
-         "ax.set_title('How much of this paper is accounted for', loc='left', fontsize=11)",
-         "fig.tight_layout()"),
-
-    md("## Where this notebook stops, and why",
-       "",
-       "Two artifacts are matched: the benchmark to the cent, and the correlation "
-       "structure the paper builds its variable selection on.",
-       "",
-       "The headline $181.68 needs the full conditional model, and that is a "
-       "genuine build rather than a data exercise. It is the next piece of work, "
-       "and it will be checked the same way, against the number the paper printed "
-       "rather than against a threshold chosen afterwards.",
-       "",
-       "Status of this replication in the archive: **ATTEMPTED**. The benchmark "
-       "reproduces. The strategy has not been built, so nothing here says the "
-       "paper's claim is right."),
+RENDERER = [
+    "def _b64(path):",
+    "    with open(path, 'rb') as fh:",
+    "        return base64.b64encode(fh.read()).decode()",
+    "",
+    "",
+    "def cells_for(exhibit):",
+    "    \"\"\"Every scored cell belonging to one exhibit, in page order.\"\"\"",
+    "    return [c for c in CELLS if c['cell'].split('/')[0] == exhibit]",
+    "",
+    "",
+    "def rebuilt(exhibit):",
+    "    \"\"\"The exhibit as a frame: what the page prints, what we computed.\"\"\"",
+    "    rows = []",
+    "    for c in cells_for(exhibit):",
+    "        addr = c['cell'].split('/')",
+    "        rows.append({",
+    "            'row': ', '.join(p for p in addr[1:-1] if p),",
+    "            'metric': addr[-1],",
+    "            'printed': c['published'],",
+    "            'ours': c['observed'],",
+    "            'gap': c['gap'],",
+    "            'state': {'REPRODUCED': 'match', 'MISSED': 'differs'}",
+    "                     .get(c['state'], 'not built'),",
+    "        })",
+    "    return pd.DataFrame(rows)",
+    "",
+    "",
+    "def _style(frame):",
+    "    \"\"\"Green where we matched the page, red where we did not.\"\"\"",
+    "    def paint(s):",
+    "        return ['color:#0a7d3c;font-weight:600' if v == 'match'",
+    "                else 'color:#b04040;font-weight:600' if v == 'differs'",
+    "                else 'color:#999' for v in s]",
+    "    return (frame.style.apply(paint, subset=['state'])",
+    "            .format({'printed': '{:g}', 'ours': '{:g}', 'gap': '{:g}'},",
+    "                    na_rep='—')",
+    "            .hide(axis='index').to_html())",
+    "",
+    "",
+    "def show(exhibit, rows=14, note=''):",
+    "    \"\"\"The paper's exhibit and ours, side by side, in one output.\"\"\"",
+    "    frame = rebuilt(exhibit)",
+    "    attempted = frame[frame['state'] != 'not built'] if len(frame) else frame",
+    "    body = attempted if len(attempted) else frame",
+    "    table = _style(body.head(rows)) if len(body) else (",
+    "        f'<p style=\"color:#777;font-size:12px\">{note or \"not built\"}</p>')",
+    "    tail = ''",
+    "    if len(body) > rows:",
+    "        tail = (f'<p style=\"color:#777;font-size:11px\">showing {rows} of '",
+    "                f'{len(body):,} cells; the rest are in the artifact file.</p>')",
+    "    if len(frame):",
+    "        n_match = int((frame['state'] == 'match').sum())",
+    "        n_diff = int((frame['state'] == 'differs').sum())",
+    "        tail += (f'<p style=\"color:#777;font-size:11px\">{exhibit}: '",
+    "                 f'{n_match:,} matched, {n_diff:,} differ, '",
+    "                 f'{len(frame) - n_match - n_diff:,} not built.</p>')",
+    "",
+    "    path = os.path.join(FIGURES, f'{exhibit}.png')",
+    "    left = (f'<img src=\"data:image/png;base64,{_b64(path)}\" '",
+    "            f'style=\"width:100%;border:1px solid #e5e7eb;border-radius:4px\">'",
+    "            if os.path.exists(path) else '<p>no page image</p>')",
+    "    cap = ('font:600 11px/1.5 -apple-system,system-ui,sans-serif;'",
+    "           'letter-spacing:.08em;text-transform:uppercase;color:#6b7280;'",
+    "           'padding-bottom:6px')",
+    "    box = 'flex:1;min-width:0'",
+    "    display(HTML(",
+    "        f'<div style=\"display:flex;gap:20px;align-items:flex-start;'",
+    "        f'max-width:1180px\">'",
+    "        f'<div style=\"{box}\"><div style=\"{cap}\">as the paper printed it</div>'",
+    "        f'{left}</div>'",
+    "        f'<div style=\"{box}\"><div style=\"{cap}\">rebuilt from free data</div>'",
+    "        f'<div style=\"overflow-x:auto;font-size:12px\">{table}</div>{tail}</div>'",
+    "        f'</div>'))",
+    "",
+    "",
+    "def source(module, symbol):",
+    "    \"\"\"The function that produced the right-hand column, as it is on disk.\"\"\"",
+    "    import ast",
+    "    path = os.path.join(ROOT, 'alpha_archive', 'replications', module + '.py')",
+    "    with open(path, encoding='utf-8') as fh:",
+    "        text = fh.read()",
+    "    for node in ast.parse(text).body:",
+    "        if getattr(node, 'name', None) == symbol:",
+    "            from IPython.display import Code",
+    "            return Code(ast.get_source_segment(text, node), language='python')",
+    "    return None",
 ]
 
 
-def main() -> None:
-    notebook = {
-        "cells": CELLS,
+def exhibit_cells() -> list[dict]:
+    """One markdown heading and one code cell per exhibit, all twenty-three."""
+    out: list[dict] = []
+    for entry in exhibits_from_pdf():
+        exhibit = entry["exhibit"]
+        module, symbol = CODE_FOR.get(exhibit, ("", ""))
+        # The heading is the exhibit's number; the lede is the paper's caption,
+        # verbatim, so the words above the image always match the image.
+        lines = [f"### {entry['label']}", "", f"*{entry['caption']}*"]
+        if exhibit in NOT_BUILT:
+            lines += ["", f"**No rebuilt column.** {NOT_BUILT[exhibit]}"]
+        out.append(md(*lines))
+        if module and symbol:
+            out.append(code(f"show({exhibit!r})", "",
+                            f"source({module!r}, {symbol!r})"))
+        else:
+            note = NOT_BUILT.get(exhibit, "no printed numbers to reproduce")
+            out.append(code(f"show({exhibit!r}, note={note!r})"))
+    return out
+
+
+def tally_cell() -> list[dict]:
+    return [
+        md("## The count, without a thumb on it",
+           "",
+           "Every cell above was scored against a tolerance set at half of the "
+           "paper's last printed digit, written down before any model here "
+           "produced a number. The totals below are that scoring, summed."),
+        code("summary = (pd.DataFrame(CELLS)",
+             "           .assign(exhibit=lambda d: d['cell'].str.split('/').str[0])",
+             "           .pivot_table(index='exhibit', columns='state',",
+             "                        values='cell', aggfunc='count', fill_value=0))",
+             "summary['checked'] = summary.get('REPRODUCED', 0) + summary.get('MISSED', 0)",
+             "# .where keeps the divisor float, so an exhibit we never checked",
+             "# becomes NaN rather than pd.NA, which has no __round__.",
+             "summary['rate %'] = (100 * summary.get('REPRODUCED', 0)",
+             "                     / summary['checked'].where(summary['checked'] > 0)).round(0)",
+             "summary.sort_values('checked', ascending=False)"),
+        code("t = ARTIFACT['tally']",
+             "checked = t['REPRODUCED'] + t['MISSED']",
+             "print(f\"printed        {len(CELLS):>6,}\")",
+             "print(f\"rebuilt        {checked:>6,}\")",
+             "print(f\"matched        {t['REPRODUCED']:>6,}\")",
+             "print(f\"missed         {t['MISSED']:>6,}\")",
+             "print(f\"not built      {t['NOT_ATTEMPTED']:>6,}\")",
+             "print(f\"match rate     {100*t['REPRODUCED']/checked:>5.0f}%  of what we checked\")"),
+    ]
+
+
+def build() -> dict:
+    cells = [
+        md("# Does the sign of a return tell you more than the return?",
+           "",
+           "**Paper:** *A new decomposition approach to modeling financial "
+           "returns*, arXiv [2606.04153](https://arxiv.org/abs/2606.04153).",
+           "",
+           "The claim, in one line: forecasting **whether** the S&P 500 goes up "
+           "next month, conditioned on **how big** the move is, beats "
+           "forecasting the return itself. Over 1981 to 2021, after costs, "
+           "\\$100 becomes **\\$182** instead of the **\\$105** you get from "
+           "buy-and-hold.",
+           "",
+           "This notebook carries **every exhibit in the paper**: fifteen "
+           "tables and eight figures. Each one appears as the paper printed it, "
+           "beside the same cells recomputed from data anyone can download, "
+           "with the function that produced them underneath.",
+           "",
+           "Where we disagree with the page, the cell says so in red. Nothing "
+           "here was tuned until it agreed."),
+
+        md("## How to read every cell below",
+           "",
+           "Left is the exhibit lifted straight out of the paper's PDF. Right "
+           "is our rebuild, one row per printed number:",
+           "",
+           "| column | meaning |",
+           "|---|---|",
+           "| `printed` | the number on the page |",
+           "| `ours` | what the replication computed |",
+           "| `gap` | the absolute difference |",
+           "| `state` | `match` inside tolerance, `differs` outside it |",
+           "",
+           "The tolerance is half of the last digit the paper printed, frozen "
+           "in `tools/score_replication.py` before any of this ran."),
+
+        code(*HELPERS),
+        code(*RENDERER),
+
+        md("## First, prove the pipeline",
+           "",
+           "The paper splits its sample at 400 observations of 887, counting "
+           "from February 1948. If the data does not rebuild to exactly those "
+           "counts, nothing downstream is worth reading, so it is checked "
+           "before anything is modelled."),
+        code("import sys",
+             "sys.path.insert(0, ROOT)",
+             "from alpha_archive.replications.decomp2026_paper import load, WINDOW",
+             "",
+             "frame = load()",
+             "print(f'{len(frame):,} observations, "
+             "{frame.index[0]:%Y-%m} to {frame.index[-1]:%Y-%m}  (paper: 887)')",
+             "print(f'in-sample {WINDOW}, out-of-sample {len(frame) - WINDOW}"
+             "  (paper: 400 and 487)')"),
+
+        md("## The exhibits",
+           "",
+           "Twenty-three of them, in the order the paper prints them."),
+    ]
+    cells += exhibit_cells()
+    cells += tally_cell()
+
+    return {
+        "cells": cells,
         "metadata": {
             "kernelspec": {"display_name": "Python 3", "language": "python",
                            "name": "python3"},
@@ -468,11 +340,33 @@ def main() -> None:
         "nbformat": 4,
         "nbformat_minor": 5,
     }
-    os.makedirs(os.path.dirname(OUT), exist_ok=True)
+
+
+def main() -> int:
+    ap = argparse.ArgumentParser(description=__doc__)
+    ap.add_argument("--execute", action="store_true",
+                    help="run the notebook and keep its outputs")
+    args = ap.parse_args()
+
+    if not os.path.exists(ARTIFACT):
+        sys.exit("no scored artifact: run tools/score_replication.py first")
+
+    nb = build()
     with open(OUT, "w", encoding="utf-8", newline="\n") as fh:
-        json.dump(notebook, fh, indent=1)
-    print(f"wrote {OUT} ({len(CELLS)} cells)")
+        json.dump(nb, fh, indent=1, ensure_ascii=False)
+    n_code = sum(1 for c in nb["cells"] if c["cell_type"] == "code")
+    print(f"{len(nb['cells'])} cells ({n_code} code) -> {OUT}")
+
+    if args.execute:
+        cmd = [sys.executable, "-m", "jupyter", "nbconvert", "--to", "notebook",
+               "--execute", "--inplace", "--ExecutePreprocessor.timeout=1800",
+               OUT]
+        result = subprocess.run(cmd, cwd=ROOT)
+        if result.returncode:
+            return result.returncode
+        print(f"executed -> {OUT}")
+    return 0
 
 
 if __name__ == "__main__":
-    main()
+    raise SystemExit(main())

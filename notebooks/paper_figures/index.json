@@ -1,0 +1,258 @@
+{
+ "paper": "2606.04153",
+ "exhibits": [
+  {
+   "exhibit": "F1",
+   "page": 53,
+   "width": 1386,
+   "height": 811,
+   "aspect": 0.5851,
+   "image": "F1.png",
+   "label": "Figure 1",
+   "caption": "Figure 1: Out-of-sample R2 as a function of the number of predictors (k)",
+   "notes": ""
+  },
+  {
+   "exhibit": "F2",
+   "page": 54,
+   "width": 1323,
+   "height": 1387,
+   "aspect": 1.0484,
+   "image": "F2.png",
+   "label": "Figure 2",
+   "caption": "Figure 2: Wealth growth for the CSM (Baseline, k = 3), buy-and-hold, and momentum strategies",
+   "notes": ""
+  },
+  {
+   "exhibit": "F3",
+   "page": 55,
+   "width": 1323,
+   "height": 1387,
+   "aspect": 1.0484,
+   "image": "F3.png",
+   "label": "Figure 3",
+   "caption": "Figure 3: Wealth growth for the CSM (Baseline), copula-based, GARCH-M, CSR, and linear strategies, each with k = 3",
+   "notes": ""
+  },
+  {
+   "exhibit": "F4",
+   "page": 56,
+   "width": 1321,
+   "height": 1418,
+   "aspect": 1.0734,
+   "image": "F4.png",
+   "label": "Figure 4",
+   "caption": "Figure 4: Terminal wealth as a function of the number of predictors (k) for CSM (Baseline), Clayton, GARCH-M, CSR, and linear models",
+   "notes": ""
+  },
+  {
+   "exhibit": "FA1",
+   "page": 63,
+   "width": 1404,
+   "height": 930,
+   "aspect": 0.6624,
+   "image": "FA1.png",
+   "label": "Figure A1",
+   "caption": "Figure A1: Out-of-sample R2 as a function of the number of predictors (k): MSE-based selection",
+   "notes": ""
+  },
+  {
+   "exhibit": "FC1",
+   "page": 71,
+   "width": 1322,
+   "height": 1427,
+   "aspect": 1.0794,
+   "image": "FC1.png",
+   "label": "Figure C1",
+   "caption": "Figure C1: Wealth growth during the Global Financial Crisis: 3-month momentum, CSR, GARCH-M, and buy-and-hold, together with the CSM (Baseline) and FGM copula strate- gies. The CSM (Baseline) and FGM wealth paths coincide and therefore overlap.",
+   "notes": ""
+  },
+  {
+   "exhibit": "FC2",
+   "page": 72,
+   "width": 1324,
+   "height": 1467,
+   "aspect": 1.108,
+   "image": "FC2.png",
+   "label": "Figure C2",
+   "caption": "Figure C2: Wealth growth during the COVID crisis period: 3-month momentum, CSM (Poly), FGM copula, CSR, GARCH-M, and buy-and-hold. The FGM and buy-and-hold wealth paths coincide, as do the CSR and CSM (Poly) paths, and the corresponding curves therefore overlap.",
+   "notes": ""
+  },
+  {
+   "exhibit": "FD1",
+   "page": 76,
+   "width": 1323,
+   "height": 1387,
+   "aspect": 1.0484,
+   "image": "FD1.png",
+   "label": "Figure D1",
+   "caption": "Figure D1: Wealth growth for CSM (Baseline), copula-based (Clayton, Gaussian), CSR, and MS strategies with nine predictors (including momentum).",
+   "notes": ""
+  },
+  {
+   "exhibit": "T1",
+   "page": 45,
+   "width": 1324,
+   "height": 1131,
+   "aspect": 0.8542,
+   "image": "T1.png",
+   "label": "Table 1",
+   "caption": "Table 1: Sample correlations",
+   "notes": "Notes: This table reports sample correlations between the variables used in the analysis over the full sample from January 1948 to December 2021. Panel A shows correlations between the current excess return (rt) and the lagged predictors: dpt\u22121 (dividend-price ratio), dfyt\u22121 (default yield spread), tmst\u22121 (term spread), tblt\u22121 (short-term interest rate), ltrt\u22121 (long-term return), dfrt\u22121 (default return spread), ntist\u22121 (net equity expansion), and inflt\u22121 (inflation). Panel B presents correlations between the sign (st) and magnitude (mt) components of the excess return and the lagged predictors. Panel C reports the correlations among the lagged predictors themselves."
+  },
+  {
+   "exhibit": "T2",
+   "page": 46,
+   "width": 1278,
+   "height": 1592,
+   "aspect": 1.2457,
+   "image": "T2.png",
+   "label": "Table 2",
+   "caption": "Table 2: Best subset selection based on AUC criterion",
+   "notes": "Notes: A star (\u2217) indicates that the corresponding variable is included in the best subset of size k. The subsets are selected based on the AUC criterion using one-step-ahead in-sample forecasts. An empty cell indicates exclusion of the variable from the selected subset. Panel A shows the selected subsets for the linear and GARCH-M models, which select identical variables for all values of k. Panel B shows the selected subsets for the MS model. Panel C shows the selected subsets for the decomposition-based models (CSM and copula-based); results are identical across all copula specifications. At k = 8, all predictors are included by construction in all models, so no subset selection is required."
+  },
+  {
+   "exhibit": "T3",
+   "page": 47,
+   "width": 1809,
+   "height": 1402,
+   "aspect": 0.775,
+   "image": "T3.png",
+   "label": "Table 3",
+   "caption": "Table 3: Out-of-sample R2 values by subset size (k) and loss function",
+   "notes": "Notes: This table reports R2"
+  },
+  {
+   "exhibit": "T4",
+   "page": 48,
+   "width": 1840,
+   "height": 1395,
+   "aspect": 0.7582,
+   "image": "T4.png",
+   "label": "Table 4",
+   "caption": "Table 4: Out-of-sample model performance comparison using MCS procedure with squared loss",
+   "notes": "Notes: This table reports MSE values multiplied by 100, along with the associated MCS p-values. The MCS p-value indicates"
+  },
+  {
+   "exhibit": "T5",
+   "page": 49,
+   "width": 1849,
+   "height": 1376,
+   "aspect": 0.7442,
+   "image": "T5.png",
+   "label": "Table 5",
+   "caption": "Table 5: Out-of-sample model performance comparison using MCS procedure with absolute loss",
+   "notes": "Notes: This table reports mean absolute error (MAE) values multiplied by 100, along with the associated MCS p-values. See"
+  },
+  {
+   "exhibit": "T6",
+   "page": 50,
+   "width": 1324,
+   "height": 1876,
+   "aspect": 1.4169,
+   "image": "T6.png",
+   "label": "Table 6",
+   "caption": "Table 6: Out-of-sample performance statistics for the trading strategies for k = 1, 2, 3, 7",
+   "notes": "Notes: This table presents out-of-sample performance statistics for the various trading strategies. TW represents the terminal wealth in dollars at the end of the trading period. AV is the annualized average return in percent, SD is the annualized standard deviation of returns in percent, SR is the Sharpe ratio, and MDD is the maximum drawdown in percent. Stars indicate statistical significance of the SR differential compared to the benchmark buy-and-hold strategy: \u2217and \u2217\u2217denote significance at the 10% and 5% levels, respectively."
+  },
+  {
+   "exhibit": "T7",
+   "page": 51,
+   "width": 1324,
+   "height": 1899,
+   "aspect": 1.4343,
+   "image": "T7.png",
+   "label": "Table 7",
+   "caption": "Table 7: CER gains against historical average for \u03b3 = 5",
+   "notes": "Notes: This table reports the CER gains for each forecasting strategy relative to the historical average benchmark, under two types of investor preferences: mean-variance (Panel A) and constant relative risk aversion (CRRA; Panel B). The parameter k denotes the number of predictors used in each model. The CER gain is interpreted as the annual management fee (in percentage points) an investor would be willing to pay to switch from the benchmark to the corresponding strategy."
+  },
+  {
+   "exhibit": "T8",
+   "page": 52,
+   "width": 1324,
+   "height": 989,
+   "aspect": 0.747,
+   "image": "T8.png",
+   "label": "Table 8",
+   "caption": "Table 8: CER gains against CSM (Baseline) for \u03b3 = 5",
+   "notes": "Notes: This table reports CER gains relative to the CSM (Baseline) benchmark, using the same setup and preferences as in Table 7. See the notes to that table for details on interpretation."
+  },
+  {
+   "exhibit": "TA1",
+   "page": 61,
+   "width": 1277,
+   "height": 1786,
+   "aspect": 1.3986,
+   "image": "TA1.png",
+   "label": "Table A1",
+   "caption": "Table A1: Best subset selection based on MSE criterion",
+   "notes": "Notes: A star (\u2217) indicates that the corresponding variable is included in the best subset of size k. The subsets are selected based on the MSE criterion using one-step-ahead in-sample forecasts. An empty cell indicates exclusion of the variable from the selected subset."
+  },
+  {
+   "exhibit": "TA2",
+   "page": 62,
+   "width": 1811,
+   "height": 1402,
+   "aspect": 0.7742,
+   "image": "TA2.png",
+   "label": "Table A2",
+   "caption": "Table A2: Out-of-sample R2 values (in %) for different models, loss functions, and subset sizes (k)",
+   "notes": "Notes: This table reports R2"
+  },
+  {
+   "exhibit": "TB1",
+   "page": 66,
+   "width": 1324,
+   "height": 1876,
+   "aspect": 1.4169,
+   "image": "TB1.png",
+   "label": "Table B1",
+   "caption": "Table B1: Out-of-sample performance statistics for the trading strategies for k = 4, 5, 6, 8",
+   "notes": "Notes: This table presents out-of-sample performance statistics for the various trading strategies. TW represents the terminal wealth in dollars at the end of the trading period. AV is the annualized average return in percent, SD is the annualized standard deviation of returns in percent, SR is the Sharpe ratio, and MDD is the maximum drawdown in percent. Stars indicate statistical significance of the SR differential compared to the benchmark buy-and-hold strategy: \u2217and \u2217\u2217denote significance at the 10% and 5% levels, respectively."
+  },
+  {
+   "exhibit": "TB2",
+   "page": 67,
+   "width": 1324,
+   "height": 1899,
+   "aspect": 1.4343,
+   "image": "TB2.png",
+   "label": "Table B2",
+   "caption": "Table B2: CER gains against historical average for \u03b3 = 5",
+   "notes": "Notes: This table reports the CER gains for each forecasting strategy relative to the historical average benchmark, under two types of investor preferences: mean-variance (Panel A) and constant relative risk aversion (CRRA; Panel B). The parameter k denotes the number of predictors used in each model. The CER gain is interpreted as the annual management fee (in percentage points) an investor would be willing to pay to switch from the benchmark to the corresponding strategy."
+  },
+  {
+   "exhibit": "TB3",
+   "page": 68,
+   "width": 1324,
+   "height": 989,
+   "aspect": 0.747,
+   "image": "TB3.png",
+   "label": "Table B3",
+   "caption": "Table B3: CER gains against CSM (Baseline) for \u03b3 = 5",
+   "notes": "Notes: This table reports CER gains relative to the CSM (Baseline) benchmark, using the same setup and preferences as in Table B2. See the notes to that table for details on interpretation."
+  },
+  {
+   "exhibit": "TC1",
+   "page": 70,
+   "width": 1324,
+   "height": 929,
+   "aspect": 0.7017,
+   "image": "TC1.png",
+   "label": "Table C1",
+   "caption": "Table C1: Out-of-sample performance statistics for the trading strategies during crisis peri- ods",
+   "notes": "Notes: See Table B1 for details on notation."
+  },
+  {
+   "exhibit": "TD1",
+   "page": 75,
+   "width": 1324,
+   "height": 798,
+   "aspect": 0.6027,
+   "image": "TD1.png",
+   "label": "Table D1",
+   "caption": "Table D1: Out-of-sample R2 and economic performance across models",
+   "notes": "Notes: R2"
+  }
+ ]
+}

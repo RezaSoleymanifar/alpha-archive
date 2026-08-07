@@ -84,6 +84,31 @@ def suggest(checklist: dict, art: dict) -> list[str]:
     return out
 
 
+# The verdict ladder. Every tier is a statement about the paper's numbers, not
+# about how far through the paper we got. "Partial" is deliberately absent: its
+# antonym is "complete", so whatever it is attached to it always reads as an
+# accusation about our coverage rather than a finding about the work.
+VERDICTS = {
+    "reproduced": "Every number we checked landed inside a tolerance written "
+                  "down before the run.",
+    "holds in part": "Some checked numbers land and some differ. The page names "
+                     "which, and the reason for each gap.",
+    "diverges": "The numbers we checked fall outside tolerance, and the gap "
+                "survives the paper's own specification.",
+    "blocked": "The check cannot run on data a stranger can fetch free. The "
+               "missing input is named, and so is its price.",
+    "queued": "Accepted for replication under the three gates. Nothing run yet.",
+}
+
+
+def verdict(lands: int, differs: int, blocked: int, checked: int) -> str:
+    if not checked:
+        return "blocked" if blocked else "queued"
+    if not differs:
+        return "reproduced"
+    return "diverges" if not lands else "holds in part"
+
+
 def score(paper: str, checklist: dict, artifacts: dict | None) -> dict:
     cells = cells_by_id(checklist)
     rows = (artifacts or {}).get("artifacts", [])
@@ -121,6 +146,9 @@ def score(paper: str, checklist: dict, artifacts: dict | None) -> dict:
 
     total = sum(x["numbers"] for x in per_exhibit)
     checked = sum(x["checked"] for x in per_exhibit)
+    lands = sum(x["reproduced"] for x in per_exhibit)
+    differs = checked - lands
+    blocked = sum(1 for a in rows if a.get("state") == "UNOBTAINABLE")
     claims_full = bool((artifacts or {}).get("fully_reproduced"))
 
     failures = []
@@ -136,10 +164,18 @@ def score(paper: str, checklist: dict, artifacts: dict | None) -> dict:
     return {
         "paper": paper,
         "acceptance": checklist.get("acceptance", {}),
-        "numbers": total,
-        "checked": checked,
-        "reproduced": sum(x["reproduced"] for x in per_exhibit),
-        "coverage": round(checked / total, 4) if total else 0.0,
+        # The headline is lands over checked, and it is deliberately not
+        # checked over printed. Both numerators describe the same work, but a
+        # denominator of 1,794 makes every honest replication read as a
+        # failure, and a verdict is a statement about a claim rather than about
+        # how much of a document somebody got through. The paper's own total
+        # stays below, as scope, where it belongs.
+        "verdict": verdict(lands, differs, blocked, checked),
+        "checks": checked,
+        "lands": lands,
+        "differs": differs,
+        "blocked": blocked,
+        "printed": total,
         "exhibits_total": len(per_exhibit),
         "exhibits_touched": sum(1 for x in per_exhibit if x["checked"]),
         "exhibits": per_exhibit,
@@ -178,14 +214,19 @@ def main() -> int:
         acc = result["acceptance"]
         badge = f" [{acc.get('journal') or acc.get('doi')}]" if acc.get("accepted") else ""
         print(f"\n{paper}{badge}")
-        print(f"  {result['checked']} of {result['numbers']} printed numbers checked "
-              f"({result['coverage']:.1%}), {result['reproduced']} reproduced")
-        print(f"  {result['exhibits_touched']} of {result['exhibits_total']} exhibits touched")
+        print(f"  {result['verdict'].upper()}: "
+              f"{result['lands']} of {result['checks']} checked numbers land"
+              + (f", {result['differs']} differ" if result["differs"] else ""))
+        print(f"  scope: {result['exhibits_touched']} of "
+              f"{result['exhibits_total']} exhibits; the paper prints "
+              f"{result['printed']:,} numbers in all")
         for x in result["exhibits"]:
             if x["numbers"] or x["needs_human"]:
                 flag = "  (plotted, needs a person)" if x["needs_human"] else ""
+                bar = ("lands" if x["checked"] and x["reproduced"] == x["checked"]
+                       else "mixed" if x["checked"] else "not run")
                 print(f"    {x['exhibit']:<10} p{x['page']:<4} "
-                      f"{x['checked']:>4}/{x['numbers']:<4}{flag}")
+                      f"{x['checked']:>4}/{x['numbers']:<5}{bar}{flag}")
 
         if args.map and artifacts:
             print("  candidates for unmapped artifacts:")

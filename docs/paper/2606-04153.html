@@ -58,7 +58,10 @@ h1{font-family:var(--serif);font-size:clamp(24px,3.4vw,36px);line-height:1.2;
 .cols{display:grid;grid-template-columns:minmax(0,1fr) 320px;gap:34px;
   padding:26px 0 60px;align-items:start}
 .cols.solo{grid-template-columns:minmax(0,760px)}
-@media(max-width:900px){.cols{grid-template-columns:1fr}}
+/* minmax(0,1fr), not 1fr: a bare 1fr track floors at its content's min-content
+   width, so one wide table pushed the whole page into horizontal scroll below
+   about 600px. */
+@media(max-width:900px){.cols{grid-template-columns:minmax(0,1fr)}}
 
 h2{font-family:var(--serif);font-size:20px;font-weight:600;margin:30px 0 10px}
 h2:first-child{margin-top:0}
@@ -103,6 +106,70 @@ table.lead td.bad{color:var(--bad)}
 .kv span:last-child{font-family:var(--mono);font-size:12.5px}
 .reason{margin:0;padding-left:18px;color:var(--soft);font-size:13px}
 .reason li{margin:0 0 6px}
+
+/* The banner summary. Two paragraphs a reader outside the field can finish:
+   what the paper says, then what happened when we ran it. */
+.claim{font-family:var(--serif);font-size:17.5px;line-height:1.5;color:var(--ink);
+  margin:16px 0 8px;max-width:60ch}
+.verdict{font-size:14px;line-height:1.65;color:var(--soft);max-width:72ch;margin:0}
+.verdict b{color:var(--ink);font-weight:600;font-family:var(--mono);font-size:13px}
+
+/* Artifact statistics. Counts first, then the same counts as one bar, because
+   a ratio is easier to disbelieve than a picture of it. */
+.stats{display:flex;flex-wrap:wrap;gap:10px;margin:4px 0 14px}
+.stat{flex:1 1 128px;background:var(--card);border:1px solid var(--line);
+  border-radius:10px;padding:12px 14px}
+.stat .n{font-family:var(--mono);font-size:21px;line-height:1.25;color:var(--ink)}
+.stat .l{font-size:11px;letter-spacing:.06em;text-transform:uppercase;
+  color:var(--dim);margin-top:3px}
+.stat.ok .n{color:var(--ok)}
+.stat.bad .n{color:var(--bad)}
+.bar{display:flex;height:9px;border-radius:99px;overflow:hidden;
+  background:var(--chip);border:1px solid var(--line)}
+.bar .seg.ok{background:var(--ok)}
+.bar .seg.bad{background:var(--bad)}
+.bar .seg.none{background:#2f2d29}
+.barkey{display:flex;gap:16px;margin:8px 0 0;font-size:11.5px;color:var(--dim)}
+.barkey .k{display:inline-flex;align-items:center;gap:6px}
+.barkey .k::before{content:"";width:8px;height:8px;border-radius:2px;
+  background:currentColor}
+.barkey .k.ok{color:var(--ok)}
+.barkey .k.bad{color:var(--bad)}
+.barkey .k.none{color:#6b665e}
+
+/* The side-by-side. The paper's own page on the left, our numbers on the
+   right, the code underneath. This is the whole argument in one frame. */
+.ev{margin:0 0 34px}
+.ev h3{font-family:var(--serif);font-size:17px;font-weight:600;margin:0 0 4px}
+.sbs{display:grid;grid-template-columns:1fr 1fr;gap:18px;align-items:start;
+  margin-top:10px}
+@media(max-width:820px){.sbs{grid-template-columns:1fr}}
+.sbs figure{margin:0;min-width:0}
+.sbs figcaption{font-size:10.5px;letter-spacing:.09em;text-transform:uppercase;
+  color:var(--dim);font-weight:600;padding-bottom:7px}
+/* A 1300px table scan rendered into a 370px column is 4px type: an image of
+   evidence rather than evidence. The blocks break out of the reading column,
+   and every scan links to its full-size file. */
+.ev{margin-left:calc(-1 * min(180px, 6vw));margin-right:calc(-1 * min(180px, 6vw))}
+@media(max-width:1100px){.ev{margin-left:0;margin-right:0}}
+.sbs a.zoom{display:block;cursor:zoom-in}
+.sbs img{width:100%;height:auto;border:1px solid var(--line);border-radius:6px;
+  background:#f7f5f0}
+.sbs a.zoom:hover img{border-color:var(--accent)}
+.scroll{overflow-x:auto;border:1px solid var(--line);border-radius:6px;
+  background:var(--card);padding:2px 10px}
+.scroll table.gap{margin:0}
+.scroll td.m{color:var(--dim);font-size:11.5px}
+table.gap td.ok{color:var(--ok)}
+table.gap td.bad{color:var(--bad)}
+.note{font-size:11.5px;color:var(--dim);margin:7px 0 0}
+details.code{margin-top:12px}
+details.code>summary{cursor:pointer;font-size:12px;color:var(--soft);
+  font-family:var(--mono)}
+details.code>summary:hover{color:var(--accent)}
+details.code pre{background:#0a0a0a;border:1px solid var(--line);border-radius:8px;
+  padding:13px 15px;overflow:auto;max-height:420px;font-family:var(--mono);
+  font-size:11.5px;line-height:1.7;color:#cfe6d8;margin:8px 0 0}
 footer{border-top:1px solid var(--line);padding:22px 0 40px;color:var(--dim);
   font-size:12.5px}
 </style>
@@ -120,10 +187,473 @@ footer{border-top:1px solid var(--line);padding:22px 0 40px;color:var(--dim);
     <h1>A new decomposition approach to modeling financial returns: Conditioning sign on magnitude</h1>
     <p class="byline">Arsène Brou, Richard Luger &middot; 2026-06-02</p>
     <div class="badges"><span class="st warn">notebook built</span><span class="tag">Volatility Forecasting</span><span class="tag">Regime Detection</span><span class="tag">Momentum and Reversal</span></div>
+    <p class="claim">Forecasting the sign of monthly S&amp;P returns conditional on their size turns $100 into $182 by 2021 after costs, versus $105 for buy-and-hold.</p><p class="verdict">The paper prints <b>1,794</b> numbers. We rebuilt <b>1,216</b> of them from data anyone can download and put each one next to the page: <b>278</b> matched to the last digit printed, <b>938</b> did not. Most of what we checked did not come back the same. Every disagreement is listed below with the printed value beside ours. A further 578 we did not attempt, usually because the paper describes a model without writing down the equation needed to run it.</p>
   </header>
 
   <div class="cols">
-    <main><h2>Abstract</h2><p class="lede">Changes in volatility contain valuable information about the likelihood of positive versus negative returns. We propose a new approach to modeling financial returns that exploits this insight by decomposing returns into sign and magnitude (absolute value) components, with magnitude closely related to volatility. The joint distribution used to compute expected returns combines a model for the marginal distribution of magnitude with a model for the distribution of the sign, conditional on the contemporaneous magnitude. Unlike traditional linear predictive regressions, this decomposition framework captures nonlinear predictability in return dynamics. An out-of-sample forecasting evaluation using monthly U.S. stock market excess returns demonstrates substantial statistical and economic gains relative to linear regression and complete subset regression, while delivering performance that is competitive with copula-based return-decomposition methods and other nonlinear benchmarks.</p><h2>Where this stands</h2><p class="lede">A notebook rebuilds this paper's exhibits from free data and compares them cell by cell against the printed page. It has not yet been scored against the paper's claim, so the status stops short of replicated.</p></main>
+    <main><h2>What we checked</h2><div class="stats"><div class="stat "><div class="n">1,794</div><div class="l">numbers printed</div></div><div class="stat "><div class="n">1,216</div><div class="l">rebuilt and checked</div></div><div class="stat ok"><div class="n">278</div><div class="l">matched</div></div><div class="stat bad"><div class="n">938</div><div class="l">missed</div></div><div class="stat bad"><div class="n">23%</div><div class="l">of what we checked</div></div></div><div class="bar"><span class="seg ok" style="width:15.4961%" title="278 matched"></span><span class="seg bad" style="width:52.2854%" title="938 missed"></span><span class="seg none" style="width:32.2185%" title="578 not built"></span></div><p class="barkey"><span class="k ok">matched</span><span class="k bad">missed</span><span class="k none">not built</span></p><h2>The paper&rsquo;s numbers, and ours</h2><p class="lede">Left is the exhibit as it appears in the paper. Right is the same cells recomputed from free data, each beside the printed value.</p>
+<section class="ev">
+  <h3>Figure 1</h3>
+  <p class="lede">Figure 1: Out-of-sample R2 as a function of the number of predictors (k)</p>
+  <div class="sbs">
+    <figure><figcaption>as the paper printed it</figcaption><a class="zoom" href="../evidence/2606.04153/F1.png" target="_blank" rel="noopener" title="open full size"><img src="../evidence/2606.04153/F1.png" loading="lazy" decoding="async" alt="Figure 1 as the paper printed it"></a></figure>
+    <figure><figcaption>rebuilt from free data</figcaption><p class="note">A plot of the Table 3 R-squared values against k. Every point in it is a cell scored above, so the figure carries no number of its own.</p></figure>
+  </div>
+  
+</section>
+<section class="ev">
+  <h3>Figure 2</h3>
+  <p class="lede">Figure 2: Wealth growth for the CSM (Baseline, k = 3), buy-and-hold, and momentum strategies</p>
+  <div class="sbs">
+    <figure><figcaption>as the paper printed it</figcaption><a class="zoom" href="../evidence/2606.04153/F2.png" target="_blank" rel="noopener" title="open full size"><img src="../evidence/2606.04153/F2.png" loading="lazy" decoding="async" alt="Figure 2 as the paper printed it"></a></figure>
+    <figure><figcaption>rebuilt from free data</figcaption><p class="note">A wealth-growth plot. The endpoints are Table 6&#x27;s terminal wealth, scored above; the path between them is not printed as numbers.</p></figure>
+  </div>
+  
+</section>
+<section class="ev">
+  <h3>Figure 3</h3>
+  <p class="lede">Figure 3: Wealth growth for the CSM (Baseline), copula-based, GARCH-M, CSR, and linear strategies, each with k = 3</p>
+  <div class="sbs">
+    <figure><figcaption>as the paper printed it</figcaption><a class="zoom" href="../evidence/2606.04153/F3.png" target="_blank" rel="noopener" title="open full size"><img src="../evidence/2606.04153/F3.png" loading="lazy" decoding="async" alt="Figure 3 as the paper printed it"></a></figure>
+    <figure><figcaption>rebuilt from free data</figcaption><p class="note">As Figure 2, across the copula and benchmark strategies.</p></figure>
+  </div>
+  
+</section>
+<section class="ev">
+  <h3>Figure 4</h3>
+  <p class="lede">Figure 4: Terminal wealth as a function of the number of predictors (k) for CSM (Baseline), Clayton, GARCH-M, CSR, and linear models</p>
+  <div class="sbs">
+    <figure><figcaption>as the paper printed it</figcaption><a class="zoom" href="../evidence/2606.04153/F4.png" target="_blank" rel="noopener" title="open full size"><img src="../evidence/2606.04153/F4.png" loading="lazy" decoding="async" alt="Figure 4 as the paper printed it"></a></figure>
+    <figure><figcaption>rebuilt from free data</figcaption><p class="note">A plot of terminal wealth against k. Every point is a cell of Table 6 or B1, both scored above.</p></figure>
+  </div>
+  
+</section>
+<section class="ev">
+  <h3>Figure A1</h3>
+  <p class="lede">Figure A1: Out-of-sample R2 as a function of the number of predictors (k): MSE-based selection</p>
+  <div class="sbs">
+    <figure><figcaption>as the paper printed it</figcaption><a class="zoom" href="../evidence/2606.04153/FA1.png" target="_blank" rel="noopener" title="open full size"><img src="../evidence/2606.04153/FA1.png" loading="lazy" decoding="async" alt="Figure A1 as the paper printed it"></a></figure>
+    <figure><figcaption>rebuilt from free data</figcaption><p class="note">As Figure 1, for MSE-based selection.</p></figure>
+  </div>
+  
+</section>
+<section class="ev">
+  <h3>Figure C1</h3>
+  <p class="lede">Figure C1: Wealth growth during the Global Financial Crisis: 3-month momentum, CSR, GARCH-M, and buy-and-hold, together with the CSM (Baseline) and FGM copula strate- gies. The CSM (Baseline) and FGM wealth paths coincide and therefore overlap.</p>
+  <div class="sbs">
+    <figure><figcaption>as the paper printed it</figcaption><a class="zoom" href="../evidence/2606.04153/FC1.png" target="_blank" rel="noopener" title="open full size"><img src="../evidence/2606.04153/FC1.png" loading="lazy" decoding="async" alt="Figure C1 as the paper printed it"></a></figure>
+    <figure><figcaption>rebuilt from free data</figcaption><p class="note">The crisis wealth paths, whose endpoints are Table C1&#x27;s terminal wealth.</p></figure>
+  </div>
+  
+</section>
+<section class="ev">
+  <h3>Figure C2</h3>
+  <p class="lede">Figure C2: Wealth growth during the COVID crisis period: 3-month momentum, CSM (Poly), FGM copula, CSR, GARCH-M, and buy-and-hold. The FGM and buy-and-hold wealth paths coincide, as do the CSR and CSM (Poly) paths, and the corresponding curves therefore overlap.</p>
+  <div class="sbs">
+    <figure><figcaption>as the paper printed it</figcaption><a class="zoom" href="../evidence/2606.04153/FC2.png" target="_blank" rel="noopener" title="open full size"><img src="../evidence/2606.04153/FC2.png" loading="lazy" decoding="async" alt="Figure C2 as the paper printed it"></a></figure>
+    <figure><figcaption>rebuilt from free data</figcaption><p class="note">As Figure C1, for the COVID window.</p></figure>
+  </div>
+  
+</section>
+<section class="ev">
+  <h3>Figure D1</h3>
+  <p class="lede">Figure D1: Wealth growth for CSM (Baseline), copula-based (Clayton, Gaussian), CSR, and MS strategies with nine predictors (including momentum).</p>
+  <div class="sbs">
+    <figure><figcaption>as the paper printed it</figcaption><a class="zoom" href="../evidence/2606.04153/FD1.png" target="_blank" rel="noopener" title="open full size"><img src="../evidence/2606.04153/FD1.png" loading="lazy" decoding="async" alt="Figure D1 as the paper printed it"></a></figure>
+    <figure><figcaption>rebuilt from free data</figcaption><p class="note">The nine-predictor wealth paths, whose endpoints are Table D1&#x27;s.</p></figure>
+  </div>
+  
+</section>
+<section class="ev">
+  <h3>Table 1</h3>
+  <p class="lede">Table 1: Sample correlations</p>
+  <div class="sbs">
+    <figure><figcaption>as the paper printed it</figcaption><a class="zoom" href="../evidence/2606.04153/T1.png" target="_blank" rel="noopener" title="open full size"><img src="../evidence/2606.04153/T1.png" loading="lazy" decoding="async" alt="Table 1 as the paper printed it"></a></figure>
+    <figure><figcaption>rebuilt from free data</figcaption><div class="scroll"><table class="gap"><thead><tr><th></th><th></th><th>printed</th><th>ours</th><th></th></tr></thead><tbody><tr><td>Panel A: Between r and x, r</td><td class="m">r</td><td>1.0</td><td class="ok">1.0</td><td class="ok">match</td></tr><tr><td>Panel A: Between r and x, r</td><td class="m">dp</td><td>0.059</td><td class="ok">0.059</td><td class="ok">match</td></tr><tr><td>Panel A: Between r and x, r</td><td class="m">dfy</td><td>0.022</td><td class="ok">0.022</td><td class="ok">match</td></tr><tr><td>Panel A: Between r and x, r</td><td class="m">tms</td><td>0.058</td><td class="bad">0.057</td><td class="bad">differs</td></tr><tr><td>Panel A: Between r and x, r</td><td class="m">tbl</td><td>-0.097</td><td class="bad">-0.098</td><td class="bad">differs</td></tr><tr><td>Panel A: Between r and x, r</td><td class="m">ltr</td><td>0.045</td><td class="bad">0.085</td><td class="bad">differs</td></tr><tr><td>Panel A: Between r and x, r</td><td class="m">dfr</td><td>0.038</td><td class="ok">0.038</td><td class="ok">match</td></tr><tr><td>Panel A: Between r and x, r</td><td class="m">ntis</td><td>-0.018</td><td class="bad">-0.017</td><td class="bad">differs</td></tr><tr><td>Panel A: Between r and x, r</td><td class="m">infl</td><td>-0.069</td><td class="ok">-0.069</td><td class="ok">match</td></tr><tr><td>Panel B: Between s , m , and x, s</td><td class="m">s</td><td>1.0</td><td class="ok">1.0</td><td class="ok">match</td></tr><tr><td>Panel B: Between s , m , and x, s</td><td class="m">m</td><td>-0.011</td><td class="ok">-0.011</td><td class="ok">match</td></tr><tr><td>Panel B: Between s , m , and x, s</td><td class="m">dp</td><td>0.006</td><td class="ok">0.006</td><td class="ok">match</td></tr><tr><td>Panel B: Between s , m , and x, s</td><td class="m">dfy</td><td>-0.025</td><td class="ok">-0.025</td><td class="ok">match</td></tr><tr><td>Panel B: Between s , m , and x, s</td><td class="m">tms</td><td>0.059</td><td class="ok">0.059</td><td class="ok">match</td></tr><tr><td>Panel B: Between s , m , and x, s</td><td class="m">tbl</td><td>-0.143</td><td class="ok">-0.143</td><td class="ok">match</td></tr><tr><td>Panel B: Between s , m , and x, s</td><td class="m">ltr</td><td>0.026</td><td class="ok">0.026</td><td class="ok">match</td></tr></tbody></table></div><p class="note">16 of 64 cells shown.</p></figure>
+  </div>
+  <details class="code" open><summary>the code that produced the right-hand column</summary><p class="note">alpha_archive/replications/decomp2026_eval.py &middot; correlations()</p><pre>def correlations(frame: pd.DataFrame) -&gt; dict[str, float]:
+    &quot;&quot;&quot;Table 1, all three panels, over the whole 887-month sample (p.11).
+
+    The decomposition is the paper&#x27;s own: r is the raw excess return, s its
+    sign and m its magnitude, each correlated against predictors already lagged
+    one month by `load`. Panel C is the predictor block on its own, printed as
+    an upper triangle, so only the cells the page actually fills are emitted.
+    &quot;&quot;&quot;
+    r = frame[&quot;xs&quot;].to_numpy()
+    s = (r &gt; 0).astype(float)
+    m = np.abs(r)
+    x = {p: frame[p].to_numpy() for p in PREDICTORS}
+
+    def rho(a: np.ndarray, b: np.ndarray) -&gt; float:
+        return float(np.corrcoef(a, b)[0, 1])
+
+    out: dict[str, float] = {}
+
+    pa = &quot;T1/Panel A: Between r and x&quot;
+    out[f&quot;{pa}/r/r&quot;] = 1.0
+    for p in PREDICTORS:
+        out[f&quot;{pa}/r/{p}&quot;] = rho(r, x[p])
+
+    pb = &quot;T1/Panel B: Between s , m , and x&quot;
+    series = {&quot;s&quot;: s, &quot;m&quot;: m}
+    out[f&quot;{pb}/s/s&quot;] = 1.0
+    out[f&quot;{pb}/s/m&quot;] = rho(s, m)
+    out[f&quot;{pb}/m/m&quot;] = 1.0
+    for row, values in series.items():
+        for p in PREDICTORS:
+            out[f&quot;{pb}/{row}/{p}&quot;] = rho(values, x[p])
+
+    # Panel C prints the upper triangle only: the cell below the diagonal is
+    # the same number and the page leaves it blank, so writing it would invent
+    # an address the paper never used.
+    pc = &quot;T1/Panel C: Among x&quot;
+    for i, a in enumerate(PREDICTORS):
+        out[f&quot;{pc}/{a}/{a}&quot;] = 1.0
+        for b in PREDICTORS[i + 1:]:
+            out[f&quot;{pc}/{a}/{b}&quot;] = rho(x[a], x[b])
+    return out</pre></details>
+</section>
+<section class="ev">
+  <h3>Table 2</h3>
+  <p class="lede">Table 2: Best subset selection based on AUC criterion</p>
+  <div class="sbs">
+    <figure><figcaption>as the paper printed it</figcaption><a class="zoom" href="../evidence/2606.04153/T2.png" target="_blank" rel="noopener" title="open full size"><img src="../evidence/2606.04153/T2.png" loading="lazy" decoding="async" alt="Table 2 as the paper printed it"></a></figure>
+    <figure><figcaption>rebuilt from free data</figcaption><p class="note">A grid of asterisks marking which predictors each model selected at each k. Our selections are computed and printed in the notebook, but the checklist harvested no numeric cells from it, so there is nothing here to score against.</p></figure>
+  </div>
+  
+</section>
+<section class="ev">
+  <h3>Table 3</h3>
+  <p class="lede">Table 3: Out-of-sample R2 values by subset size (k) and loss function</p>
+  <div class="sbs">
+    <figure><figcaption>as the paper printed it</figcaption><a class="zoom" href="../evidence/2606.04153/T3.png" target="_blank" rel="noopener" title="open full size"><img src="../evidence/2606.04153/T3.png" loading="lazy" decoding="async" alt="Table 3 as the paper printed it"></a></figure>
+    <figure><figcaption>rebuilt from free data</figcaption><div class="scroll"><table class="gap"><thead><tr><th></th><th></th><th>printed</th><th>ours</th><th></th></tr></thead><tbody><tr><td>Linear model, k = 1</td><td class="m">Squared</td><td>-0.24</td><td class="bad">-0.24</td><td class="bad">differs</td></tr><tr><td>Linear model, k = 1</td><td class="m">Absolute</td><td>0.91</td><td class="bad">0.91</td><td class="bad">differs</td></tr><tr><td>Linear model, k = 2</td><td class="m">Squared</td><td>-0.56</td><td class="bad">-0.56</td><td class="bad">differs</td></tr><tr><td>Linear model, k = 2</td><td class="m">Absolute</td><td>0.42</td><td class="bad">0.42</td><td class="bad">differs</td></tr><tr><td>Linear model, k = 3</td><td class="m">Squared</td><td>-1.52</td><td class="bad">-1.52</td><td class="bad">differs</td></tr><tr><td>Linear model, k = 3</td><td class="m">Absolute</td><td>-0.26</td><td class="bad">-0.26</td><td class="bad">differs</td></tr><tr><td>Linear model, k = 4</td><td class="m">Squared</td><td>-2.28</td><td class="bad">-2.28</td><td class="bad">differs</td></tr><tr><td>Linear model, k = 4</td><td class="m">Absolute</td><td>-1.0</td><td class="bad">-1.0</td><td class="bad">differs</td></tr><tr><td>CSR approach, k = 1</td><td class="m">Squared</td><td>0.37</td><td class="bad">0.37</td><td class="bad">differs</td></tr><tr><td>CSR approach, k = 1</td><td class="m">Absolute</td><td>0.24</td><td class="bad">0.24</td><td class="bad">differs</td></tr><tr><td>CSR approach, k = 2</td><td class="m">Squared</td><td>0.51</td><td class="bad">0.51</td><td class="bad">differs</td></tr><tr><td>CSR approach, k = 2</td><td class="m">Absolute</td><td>0.18</td><td class="bad">0.19</td><td class="bad">differs</td></tr><tr><td>CSR approach, k = 3</td><td class="m">Squared</td><td>0.4</td><td class="bad">0.4</td><td class="bad">differs</td></tr><tr><td>CSR approach, k = 3</td><td class="m">Absolute</td><td>0.02</td><td class="bad">0.02</td><td class="bad">differs</td></tr><tr><td>CSR approach, k = 4</td><td class="m">Squared</td><td>0.11</td><td class="bad">0.11</td><td class="bad">differs</td></tr><tr><td>CSR approach, k = 4</td><td class="m">Absolute</td><td>-0.21</td><td class="bad">-0.21</td><td class="bad">differs</td></tr></tbody></table></div><p class="note">16 of 160 cells shown.</p></figure>
+  </div>
+  <details class="code" open><summary>the code that produced the right-hand column</summary><p class="note">alpha_archive/replications/decomp2026_eval.py &middot; r2_oos()</p><pre>def r2_oos(actual: np.ndarray, model: np.ndarray, benchmark: np.ndarray,
+           absolute: bool = False) -&gt; float:
+    &quot;&quot;&quot;Campbell-Thompson R2 against the rolling historical average, in percent.&quot;&quot;&quot;
+    em, eb = actual - model, actual - benchmark
+    loss = (np.abs if absolute else np.square)
+    return float(100.0 * (1.0 - loss(em).sum() / loss(eb).sum()))</pre></details>
+</section>
+<section class="ev">
+  <h3>Table 4</h3>
+  <p class="lede">Table 4: Out-of-sample model performance comparison using MCS procedure with squared loss</p>
+  <div class="sbs">
+    <figure><figcaption>as the paper printed it</figcaption><a class="zoom" href="../evidence/2606.04153/T4.png" target="_blank" rel="noopener" title="open full size"><img src="../evidence/2606.04153/T4.png" loading="lazy" decoding="async" alt="Table 4 as the paper printed it"></a></figure>
+    <figure><figcaption>rebuilt from free data</figcaption><div class="scroll"><table class="gap"><thead><tr><th></th><th></th><th>printed</th><th>ours</th><th></th></tr></thead><tbody><tr><td>Historical average, k = 1</td><td class="m">MSE</td><td>0.189</td><td class="ok">0.189</td><td class="ok">match</td></tr><tr><td>Historical average, k = 1</td><td class="m">MCS p-value</td><td>0.999</td><td class="bad">0.875</td><td class="bad">differs</td></tr><tr><td>Historical average, k = 2</td><td class="m">MSE</td><td>0.189</td><td class="ok">0.189</td><td class="ok">match</td></tr><tr><td>Historical average, k = 2</td><td class="m">MCS p-value</td><td>0.97</td><td class="bad">0.84</td><td class="bad">differs</td></tr><tr><td>Historical average, k = 3</td><td class="m">MSE</td><td>0.189</td><td class="ok">0.189</td><td class="ok">match</td></tr><tr><td>Historical average, k = 3</td><td class="m">MCS p-value</td><td>0.953</td><td class="bad">0.839</td><td class="bad">differs</td></tr><tr><td>Historical average, k = 4</td><td class="m">MSE</td><td>0.189</td><td class="ok">0.189</td><td class="ok">match</td></tr><tr><td>Historical average, k = 4</td><td class="m">MCS p-value</td><td>0.946</td><td class="bad">0.864</td><td class="bad">differs</td></tr><tr><td>Linear model, k = 1</td><td class="m">MSE</td><td>0.189</td><td class="ok">0.189</td><td class="ok">match</td></tr><tr><td>Linear model, k = 1</td><td class="m">MCS p-value</td><td>0.292</td><td class="bad">0.496</td><td class="bad">differs</td></tr><tr><td>Linear model, k = 2</td><td class="m">MSE</td><td>0.189</td><td class="bad">0.190</td><td class="bad">differs</td></tr><tr><td>Linear model, k = 2</td><td class="m">MCS p-value</td><td>0.593</td><td class="bad">0.806</td><td class="bad">differs</td></tr><tr><td>Linear model, k = 3</td><td class="m">MSE</td><td>0.191</td><td class="ok">0.191</td><td class="ok">match</td></tr><tr><td>Linear model, k = 3</td><td class="m">MCS p-value</td><td>0.0</td><td class="bad">0.6</td><td class="bad">differs</td></tr><tr><td>Linear model, k = 4</td><td class="m">MSE</td><td>0.193</td><td class="ok">0.193</td><td class="ok">match</td></tr><tr><td>Linear model, k = 4</td><td class="m">MCS p-value</td><td>0.0</td><td class="bad">0.0</td><td class="bad">differs</td></tr></tbody></table></div><p class="note">16 of 176 cells shown.</p></figure>
+  </div>
+  <details class="code" open><summary>the code that produced the right-hand column</summary><p class="note">alpha_archive/replications/decomp2026_eval.py &middot; mcs_pvalues()</p><pre>def mcs_pvalues(losses: dict[str, np.ndarray], boot: int = 5000,
+                block: int = 2, seed: int = 20260204) -&gt; dict[str, float]:
+    &quot;&quot;&quot;Hansen, Lunde and Nason (2011), the T_max variant of Section 3.1.2.
+
+    The paper reports p-values from the R MCS package and states neither the
+    block length nor the number of replications, so the package&#x27;s own defaults
+    are used and recorded as an assumption. The seed is fixed because a p-value
+    that moves between runs cannot be scored against a printed one.
+    &quot;&quot;&quot;
+    names = list(losses)
+    L = np.column_stack([losses[n] for n in names])
+    n, m = L.shape
+    rng = np.random.default_rng(seed)
+
+    # Stationary bootstrap indices, shared across models so the resampling
+    # cannot favour one of them.
+    idx = np.empty((boot, n), dtype=np.int64)
+    for b in range(boot):
+        i, pos = rng.integers(0, n), 0
+        while pos &lt; n:
+            run = min(rng.geometric(1.0 / block), n - pos)
+            take = (np.arange(i, i + run) % n)
+            idx[b, pos:pos + run] = take
+            pos += run
+            i = rng.integers(0, n)
+
+    alive = list(range(m))
+    pvals: dict[str, float] = {}
+    running = 0.0
+    while len(alive) &gt; 1:
+        sub = L[:, alive]
+        d = sub - sub.mean(axis=1, keepdims=True)   # loss vs the live average
+        dbar = d.mean(axis=0)
+        boot_mean = d[idx].mean(axis=1)             # (boot, alive)
+        var = boot_mean.var(axis=0, ddof=1)
+        var = np.where(var &lt; 1e-18, 1e-18, var)
+        tstat = dbar / np.sqrt(var)
+        tboot = (boot_mean - dbar) / np.sqrt(var)
+
+        tmax, tmax_boot = tstat.max(), tboot.max(axis=1)
+        p = float((tmax_boot &gt;= tmax).mean())
+        running = max(running, p)
+
+        worst = int(np.argmax(tstat))
+        pvals[names[alive[worst]]] = running
+        alive.pop(worst)
+
+    pvals[names[alive[0]]] = 1.0
+    return pvals</pre></details>
+</section>
+<section class="ev">
+  <h3>Table 5</h3>
+  <p class="lede">Table 5: Out-of-sample model performance comparison using MCS procedure with absolute loss</p>
+  <div class="sbs">
+    <figure><figcaption>as the paper printed it</figcaption><a class="zoom" href="../evidence/2606.04153/T5.png" target="_blank" rel="noopener" title="open full size"><img src="../evidence/2606.04153/T5.png" loading="lazy" decoding="async" alt="Table 5 as the paper printed it"></a></figure>
+    <figure><figcaption>rebuilt from free data</figcaption><div class="scroll"><table class="gap"><thead><tr><th></th><th></th><th>printed</th><th>ours</th><th></th></tr></thead><tbody><tr><td>Historical average, k = 1</td><td class="m">MAE</td><td>3.269</td><td class="ok">3.269</td><td class="ok">match</td></tr><tr><td>Historical average, k = 1</td><td class="m">MCS p-value</td><td>0.0</td><td class="bad">0.1</td><td class="bad">differs</td></tr><tr><td>Historical average, k = 2</td><td class="m">MAE</td><td>3.269</td><td class="ok">3.269</td><td class="ok">match</td></tr><tr><td>Historical average, k = 2</td><td class="m">MCS p-value</td><td>0.559</td><td class="bad">0.231</td><td class="bad">differs</td></tr><tr><td>Historical average, k = 3</td><td class="m">MAE</td><td>3.268</td><td class="bad">3.269</td><td class="bad">differs</td></tr><tr><td>Historical average, k = 3</td><td class="m">MCS p-value</td><td>0.322</td><td class="bad">0.344</td><td class="bad">differs</td></tr><tr><td>Historical average, k = 4</td><td class="m">MAE</td><td>3.268</td><td class="bad">3.269</td><td class="bad">differs</td></tr><tr><td>Historical average, k = 4</td><td class="m">MCS p-value</td><td>0.731</td><td class="bad">0.310</td><td class="bad">differs</td></tr><tr><td>Linear model, k = 1</td><td class="m">MAE</td><td>3.239</td><td class="ok">3.239</td><td class="ok">match</td></tr><tr><td>Linear model, k = 1</td><td class="m">MCS p-value</td><td>0.805</td><td class="bad">0.183</td><td class="bad">differs</td></tr><tr><td>Linear model, k = 2</td><td class="m">MAE</td><td>3.255</td><td class="ok">3.255</td><td class="ok">match</td></tr><tr><td>Linear model, k = 2</td><td class="m">MCS p-value</td><td>0.878</td><td class="bad">0.518</td><td class="bad">differs</td></tr><tr><td>Linear model, k = 3</td><td class="m">MAE</td><td>3.277</td><td class="ok">3.277</td><td class="ok">match</td></tr><tr><td>Linear model, k = 3</td><td class="m">MCS p-value</td><td>0.0</td><td class="bad">0.3</td><td class="bad">differs</td></tr><tr><td>Linear model, k = 4</td><td class="m">MAE</td><td>3.301</td><td class="ok">3.301</td><td class="ok">match</td></tr><tr><td>Linear model, k = 4</td><td class="m">MCS p-value</td><td>0.0</td><td class="bad">0.0</td><td class="bad">differs</td></tr></tbody></table></div><p class="note">16 of 176 cells shown.</p></figure>
+  </div>
+  <details class="code" open><summary>the code that produced the right-hand column</summary><p class="note">alpha_archive/replications/decomp2026_eval.py &middot; mcs_pvalues()</p><pre>def mcs_pvalues(losses: dict[str, np.ndarray], boot: int = 5000,
+                block: int = 2, seed: int = 20260204) -&gt; dict[str, float]:
+    &quot;&quot;&quot;Hansen, Lunde and Nason (2011), the T_max variant of Section 3.1.2.
+
+    The paper reports p-values from the R MCS package and states neither the
+    block length nor the number of replications, so the package&#x27;s own defaults
+    are used and recorded as an assumption. The seed is fixed because a p-value
+    that moves between runs cannot be scored against a printed one.
+    &quot;&quot;&quot;
+    names = list(losses)
+    L = np.column_stack([losses[n] for n in names])
+    n, m = L.shape
+    rng = np.random.default_rng(seed)
+
+    # Stationary bootstrap indices, shared across models so the resampling
+    # cannot favour one of them.
+    idx = np.empty((boot, n), dtype=np.int64)
+    for b in range(boot):
+        i, pos = rng.integers(0, n), 0
+        while pos &lt; n:
+            run = min(rng.geometric(1.0 / block), n - pos)
+            take = (np.arange(i, i + run) % n)
+            idx[b, pos:pos + run] = take
+            pos += run
+            i = rng.integers(0, n)
+
+    alive = list(range(m))
+    pvals: dict[str, float] = {}
+    running = 0.0
+    while len(alive) &gt; 1:
+        sub = L[:, alive]
+        d = sub - sub.mean(axis=1, keepdims=True)   # loss vs the live average
+        dbar = d.mean(axis=0)
+        boot_mean = d[idx].mean(axis=1)             # (boot, alive)
+        var = boot_mean.var(axis=0, ddof=1)
+        var = np.where(var &lt; 1e-18, 1e-18, var)
+        tstat = dbar / np.sqrt(var)
+        tboot = (boot_mean - dbar) / np.sqrt(var)
+
+        tmax, tmax_boot = tstat.max(), tboot.max(axis=1)
+        p = float((tmax_boot &gt;= tmax).mean())
+        running = max(running, p)
+
+        worst = int(np.argmax(tstat))
+        pvals[names[alive[worst]]] = running
+        alive.pop(worst)
+
+    pvals[names[alive[0]]] = 1.0
+    return pvals</pre></details>
+</section>
+<section class="ev">
+  <h3>Table 6</h3>
+  <p class="lede">Table 6: Out-of-sample performance statistics for the trading strategies for k = 1, 2, 3, 7</p>
+  <div class="sbs">
+    <figure><figcaption>as the paper printed it</figcaption><a class="zoom" href="../evidence/2606.04153/T6.png" target="_blank" rel="noopener" title="open full size"><img src="../evidence/2606.04153/T6.png" loading="lazy" decoding="async" alt="Table 6 as the paper printed it"></a></figure>
+    <figure><figcaption>rebuilt from free data</figcaption><div class="scroll"><table class="gap"><thead><tr><th></th><th></th><th>printed</th><th>ours</th><th></th></tr></thead><tbody><tr><td>Buy and hold, k =1</td><td class="m">TW</td><td>104.63</td><td class="bad">104.62</td><td class="bad">differs</td></tr><tr><td>Buy and hold, k =1</td><td class="m">AV</td><td>12.65</td><td class="ok">12.65</td><td class="ok">match</td></tr><tr><td>Buy and hold, k =1</td><td class="m">SD</td><td>15.0</td><td class="ok">15.0</td><td class="ok">match</td></tr><tr><td>Buy and hold, k =1</td><td class="m">SR</td><td>0.17</td><td class="ok">0.17</td><td class="ok">match</td></tr><tr><td>Buy and hold, k =1</td><td class="m">MDD</td><td>0.5</td><td class="ok">0.5</td><td class="ok">match</td></tr><tr><td>Buy and hold, k =2</td><td class="m">TW</td><td>104.63</td><td class="bad">104.62</td><td class="bad">differs</td></tr><tr><td>Buy and hold, k =2</td><td class="m">AV</td><td>12.65</td><td class="ok">12.65</td><td class="ok">match</td></tr><tr><td>Buy and hold, k =2</td><td class="m">SD</td><td>15.0</td><td class="ok">15.0</td><td class="ok">match</td></tr><tr><td>Buy and hold, k =2</td><td class="m">SR</td><td>0.17</td><td class="ok">0.17</td><td class="ok">match</td></tr><tr><td>Buy and hold, k =2</td><td class="m">MDD</td><td>0.5</td><td class="ok">0.5</td><td class="ok">match</td></tr><tr><td>Momentum, 3-month, k =1</td><td class="m">TW</td><td>32.39</td><td class="bad">40.49</td><td class="bad">differs</td></tr><tr><td>Momentum, 3-month, k =1</td><td class="m">AV</td><td>9.18</td><td class="bad">10.07</td><td class="bad">differs</td></tr><tr><td>Momentum, 3-month, k =1</td><td class="m">SD</td><td>10.69</td><td class="bad">11.28</td><td class="bad">differs</td></tr><tr><td>Momentum, 3-month, k =1</td><td class="m">SR</td><td>0.15</td><td class="bad">0.16</td><td class="bad">differs</td></tr><tr><td>Momentum, 3-month, k =1</td><td class="m">MDD</td><td>0.23</td><td class="bad">0.32</td><td class="bad">differs</td></tr><tr><td>Momentum, 3-month, k =2</td><td class="m">TW</td><td>32.39</td><td class="bad">40.49</td><td class="bad">differs</td></tr></tbody></table></div><p class="note">16 of 280 cells shown.</p></figure>
+  </div>
+  <details class="code" open><summary>the code that produced the right-hand column</summary><p class="note">alpha_archive/replications/decomp2026_eval.py &middot; switching()</p><pre>def switching(forecast: np.ndarray, mkt: np.ndarray, rf: np.ndarray) -&gt; dict:
+    &quot;&quot;&quot;The paper&#x27;s switching rule, and everything Table 6 reports about it.&quot;&quot;&quot;
+    equity = forecast &gt; 0
+    ret = np.where(equity, mkt, rf)
+
+    # Nothing is held before the first decision, so the first allocation is not
+    # a switch. Charging it would put a cost on buy-and-hold, whose printed
+    # 104.63 is exactly the uncosted compounding of the index.
+    switched = np.empty(len(equity), dtype=bool)
+    switched[0] = False
+    switched[1:] = equity[1:] != equity[:-1]
+
+    wealth = np.cumprod((1.0 + ret) * np.where(switched, 1.0 - COST, 1.0))
+    peak = np.maximum.accumulate(wealth)
+    return {
+        &quot;returns&quot;: ret,
+        &quot;excess&quot;: ret - rf,
+        &quot;wealth&quot;: wealth,
+        &quot;TW&quot;: float(wealth[-1]),
+        &quot;AV&quot;: float(ret.mean() * MONTHS * 100.0),
+        &quot;SD&quot;: float(ret.std(ddof=1) * np.sqrt(MONTHS) * 100.0),
+        &quot;SR&quot;: float((ret - rf).mean() / ret.std(ddof=1)),
+        &quot;MDD&quot;: float(np.max(1.0 - wealth / peak)),
+        &quot;switches&quot;: int(switched.sum()),
+    }</pre></details>
+</section>
+<section class="ev">
+  <h3>Table 7</h3>
+  <p class="lede">Table 7: CER gains against historical average for γ = 5</p>
+  <div class="sbs">
+    <figure><figcaption>as the paper printed it</figcaption><a class="zoom" href="../evidence/2606.04153/T7.png" target="_blank" rel="noopener" title="open full size"><img src="../evidence/2606.04153/T7.png" loading="lazy" decoding="async" alt="Table 7 as the paper printed it"></a></figure>
+    <figure><figcaption>rebuilt from free data</figcaption><div class="scroll"><table class="gap"><thead><tr><th></th><th></th><th>printed</th><th>ours</th><th></th></tr></thead><tbody><tr><td>Panel A: Mean-variance preferences, 3-month momentum</td><td class="m">k = 1</td><td>-0.706</td><td class="bad">-0.139</td><td class="bad">differs</td></tr><tr><td>Panel A: Mean-variance preferences, 3-month momentum</td><td class="m">k = 2</td><td>-0.706</td><td class="bad">-0.139</td><td class="bad">differs</td></tr><tr><td>Panel A: Mean-variance preferences, 3-month momentum</td><td class="m">k = 3</td><td>-0.706</td><td class="bad">-0.139</td><td class="bad">differs</td></tr><tr><td>Panel A: Mean-variance preferences, 3-month momentum</td><td class="m">k = 7</td><td>-0.706</td><td class="bad">-0.139</td><td class="bad">differs</td></tr><tr><td>Panel A: Mean-variance preferences, 6-month momentum</td><td class="m">k = 1</td><td>0.042</td><td class="bad">0.054</td><td class="bad">differs</td></tr><tr><td>Panel A: Mean-variance preferences, 6-month momentum</td><td class="m">k = 2</td><td>0.042</td><td class="bad">0.054</td><td class="bad">differs</td></tr><tr><td>Panel A: Mean-variance preferences, 6-month momentum</td><td class="m">k = 3</td><td>0.042</td><td class="bad">0.054</td><td class="bad">differs</td></tr><tr><td>Panel A: Mean-variance preferences, 6-month momentum</td><td class="m">k = 7</td><td>0.042</td><td class="bad">0.054</td><td class="bad">differs</td></tr><tr><td>Panel A: Mean-variance preferences, 12-month momentum</td><td class="m">k = 1</td><td>1.436</td><td class="bad">1.047</td><td class="bad">differs</td></tr><tr><td>Panel A: Mean-variance preferences, 12-month momentum</td><td class="m">k = 2</td><td>1.436</td><td class="bad">1.047</td><td class="bad">differs</td></tr><tr><td>Panel A: Mean-variance preferences, 12-month momentum</td><td class="m">k = 3</td><td>1.436</td><td class="bad">1.047</td><td class="bad">differs</td></tr><tr><td>Panel A: Mean-variance preferences, 12-month momentum</td><td class="m">k = 7</td><td>1.436</td><td class="bad">1.047</td><td class="bad">differs</td></tr><tr><td>Panel A: Mean-variance preferences, Linear model</td><td class="m">k = 1</td><td>0.127</td><td class="bad">0.134</td><td class="bad">differs</td></tr><tr><td>Panel A: Mean-variance preferences, Linear model</td><td class="m">k = 2</td><td>0.403</td><td class="bad">0.436</td><td class="bad">differs</td></tr><tr><td>Panel A: Mean-variance preferences, Linear model</td><td class="m">k = 3</td><td>0.854</td><td class="bad">0.949</td><td class="bad">differs</td></tr><tr><td>Panel A: Mean-variance preferences, Linear model</td><td class="m">k = 7</td><td>1.384</td><td class="bad">1.507</td><td class="bad">differs</td></tr></tbody></table></div><p class="note">16 of 104 cells shown.</p></figure>
+  </div>
+  <details class="code" open><summary>the code that produced the right-hand column</summary><p class="note">alpha_archive/replications/decomp2026_eval.py &middot; cer_mean_variance()</p><pre>def cer_mean_variance(ret: np.ndarray) -&gt; float:
+    return float(ret.mean() - 0.5 * GAMMA * ret.var(ddof=1))</pre></details>
+</section>
+<section class="ev">
+  <h3>Table 8</h3>
+  <p class="lede">Table 8: CER gains against CSM (Baseline) for γ = 5</p>
+  <div class="sbs">
+    <figure><figcaption>as the paper printed it</figcaption><a class="zoom" href="../evidence/2606.04153/T8.png" target="_blank" rel="noopener" title="open full size"><img src="../evidence/2606.04153/T8.png" loading="lazy" decoding="async" alt="Table 8 as the paper printed it"></a></figure>
+    <figure><figcaption>rebuilt from free data</figcaption><div class="scroll"><table class="gap"><thead><tr><th></th><th></th><th>printed</th><th>ours</th><th></th></tr></thead><tbody><tr><td>Panel A: Mean-variance preferences, Gaussian</td><td class="m">k = 1</td><td>-0.087</td><td class="bad">0.000</td><td class="bad">differs</td></tr><tr><td>Panel A: Mean-variance preferences, Gaussian</td><td class="m">k = 2</td><td>-0.504</td><td class="bad">0.061</td><td class="bad">differs</td></tr><tr><td>Panel A: Mean-variance preferences, Gaussian</td><td class="m">k = 3</td><td>-0.288</td><td class="bad">0.109</td><td class="bad">differs</td></tr><tr><td>Panel A: Mean-variance preferences, Gaussian</td><td class="m">k = 7</td><td>0.14</td><td class="bad">-0.10</td><td class="bad">differs</td></tr><tr><td>Panel A: Mean-variance preferences, Frank</td><td class="m">k = 1</td><td>-0.041</td><td class="bad">-3.723</td><td class="bad">differs</td></tr><tr><td>Panel A: Mean-variance preferences, Frank</td><td class="m">k = 2</td><td>0.0</td><td class="bad">-4.9</td><td class="bad">differs</td></tr><tr><td>Panel A: Mean-variance preferences, Frank</td><td class="m">k = 3</td><td>-0.288</td><td class="bad">-5.139</td><td class="bad">differs</td></tr><tr><td>Panel A: Mean-variance preferences, Frank</td><td class="m">k = 7</td><td>0.078</td><td class="bad">-7.889</td><td class="bad">differs</td></tr><tr><td>Panel A: Mean-variance preferences, Clayton</td><td class="m">k = 1</td><td>-0.054</td><td class="bad">0.054</td><td class="bad">differs</td></tr><tr><td>Panel A: Mean-variance preferences, Clayton</td><td class="m">k = 2</td><td>-0.802</td><td class="bad">0.048</td><td class="bad">differs</td></tr><tr><td>Panel A: Mean-variance preferences, Clayton</td><td class="m">k = 3</td><td>-1.464</td><td class="bad">0.109</td><td class="bad">differs</td></tr><tr><td>Panel A: Mean-variance preferences, Clayton</td><td class="m">k = 7</td><td>0.11</td><td class="bad">-0.19</td><td class="bad">differs</td></tr><tr><td>Panel A: Mean-variance preferences, FGM</td><td class="m">k = 1</td><td>-0.041</td><td class="bad">0.000</td><td class="bad">differs</td></tr><tr><td>Panel A: Mean-variance preferences, FGM</td><td class="m">k = 2</td><td>-0.363</td><td class="bad">0.061</td><td class="bad">differs</td></tr><tr><td>Panel A: Mean-variance preferences, FGM</td><td class="m">k = 3</td><td>-0.288</td><td class="bad">0.071</td><td class="bad">differs</td></tr><tr><td>Panel A: Mean-variance preferences, FGM</td><td class="m">k = 7</td><td>0.078</td><td class="bad">-0.058</td><td class="bad">differs</td></tr></tbody></table></div><p class="note">16 of 40 cells shown.</p></figure>
+  </div>
+  <details class="code" open><summary>the code that produced the right-hand column</summary><p class="note">alpha_archive/replications/decomp2026_eval.py &middot; cer_crra()</p><pre>def cer_crra(ret: np.ndarray) -&gt; float:
+    power = np.power(1.0 + ret, 1.0 - GAMMA)
+    return float(np.mean(power) ** (1.0 / (1.0 - GAMMA)) - 1.0)</pre></details>
+</section>
+<section class="ev">
+  <h3>Table A1</h3>
+  <p class="lede">Table A1: Best subset selection based on MSE criterion</p>
+  <div class="sbs">
+    <figure><figcaption>as the paper printed it</figcaption><a class="zoom" href="../evidence/2606.04153/TA1.png" target="_blank" rel="noopener" title="open full size"><img src="../evidence/2606.04153/TA1.png" loading="lazy" decoding="async" alt="Table A1 as the paper printed it"></a></figure>
+    <figure><figcaption>rebuilt from free data</figcaption><p class="note">As Table 2, for MSE-based selection rather than AUC.</p></figure>
+  </div>
+  
+</section>
+<section class="ev">
+  <h3>Table A2</h3>
+  <p class="lede">Table A2: Out-of-sample R2 values (in %) for different models, loss functions, and subset sizes (k)</p>
+  <div class="sbs">
+    <figure><figcaption>as the paper printed it</figcaption><a class="zoom" href="../evidence/2606.04153/TA2.png" target="_blank" rel="noopener" title="open full size"><img src="../evidence/2606.04153/TA2.png" loading="lazy" decoding="async" alt="Table A2 as the paper printed it"></a></figure>
+    <figure><figcaption>rebuilt from free data</figcaption><div class="scroll"><table class="gap"><thead><tr><th></th><th></th><th>printed</th><th>ours</th><th></th></tr></thead><tbody><tr><td>Linear model, k = 1</td><td class="m">Squared</td><td>-0.88</td><td class="miss">—</td><td class="miss">—</td></tr><tr><td>Linear model, k = 1</td><td class="m">Absolute</td><td>-1.74</td><td class="miss">—</td><td class="miss">—</td></tr><tr><td>Linear model, k = 2</td><td class="m">Squared</td><td>-1.37</td><td class="miss">—</td><td class="miss">—</td></tr><tr><td>Linear model, k = 2</td><td class="m">Absolute</td><td>-0.1</td><td class="miss">—</td><td class="miss">—</td></tr><tr><td>Linear model, k = 3</td><td class="m">Squared</td><td>-2.58</td><td class="miss">—</td><td class="miss">—</td></tr><tr><td>Linear model, k = 3</td><td class="m">Absolute</td><td>-1.92</td><td class="miss">—</td><td class="miss">—</td></tr><tr><td>Linear model, k = 4</td><td class="m">Squared</td><td>-2.58</td><td class="miss">—</td><td class="miss">—</td></tr><tr><td>Linear model, k = 4</td><td class="m">Absolute</td><td>-2.66</td><td class="miss">—</td><td class="miss">—</td></tr><tr><td>CSR approach, k = 1</td><td class="m">Squared</td><td>0.37</td><td class="miss">—</td><td class="miss">—</td></tr><tr><td>CSR approach, k = 1</td><td class="m">Absolute</td><td>0.24</td><td class="miss">—</td><td class="miss">—</td></tr><tr><td>CSR approach, k = 2</td><td class="m">Squared</td><td>0.51</td><td class="miss">—</td><td class="miss">—</td></tr><tr><td>CSR approach, k = 2</td><td class="m">Absolute</td><td>0.18</td><td class="miss">—</td><td class="miss">—</td></tr><tr><td>CSR approach, k = 3</td><td class="m">Squared</td><td>0.4</td><td class="miss">—</td><td class="miss">—</td></tr><tr><td>CSR approach, k = 3</td><td class="m">Absolute</td><td>0.02</td><td class="miss">—</td><td class="miss">—</td></tr><tr><td>CSR approach, k = 4</td><td class="m">Squared</td><td>0.11</td><td class="miss">—</td><td class="miss">—</td></tr><tr><td>CSR approach, k = 4</td><td class="m">Absolute</td><td>-0.21</td><td class="miss">—</td><td class="miss">—</td></tr></tbody></table></div><p class="note">16 of 160 cells shown.</p></figure>
+  </div>
+  
+</section>
+<section class="ev">
+  <h3>Table B1</h3>
+  <p class="lede">Table B1: Out-of-sample performance statistics for the trading strategies for k = 4, 5, 6, 8</p>
+  <div class="sbs">
+    <figure><figcaption>as the paper printed it</figcaption><a class="zoom" href="../evidence/2606.04153/TB1.png" target="_blank" rel="noopener" title="open full size"><img src="../evidence/2606.04153/TB1.png" loading="lazy" decoding="async" alt="Table B1 as the paper printed it"></a></figure>
+    <figure><figcaption>rebuilt from free data</figcaption><div class="scroll"><table class="gap"><thead><tr><th></th><th></th><th>printed</th><th>ours</th><th></th></tr></thead><tbody><tr><td>Buy and hold, k =4</td><td class="m">TW</td><td>104.63</td><td class="bad">104.62</td><td class="bad">differs</td></tr><tr><td>Buy and hold, k =4</td><td class="m">AV</td><td>12.65</td><td class="ok">12.65</td><td class="ok">match</td></tr><tr><td>Buy and hold, k =4</td><td class="m">SD</td><td>15.0</td><td class="ok">15.0</td><td class="ok">match</td></tr><tr><td>Buy and hold, k =4</td><td class="m">SR</td><td>0.17</td><td class="ok">0.17</td><td class="ok">match</td></tr><tr><td>Buy and hold, k =4</td><td class="m">MDD</td><td>0.5</td><td class="ok">0.5</td><td class="ok">match</td></tr><tr><td>Buy and hold, k =5</td><td class="m">TW</td><td>104.63</td><td class="bad">104.62</td><td class="bad">differs</td></tr><tr><td>Buy and hold, k =5</td><td class="m">AV</td><td>12.65</td><td class="ok">12.65</td><td class="ok">match</td></tr><tr><td>Buy and hold, k =5</td><td class="m">SD</td><td>15.0</td><td class="ok">15.0</td><td class="ok">match</td></tr><tr><td>Buy and hold, k =5</td><td class="m">SR</td><td>0.17</td><td class="ok">0.17</td><td class="ok">match</td></tr><tr><td>Buy and hold, k =5</td><td class="m">MDD</td><td>0.5</td><td class="ok">0.5</td><td class="ok">match</td></tr><tr><td>Momentum, 3-month, k =4</td><td class="m">TW</td><td>32.39</td><td class="bad">40.49</td><td class="bad">differs</td></tr><tr><td>Momentum, 3-month, k =4</td><td class="m">AV</td><td>9.18</td><td class="bad">10.07</td><td class="bad">differs</td></tr><tr><td>Momentum, 3-month, k =4</td><td class="m">SD</td><td>10.69</td><td class="bad">11.28</td><td class="bad">differs</td></tr><tr><td>Momentum, 3-month, k =4</td><td class="m">SR</td><td>0.15</td><td class="bad">0.16</td><td class="bad">differs</td></tr><tr><td>Momentum, 3-month, k =4</td><td class="m">MDD</td><td>0.23</td><td class="bad">0.32</td><td class="bad">differs</td></tr><tr><td>Momentum, 3-month, k =5</td><td class="m">TW</td><td>32.39</td><td class="bad">40.49</td><td class="bad">differs</td></tr></tbody></table></div><p class="note">16 of 280 cells shown.</p></figure>
+  </div>
+  <details class="code" open><summary>the code that produced the right-hand column</summary><p class="note">alpha_archive/replications/decomp2026_eval.py &middot; switching()</p><pre>def switching(forecast: np.ndarray, mkt: np.ndarray, rf: np.ndarray) -&gt; dict:
+    &quot;&quot;&quot;The paper&#x27;s switching rule, and everything Table 6 reports about it.&quot;&quot;&quot;
+    equity = forecast &gt; 0
+    ret = np.where(equity, mkt, rf)
+
+    # Nothing is held before the first decision, so the first allocation is not
+    # a switch. Charging it would put a cost on buy-and-hold, whose printed
+    # 104.63 is exactly the uncosted compounding of the index.
+    switched = np.empty(len(equity), dtype=bool)
+    switched[0] = False
+    switched[1:] = equity[1:] != equity[:-1]
+
+    wealth = np.cumprod((1.0 + ret) * np.where(switched, 1.0 - COST, 1.0))
+    peak = np.maximum.accumulate(wealth)
+    return {
+        &quot;returns&quot;: ret,
+        &quot;excess&quot;: ret - rf,
+        &quot;wealth&quot;: wealth,
+        &quot;TW&quot;: float(wealth[-1]),
+        &quot;AV&quot;: float(ret.mean() * MONTHS * 100.0),
+        &quot;SD&quot;: float(ret.std(ddof=1) * np.sqrt(MONTHS) * 100.0),
+        &quot;SR&quot;: float((ret - rf).mean() / ret.std(ddof=1)),
+        &quot;MDD&quot;: float(np.max(1.0 - wealth / peak)),
+        &quot;switches&quot;: int(switched.sum()),
+    }</pre></details>
+</section>
+<section class="ev">
+  <h3>Table B2</h3>
+  <p class="lede">Table B2: CER gains against historical average for γ = 5</p>
+  <div class="sbs">
+    <figure><figcaption>as the paper printed it</figcaption><a class="zoom" href="../evidence/2606.04153/TB2.png" target="_blank" rel="noopener" title="open full size"><img src="../evidence/2606.04153/TB2.png" loading="lazy" decoding="async" alt="Table B2 as the paper printed it"></a></figure>
+    <figure><figcaption>rebuilt from free data</figcaption><div class="scroll"><table class="gap"><thead><tr><th></th><th></th><th>printed</th><th>ours</th><th></th></tr></thead><tbody><tr><td>Panel A: Mean-variance preferences, 3-month momentum</td><td class="m">k = 4</td><td>-0.706</td><td class="bad">-0.139</td><td class="bad">differs</td></tr><tr><td>Panel A: Mean-variance preferences, 3-month momentum</td><td class="m">k = 5</td><td>-0.706</td><td class="bad">-0.139</td><td class="bad">differs</td></tr><tr><td>Panel A: Mean-variance preferences, 3-month momentum</td><td class="m">k = 6</td><td>-0.706</td><td class="bad">-0.139</td><td class="bad">differs</td></tr><tr><td>Panel A: Mean-variance preferences, 3-month momentum</td><td class="m">k = 8</td><td>-0.706</td><td class="bad">-0.139</td><td class="bad">differs</td></tr><tr><td>Panel A: Mean-variance preferences, 6-month momentum</td><td class="m">k = 4</td><td>0.042</td><td class="bad">0.054</td><td class="bad">differs</td></tr><tr><td>Panel A: Mean-variance preferences, 6-month momentum</td><td class="m">k = 5</td><td>0.042</td><td class="bad">0.054</td><td class="bad">differs</td></tr><tr><td>Panel A: Mean-variance preferences, 6-month momentum</td><td class="m">k = 6</td><td>0.042</td><td class="bad">0.054</td><td class="bad">differs</td></tr><tr><td>Panel A: Mean-variance preferences, 6-month momentum</td><td class="m">k = 8</td><td>0.042</td><td class="bad">0.054</td><td class="bad">differs</td></tr><tr><td>Panel A: Mean-variance preferences, 12-month momentum</td><td class="m">k = 4</td><td>1.436</td><td class="bad">1.047</td><td class="bad">differs</td></tr><tr><td>Panel A: Mean-variance preferences, 12-month momentum</td><td class="m">k = 5</td><td>1.436</td><td class="bad">1.047</td><td class="bad">differs</td></tr><tr><td>Panel A: Mean-variance preferences, 12-month momentum</td><td class="m">k = 6</td><td>1.436</td><td class="bad">1.047</td><td class="bad">differs</td></tr><tr><td>Panel A: Mean-variance preferences, 12-month momentum</td><td class="m">k = 8</td><td>1.436</td><td class="bad">1.047</td><td class="bad">differs</td></tr><tr><td>Panel A: Mean-variance preferences, Linear model</td><td class="m">k = 4</td><td>-0.286</td><td class="bad">-0.229</td><td class="bad">differs</td></tr><tr><td>Panel A: Mean-variance preferences, Linear model</td><td class="m">k = 5</td><td>-0.408</td><td class="bad">-0.302</td><td class="bad">differs</td></tr><tr><td>Panel A: Mean-variance preferences, Linear model</td><td class="m">k = 6</td><td>-0.209</td><td class="bad">-0.095</td><td class="bad">differs</td></tr><tr><td>Panel A: Mean-variance preferences, Linear model</td><td class="m">k = 8</td><td>0.726</td><td class="bad">0.874</td><td class="bad">differs</td></tr></tbody></table></div><p class="note">16 of 104 cells shown.</p></figure>
+  </div>
+  <details class="code" open><summary>the code that produced the right-hand column</summary><p class="note">alpha_archive/replications/decomp2026_eval.py &middot; cer_mean_variance()</p><pre>def cer_mean_variance(ret: np.ndarray) -&gt; float:
+    return float(ret.mean() - 0.5 * GAMMA * ret.var(ddof=1))</pre></details>
+</section>
+<section class="ev">
+  <h3>Table B3</h3>
+  <p class="lede">Table B3: CER gains against CSM (Baseline) for γ = 5</p>
+  <div class="sbs">
+    <figure><figcaption>as the paper printed it</figcaption><a class="zoom" href="../evidence/2606.04153/TB3.png" target="_blank" rel="noopener" title="open full size"><img src="../evidence/2606.04153/TB3.png" loading="lazy" decoding="async" alt="Table B3 as the paper printed it"></a></figure>
+    <figure><figcaption>rebuilt from free data</figcaption><div class="scroll"><table class="gap"><thead><tr><th></th><th></th><th>printed</th><th>ours</th><th></th></tr></thead><tbody><tr><td>Panel A: Mean-variance preferences, Gaussian</td><td class="m">k = 4</td><td>0.278</td><td class="bad">-0.059</td><td class="bad">differs</td></tr><tr><td>Panel A: Mean-variance preferences, Gaussian</td><td class="m">k = 5</td><td>-0.089</td><td class="bad">0.099</td><td class="bad">differs</td></tr><tr><td>Panel A: Mean-variance preferences, Gaussian</td><td class="m">k = 6</td><td>0.288</td><td class="bad">0.151</td><td class="bad">differs</td></tr><tr><td>Panel A: Mean-variance preferences, Gaussian</td><td class="m">k = 8</td><td>-0.005</td><td class="bad">-0.243</td><td class="bad">differs</td></tr><tr><td>Panel A: Mean-variance preferences, Frank</td><td class="m">k = 4</td><td>0.164</td><td class="bad">-5.644</td><td class="bad">differs</td></tr><tr><td>Panel A: Mean-variance preferences, Frank</td><td class="m">k = 5</td><td>0.218</td><td class="bad">-5.931</td><td class="bad">differs</td></tr><tr><td>Panel A: Mean-variance preferences, Frank</td><td class="m">k = 6</td><td>0.313</td><td class="bad">-5.136</td><td class="bad">differs</td></tr><tr><td>Panel A: Mean-variance preferences, Frank</td><td class="m">k = 8</td><td>-0.003</td><td class="bad">-7.948</td><td class="bad">differs</td></tr><tr><td>Panel A: Mean-variance preferences, Clayton</td><td class="m">k = 4</td><td>0.489</td><td class="bad">0.251</td><td class="bad">differs</td></tr><tr><td>Panel A: Mean-variance preferences, Clayton</td><td class="m">k = 5</td><td>0.125</td><td class="bad">0.306</td><td class="bad">differs</td></tr><tr><td>Panel A: Mean-variance preferences, Clayton</td><td class="m">k = 6</td><td>0.518</td><td class="bad">0.319</td><td class="bad">differs</td></tr><tr><td>Panel A: Mean-variance preferences, Clayton</td><td class="m">k = 8</td><td>0.093</td><td class="bad">0.043</td><td class="bad">differs</td></tr><tr><td>Panel A: Mean-variance preferences, FGM</td><td class="m">k = 4</td><td>0.164</td><td class="bad">0.193</td><td class="bad">differs</td></tr><tr><td>Panel A: Mean-variance preferences, FGM</td><td class="m">k = 5</td><td>0.218</td><td class="bad">0.329</td><td class="bad">differs</td></tr><tr><td>Panel A: Mean-variance preferences, FGM</td><td class="m">k = 6</td><td>0.232</td><td class="bad">0.359</td><td class="bad">differs</td></tr><tr><td>Panel A: Mean-variance preferences, FGM</td><td class="m">k = 8</td><td>-0.003</td><td class="bad">0.038</td><td class="bad">differs</td></tr></tbody></table></div><p class="note">16 of 40 cells shown.</p></figure>
+  </div>
+  <details class="code" open><summary>the code that produced the right-hand column</summary><p class="note">alpha_archive/replications/decomp2026_eval.py &middot; cer_crra()</p><pre>def cer_crra(ret: np.ndarray) -&gt; float:
+    power = np.power(1.0 + ret, 1.0 - GAMMA)
+    return float(np.mean(power) ** (1.0 / (1.0 - GAMMA)) - 1.0)</pre></details>
+</section>
+<section class="ev">
+  <h3>Table C1</h3>
+  <p class="lede">Table C1: Out-of-sample performance statistics for the trading strategies during crisis peri- ods</p>
+  <div class="sbs">
+    <figure><figcaption>as the paper printed it</figcaption><a class="zoom" href="../evidence/2606.04153/TC1.png" target="_blank" rel="noopener" title="open full size"><img src="../evidence/2606.04153/TC1.png" loading="lazy" decoding="async" alt="Table C1 as the paper printed it"></a></figure>
+    <figure><figcaption>rebuilt from free data</figcaption><div class="scroll"><table class="gap"><thead><tr><th></th><th></th><th>printed</th><th>ours</th><th></th></tr></thead><tbody><tr><td>Buy and hold, Global Financial Crisis</td><td class="m">TW</td><td>0.59</td><td class="miss">—</td><td class="miss">—</td></tr><tr><td>Buy and hold, Global Financial Crisis</td><td class="m">AV</td><td>-29.98</td><td class="miss">—</td><td class="miss">—</td></tr><tr><td>Buy and hold, Global Financial Crisis</td><td class="m">SD</td><td>21.26</td><td class="miss">—</td><td class="miss">—</td></tr><tr><td>Buy and hold, Global Financial Crisis</td><td class="m">SR</td><td>-0.43</td><td class="miss">—</td><td class="miss">—</td></tr><tr><td>Buy and hold, Global Financial Crisis</td><td class="m">MDD</td><td>0.5</td><td class="miss">—</td><td class="miss">—</td></tr><tr><td>Buy and hold, COVID-19 Crisis</td><td class="m">TW</td><td>1.57</td><td class="miss">—</td><td class="miss">—</td></tr><tr><td>Buy and hold, COVID-19 Crisis</td><td class="m">AV</td><td>23.51</td><td class="miss">—</td><td class="miss">—</td></tr><tr><td>Buy and hold, COVID-19 Crisis</td><td class="m">SD</td><td>19.05</td><td class="miss">—</td><td class="miss">—</td></tr><tr><td>Buy and hold, COVID-19 Crisis</td><td class="m">SR</td><td>0.35</td><td class="miss">—</td><td class="miss">—</td></tr><tr><td>Buy and hold, COVID-19 Crisis</td><td class="m">MDD</td><td>0.19</td><td class="miss">—</td><td class="miss">—</td></tr><tr><td>Momentum, 3-month, Global Financial Crisis</td><td class="m">TW</td><td>1.09</td><td class="miss">—</td><td class="miss">—</td></tr><tr><td>Momentum, 3-month, Global Financial Crisis</td><td class="m">AV</td><td>5.42</td><td class="miss">—</td><td class="miss">—</td></tr><tr><td>Momentum, 3-month, Global Financial Crisis</td><td class="m">SD</td><td>5.84</td><td class="miss">—</td><td class="miss">—</td></tr><tr><td>Momentum, 3-month, Global Financial Crisis</td><td class="m">SR</td><td>0.17</td><td class="miss">—</td><td class="miss">—</td></tr><tr><td>Momentum, 3-month, Global Financial Crisis</td><td class="m">MDD</td><td>0.04</td><td class="miss">—</td><td class="miss">—</td></tr><tr><td>Momentum, 3-month, COVID-19 Crisis</td><td class="m">TW</td><td>1.95</td><td class="miss">—</td><td class="miss">—</td></tr></tbody></table></div><p class="note">16 of 140 cells shown.</p></figure>
+  </div>
+  <details class="code" open><summary>the code that produced the right-hand column</summary><p class="note">alpha_archive/replications/decomp2026_eval.py &middot; crisis_tables()</p><pre>def crisis_tables(frame: pd.DataFrame,
+                  forecasts: dict[str, np.ndarray]) -&gt; dict[str, float]:
+    &quot;&quot;&quot;Table C1: the same strategies, scored inside two named windows.
+
+    The forecasts are the ones already produced for k = 8; re-estimating inside
+    the crisis would be a different exercise from the one the appendix
+    describes, which evaluates the main analysis over a sub-period.
+    &quot;&quot;&quot;
+    oos = frame.iloc[WINDOW:]
+    index = oos.index
+    mkt, rf = oos[&quot;mkt&quot;].to_numpy(), oos[&quot;rf&quot;].to_numpy()
+
+    rows: dict[str, np.ndarray] = {&quot;Buy and hold&quot;: np.ones(len(mkt))}
+    for n in MOMENTUM:
+        rows[f&quot;{n}-month&quot;] = momentum_positions(frame, n)
+    rows.update(forecasts)
+
+    out: dict[str, float] = {}
+    for name, (start, end) in CRISES.items():
+        mask = (index &gt;= start) &amp; (index &lt;= f&quot;{end}-31&quot;)
+        for row, signal in rows.items():
+            if row == &quot;Historical average&quot;:
+                continue
+            # Wealth restarts at $1 inside the window, so the slice is taken
+            # before compounding rather than read off the full path.
+            s = switching(signal[mask], mkt[mask], rf[mask])
+            label = (f&quot;TC1/Momentum/{row}&quot; if row.endswith(&quot;-month&quot;)
+                     else f&quot;TC1/{row}&quot;)
+            for metric in (&quot;TW&quot;, &quot;AV&quot;, &quot;SD&quot;, &quot;SR&quot;, &quot;MDD&quot;):
+                out[f&quot;{label}/{name}/{metric}&quot;] = s[metric]
+    return out</pre></details>
+</section>
+<section class="ev">
+  <h3>Table D1</h3>
+  <p class="lede">Table D1: Out-of-sample R2 and economic performance across models</p>
+  <div class="sbs">
+    <figure><figcaption>as the paper printed it</figcaption><a class="zoom" href="../evidence/2606.04153/TD1.png" target="_blank" rel="noopener" title="open full size"><img src="../evidence/2606.04153/TD1.png" loading="lazy" decoding="async" alt="Table D1 as the paper printed it"></a></figure>
+    <figure><figcaption>rebuilt from free data</figcaption><div class="scroll"><table class="gap"><thead><tr><th></th><th></th><th>printed</th><th>ours</th><th></th></tr></thead><tbody><tr><td>Linear model, OOS</td><td class="m">Squared</td><td>-5.15</td><td class="miss">—</td><td class="miss">—</td></tr><tr><td>Linear model, OOS</td><td class="m">Absolute</td><td>-2.87</td><td class="miss">—</td><td class="miss">—</td></tr><tr><td>Linear model, OOS</td><td class="m">TW</td><td>72.1</td><td class="miss">—</td><td class="miss">—</td></tr><tr><td>Linear model, OOS</td><td class="m">AV</td><td>11.29</td><td class="miss">—</td><td class="miss">—</td></tr><tr><td>Linear model, OOS</td><td class="m">SD</td><td>11.9</td><td class="miss">—</td><td class="miss">—</td></tr><tr><td>Linear model, OOS</td><td class="m">SR</td><td>0.18</td><td class="miss">—</td><td class="miss">—</td></tr><tr><td>Linear model, OOS</td><td class="m">MDD</td><td>0.45</td><td class="miss">—</td><td class="miss">—</td></tr><tr><td>CSR approach, OOS</td><td class="m">Squared</td><td>-5.15</td><td class="miss">—</td><td class="miss">—</td></tr><tr><td>CSR approach, OOS</td><td class="m">Absolute</td><td>-2.87</td><td class="miss">—</td><td class="miss">—</td></tr><tr><td>CSR approach, OOS</td><td class="m">TW</td><td>72.1</td><td class="miss">—</td><td class="miss">—</td></tr><tr><td>CSR approach, OOS</td><td class="m">AV</td><td>11.29</td><td class="miss">—</td><td class="miss">—</td></tr><tr><td>CSR approach, OOS</td><td class="m">SD</td><td>11.9</td><td class="miss">—</td><td class="miss">—</td></tr><tr><td>CSR approach, OOS</td><td class="m">SR</td><td>0.18</td><td class="miss">—</td><td class="miss">—</td></tr><tr><td>CSR approach, OOS</td><td class="m">MDD</td><td>0.45</td><td class="miss">—</td><td class="miss">—</td></tr><tr><td>GARCH-M model, OOS</td><td class="m">Squared</td><td>-4.36</td><td class="miss">—</td><td class="miss">—</td></tr><tr><td>GARCH-M model, OOS</td><td class="m">Absolute</td><td>-2.77</td><td class="miss">—</td><td class="miss">—</td></tr></tbody></table></div><p class="note">16 of 70 cells shown.</p></figure>
+  </div>
+  <details class="code" open><summary>the code that produced the right-hand column</summary><p class="note">alpha_archive/replications/decomp2026_eval.py &middot; full_set_table()</p><pre>def full_set_table(frame: pd.DataFrame, families: tuple[str, ...]) -&gt; dict[str, float]:
+    &quot;&quot;&quot;Table D1: every model re-estimated on all nine predictors at once.
+
+    One subset rather than a grid, so this is a single pass of each forecast
+    rather than another eight.
+    &quot;&quot;&quot;
+    wide, names = with_momentum(frame)
+    subset = tuple(names)
+    oos = wide.iloc[WINDOW:]
+    mkt, rf, xs = (oos[&quot;mkt&quot;].to_numpy(), oos[&quot;rf&quot;].to_numpy(),
+                   oos[&quot;xs&quot;].to_numpy())
+    ha = forecast_historical_average(wide)
+
+    forecasts = {
+        &quot;Linear model&quot;: forecast_linear(wide, subset),
+        &quot;CSR approach&quot;: forecast_csr(wide, len(subset)),
+        &quot;CSM approach/Baseline&quot;: forecast_csm(wide, subset, poly=False),
+        &quot;CSM approach/Poly&quot;: forecast_csm(wide, subset, poly=True),
+    }
+    for fam in families:
+        forecasts[f&quot;Copula-based approach/{fam}&quot;] = forecast_copula(
+            wide, subset, fam)
+
+    out: dict[str, float] = {}
+    for row, fc in forecasts.items():
+        s = switching(fc, mkt, rf)
+        out[f&quot;TD1/{row}/OOS/Squared&quot;] = r2_oos(xs, fc, ha)
+        out[f&quot;TD1/{row}/OOS/Absolute&quot;] = r2_oos(xs, fc, ha, absolute=True)
+        for metric in (&quot;TW&quot;, &quot;AV&quot;, &quot;SD&quot;, &quot;SR&quot;, &quot;MDD&quot;):
+            out[f&quot;TD1/{row}/OOS/{metric}&quot;] = s[metric]
+    return out</pre></details>
+</section><h2>Exhibit by exhibit</h2><p class="lede">Where the coverage actually is, so a table we never reached cannot pass for one that agreed.</p><table class="gap lead"><thead><tr><th>exhibit</th><th>printed</th><th>checked</th><th>matched</th><th>missed</th><th>not built</th><th>rate</th></tr></thead><tbody><tr><td>Table 6</td><td>280</td><td>240</td><td class="ok">85</td><td class="bad">155</td><td class="miss">40</td><td>35%</td></tr><tr><td>Table B1</td><td>280</td><td>240</td><td class="ok">73</td><td class="bad">167</td><td class="miss">40</td><td>30%</td></tr><tr><td>Table 4</td><td>176</td><td>144</td><td class="ok">49</td><td class="bad">95</td><td class="miss">32</td><td>34%</td></tr><tr><td>Table 5</td><td>176</td><td>144</td><td class="ok">29</td><td class="bad">115</td><td class="miss">32</td><td>20%</td></tr><tr><td>Table 3</td><td>160</td><td>128</td><td class="ok">2</td><td class="bad">126</td><td class="miss">32</td><td>2%</td></tr><tr><td>Table 7</td><td>104</td><td>88</td><td class="ok">1</td><td class="bad">87</td><td class="miss">16</td><td>1%</td></tr><tr><td>Table B2</td><td>104</td><td>88</td><td class="miss">0</td><td class="bad">88</td><td class="miss">16</td><td>0%</td></tr><tr><td>Table 1</td><td>64</td><td>64</td><td class="ok">39</td><td class="bad">25</td><td class="miss"></td><td>61%</td></tr><tr><td>Table 8</td><td>40</td><td>40</td><td class="miss">0</td><td class="bad">40</td><td class="miss"></td><td>0%</td></tr><tr><td>Table B3</td><td>40</td><td>40</td><td class="miss">0</td><td class="bad">40</td><td class="miss"></td><td>0%</td></tr><tr><td>Figure 1</td><td class="miss" colspan="6">no printed numbers</td></tr><tr><td>Figure 2</td><td class="miss" colspan="6">no printed numbers</td></tr><tr><td>Figure 3</td><td class="miss" colspan="6">no printed numbers</td></tr><tr><td>Figure 4</td><td class="miss" colspan="6">no printed numbers</td></tr><tr><td>Figure A1</td><td class="miss" colspan="6">no printed numbers</td></tr><tr><td>Figure C1</td><td class="miss" colspan="6">no printed numbers</td></tr><tr><td>Figure C2</td><td class="miss" colspan="6">no printed numbers</td></tr><tr><td>Figure D1</td><td class="miss" colspan="6">no printed numbers</td></tr><tr><td>Table 2</td><td class="miss" colspan="6">no printed numbers</td></tr><tr><td>Table A1</td><td class="miss" colspan="6">no printed numbers</td></tr><tr><td>Table A2</td><td>160</td><td>0</td><td class="miss">0</td><td class="bad"></td><td class="miss">160</td><td>—</td></tr><tr><td>Table C1</td><td>140</td><td>0</td><td class="miss">0</td><td class="bad"></td><td class="miss">140</td><td>—</td></tr><tr><td>Table D1</td><td>70</td><td>0</td><td class="miss">0</td><td class="bad"></td><td class="miss">70</td><td>—</td></tr></tbody></table><h2>Abstract</h2><p class="lede">Changes in volatility contain valuable information about the likelihood of positive versus negative returns. We propose a new approach to modeling financial returns that exploits this insight by decomposing returns into sign and magnitude (absolute value) components, with magnitude closely related to volatility. The joint distribution used to compute expected returns combines a model for the marginal distribution of magnitude with a model for the distribution of the sign, conditional on the contemporaneous magnitude. Unlike traditional linear predictive regressions, this decomposition framework captures nonlinear predictability in return dynamics. An out-of-sample forecasting evaluation using monthly U.S. stock market excess returns demonstrates substantial statistical and economic gains relative to linear regression and complete subset regression, while delivering performance that is competitive with copula-based return-decomposition methods and other nonlinear benchmarks.</p><h2>Where this stands</h2><p class="lede">Every number above was scored against a tolerance written down before any of these models produced a value. A miss is recorded as a miss; nothing was widened to clear a bar.</p></main>
     <aside><div class="panel"><h3>Run it</h3><div class="use">git clone https://github.com/RezaSoleymanifar/alpha-archive
 cd alpha-archive
 uv run jupyter lab notebooks/2606.04153_sign_and_magnitude.ipynb<button class="copy">copy</button></div></div><div class="panel files"><h3>Files</h3><a href="https://arxiv.org/abs/2606.04153v1"><span class="k">paper</span><span class="v">PDF</span></a><a href="https://github.com/RezaSoleymanifar/alpha-archive/blob/main/alpha_archive/replications/decomp2026.py"><span class="k">replication</span><span class="v">.py</span></a><a href="https://github.com/RezaSoleymanifar/alpha-archive/blob/main/notebooks/2606.04153_sign_and_magnitude.ipynb"><span class="k">notebook</span><span class="v">.ipynb</span></a></div><div class="panel"><h3>Index</h3><div class="kv"><span>citations</span><span>0</span></div><div class="kv"><span>published</span><span>2026-06-02</span></div><div class="kv"><span>source</span><span>arxiv</span></div></div></aside>
