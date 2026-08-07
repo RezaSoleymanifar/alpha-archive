@@ -52,9 +52,12 @@ TRADING_DAYS = 252
 
 # ------------------------------------------------------------------ signals
 
-# Price-only predictors, each expressed as a score per name per day. A higher
-# score means the paper expects a higher return, so the sign convention is
-# applied here rather than left to the caller.
+# Each function returns the RAW quantity the paper names, never a direction.
+# SignalDoc publishes a `Sign` per predictor saying which way it points, and the
+# runner multiplies by it. Hardcoding a negation here is how a signal ends up
+# reproducing the paper's effect backwards: I did exactly that on the first
+# pass, and Beta came out inverted because I assumed low-beta when SignalDoc
+# says the published portfolio is long high beta.
 
 def _mom(prices: pd.DataFrame, lookback: int, skip: int = 21) -> pd.DataFrame:
     return prices.shift(skip) / prices.shift(lookback) - 1.0
@@ -70,44 +73,40 @@ def mom6m(prices: pd.DataFrame) -> pd.DataFrame:
 
 
 def strev(prices: pd.DataFrame) -> pd.DataFrame:
-    """Short-term reversal: last month's return, negated."""
-    return -(prices / prices.shift(21) - 1.0)
+    """Last month's return. SignalDoc's sign makes it a reversal."""
+    return prices / prices.shift(21) - 1.0
 
 
 def maxret(prices: pd.DataFrame) -> pd.DataFrame:
-    """Maximum daily return in the trailing month, negated.
-
-    Bali, Cakici and Whitelaw find lottery-like stocks underperform, so the
-    predictor is the negative of the maximum.
-    """
-    return -prices.pct_change().rolling(21).max()
+    """The largest daily return in the trailing month."""
+    return prices.pct_change().rolling(21).max()
 
 
-def volatility(prices: pd.DataFrame) -> pd.DataFrame:
-    """Trailing twelve-month total volatility, negated: low vol earns more."""
-    return -prices.pct_change().rolling(252).std()
+def retvol(prices: pd.DataFrame) -> pd.DataFrame:
+    """Trailing twelve-month volatility of daily returns."""
+    return prices.pct_change().rolling(252).std()
 
 
 def idiovol(prices: pd.DataFrame) -> pd.DataFrame:
-    """Residual volatility against an equal-weighted market, negated.
+    """Residual volatility against an equal-weighted market.
 
-    The published version regresses on Fama-French three factors. This uses a
-    single market factor built from the panel itself, which is a weaker control
-    and is recorded as such on every row it produces.
+    The published version regresses on the Fama-French three factors. This uses
+    a single market factor built from the panel itself, a weaker control, and
+    every row it produces says so.
     """
     rets = prices.pct_change()
     market = rets.mean(axis=1)
     window = 252
-    beta = rets.rolling(window).cov(market).div(market.rolling(window).var(), axis=0)
-    resid = rets.sub(beta.mul(market, axis=0))
-    return -resid.rolling(window).std()
+    beta_ = rets.rolling(window).cov(market).div(market.rolling(window).var(), axis=0)
+    resid = rets.sub(beta_.mul(market, axis=0))
+    return resid.rolling(window).std()
 
 
 def beta(prices: pd.DataFrame) -> pd.DataFrame:
-    """Market beta, negated: the low-beta anomaly."""
+    """Market beta against an equal-weighted market."""
     rets = prices.pct_change()
     market = rets.mean(axis=1)
-    return -rets.rolling(252).cov(market).div(market.rolling(252).var(), axis=0)
+    return rets.rolling(252).cov(market).div(market.rolling(252).var(), axis=0)
 
 
 @dataclass(frozen=True)
@@ -121,7 +120,7 @@ SIGNALS: dict[str, Signal] = {
     "Mom6m": Signal(mom6m),
     "STreversal": Signal(strev),
     "MaxRet": Signal(maxret),
-    "VolSD": Signal(volatility),
+    "RetVol": Signal(retvol),
     "IdioVol3F": Signal(
         idiovol,
         "controls on a single equal-weighted market factor rather than the "
@@ -129,6 +128,12 @@ SIGNALS: dict[str, Signal] = {
     ),
     "Beta": Signal(beta),
 }
+
+# VolSD was in this list and should not have been. SignalDoc calls it Volume
+# Variance, which is the variance of trading volume, and what was implemented
+# was the volatility of returns. That is a different predictor wearing the same
+# acronym, and it calibrated to a t of the wrong sign because it was never the
+# right signal. It comes back when volume data does.
 
 
 # ------------------------------------------------------------------- the run
@@ -143,6 +148,7 @@ class PostSample:
     sample_end_year: int | None = None
     claimed_t: float | None = None
     claimed_monthly_return: float | None = None
+    published_sign: float | None = None
     data_category: str = ""
 
     window_start: str | None = None
@@ -221,6 +227,7 @@ def catalogue() -> list[PostSample]:
                                if _num(row, "SampleStartYear") else None),
             claimed_t=_num(row, "T-Stat"),
             claimed_monthly_return=_num(row, "Mean Return"),
+            published_sign=_num(row, "Sign"),
             data_category=(row.get("Cat.Data") or "").strip(),
         )
         if window:
@@ -277,6 +284,12 @@ CALIB_T_TOLERANCE = 0.6      # as a fraction of the published t
 CALIB_MIN_T = 1.5
 
 
+def _directed(rec: "PostSample", prices: pd.DataFrame) -> pd.DataFrame:
+    """The raw signal, pointed the way SignalDoc says the paper pointed it."""
+    raw = SIGNALS[rec.acronym].fn(prices)
+    return raw * (rec.published_sign if rec.published_sign else 1.0)
+
+
 def _score(scores: pd.DataFrame, prices: pd.DataFrame,
            start: str, end: str) -> tuple[pd.Series, str]:
     window = prices.loc[start:end]
@@ -317,7 +330,7 @@ def calibrate(rec: PostSample, prices: pd.DataFrame) -> PostSample:
                           f"overlap to calibrate on")
         return rec
 
-    net, why = _score(signal.fn(prices), prices, start, end)
+    net, why = _score(_directed(rec, prices), prices, start, end)
     if net.empty:
         rec.calibration = "no_overlap"
         rec.calib_note = why
@@ -365,7 +378,8 @@ def run_one(rec: PostSample, prices: pd.DataFrame) -> PostSample:
         rec.status = "uncalibrated"
         return rec
 
-    net, why = _score(signal.fn(prices), prices, rec.window_start, rec.window_end)
+    net, why = _score(_directed(rec, prices), prices,
+                      rec.window_start, rec.window_end)
     if net.empty:
         rec.status = "no_data"
         rec.note = why
