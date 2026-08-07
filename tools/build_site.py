@@ -490,9 +490,9 @@ PAGE = """<!doctype html>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Quantitative Finance with Code, papers rebuilt and checked against their own numbers</title>
-<meta name="description" content="Quantitative finance papers rebuilt in code and scored against the numbers they printed. Every paper read in full, its data traced to a free source, its targets written down before anything was run.">
+<meta name="description" content="Alpha Archive is a quantitative research replication platform. We take quantitative finance research and turn it into reproducible implementations. Every paper read in full, its data traced to a free source, its targets written down before anything was run.">
 <meta property="og:title" content="Quantitative Finance with Code">
-<meta property="og:description" content="Papers rebuilt in code and scored against the numbers they printed.">
+<meta property="og:description" content="A quantitative research replication platform. We take quantitative finance research and turn it into reproducible implementations.">
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='6' fill='%230d0d0d'/><text x='16' y='23' font-size='20' font-family='Georgia,serif' fill='%233ddc84' text-anchor='middle'>&#945;</text></svg>">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -696,13 +696,6 @@ footer a{margin-right:18px;color:var(--soft)}
 <nav class="topbar">
   <div class="wrap">
     <a class="brand" href="./"><span class="a">&alpha;</span>-Archive</a>
-    <div class="nlinks">
-      <a class="on" href="./">Trending</a>
-      <a href="__REPO__/blob/main/docs/selection.md">Selection</a>
-      <a href="__REPO__/blob/main/docs/sources.md">Sources</a>
-      <a href="__REPO__/blob/main/docs/methodology.md">Methodology</a>
-      <a href="__REPO__/issues/new">Submit</a>
-    </div>
     <div class="navright">
       <a class="pill" href="__REPO__/issues/new">Submit feedback</a>
       <div class="searchbox">
@@ -721,7 +714,7 @@ footer a{margin-right:18px;color:var(--soft)}
 <div class="wrap">
   <div class="head">
     <h1>Quantitative finance <em>with code</em></h1>
-    <p class="sub">Papers rebuilt in code and scored against the numbers they printed.</p>
+    <p class="sub">Alpha Archive is a quantitative research replication platform. We take quantitative finance research and turn it into reproducible implementations.</p>
   </div>
 
   <div class="cols">
@@ -1018,11 +1011,6 @@ footer{border-top:1px solid var(--line);padding:22px 0 40px;color:var(--dim);
 <body>
 <nav class="topbar"><div class="wrap">
   <a class="brand" href="../"><span class="a">&alpha;</span>-Archive</a>
-  <div class="nlinks">
-    <a href="../">Trending</a>
-    <a href="__REPO__/blob/main/docs/selection.md">Selection</a>
-    <a href="__REPO__/blob/main/docs/methodology.md">Methodology</a>
-  </div>
   <div class="navright"><a class="pill" href="__REPO__/issues/new">Submit feedback</a></div>
 </div></nav>
 
