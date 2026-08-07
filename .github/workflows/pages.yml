@@ -30,10 +30,15 @@ jobs:
 
       - name: Fail if the site was not rebuilt from the records
         run: |
+          # The guard used to look for the thumbnail column, which the ranked
+          # site does not have. What it checks now is that every card carries
+          # the number it was ranked by: a page of cards with no significance
+          # attribute is a page built from something other than the corpus.
           test -f docs/index.html || { echo "::error::docs/index.html missing"; exit 1; }
-          grep -q 'class="fig"' docs/index.html \
-            || { echo "::error::no figure column — run tools/build_site.py"; exit 1; }
-          echo "index.html looks current ($(wc -c < docs/index.html) bytes)"
+          cards=$(grep -o 'data-sig=' docs/index.html | wc -l)
+          test "$cards" -ge 100 \
+            || { echo "::error::only $cards ranked cards — run tools/build_rank_site.py"; exit 1; }
+          echo "index.html looks current ($cards cards, $(wc -c < docs/index.html) bytes)"
 
       - uses: actions/configure-pages@v5
       - uses: actions/upload-pages-artifact@v3
