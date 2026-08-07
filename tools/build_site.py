@@ -696,6 +696,7 @@ footer a{margin-right:18px;color:var(--soft)}
 <nav class="topbar">
   <div class="wrap">
     <a class="brand" href="./"><span class="a">&alpha;</span>-Archive</a>
+    <div class="nlinks"><a href="about.html">About</a></div>
     <div class="navright">
       <a class="pill" href="__REPO__/issues/new">Submit feedback</a>
       <div class="searchbox">
@@ -714,7 +715,7 @@ footer a{margin-right:18px;color:var(--soft)}
 <div class="wrap">
   <div class="head">
     <h1>Quantitative finance <em>with code</em></h1>
-    <p class="sub">Alpha Archive is a quantitative research replication platform. We take quantitative finance research and turn it into reproducible implementations.</p>
+    <p class="sub">Papers rebuilt in code and scored against the numbers they printed.</p>
   </div>
 
   <div class="cols">
@@ -1011,6 +1012,7 @@ footer{border-top:1px solid var(--line);padding:22px 0 40px;color:var(--dim);
 <body>
 <nav class="topbar"><div class="wrap">
   <a class="brand" href="../"><span class="a">&alpha;</span>-Archive</a>
+  <div class="nlinks"><a href="../about.html">About</a></div>
   <div class="navright"><a class="pill" href="__REPO__/issues/new">Submit feedback</a></div>
 </div></nav>
 
@@ -1224,6 +1226,142 @@ def build_paper_pages(reps: list[dict], kept: list[dict], cites: dict[str, int])
     return links
 
 
+# ------------------------------------------------------------------ about
+
+# What the place is and how a paper is judged, in one page rather than five
+# markdown files behind a nav bar. The nav is for moving around the site; this
+# is where the reader goes to find out what they are looking at.
+
+ABOUT_BODY = """
+<h2>What this is</h2>
+<p>Alpha Archive is a quantitative research replication platform. We take
+quantitative finance research and turn it into reproducible implementations.</p>
+
+<p class="lede">A paper's claim is a number printed in a table. A replication is
+that number recomputed from data anyone can fetch, with the difference shown
+rather than described. Everything here is one or the other, and the page says
+which.</p>
+
+<h2>The three gates</h2>
+<p>Roughly four in five papers do not make it in, and that ratio is the product
+rather than a shortcoming. A paper is indexed only if all three hold.</p>
+<table class="gap">
+  <thead><tr><th>gate</th><th>what it asks</th><th>what fails it</th></tr></thead>
+  <tbody>
+    <tr><td>mechanism</td><td>does it name a signal, a portfolio rule or a
+      forecast?</td><td>governance, disclosure and policy essays</td></tr>
+    <tr><td>data</td><td>can a stranger fetch the inputs for nothing?</td>
+      <td>tick data, option chains, analyst estimates, TRACE, 13F panels</td></tr>
+    <tr><td>position</td><td>does it end in something you could hold?</td>
+      <td>convergence theorems, existence proofs, mean-field games</td></tr>
+  </tbody>
+</table>
+
+<h2>How a paper is judged</h2>
+<p>Reproducing a number answers whether we got the same figure. It says nothing
+about whether the figure would have survived the checks the paper did not run,
+and most of this literature predates them. So a replication is scored twice.</p>
+
+<table class="gap">
+  <thead><tr><th>check</th><th>what it catches</th><th>from</th></tr></thead>
+  <tbody>
+    <tr><td>Newey-West t</td><td>daily returns are autocorrelated, so an
+      ordinary standard error is too small and the t-statistic built on it too
+      large</td><td>Newey &amp; West, 1987</td></tr>
+    <tr><td>combinatorial purged CV</td><td>a result that lives in one stretch
+      of the sample: hold that stretch out and it collapses</td>
+      <td>Lopez de Prado, ch. 12</td></tr>
+    <tr><td>probability of overfitting</td><td>whether choosing this
+      specification from the ones tried would have held up out of sample</td>
+      <td>Bailey, Borwein, Lopez de Prado &amp; Zhu, 2017</td></tr>
+    <tr><td>minimum backtest length</td><td>whether the sample is even long
+      enough to settle the question at this trial count</td>
+      <td>Bailey, Borwein, Lopez de Prado &amp; Zhu, 2014</td></tr>
+    <tr><td>deflated Sharpe</td><td>the bar a Sharpe has to clear once the
+      number of attempts is counted</td><td>Bailey &amp; Lopez de Prado, 2014</td></tr>
+  </tbody>
+</table>
+
+<p>Every threshold is written down and frozen before a run. On the first
+replication a criterion was set at 0.6, the result came back at 0.74, and it was
+called validated. That is grading your own exam, and worse, 0.6 had been chosen
+after seeing that 0.9 was unreachable. The thresholds live in code now and
+nothing in a run can change one.</p>
+
+<h2>What a status means</h2>
+<table class="gap">
+  <thead><tr><th>badge</th><th>means</th></tr></thead>
+  <tbody>
+    <tr><td>replicated</td><td>cleared a criterion written before the run,
+      against a fixture we did not produce</td></tr>
+    <tr><td>notebook built</td><td>the exhibits are rebuilt and compared cell by
+      cell, but not yet scored against the claim</td></tr>
+    <tr><td>differs</td><td>the numbers were recomputed and they do not
+      match</td></tr>
+    <tr><td>unverified</td><td>the fixture could not be fetched, so nothing can
+      be claimed either way</td></tr>
+    <tr><td>not attempted</td><td>indexed and open for anyone to run</td></tr>
+  </tbody>
+</table>
+<p>There is no middle tier. "Partially validated" is the phrase you reach for
+when you want credit you have not earned.</p>
+
+<h2>Where the data comes from</h2>
+<p>Free sources only, fetched at run time rather than mirrored: SEC EDGAR, FRED
+and ALFRED, the Ken French library, Open Source Asset Pricing, FINRA, CFTC,
+CBOE, the ECB and the US Treasury, mostly through
+<a href="https://github.com/RezaSoleymanifar/vintage">Vintage</a>, which carries
+two dates on every row so a backtest cannot read a number before it was public.
+Where a replication reaches outside that, the notebook says so.</p>
+
+<h2>Contributing</h2>
+<p>Pick a paper from the index, run it, and open a pull request with the gap
+table. A replication that fails is as useful as one that holds, and considerably
+more useful than one that was never attempted.</p>
+"""
+
+ABOUT_ASIDE = """
+<div class="panel"><h3>In short</h3>
+  <div class="kv"><span>papers indexed</span><span>__NPAPERS__</span></div>
+  <div class="kv"><span>with results</span><span>__NCODE__</span></div>
+  <div class="kv"><span>gates a paper must clear</span><span>3</span></div>
+  <div class="kv"><span>checks after replication</span><span>5</span></div>
+</div>
+<div class="panel"><h3>Read further</h3>
+  <div class="files">
+    <a href="__REPO__/blob/main/docs/selection.md"><span class="k">selection</span>
+      <span class="v">.md</span></a>
+    <a href="__REPO__/blob/main/docs/methodology.md"><span class="k">methodology</span>
+      <span class="v">.md</span></a>
+    <a href="__REPO__/blob/main/docs/sources.md"><span class="k">sources</span>
+      <span class="v">.md</span></a>
+    <a href="__REPO__"><span class="k">the code</span><span class="v">github</span></a>
+  </div>
+</div>
+"""
+
+
+def build_about(n_papers: int, n_code: int) -> None:
+    page = paper_page(
+        slug="about",
+        title="About",
+        byline="What this is, what gets in, and how a paper is judged.",
+        badges="",
+        body=ABOUT_BODY,
+        aside=ABOUT_ASIDE.replace("__NPAPERS__", f"{n_papers:,}")
+                         .replace("__NCODE__", str(n_code)),
+        blurb=("Alpha Archive is a quantitative research replication platform. "
+               "We take quantitative finance research and turn it into "
+               "reproducible implementations."),
+    )
+    # This one sits at the site root, so its links point one level shallower.
+    page = (page.replace('href="../"', 'href="./"')
+                .replace('href="../about.html"', 'href="about.html"'))
+    with open(os.path.join(ROOT, "docs", "about.html"), "w",
+              encoding="utf-8", newline="\n") as fh:
+        fh.write(page)
+
+
 def main() -> None:
     reps = load_replications()
     queue = load_queue()
@@ -1297,9 +1435,14 @@ def main() -> None:
     os.makedirs(out_dir, exist_ok=True)
     with open(os.path.join(out_dir, "index.html"), "w", encoding="utf-8", newline="\n") as fh:
         fh.write(page)
+    build_about(len(cards), len(reps))
     print(f"wrote docs/index.html ({len(page):,} bytes), "
           f"{len(cards)} cards, {len(reps)} with results, "
           f"{len(links)} paper pages")
+
+
+if __name__ == "__main__":
+    main()
 
 
 if __name__ == "__main__":
