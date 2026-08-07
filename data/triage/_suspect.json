@@ -1,0 +1,226 @@
+[
+ {
+  "id": "2511.22782",
+  "gap": "other",
+  "confidence": 0.6,
+  "method": "Estimates ARDL and error-correction models of weekly log prices for Bitcoin, Ethereum, Dash, Litecoin and Monero (2010-2018) on a self-built market-cap-weighted Crypto 50 index (price, volume, high-low volatility), Googl",
+  "reason": "Three of the required inputs fall outside the free set: the CRX50 index needs historical market caps, volumes and high-low prices for the top 50 coins from CoinMarketCap; the attractiveness regressor needs Google Trends; and pre-2014 Bitcoin/Litecoin weekly prices come from BitInfoCharts, before Yahoo's BTC-USD (Sept 2014) and Coinbase history begin. Only S&P 500, EUR/USD and gold are directly available free, so the "
+ },
+ {
+  "id": "2512.18648",
+  "gap": "non-US market",
+  "confidence": 0.6,
+  "method": "Establishes a matched-filter principle for order-flow normalization (market-cap normalization for capacity-constrained institutions, trading-value normalization for volume-targeting algos), validates it with Monte Carlo,",
+  "reason": "The empirical core is 2,116,122 stock-day observations of Korea Exchange net-buy value split into domestic institutional, foreign and individual investors, across 2,570 stocks 2020-2024. Yahoo carries .KS/.KQ prices but not investor-type order flow; that disclosure lives only on KRX's own portal and is outside the free-source list, so the t = 9.65 and t = 16.35 results cannot be rebuilt."
+ },
+ {
+  "id": "2606.14386",
+  "gap": "non-US market",
+  "confidence": 0.6,
+  "method": "Poses a Search Compression Hypothesis for LLM-hybrid discovery - non-local proposals help only under spectral compression, orthogonal escape and residual signal alignment - proves each condition necessary, and tests it o",
+  "reason": "The only real-market evidence is a factor archive over 5,647 Chinese A-share stocks 2010-2026, including volume-centric factors, ICIR rankings and risk-neutralized OOS 2022-2026 performance. A survivorship-complete A-share cross-section of that size with point-in-time volume and fundamentals has no free source; Yahoo's .SS/.SZ coverage is partial and drops delisted names. The remaining evidence is synthetic sweeps an"
+ },
+ {
+  "id": "2512.22001",
+  "gap": "other",
+  "confidence": 0.62,
+  "method": "Scales a Variational Quantum Eigensolver for dynamic portfolio optimization by adding an Ising Sample-based Quantum Configuration Recovery routine and a constrained decomposition, and runs 9-asset and up to 38-asset (ful",
+  "reason": "The price inputs (IBEX 35 constituents through 2023) are free on Yahoo with .MC tickers, but the claims being tested are about quantum-hardware solution quality, not about markets. Reproducing Table I, III or V requires access to an IBM Fez QPU and a CPLEX licence; no free-data replication can land on those Sharpe figures."
+ },
+ {
+  "id": "2512.17936",
+  "gap": "non-US market",
+  "confidence": 0.72,
+  "method": "Fuses BIST 100 firm financial statements, Turkish macro indicators and NLP sentiment from news/earnings calls into an XGBoost/LSTM/GNN/BNN ensemble with intuitionistic-fuzzy Entropy-EDAS-MARCOS model ranking, validated o",
+  "reason": "The reproducible claims are quarterly balance-sheet forecasts (total assets, net profit, equity) for a single Turkish firm, which need KAP filings plus TUIK/TCMB macro series and a proprietary news/analyst-report sentiment corpus; BIST prices are free on Yahoo (.IS) but the target variables are not, and none of the required Turkish fundamental or macro sources is in the free set."
+ },
+ {
+  "id": "2606.20145",
+  "gap": "vendor data",
+  "confidence": 0.72,
+  "method": "Regresses next-day variance and next-week correlations on today's trend strength (the t-statistic of the trend) and today's variance or correlation, aggregating across 24 futures markets, 10 trend horizons and 33 years o",
+  "reason": "The whole study rests on 33 years of daily continuous futures returns across equity indices, rates, currencies and commodities in three regions. Yahoo's futures tickers carry only front-month quotes with short history and no roll adjustment, so a back-adjusted 24-market panel to the early 1990s needs a commercial futures database. The pooled coefficients and t-statistics cannot be landed on with free data."
+ },
+ {
+  "id": "2606.20903",
+  "gap": "synthetic only",
+  "confidence": 0.75,
+  "method": "Reformulates risk-sensitive benchmarked asset allocation as an LQG stochastic differential game via free-energy-entropy duality, derives explicit finite- and infinite-horizon saddle points, and implements a continuous-ti",
+  "reason": "Real returns (13 U.S. sector and size ETFs plus Fama-French six factors, 2018-06-20 to 2024-12-31) are only used to fix the model coefficients. Every reported number in Table 1 is a convergence error of the RL algorithm against the analytical policy, measured on paths simulated from those coefficients, so there is no claim tested on realised market outcomes. The ETF returns come from CRSP but are individually free on"
+ },
+ {
+  "id": "2606.25811",
+  "gap": "vendor data",
+  "confidence": 0.75,
+  "method": "Proposes a bi-level hierarchical graph (underlying commodities at the upper level, individual futures contracts at the lower level, with time-to-maturity-dependent cross-level edges) to predict futures price movements an",
+  "reason": "The method needs contract-level prices for every individual commodity futures contract across maturities, with a rolling average condition chart running from the late 1970s through 2020s. No free source supplies a maturity-resolved historical futures term structure of that depth; Yahoo carries only front-month continuous series. This requires a Bloomberg / Refinitiv / CME historical contract database."
+ },
+ {
+  "id": "2607.24410",
+  "gap": "vendor data",
+  "confidence": 0.75,
+  "method": "Non-linear latent factor model that maps firm characteristics (not return history) into factor exposures and a forward covariance forecast, trained end-to-end on a Stein covariance loss plus factor reconstruction.",
+  "reason": "Three of the 22 input characteristics are RavenPack Edge news analytics, a paid vendor feed with no free substitute, so the reported covariance and calibration numbers cannot be matched even though prices and fundamentals are obtainable from Yahoo and EDGAR."
+ },
+ {
+  "id": "2608.04200",
+  "gap": "other",
+  "confidence": 0.75,
+  "method": "QLoRA-finetune Qwen2.5/LLaMA3/Mistral for three-class headline sentiment, then form daily equal-weight top/bottom-15% long-short portfolios on the S&P 100 from the resulting scores.",
+  "reason": "The signal itself is built from a vendor headline feed (Benzinga) plus five external labeled text corpora, none of which are in the stack; only the price leg is reproducible, and the paper's headline finding is a null result anyway."
+ },
+ {
+  "id": "2512.06473",
+  "gap": "intraday / order book",
+  "confidence": 0.76,
+  "method": "Builds scale- and fluctuation-dependent correlation matrices from the multifractal detrended cross-correlation coefficient rho_r, compares their spectra to synthetic Gaussian and q-Gaussian references, and applies the fr",
+  "reason": "The empirical claim is measured on one-minute intraday returns for 140 coins across four years, roughly 2 million bars per asset. None of the permitted free sources supplies that: Yahoo crypto history is daily and Coinbase spot candle history is depth-limited and does not cover a 140-coin cross-section at minute frequency. The result is scale-dependent by construction, so a daily-frequency substitute would not land o"
+ },
+ {
+  "id": "2512.14134",
+  "gap": "non-US market",
+  "confidence": 0.78,
+  "method": "Event study of the high-volume return premium on Korean stocks 2020-2024, splitting abnormal-volume events by investor type (institutional vs retail net buying) and normalizing buying intensity by market capitalization r",
+  "reason": "Korean prices are on Yahoo (.KS/.KQ), but the central claim depends on per-stock daily net buy value split by investor identity (institution vs retail) across 2.75 million stock-days, which is KRX-supplied investor-type flow data with no equivalent in any listed free source. The monotonic Q1-Q4 institutional result cannot be rebuilt from prices and volume alone."
+ },
+ {
+  "id": "2601.00011",
+  "gap": "non-US market",
+  "confidence": 0.78,
+  "method": "Estimates the endogenous ultimate forward rate with Smith-Wilson and de Kort-Vellekoop-type methods plus a new optimal turning-parameter rule, forecasts the UFR with linear and nonlinear machine learning using macroecono",
+  "reason": "Everything is estimated on the Chinese treasury bond term structure and Chinese macroeconomic variables, December 2009 to December 2024. Chinese government bond yield curves come from ChinaBond/Wind; there is no Yahoo, FRED or Treasury source for them, and Chinese CPI/PPI series at the needed granularity are not on the free list either."
+ },
+ {
+  "id": "2606.04217",
+  "gap": "crypto derivatives",
+  "confidence": 0.78,
+  "method": "Releases the complete on-chain trade archive of Polymarket's first-generation CTF Exchange on Polygon (1.20 billion trades, 1.30 million markets, $61B notional, Nov 2022 - Apr 2026) with ground-truth aggressor direction,",
+  "reason": "Every claim rests on trade-level on-chain settlement records from Polygon - aggressor direction, VPIN, Kyle's lambda, Gibbs and Roll spreads, Hasbrouck VAR decompositions. Even though the archive is posted on HuggingFace, this is on-chain prediction-market microstructure at tick granularity, which no listed free source serves and which cannot be rebuilt from price series."
+ },
+ {
+  "id": "2607.19497",
+  "gap": "other",
+  "confidence": 0.78,
+  "method": "Volatility-normalized returns passed through EWMA / long-short EWMA filters (spans 30, 125, 250 with 20-day short leg) to produce a trend signal scaled to a volatility target.",
+  "reason": "Core empirical results are a cross-section of 84 back-adjusted futures contracts plus the licensed SG Trend Index; neither is available from Yahoo or any free Vintage source."
+ },
+ {
+  "id": "2601.06088",
+  "gap": "live protocol",
+  "confidence": 0.8,
+  "method": "A live benchmark scoring twelve large language models on next-move stock prediction across 110 US stocks in 11 sectors, using 249 days of price history plus contemporaneous news text.",
+  "reason": "The prices are ordinary Yahoo data, but the result being claimed is model accuracy under a deliberately uncontaminated live protocol. Rerunning it later means querying paid model APIs against a window those models have since been trained on, which is the one condition the benchmark is built to avoid. The published table cannot be reproduced, only superseded."
+ },
+ {
+  "id": "2607.27063",
+  "gap": "non-US market",
+  "confidence": 0.82,
+  "method": "Lattice/network agent-based model where investors form Gaussian beliefs, herd on neighbours and receive delayed information, generating momentum then reversal; empirically compared against CSAD, LSV and a Johnson S_U tai",
+  "reason": "80-85% is pure simulation with no data, and the 15-20% empirical part needs Chinese A-share panel data plus trade-level buy/sell classification for LSV, none of which Vintage covers (Yahoo has no reliable SSE 50 constituent history)."
+ },
+ {
+  "id": "2606.06190",
+  "gap": "intraday / order book",
+  "confidence": 0.83,
+  "method": "Estimates three independent AR(1)-MS-GARCH models with skewed Student-t emissions on EUR/USD at daily, four-hour and hourly scales, adds Filardo time-varying transition probabilities driven by composite stress indices at",
+  "reason": "The input is EUR/USD 1-minute mid-price data spanning 2015-2025, resampled to 1H/4H/1D, with a 31,152-hour out-of-sample window. Yahoo and ECB give daily FX for that span but no free listed source carries a decade of minute or hourly EUR/USD, and the 4H and 1H layers carry the paper's central claims."
+ },
+ {
+  "id": "2607.15414",
+  "gap": "synthetic only",
+  "confidence": 0.85,
+  "method": "Prompts five LLMs with 30-day OHLCV windows plus RSI/MACD/Bollinger values to emit BUY/SELL/HOLD signals, then backtests an equal-weighted 50-stock long-only book against the S&P 500.",
+  "reason": "Tables 3-6 and Figures 1-3 are captioned 'Simulated / Illustrative Data' by the authors themselves, so the Sharpe of 1.42 and 31.2% return are not measured results - there is no genuine parity target even though the price data is free."
+ },
+ {
+  "id": "2607.28127",
+  "gap": "other",
+  "confidence": 0.85,
+  "method": "FinSMART post-trains a financial LLM with GRPO using realized next-day open-to-open returns as the reward, then forms a daily long-short S&P 500 portfolio from the sentiment scores.",
+  "reason": "The price and portfolio leg is Yahoo-only and fine, but the signal is built from a scraped Motley Fool/MarketWatch news corpus plus RL post-training of an 8B LLM - neither is in the free stack."
+ },
+ {
+  "id": "2511.21850",
+  "gap": "vendor data",
+  "confidence": 0.86,
+  "method": "Uses firm ESG scores as the Stein-shrinkage bias on Black-Litterman equilibrium risk premiums, models returns as multivariate affine normal-inverse Gaussian, and reallocates 616 hyperparameter variants of a mean-CVaR por",
+  "reason": "Section 4.1 states the ESG input is yearly Robeco scores released each December 2016-2020. Robeco's proprietary ESG ratings are the entire novelty of the strategy and have no free equivalent - Yahoo carries no ESG history, and substituting a different provider changes the shrinkage target and therefore every reported return. The price side (29 DJIA names, Jan 2013 - Sep 2021) would otherwise be free."
+ },
+ {
+  "id": "2606.08141",
+  "gap": "intraday / order book",
+  "confidence": 0.86,
+  "method": "Fits a Structural Matrix Autoregressive model to the joint dynamics of returns, realized bipower variation and trading volume for Dow Jones Industrial Average constituents, Jan 2021 - Feb 2025, and reports impulse respon",
+  "reason": "The volatility variable is realized bipower variation, defined in Equation 19 as a sum over intraday returns r_{i,tau} with N_t intraday observations per day. Daily Yahoo bars cannot produce it, and the paper sources its panel from Bloomberg."
+ },
+ {
+  "id": "2606.21515",
+  "gap": "vendor data",
+  "confidence": 0.88,
+  "method": "Introduces the zero-one censored transformed normal distribution for proportional outcomes with boundary mass, extends it with tree boosting and spatio-temporal Gaussian-process frailties, and benchmarks it against censo",
+  "reason": "The empirical work needs a loan-level U.S. residential mortgage performance database covering defaults from 2000 to 2022 across 874 ZIP3 regions, with realised LGD, loan characteristics and addresses. That is a licensed credit dataset; the BEA covariates and FRED mortgage-rate spread it also uses are free but reproduce nothing on their own."
+ },
+ {
+  "id": "2607.20168",
+  "gap": "non-US market",
+  "confidence": 0.88,
+  "method": "Quantum kernel ridge regression (fidelity and projected quantum kernels) versus a classical RBF control on 27 firm characteristics, predicting 20-day forward returns in a 170-window walk-forward with kernel type as the o",
+  "reason": "Entirely a Chinese A-share study needing CN prices plus point-in-time quarterly fundamentals; EDGAR is US-only and Yahoo has no usable point-in-time A-share fundamental panel."
+ },
+ {
+  "id": "2512.00916",
+  "gap": "out of scope",
+  "confidence": 0.9,
+  "method": "Derives a family of rare-event-stable (RES) classification metrics whose optimal thresholds stay interior as prevalence goes to zero, then contrasts them against F1/MCC/balanced accuracy in simulations (prevalence 1e-2 t",
+  "reason": "Real data is used, but it is the Kaggle 'Give Me Some Credit' consumer-credit dataset (45,000 obs, 2,986 defaults, prevalence 6.64%), not market data. The rest of the evidence is pure simulation. Free to obtain, but out of the archive's market-data scope."
+ },
+ {
+  "id": "2512.03709",
+  "gap": "vendor data",
+  "confidence": 0.9,
+  "method": "Runs a staggered difference-in-differences on Chinese A-share firm-year panel data 2008-2019, testing whether analysts' relative earnings forecast errors fall after a firm's city gains high-speed-rail connectivity, with ",
+  "reason": "The dependent variable is analyst EPS forecast error and the controls are governance and ownership variables (Mngmhldn, INST_HLD, Top1, Inde_Ratio, Big4), which come from CSMAR or WIND. Neither the analyst forecast panel nor the mandated site-visit records has a free source; Yahoo A-share prices do not supply any of it."
+ },
+ {
+  "id": "2607.20877",
+  "gap": "vendor data",
+  "confidence": 0.9,
+  "method": "A supremum-type statistic built from cross-autocovariance functions of high-dimensional functional time series, with a parametric bootstrap for the null distribution, applied under a general error-contamination framework",
+  "reason": "The real-data section runs on Bloomberg-terminal sovereign zero-coupon curves for 22 countries plus a mortality panel - neither is in the free stack (FRED carries US Treasury yields only, not 22-country zero-coupon curves)."
+ },
+ {
+  "id": "2607.26405",
+  "gap": "non-US market",
+  "confidence": 0.9,
+  "method": "Constant-mean multi-currency AMM whose pool membership is chosen by hierarchical agglomerative clustering on FX covariance and bilateral trade weights, evaluated on realized trading cost versus vehicle-currency routing.",
+  "reason": "Both inputs are IMF panel datasets (FX rates for 43 currencies and bilateral goods-export volumes); FRED carries only a handful of USD FX pairs and no bilateral trade matrix, so Table 3's ~13% / USD 2.5bn cost saving cannot be rebuilt."
+ },
+ {
+  "id": "2606.11318",
+  "gap": "synthetic only",
+  "confidence": 0.92,
+  "method": "Solves a continuous-time multi-asset Black-Scholes mean-variance problem in which the drifts are unknown with a prior, using the Maccheroni smooth-ambiguity criterion that weights conditional variance and ambiguity premi",
+  "reason": "A duality-and-Fredholm-integral-equation solution illustrated by simulating terminal wealth under discrete and Gaussian priors. Table 1 reports empirical mean and variance of the simulated optimal payoff; there is no market data in the paper."
+ },
+ {
+  "id": "2606.04574",
+  "gap": "crypto derivatives",
+  "confidence": 0.94,
+  "method": "Builds a hierarchical filter-then-rank pair selection over a monthly-revised universe of the 100 most liquid instruments, adds a fixed-risk adaptive-mean execution rule, and lets a recurrent PPO agent govern entries and ",
+  "reason": "Every bar is a 1-hour OHLCV candle from the Binance USD-M perpetual futures archive, pulled from Binance Data Vision. That is exchange derivative data at intraday frequency; neither Coinbase spot nor Yahoo crypto tickers reproduce the perpetual-futures universe or the liquidity ranking the pair selection depends on."
+ },
+ {
+  "id": "2607.27814",
+  "gap": "intraday / order book",
+  "confidence": 0.94,
+  "method": "Model-free decomposition of a pay-as-produced PPA strike into baseload forward, deterministic profile adjustment, and price-volume covariance term, with a Levy-driven bivariate MCARMA state-space model calibrated to Germ",
+  "reason": "European hourly power prices, renewable generation, and power futures are outside the free stack entirely - FRED has no German intraday power or generation series."
+ },
+ {
+  "id": "2606.23596",
+  "gap": "vendor data",
+  "confidence": 0.95,
+  "method": "Builds an investible U.S. equity universe from daily CRSP, splits it into capitalization-ranked body and tail legs that recombine to the market return, and tests whether FF3, FF5 and q5 price both legs without offsetting",
+  "reason": "The test requires daily CRSP individual-stock returns from 1967 with SHROUT, PRC, VOL and delisting returns, plus month-end ADV63 screens on the full NYSE/AMEX/NASDAQ cross-section. Yahoo carries no delisted-name history and no shares-outstanding panel back to 1967, so the universe and cMKT cannot be rebuilt."
+ }
+]

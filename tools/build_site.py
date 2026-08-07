@@ -771,7 +771,7 @@ footer a{margin-right:18px;color:var(--soft)}
 <nav class="topbar">
   <div class="wrap">
     <a class="brand" href="./"><span class="a">&alpha;</span>-Archive</a>
-    <div class="nlinks"><a href="leaderboard.html">Leaderboard</a><a href="about.html">About</a></div>
+    <div class="nlinks"><a href="about.html">About</a></div>
     <div class="navright">
       <a class="pill" href="__REPO__/issues/new">Submit feedback</a>
       <div class="searchbox">
@@ -1088,7 +1088,7 @@ footer{border-top:1px solid var(--line);padding:22px 0 40px;color:var(--dim);
 <body>
 <nav class="topbar"><div class="wrap">
   <a class="brand" href="../"><span class="a">&alpha;</span>-Archive</a>
-  <div class="nlinks"><a href="../leaderboard.html">Leaderboard</a><a href="../about.html">About</a></div>
+  <div class="nlinks"><a href="../about.html">About</a></div>
   <div class="navright"><a class="pill" href="__REPO__/issues/new">Submit feedback</a></div>
 </div></nav>
 
@@ -1387,11 +1387,24 @@ when you want credit you have not earned.</p>
 
 <h2>Where the data comes from</h2>
 <p>Free sources only, fetched at run time rather than mirrored: SEC EDGAR, FRED
-and ALFRED, the Ken French library, Open Source Asset Pricing, FINRA, CFTC,
+and ALFRED, the Ken French library, FINRA, CFTC,
 CBOE, the ECB and the US Treasury, mostly through
 <a href="https://github.com/RezaSoleymanifar/vintage">Vintage</a>, which carries
 two dates on every row so a backtest cannot read a number before it was public.
 Where a replication reaches outside that, the notebook says so.</p>
+
+<h2>Why the classics are not here</h2>
+<p>The obvious targets would be the published anomalies: momentum, low
+volatility, the rest of the zoo. They were indexed here and have been removed.</p>
+<p class="lede">Every one of them was measured on the full CRSP cross-section,
+which costs money. On free data the direction reproduces and the size does not.
+Momentum correlates 0.59 with the original authors' own monthly series over 420
+months, and earns a sixth of their return, because the effect lives in small
+stocks we cannot see. That gap does not close without buying the data, so
+publishing those attempts would be publishing a list of near-misses.</p>
+<p>arXiv is the opposite case. Much of that work already runs on free data, so a
+clean match is possible, and a clean match is the only result worth putting a
+tick next to.</p>
 
 <h2>Contributing</h2>
 <p>Pick a paper from the index, run it, and open a pull request with the gap
@@ -1446,170 +1459,23 @@ def build_about(n_papers: int, n_code: int) -> None:
 # in-sample reproduction is Chen and Zimmermann's; this is the column they did
 # not fill. Sorted by what survived, because that is the question.
 
-LEADER_INTRO = """
-<h2>The flow</h2>
-<p>Four steps, in this order, and the order is the point.</p>
-<ol class="flow">
-  <li><b>Calibrate.</b> Run the implementation on the paper's own sample years
-    and check the reproduced t-statistic against the published one. Until this
-    passes, nothing below it is earned.</li>
-  <li><b>Run forward.</b> Only for a calibrated implementation, and only on the
-    years after the paper's sample ended.</li>
-  <li><b>Judge.</b> Newey-West, held-out paths, overfitting probability and
-    minimum backtest length, applied to the post-sample series alone.</li>
-  <li><b>Repeat.</b> The window grows every month on its own.</li>
-</ol>
-<p class="lede">A failed calibration is a finding about our code, not about the
-market, and it is filed that way. Publishing a post-sample number from an
-implementation that cannot reproduce the paper would be inventing evidence.</p>
-"""
-
-
-def _pct(x):
-    return "n/a" if x is None else f"{x * 100:.0f}%"
-
-
-def _num_cell(x):
-    return "" if x is None else str(x)
-
-
 def build_leaderboard() -> tuple[int, int]:
-    """Calibration first, post-sample second, in two switchable views."""
-    path = os.path.join(ROOT, "data", "postsample", "postsample.json")
-    if not os.path.exists(path):
-        return 0, 0
-    with open(path, encoding="utf-8") as fh:
-        payload = json.load(fh)
-    records = payload.get("records", [])
-    if not records:
-        return 0, 0
+    """Removed. Kept as a stub so the build does not have to know it is gone.
 
-    attempted = [r for r in records if r.get("calibration") != "not attempted"
-                 and r.get("calib_t") is not None]
-    attempted.sort(key=lambda r: (r.get("calibration") != "calibrated",
-                                  -(r.get("calib_t") or 0)))
-    calibrated = [r for r in attempted if r.get("calibration") == "calibrated"]
-    ran = [r for r in records if r.get("status") == "ran"]
-    ran.sort(key=lambda r: (r["decay"] if r.get("decay") is not None else 9))
+    The OSAP predictors were indexed as replication targets and the leaderboard
+    scored them. Four attempts made the problem plain: the direction reproduces
+    and the size does not, because these anomalies were measured on the whole
+    CRSP cross-section and we run a large-cap panel. Momentum came back
+    correlated 0.59 with the authors' own series and earning a sixth of their
+    return. That gap is structural rather than a bug, and it does not close
+    without buying the data.
 
-    def state_badge(word: str, kind: str) -> str:
-        return f'<span class="bdg {kind}"><span>{html.escape(word)}</span></span>'
-
-    calib_rows = ""
-    for r in attempted:
-        ok = r.get("calibration") == "calibrated"
-        calib_rows += (
-            f'<tr><td>{html.escape(r["acronym"])}'
-            f'<div class="sub2">{html.escape(r.get("description", "")[:58])}</div></td>'
-            f'<td>{r.get("sample_start_year") or ""}&ndash;{r.get("sample_end_year") or ""}</td>'
-            f'<td>{_num_cell(r.get("calib_years"))}</td>'
-            f'<td>{_num_cell(r.get("claimed_t"))}</td>'
-            f'<td class="{"ok" if ok else "bad"}">{_num_cell(r.get("calib_t"))}</td>'
-            f'<td>{state_badge("calibrated" if ok else "miscalibrated", "ok" if ok else "bad")}</td>'
-            f'</tr>'
-        )
-
-    post_rows = ""
-    for r in ran:
-        d = r.get("decay")
-        cls = "ok" if (d is not None and d < 0.3) else "warn" if (d is not None and d < 0.7) else "bad"
-        post_rows += (
-            f'<tr><td>{html.escape(r["acronym"])}'
-            f'<div class="sub2">{html.escape(r.get("description", "")[:58])}</div></td>'
-            f'<td>{r.get("sample_end_year") or ""}</td>'
-            f'<td>{_num_cell(r.get("years_tested"))}</td>'
-            f'<td>{_num_cell(r.get("claimed_t"))}</td>'
-            f'<td>{_num_cell(r.get("post_t"))}</td>'
-            f'<td class="{cls}">{_pct(d)}</td>'
-            f'<td>{_num_cell(r.get("post_sharpe"))}</td></tr>'
-        )
-    if not post_rows:
-        post_rows = ('<tr><td colspan="7" class="empty2">Nothing has cleared '
-                     'calibration yet, so there is nothing to run forward. That is '
-                     'the gate doing its job rather than a gap in the data.</td></tr>')
-
-    no_signal = sum(1 for r in records if r.get("status") == "no_signal")
-    no_overlap = sum(1 for r in records if r.get("calibration") == "no_overlap")
-
-    body = (
-        LEADER_INTRO
-        + '<div class="views">'
-          '<button class="vbtn on" data-v="calib">Fixtures, calibration</button>'
-          '<button class="vbtn" data-v="post">Post-sample, what survived</button>'
-          '</div>'
-
-        + '<section class="view" id="v-calib">'
-          '<h2>Does the implementation reproduce the paper?</h2>'
-          '<p class="lede">Each signal run on the paper\'s own sample window. The '
-          'reproduced t has to land within 60% of the published one and clear 1.5 '
-          'to count. Wide on purpose: the universe, the weighting and the costs '
-          'all differ from the paper, so this asks whether the same effect is '
-          'there, not whether the decimals match.</p>'
-          '<table class="gap lead"><thead><tr><th>predictor</th><th>paper sample</th>'
-          '<th>years priced</th><th>published t</th><th>reproduced t</th>'
-          '<th>calibration</th></tr></thead><tbody>'
-        + calib_rows + '</tbody></table>'
-        + f'<p class="lede">{len(calibrated)} of {len(attempted)} attempted '
-          f'implementations calibrate. Every failure above is ours to fix: the '
-          f'universe here is {payload.get("universe", "a large-cap panel")}, and '
-          f'most of these anomalies were documented on the full CRSP cross-section '
-          f'where small names carry the effect.</p>'
-          '</section>'
-
-        + '<section class="view" id="v-post" hidden>'
-          '<h2>What survived, for the implementations that calibrated</h2>'
-          '<p class="lede">Decay is the loss in t-statistic against the published '
-          'one. A decay of 1.0 means nothing is left. Negative means it got '
-          'stronger, which happens and deserves the same attention as a '
-          'failure.</p>'
-          '<table class="gap lead"><thead><tr><th>predictor</th><th>sample ends</th>'
-          '<th>years tested</th><th>published t</th><th>post t</th><th>decay</th>'
-          '<th>sharpe</th></tr></thead><tbody>'
-        + post_rows + '</tbody></table>'
-          '</section>'
-
-        + f'<h2>What is not here</h2><p class="lede">{no_signal:,} of the '
-          f'{len(records):,} predictors have no implementation yet, and '
-          f'{no_overlap} could not be calibrated because the paper\'s sample ends '
-          f'before our price history begins. They are counted rather than hidden: '
-          f'a leaderboard showing only what ran is a leaderboard of what was '
-          f'easy.</p>'
-
-        + '<h2>What this cannot tell you</h2>'
-          '<p class="lede">The universe is built from names listed today, so the '
-          'companies that failed along the way are missing and every number is '
-          'flattered by their absence. Costs are 10bp a side on turnover. The '
-          'post-sample window opens at the paper\'s stated sample end rather than '
-          'its publication date, so some of those years were already public before '
-          'the paper appeared.</p>'
-    )
-
-    script = """
-<script>
-document.querySelectorAll('.vbtn').forEach(function (b) {
-  b.addEventListener('click', function () {
-    document.querySelectorAll('.vbtn').forEach(function (o) { o.classList.remove('on'); });
-    b.classList.add('on');
-    document.getElementById('v-calib').hidden = b.dataset.v !== 'calib';
-    document.getElementById('v-post').hidden = b.dataset.v !== 'post';
-  });
-});
-</script>
-"""
-    page = paper_page(
-        slug="leaderboard", title="Calibrate, then run forward",
-        byline="Every published predictor: reproduced on its own years first, "
-               "then scored on the years it never saw.",
-        badges="", body=body + script, aside="",
-        blurb="Published quantitative finance predictors, calibrated then scored "
-              "out of sample.")
-    page = (page.replace('href="../"', 'href="./"')
-                .replace('href="../about.html"', 'href="about.html"')
-                .replace('href="../leaderboard.html"', 'href="leaderboard.html"'))
-    with open(os.path.join(ROOT, "docs", "leaderboard.html"), "w",
-              encoding="utf-8", newline="\n") as fh:
-        fh.write(page)
-    return len(calibrated), len(records)
+    So the canon is not the target. arXiv q-fin papers are: many of them run on
+    free data already, which means a clean match is possible, and a clean match
+    is the only thing worth publishing. What was here is written up in
+    docs/why-not-osap.md rather than shown as a scoreboard of near-misses.
+    """
+    return 0, 0
 
 
 def main() -> None:
@@ -1618,7 +1484,6 @@ def main() -> None:
     cites = load_citations()
     done = {REPLICATED[r["paper"]]["title"].lower() for r in reps}
     kept = [p for p in queue if p["title"].lower() not in done]
-    specs = load_osap()
     # The shortlist and what has been built from it. The OSAP predictor specs
     # are still loaded for the counter, but they are not papers we read and
     # judged, and mixing them in was what made this a directory again.
@@ -1678,7 +1543,6 @@ def main() -> None:
                 .replace("__TRENDTAGS__", trendtags)
                 .replace("__SOURCES__", sources)
                 .replace("__NPAPERS__", f"{len(cards):,}")
-                .replace("__NSPEC__", f"{len(specs):,}")
                 .replace("__NCODE__", str(len(reps)))
                 .replace("__REPO__", REPO))
     out_dir = os.path.join(ROOT, "docs")

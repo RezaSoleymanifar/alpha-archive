@@ -1,0 +1,38 @@
+[
+ {
+  "arxiv_id": "2511.22782",
+  "gap": "other",
+  "confidence": 0.6,
+  "free_sources_named": [
+   "CoinGecko"
+  ],
+  "endpoints": [
+   "https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd"
+  ],
+  "reason": "Three of the required inputs fall outside the free set: the CRX50 index needs historical market caps, volumes and high-low prices for the top 50 coins from CoinMarketCap; the attractiveness regressor needs Google Trends; and pre-2014 Bitcoin/Litecoin weekly prices come from BitInfoCharts, before Yah"
+ },
+ {
+  "arxiv_id": "2512.18648",
+  "gap": "non-US market",
+  "confidence": 0.6,
+  "free_sources_named": [
+   "Yahoo international listings"
+  ],
+  "endpoints": [
+   "https://query1.finance.yahoo.com/v8/finance/chart/005930.KS?range=1mo&interval=1d"
+  ],
+  "reason": "The empirical core is 2,116,122 stock-day observations of Korea Exchange net-buy value split into domestic institutional, foreign and individual investors, across 2,570 stocks 2020-2024. Yahoo carries .KS/.KQ prices but not investor-type order flow; that disclosure lives only on KRX's own portal and"
+ },
+ {
+  "arxiv_id": "2606.14386",
+  "gap": "non-US market",
+  "confidence": 0.6,
+  "free_sources_named": [
+   "Yahoo international listings"
+  ],
+  "endpoints": [
+   "https://query1.finance.yahoo.com/v8/finance/chart/005930.KS?range=1mo&interval=1d"
+  ],
+  "reason": "The only real-market evidence is a factor archive over 5,647 Chinese A-share stocks 2010-2026, including volume-centric factors, ICIR rankings and risk-neutralized OOS 2022-2026 performance. A survivorship-complete A-share cross-section of that size with point-in-time volume and fundamentals has no "
+ }
+]

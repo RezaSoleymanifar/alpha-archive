@@ -110,7 +110,7 @@ footer{border-top:1px solid var(--line);padding:22px 0 40px;color:var(--dim);
 <body>
 <nav class="topbar"><div class="wrap">
   <a class="brand" href="./"><span class="a">&alpha;</span>-Archive</a>
-  <div class="nlinks"><a href="../leaderboard.html">Leaderboard</a><a href="about.html">About</a></div>
+  <div class="nlinks"><a href="about.html">About</a></div>
   <div class="navright"><a class="pill" href="https://github.com/RezaSoleymanifar/alpha-archive/issues/new">Submit feedback</a></div>
 </div></nav>
 
@@ -199,11 +199,24 @@ when you want credit you have not earned.</p>
 
 <h2>Where the data comes from</h2>
 <p>Free sources only, fetched at run time rather than mirrored: SEC EDGAR, FRED
-and ALFRED, the Ken French library, Open Source Asset Pricing, FINRA, CFTC,
+and ALFRED, the Ken French library, FINRA, CFTC,
 CBOE, the ECB and the US Treasury, mostly through
 <a href="https://github.com/RezaSoleymanifar/vintage">Vintage</a>, which carries
 two dates on every row so a backtest cannot read a number before it was public.
 Where a replication reaches outside that, the notebook says so.</p>
+
+<h2>Why the classics are not here</h2>
+<p>The obvious targets would be the published anomalies: momentum, low
+volatility, the rest of the zoo. They were indexed here and have been removed.</p>
+<p class="lede">Every one of them was measured on the full CRSP cross-section,
+which costs money. On free data the direction reproduces and the size does not.
+Momentum correlates 0.59 with the original authors' own monthly series over 420
+months, and earns a sixth of their return, because the effect lives in small
+stocks we cannot see. That gap does not close without buying the data, so
+publishing those attempts would be publishing a list of near-misses.</p>
+<p>arXiv is the opposite case. Much of that work already runs on free data, so a
+clean match is possible, and a clean match is the only result worth putting a
+tick next to.</p>
 
 <h2>Contributing</h2>
 <p>Pick a paper from the index, run it, and open a pull request with the gap
