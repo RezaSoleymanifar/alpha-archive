@@ -101,6 +101,49 @@ CELLS = [
          "",
          "print(f'{len(m):,} months, {m.index[0]:%b %Y} to {m.index[-1]:%b %Y}')"),
 
+    md("## Reading the exhibits",
+       "",
+       "Every exhibit below appears twice in the same output: the page as the "
+       "paper printed it on the left, the same thing rebuilt from free data on "
+       "the right. Side by side in one frame, so a disagreement is visible at a "
+       "glance rather than remembered from a scroll ago."),
+
+    code("import base64",
+         "from IPython.display import HTML",
+         "",
+         "def _b64_file(path):",
+         "    with open(path, 'rb') as fh:",
+         "        return base64.b64encode(fh.read()).decode()",
+         "",
+         "def _b64_fig(fig):",
+         "    buf = io.BytesIO()",
+         "    fig.savefig(buf, format='png', dpi=110, bbox_inches='tight')",
+         "    plt.close(fig)",
+         "    return base64.b64encode(buf.getvalue()).decode()",
+         "",
+         "def compare(paper_png, *, table=None, fig=None,",
+         "            left='as the paper printed it', right='rebuilt from free data'):",
+         "    \"\"\"The paper's exhibit and ours, in one output, at the same size.\"\"\"",
+         "    if fig is not None:",
+         "        body = f'<img src=\"data:image/png;base64,{_b64_fig(fig)}\" style=\"width:100%\">'",
+         "    else:",
+         "        body = table.to_html() if hasattr(table, 'to_html') else str(table)",
+         "    cap = ('font:600 11px/1.5 -apple-system,system-ui,sans-serif;'",
+         "           'letter-spacing:.08em;text-transform:uppercase;color:#6b7280;'",
+         "           'padding-bottom:6px')",
+         "    box = 'flex:1;min-width:0'",
+         "    return HTML(",
+         "        f'<div style=\"display:flex;gap:20px;align-items:flex-start;'",
+         "        f'max-width:1100px\">'",
+         "        f'<div style=\"{box}\"><div style=\"{cap}\">{left}</div>'",
+         "        f'<img src=\"data:image/png;base64,{_b64_file(paper_png)}\" '",
+         "        f'style=\"width:100%;border:1px solid #e5e7eb;border-radius:4px\"></div>'",
+         "        f'<div style=\"{box}\"><div style=\"{cap}\">{right}</div>'",
+         "        f'<div style=\"overflow-x:auto;font-size:12px\">{body}</div></div>'",
+         "        f'</div>')",
+         "",
+         "compare"),
+
     md("## First, prove the pipeline",
        "",
        "The paper splits its sample at 400 observations. Counting from February "
@@ -214,19 +257,6 @@ CELLS = [
          "      f'   (paper: 887)')",
          "panel[PREDICTORS].corr().round(2)"),
 
-    md("## How to read this notebook",
-       "",
-       "Every exhibit appears twice. First the page as the paper printed it, "
-       "rendered straight from the PDF, then the same thing rebuilt from free data "
-       "in the cell below it. Nothing is paraphrased, so a disagreement is visible "
-       "rather than argued.",
-       "",
-       "![Table 6 as published](paper_figures/Table6.png)",
-       "",
-       "*The paper's Table 6. Note that MDD is a fraction, so 0.50 means a fifty per "
-       "cent drawdown, and that the momentum rows repeat across every k because "
-       "momentum does not depend on it.*"),
-
     md("### Table 1, reproduced",
        "",
        "The paper reports that the lagged bill rate carries the largest absolute "
@@ -240,12 +270,13 @@ CELLS = [
          "    'vs return': lagged.corrwith(panel['xs']),",
          "    'vs sign':   lagged.corrwith(sign),",
          "}).round(3).sort_values('vs return', key=abs, ascending=False)",
-         "table1.head(4).style.set_caption('Table 1, rebuilt')"),
+         "",
+         "compare('paper_figures/Table1.png', table=table1.head(6))"),
 
     md("## Table 6, reproduced",
        "",
-       "Scroll back to the image above and read the k=3 panel against the table "
-       "below. Same rows, same five columns, same window, 10bp on each switch.",
+       "The k=3 panel on the left, ours on the right. Same rows, same five "
+       "columns, same window, 10bp on each switch.",
        "",
        "Drawdown is shown as a fraction to match the paper, so 0.50 is a fifty per "
        "cent fall."),
@@ -259,14 +290,13 @@ CELLS = [
          "",
          "side = ours.join(paper, rsuffix=' (paper)', lsuffix=' (ours)')",
          "side = side[sorted(side.columns, key=lambda c: (c.split()[0], 'paper' in c))]",
-         "side.round(2)"),
+         "",
+         "compare('paper_figures/Table6.png', table=side.round(2))"),
 
-    md("### Figure 4, as published",
+    md("### The wealth paths behind that table",
        "",
-       "![Figure 4 as published](paper_figures/Figure4.png)",
-       "",
-       "And rebuilt below. The paper uses this figure to argue the decomposition is "
-       "stable rather than lucky in one sub-period."),
+       "The paper uses this exhibit to argue the decomposition is stable rather "
+       "than lucky in one sub-period."),
 
     code("paths = D.wealth_paths(frame)",
          "fig, ax = plt.subplots(figsize=(9.5, 4.6))",
@@ -282,11 +312,11 @@ CELLS = [
          "ax.set_title('Figure 4, rebuilt: terminal wealth, June 1981 to December 2021')",
          "ax.legend(frameon=False, fontsize=9)",
          "ax.spines[['top', 'right']].set_visible(False)",
-         "fig.tight_layout()"),
+         "",
+         "compare('paper_figures/Figure4.png', fig=fig,",
+         "        left='Figure 4 as published', right='our wealth paths')"),
 
-    md("## Figure 4, as published: sensitivity to k",
-       "",
-       "![Figure 4 as published](paper_figures/Figure4.png)",
+    md("## Figure 4: sensitivity to k",
        "",
        "This is the exhibit to sit with. The paper plots terminal wealth against k "
        "for every strategy, and its own CSM line runs 124, 155, **182**, then falls "
@@ -315,7 +345,9 @@ CELLS = [
          "ax.set_title('One specification choice, a fifty per cent range')",
          "ax.legend(frameon=False)",
          "ax.spines[['top', 'right']].set_visible(False)",
-         "fig.tight_layout()"),
+         "",
+         "compare('paper_figures/Figure4.png', fig=fig,",
+         "        left='Figure 4 as published', right='rebuilt: terminal wealth against k')"),
 
     md("### Reading the two curves together",
        "",
