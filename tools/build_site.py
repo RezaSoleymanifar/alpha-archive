@@ -1447,88 +1447,169 @@ def build_about(n_papers: int, n_code: int) -> None:
 # not fill. Sorted by what survived, because that is the question.
 
 LEADER_INTRO = """
-<h2>What survived</h2>
-<p>Each predictor below was run only on the years <em>after</em> its own paper's
-sample ended. Reproducing a result in sample is already done, and doing it again
-proves nothing about whether the edge is still there. The post-sample window is
-a subtraction from the paper's own stated end year, so it is not a judgement
-call.</p>
-<p class="lede">Decay is the loss in t-statistic against the published one. A
-decay of 1.0 means nothing is left. Negative means it got stronger, which
-happens and is worth as much attention as the failures.</p>
+<h2>The flow</h2>
+<p>Four steps, in this order, and the order is the point.</p>
+<ol class="flow">
+  <li><b>Calibrate.</b> Run the implementation on the paper's own sample years
+    and check the reproduced t-statistic against the published one. Until this
+    passes, nothing below it is earned.</li>
+  <li><b>Run forward.</b> Only for a calibrated implementation, and only on the
+    years after the paper's sample ended.</li>
+  <li><b>Judge.</b> Newey-West, held-out paths, overfitting probability and
+    minimum backtest length, applied to the post-sample series alone.</li>
+  <li><b>Repeat.</b> The window grows every month on its own.</li>
+</ol>
+<p class="lede">A failed calibration is a finding about our code, not about the
+market, and it is filed that way. Publishing a post-sample number from an
+implementation that cannot reproduce the paper would be inventing evidence.</p>
 """
 
 
-def _pct(x: float | None) -> str:
+def _pct(x):
     return "n/a" if x is None else f"{x * 100:.0f}%"
 
 
+def _num_cell(x):
+    return "" if x is None else str(x)
+
+
 def build_leaderboard() -> tuple[int, int]:
-    """The post-sample table as its own page. Returns (ran, total)."""
-    # Read the stored result rather than importing the runner. The site build
-    # should render an artifact, not re-derive one, and the runner needs Vintage
-    # while this does not.
+    """Calibration first, post-sample second, in two switchable views."""
     path = os.path.join(ROOT, "data", "postsample", "postsample.json")
     if not os.path.exists(path):
         return 0, 0
     with open(path, encoding="utf-8") as fh:
-        records = json.load(fh).get("records", [])
+        payload = json.load(fh)
+    records = payload.get("records", [])
     if not records:
         return 0, 0
 
-    ran = [r for r in records if r["status"] == "ran"]
-    ran.sort(key=lambda r: (r["decay"] if r["decay"] is not None else 9))
+    attempted = [r for r in records if r.get("calibration") != "not attempted"
+                 and r.get("calib_t") is not None]
+    attempted.sort(key=lambda r: (r.get("calibration") != "calibrated",
+                                  -(r.get("calib_t") or 0)))
+    calibrated = [r for r in attempted if r.get("calibration") == "calibrated"]
+    ran = [r for r in records if r.get("status") == "ran"]
+    ran.sort(key=lambda r: (r["decay"] if r.get("decay") is not None else 9))
 
-    rows = ""
-    for r in ran:
-        cls = ("ok" if (r.get("decay") is not None and r["decay"] < 0.3) else
-               "warn" if (r.get("decay") is not None and r["decay"] < 0.7) else "bad")
-        rows += (
+    def state_badge(word: str, kind: str) -> str:
+        return f'<span class="bdg {kind}"><span>{html.escape(word)}</span></span>'
+
+    calib_rows = ""
+    for r in attempted:
+        ok = r.get("calibration") == "calibrated"
+        calib_rows += (
             f'<tr><td>{html.escape(r["acronym"])}'
-            f'<div class="sub2">{html.escape(r["description"][:60])}</div></td>'
-            f'<td>{r.get("sample_end_year") or ""}</td>'
-            f'<td>{r.get("years_tested") or ""}</td>'
-            f'<td>{r.get("claimed_t") or ""}</td>'
-            f'<td>{r.get("post_t") if r.get("post_t") is not None else ""}</td>'
-            f'<td class="{cls}">{_pct(r.get("decay"))}</td>'
-            f'<td>{r.get("post_sharpe") if r.get("post_sharpe") is not None else ""}</td>'
-            f'<td><span class="bdg {"ok" if r.get("verdict") == "HOLDS" else "warn" if r.get("verdict") == "WEAKER" else "bad"}">'
-            f'<span>{html.escape(str(r.get("verdict") or "")).lower()}</span></span></td></tr>'
+            f'<div class="sub2">{html.escape(r.get("description", "")[:58])}</div></td>'
+            f'<td>{r.get("sample_start_year") or ""}&ndash;{r.get("sample_end_year") or ""}</td>'
+            f'<td>{_num_cell(r.get("calib_years"))}</td>'
+            f'<td>{_num_cell(r.get("claimed_t"))}</td>'
+            f'<td class="{"ok" if ok else "bad"}">{_num_cell(r.get("calib_t"))}</td>'
+            f'<td>{state_badge("calibrated" if ok else "miscalibrated", "ok" if ok else "bad")}</td>'
+            f'</tr>'
         )
 
-    pending = sum(1 for r in records if r["status"] == "no_signal")
-    nodata = sum(1 for r in records if r["status"] == "no_data")
+    post_rows = ""
+    for r in ran:
+        d = r.get("decay")
+        cls = "ok" if (d is not None and d < 0.3) else "warn" if (d is not None and d < 0.7) else "bad"
+        post_rows += (
+            f'<tr><td>{html.escape(r["acronym"])}'
+            f'<div class="sub2">{html.escape(r.get("description", "")[:58])}</div></td>'
+            f'<td>{r.get("sample_end_year") or ""}</td>'
+            f'<td>{_num_cell(r.get("years_tested"))}</td>'
+            f'<td>{_num_cell(r.get("claimed_t"))}</td>'
+            f'<td>{_num_cell(r.get("post_t"))}</td>'
+            f'<td class="{cls}">{_pct(d)}</td>'
+            f'<td>{_num_cell(r.get("post_sharpe"))}</td></tr>'
+        )
+    if not post_rows:
+        post_rows = ('<tr><td colspan="7" class="empty2">Nothing has cleared '
+                     'calibration yet, so there is nothing to run forward. That is '
+                     'the gate doing its job rather than a gap in the data.</td></tr>')
+
+    no_signal = sum(1 for r in records if r.get("status") == "no_signal")
+    no_overlap = sum(1 for r in records if r.get("calibration") == "no_overlap")
 
     body = (
         LEADER_INTRO
-        + '<table class="gap lead"><thead><tr><th>predictor</th><th>sample ends</th>'
-          '<th>years tested</th><th>claimed t</th><th>post t</th><th>decay</th>'
-          '<th>sharpe</th><th>verdict</th></tr></thead><tbody>'
-        + rows + '</tbody></table>'
-        + f'<h2>What is not here</h2><p class="lede">{pending:,} of the '
-          f'{len(records):,} predictors have no implementation yet, and {nodata} '
-          f'had too little price history inside their window to judge. They are '
-          f'counted rather than hidden: a leaderboard that shows only what ran '
-          f'is a leaderboard of what was easy.</p>'
+        + '<div class="views">'
+          '<button class="vbtn on" data-v="calib">Fixtures, calibration</button>'
+          '<button class="vbtn" data-v="post">Post-sample, what survived</button>'
+          '</div>'
+
+        + '<section class="view" id="v-calib">'
+          '<h2>Does the implementation reproduce the paper?</h2>'
+          '<p class="lede">Each signal run on the paper\'s own sample window. The '
+          'reproduced t has to land within 60% of the published one and clear 1.5 '
+          'to count. Wide on purpose: the universe, the weighting and the costs '
+          'all differ from the paper, so this asks whether the same effect is '
+          'there, not whether the decimals match.</p>'
+          '<table class="gap lead"><thead><tr><th>predictor</th><th>paper sample</th>'
+          '<th>years priced</th><th>published t</th><th>reproduced t</th>'
+          '<th>calibration</th></tr></thead><tbody>'
+        + calib_rows + '</tbody></table>'
+        + f'<p class="lede">{len(calibrated)} of {len(attempted)} attempted '
+          f'implementations calibrate. Every failure above is ours to fix: the '
+          f'universe here is {payload.get("universe", "a large-cap panel")}, and '
+          f'most of these anomalies were documented on the full CRSP cross-section '
+          f'where small names carry the effect.</p>'
+          '</section>'
+
+        + '<section class="view" id="v-post" hidden>'
+          '<h2>What survived, for the implementations that calibrated</h2>'
+          '<p class="lede">Decay is the loss in t-statistic against the published '
+          'one. A decay of 1.0 means nothing is left. Negative means it got '
+          'stronger, which happens and deserves the same attention as a '
+          'failure.</p>'
+          '<table class="gap lead"><thead><tr><th>predictor</th><th>sample ends</th>'
+          '<th>years tested</th><th>published t</th><th>post t</th><th>decay</th>'
+          '<th>sharpe</th></tr></thead><tbody>'
+        + post_rows + '</tbody></table>'
+          '</section>'
+
+        + f'<h2>What is not here</h2><p class="lede">{no_signal:,} of the '
+          f'{len(records):,} predictors have no implementation yet, and '
+          f'{no_overlap} could not be calibrated because the paper\'s sample ends '
+          f'before our price history begins. They are counted rather than hidden: '
+          f'a leaderboard showing only what ran is a leaderboard of what was '
+          f'easy.</p>'
+
         + '<h2>What this cannot tell you</h2>'
           '<p class="lede">The universe is built from names listed today, so the '
-          'companies that failed along the way are missing and every number here '
-          'is flattered by their absence. Costs are charged at 10bp a side on '
-          'turnover. The window is the paper\'s stated sample end, not its '
-          'publication date, so some of these years were public knowledge before '
+          'companies that failed along the way are missing and every number is '
+          'flattered by their absence. Costs are 10bp a side on turnover. The '
+          'post-sample window opens at the paper\'s stated sample end rather than '
+          'its publication date, so some of those years were already public before '
           'the paper appeared.</p>'
     )
+
+    script = """
+<script>
+document.querySelectorAll('.vbtn').forEach(function (b) {
+  b.addEventListener('click', function () {
+    document.querySelectorAll('.vbtn').forEach(function (o) { o.classList.remove('on'); });
+    b.classList.add('on');
+    document.getElementById('v-calib').hidden = b.dataset.v !== 'calib';
+    document.getElementById('v-post').hidden = b.dataset.v !== 'post';
+  });
+});
+</script>
+"""
     page = paper_page(
-        slug="leaderboard", title="Post-sample leaderboard",
-        byline="Every published predictor, run on the years its own paper never saw.",
-        badges="", body=body, aside="",
-        blurb="Published quantitative finance predictors scored out of sample.")
-    page = page.replace('href="../"', 'href="./"').replace('href="../about.html"',
-                                                           'href="about.html"')
+        slug="leaderboard", title="Calibrate, then run forward",
+        byline="Every published predictor: reproduced on its own years first, "
+               "then scored on the years it never saw.",
+        badges="", body=body + script, aside="",
+        blurb="Published quantitative finance predictors, calibrated then scored "
+              "out of sample.")
+    page = (page.replace('href="../"', 'href="./"')
+                .replace('href="../about.html"', 'href="about.html"')
+                .replace('href="../leaderboard.html"', 'href="leaderboard.html"'))
     with open(os.path.join(ROOT, "docs", "leaderboard.html"), "w",
               encoding="utf-8", newline="\n") as fh:
         fh.write(page)
-    return len(ran), len(records)
+    return len(calibrated), len(records)
 
 
 def main() -> None:

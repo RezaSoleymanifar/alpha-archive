@@ -9,8 +9,14 @@ subtraction, and running it is a contribution rather than a repeat.
 
 The rules this module holds to:
 
-  * The window starts the January after the paper's sample ended. Not one month
-    after publication, and not a round number. The paper's own stated end date.
+  * Nothing is published for a predictor until the implementation has been
+    calibrated: run on the paper's OWN sample years and checked against the
+    number the paper printed. An uncalibrated post-sample result is a claim
+    about our code rather than about the market, and it is worse than no
+    result because it looks like one.
+  * The post-sample window starts the January after the paper's sample ended.
+    Not one month after publication, and not a round number. The paper's own
+    stated end date.
   * The claim is read from SignalDoc, never from us.
   * The five checks in `claims.py` run on the post-sample series, not the full
     one, because the full one contains the years the paper was fitted on.
@@ -148,6 +154,17 @@ class PostSample:
     tested_end: str | None = None
     years_tested: float | None = None
 
+    # Step one: does the implementation reproduce the paper on the paper's
+    # own years? Until this passes, nothing downstream is published.
+    sample_start_year: int | None = None
+    calib_start: str | None = None
+    calib_end: str | None = None
+    calib_years: float | None = None
+    calib_t: float | None = None
+    calib_sharpe: float | None = None
+    calibration: str = "not attempted"   # calibrated | miscalibrated | no_overlap
+    calib_note: str = ""
+
     post_sharpe: float | None = None
     post_annual_return: float | None = None
     post_t: float | None = None
@@ -200,6 +217,8 @@ def catalogue() -> list[PostSample]:
             authors=(row.get("Authors") or "").strip(),
             year=int(_num(row, "Year") or 0) or None,
             sample_end_year=int(end_year) if end_year else None,
+            sample_start_year=(int(_num(row, "SampleStartYear"))
+                               if _num(row, "SampleStartYear") else None),
             claimed_t=_num(row, "T-Stat"),
             claimed_monthly_return=_num(row, "Mean Return"),
             data_category=(row.get("Cat.Data") or "").strip(),
@@ -249,34 +268,112 @@ def _long_short(scores: pd.DataFrame, prices: pd.DataFrame,
     return (gross - turnover * (cost_bps / 10_000.0)).dropna()
 
 
+MIN_CALIB_YEARS = 5.0
+# How far the reproduced t may sit from the published one and still count as the
+# same signal. Wide on purpose: the universe, the weighting and the cost model
+# all differ from the paper, so this asks whether the implementation finds the
+# same effect, not whether it lands on the same decimal.
+CALIB_T_TOLERANCE = 0.6      # as a fraction of the published t
+CALIB_MIN_T = 1.5
+
+
+def _score(scores: pd.DataFrame, prices: pd.DataFrame,
+           start: str, end: str) -> tuple[pd.Series, str]:
+    window = prices.loc[start:end]
+    if len(window) < 300:
+        return pd.Series(dtype=float), (
+            f"only {len(window)} trading days available in {start}..{end}")
+    net = _long_short(scores.loc[window.index], window)
+    if net.empty or float(net.std()) == 0:
+        return pd.Series(dtype=float), "the signal produced no tradeable cross-section"
+    return net, ""
+
+
+def _t_stat(net: pd.Series) -> float:
+    from vintage.engine import validation
+    return validation.newey_west_t(list(net.values)).get("newey_west_t") or 0.0
+
+
+def calibrate(rec: PostSample, prices: pd.DataFrame) -> PostSample:
+    """Step one: reproduce the paper on the paper's own years.
+
+    Passing this is what earns the right to say anything about the years after
+    it. Failing it is a finding about our implementation, not about the market,
+    and the page has to say which of the two it is looking at.
+    """
+    signal = SIGNALS.get(rec.acronym)
+    if signal is None or not rec.sample_start_year or not rec.sample_end_year:
+        rec.calibration = "no_overlap"
+        rec.calib_note = "no implementation, or the paper's sample years are unstated"
+        return rec
+
+    have_start = str(prices.index[0].date())
+    start = max(f"{rec.sample_start_year}-01-01", have_start)
+    end = f"{rec.sample_end_year}-12-31"
+    if start >= end:
+        rec.calibration = "no_overlap"
+        rec.calib_note = (f"the paper's sample ends in {rec.sample_end_year} and our "
+                          f"price history starts in {have_start[:4]}, so there is no "
+                          f"overlap to calibrate on")
+        return rec
+
+    net, why = _score(signal.fn(prices), prices, start, end)
+    if net.empty:
+        rec.calibration = "no_overlap"
+        rec.calib_note = why
+        return rec
+
+    rec.calib_start, rec.calib_end = start, str(net.index[-1].date())
+    rec.calib_years = round(len(net) / TRADING_DAYS, 1)
+    rec.calib_sharpe = round(float(net.mean() / net.std()) * np.sqrt(TRADING_DAYS), 3)
+    rec.calib_t = round(_t_stat(net), 3)
+
+    if rec.calib_years < MIN_CALIB_YEARS:
+        rec.calibration = "no_overlap"
+        rec.calib_note = (f"only {rec.calib_years} years of the paper's sample are "
+                          f"priced, below the {MIN_CALIB_YEARS} needed to calibrate")
+        return rec
+
+    claimed = rec.claimed_t or 0.0
+    if claimed <= 0:
+        rec.calibration = "no_overlap"
+        rec.calib_note = "the paper publishes no t-statistic to calibrate against"
+        return rec
+
+    close = abs(rec.calib_t - claimed) <= CALIB_T_TOLERANCE * claimed
+    if rec.calib_t >= CALIB_MIN_T and close:
+        rec.calibration = "calibrated"
+        rec.calib_note = (f"reproduces t = {rec.calib_t} against the published "
+                          f"{claimed}, on {rec.calib_years} years of the paper's "
+                          f"own sample")
+    else:
+        rec.calibration = "miscalibrated"
+        rec.calib_note = (f"reproduces t = {rec.calib_t} against the published "
+                          f"{claimed}. The implementation does not find the "
+                          f"paper's effect on the paper's own years, so nothing "
+                          f"is claimed about the years after it")
+    return rec
+
+
 def run_one(rec: PostSample, prices: pd.DataFrame) -> PostSample:
-    """Score one predictor on its post-sample window."""
+    """Step two, and only for an implementation that calibrated."""
+    rec = calibrate(rec, prices)
     signal = SIGNALS.get(rec.acronym)
     if signal is None or not rec.window_start:
         return rec
-
-    scores = signal.fn(prices)
-    window = prices.loc[rec.window_start:rec.window_end]
-    if len(window) < 300:
-        rec.status = "no_data"
-        rec.note = (f"only {len(window)} trading days of price history inside "
-                    f"the window, too few to judge")
+    if rec.calibration != "calibrated":
+        rec.status = "uncalibrated"
         return rec
 
-    rec.tested_start = str(window.index[0].date())
-    rec.tested_end = str(window.index[-1].date())
-    rec.years_tested = round(len(window) / TRADING_DAYS, 1)
-    if rec.years_tested and rec.years_out_of_sample and             rec.years_tested < rec.years_out_of_sample - 1:
-        rec.note = ((rec.note + ". ") if rec.note else "") + (
-            f"price history starts {rec.tested_start}, so {rec.years_tested} of "
-            f"the {rec.years_out_of_sample} post-sample years are covered")
-
-    net = _long_short(scores.loc[window.index], window)
-    if net.empty or float(net.std()) == 0:
+    net, why = _score(signal.fn(prices), prices, rec.window_start, rec.window_end)
+    if net.empty:
         rec.status = "no_data"
-        rec.note = "the signal produced no tradeable cross-section"
+        rec.note = why
         return rec
 
+    rec.tested_start = str(net.index[0].date())
+    rec.tested_end = str(net.index[-1].date())
+    rec.years_tested = round(len(net) / TRADING_DAYS, 1)
     rec.post_sharpe = round(float(net.mean() / net.std()) * np.sqrt(TRADING_DAYS), 3)
     total = float((1 + net).prod())
     years = len(net) / TRADING_DAYS
@@ -288,6 +385,7 @@ def run_one(rec: PostSample, prices: pd.DataFrame) -> PostSample:
         claimed_t=rec.claimed_t,
         claimed_annual_return=((rec.claimed_monthly_return / 100.0 * 12.0)
                                if rec.claimed_monthly_return is not None else None),
+        sample_start_year=rec.sample_start_year,
         sample_end_year=rec.sample_end_year,
     )
     verdict = verify(claim, list(net.values), trials=1)

@@ -3,8 +3,8 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Post-sample leaderboard &middot; &alpha;-Archive</title>
-<meta name="description" content="Published quantitative finance predictors scored out of sample.">
+<title>Calibrate, then run forward &middot; &alpha;-Archive</title>
+<meta name="description" content="Published quantitative finance predictors, calibrated then scored out of sample.">
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='6' fill='%230d0d0d'/><text x='16' y='23' font-size='20' font-family='Georgia,serif' fill='%233ddc84' text-anchor='middle'>&#945;</text></svg>">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -110,30 +110,47 @@ footer{border-top:1px solid var(--line);padding:22px 0 40px;color:var(--dim);
 <body>
 <nav class="topbar"><div class="wrap">
   <a class="brand" href="./"><span class="a">&alpha;</span>-Archive</a>
-  <div class="nlinks"><a href="../leaderboard.html">Leaderboard</a><a href="about.html">About</a></div>
+  <div class="nlinks"><a href="leaderboard.html">Leaderboard</a><a href="about.html">About</a></div>
   <div class="navright"><a class="pill" href="https://github.com/RezaSoleymanifar/alpha-archive/issues/new">Submit feedback</a></div>
 </div></nav>
 
 <div class="wrap">
   <p class="crumb"><a href="./">&alpha;-Archive</a> / <span>leaderboard</span></p>
   <header class="paper">
-    <h1>Post-sample leaderboard</h1>
-    <p class="byline">Every published predictor, run on the years its own paper never saw.</p>
+    <h1>Calibrate, then run forward</h1>
+    <p class="byline">Every published predictor: reproduced on its own years first, then scored on the years it never saw.</p>
     <div class="badges"></div>
   </header>
 
   <div class="cols solo">
     <main>
-<h2>What survived</h2>
-<p>Each predictor below was run only on the years <em>after</em> its own paper's
-sample ended. Reproducing a result in sample is already done, and doing it again
-proves nothing about whether the edge is still there. The post-sample window is
-a subtraction from the paper's own stated end year, so it is not a judgement
-call.</p>
-<p class="lede">Decay is the loss in t-statistic against the published one. A
-decay of 1.0 means nothing is left. Negative means it got stronger, which
-happens and is worth as much attention as the failures.</p>
-<table class="gap lead"><thead><tr><th>predictor</th><th>sample ends</th><th>years tested</th><th>claimed t</th><th>post t</th><th>decay</th><th>sharpe</th><th>verdict</th></tr></thead><tbody><tr><td>Mom12m<div class="sub2">Momentum (12 month)</div></td><td>1989</td><td>15.0</td><td>3.74</td><td>0.576</td><td class="bad">85%</td><td>0.139</td><td><span class="bdg bad"><span>fails</span></span></td></tr><tr><td>Mom6m<div class="sub2">Momentum (6 month)</div></td><td>1989</td><td>15.0</td><td>2.44</td><td>0.36</td><td class="bad">85%</td><td>0.087</td><td><span class="bdg bad"><span>fails</span></span></td></tr><tr><td>STreversal<div class="sub2">Short term reversal</div></td><td>1987</td><td>15.0</td><td>12.44</td><td>-0.915</td><td class="bad">107%</td><td>-0.218</td><td><span class="bdg bad"><span>fails</span></span></td></tr><tr><td>VolSD<div class="sub2">Volume Variance</div></td><td>1995</td><td>15.0</td><td>3.56</td><td>-2.921</td><td class="bad">182%</td><td>-0.727</td><td><span class="bdg bad"><span>fails</span></span></td></tr><tr><td>Beta<div class="sub2">CAPM beta</div></td><td>1968</td><td>15.0</td><td>2.57</td><td>-2.396</td><td class="bad">193%</td><td>-0.581</td><td><span class="bdg bad"><span>fails</span></span></td></tr><tr><td>IdioVol3F<div class="sub2">Idiosyncratic risk (3 factor)</div></td><td>2000</td><td>15.0</td><td>3.1</td><td>-3.28</td><td class="bad">206%</td><td>-0.827</td><td><span class="bdg bad"><span>fails</span></span></td></tr><tr><td>MaxRet<div class="sub2">Maximum return over month</div></td><td>2005</td><td>15.0</td><td>2.83</td><td>-3.222</td><td class="bad">214%</td><td>-0.809</td><td><span class="bdg bad"><span>fails</span></span></td></tr></tbody></table><h2>What is not here</h2><p class="lede">324 of the 331 predictors have no implementation yet, and 0 had too little price history inside their window to judge. They are counted rather than hidden: a leaderboard that shows only what ran is a leaderboard of what was easy.</p><h2>What this cannot tell you</h2><p class="lede">The universe is built from names listed today, so the companies that failed along the way are missing and every number here is flattered by their absence. Costs are charged at 10bp a side on turnover. The window is the paper's stated sample end, not its publication date, so some of these years were public knowledge before the paper appeared.</p></main>
+<h2>The flow</h2>
+<p>Four steps, in this order, and the order is the point.</p>
+<ol class="flow">
+  <li><b>Calibrate.</b> Run the implementation on the paper's own sample years
+    and check the reproduced t-statistic against the published one. Until this
+    passes, nothing below it is earned.</li>
+  <li><b>Run forward.</b> Only for a calibrated implementation, and only on the
+    years after the paper's sample ended.</li>
+  <li><b>Judge.</b> Newey-West, held-out paths, overfitting probability and
+    minimum backtest length, applied to the post-sample series alone.</li>
+  <li><b>Repeat.</b> The window grows every month on its own.</li>
+</ol>
+<p class="lede">A failed calibration is a finding about our code, not about the
+market, and it is filed that way. Publishing a post-sample number from an
+implementation that cannot reproduce the paper would be inventing evidence.</p>
+<div class="views"><button class="vbtn on" data-v="calib">Fixtures, calibration</button><button class="vbtn" data-v="post">Post-sample, what survived</button></div><section class="view" id="v-calib"><h2>Does the implementation reproduce the paper?</h2><p class="lede">Each signal run on the paper's own sample window. The reproduced t has to land within 60% of the published one and clear 1.5 to count. Wide on purpose: the universe, the weighting and the costs all differ from the paper, so this asks whether the same effect is there, not whether the decimals match.</p><table class="gap lead"><thead><tr><th>predictor</th><th>paper sample</th><th>years priced</th><th>published t</th><th>reproduced t</th><th>calibration</th></tr></thead><tbody><tr><td>VolSD<div class="sub2">Volume Variance</div></td><td>1966&ndash;1995</td><td>6.0</td><td>3.56</td><td class="bad">-2.826</td><td><span class="bdg bad"><span>miscalibrated</span></span></td></tr><tr><td>IdioVol3F<div class="sub2">Idiosyncratic risk (3 factor)</div></td><td>1963&ndash;2000</td><td>11.0</td><td>3.1</td><td class="bad">-2.959</td><td><span class="bdg bad"><span>miscalibrated</span></span></td></tr><tr><td>MaxRet<div class="sub2">Maximum return over month</div></td><td>1962&ndash;2005</td><td>16.0</td><td>2.83</td><td class="bad">-3.209</td><td><span class="bdg bad"><span>miscalibrated</span></span></td></tr></tbody></table><p class="lede">0 of 3 attempted implementations calibrate. Every failure above is ours to fix: the universe here is a large-cap panel, and most of these anomalies were documented on the full CRSP cross-section where small names carry the effect.</p></section><section class="view" id="v-post" hidden><h2>What survived, for the implementations that calibrated</h2><p class="lede">Decay is the loss in t-statistic against the published one. A decay of 1.0 means nothing is left. Negative means it got stronger, which happens and deserves the same attention as a failure.</p><table class="gap lead"><thead><tr><th>predictor</th><th>sample ends</th><th>years tested</th><th>published t</th><th>post t</th><th>decay</th><th>sharpe</th></tr></thead><tbody><tr><td colspan="7" class="empty2">Nothing has cleared calibration yet, so there is nothing to run forward. That is the gate doing its job rather than a gap in the data.</td></tr></tbody></table></section><h2>What is not here</h2><p class="lede">324 of the 331 predictors have no implementation yet, and 328 could not be calibrated because the paper's sample ends before our price history begins. They are counted rather than hidden: a leaderboard showing only what ran is a leaderboard of what was easy.</p><h2>What this cannot tell you</h2><p class="lede">The universe is built from names listed today, so the companies that failed along the way are missing and every number is flattered by their absence. Costs are 10bp a side on turnover. The post-sample window opens at the paper's stated sample end rather than its publication date, so some of those years were already public before the paper appeared.</p>
+<script>
+document.querySelectorAll('.vbtn').forEach(function (b) {
+  b.addEventListener('click', function () {
+    document.querySelectorAll('.vbtn').forEach(function (o) { o.classList.remove('on'); });
+    b.classList.add('on');
+    document.getElementById('v-calib').hidden = b.dataset.v !== 'calib';
+    document.getElementById('v-post').hidden = b.dataset.v !== 'post';
+  });
+});
+</script>
+</main>
     <aside></aside>
   </div>
 
