@@ -621,7 +621,11 @@ details.spec .note{font-size:12px;color:var(--dim);margin-top:10px}
 .tab.on{background:#e9e4da;color:#14130f;font-weight:500}
 .tab.bd{border:1px solid var(--line);display:inline-flex;align-items:center;gap:7px}
 .tab.bd.on{border-color:#e9e4da}
-.bar .right{margin-left:auto;display:flex;gap:4px;flex-wrap:wrap}
+/* The window buttons sat on the right and wrapped to their own line at
+   most widths, which put two rows of controls on two different left
+   edges. They get their own row, starting where the sorts start. */
+.bar .right{flex-basis:100%;display:flex;gap:6px;flex-wrap:wrap;
+  margin:2px 0 0;padding-top:8px;border-top:1px solid var(--line)}
 .bar .right .tab{font-family:var(--sans);font-size:13px}
 
 .count{color:var(--dim);font-size:12.5px;font-family:var(--mono);padding:16px 0 4px}
