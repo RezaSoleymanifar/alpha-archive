@@ -1,11 +1,11 @@
 {
  "paper": "2606.04153",
  "title": "A new decomposition approach to modeling financial returns",
- "headline": "7 of 12 published numbers reproduced, 4 missed, 1 not built yet",
+ "headline": "6 of 1,794 published numbers checked and reproduced; 6 checked and missed",
  "fully_reproduced": false,
  "tally": {
-  "REPRODUCED": 7,
-  "MISSED": 4,
+  "REPRODUCED": 6,
+  "MISSED": 6,
   "NOT_ATTEMPTED": 1,
   "UNOBTAINABLE": 0
  },
@@ -22,7 +22,8 @@
    "gap": 0.01,
    "state": "REPRODUCED",
    "note": "",
-   "blocker": ""
+   "blocker": "",
+   "cell": "T6/Buy and hold/k =1/TW"
   },
   {
    "name": "Buy-and-hold annualised return",
@@ -34,7 +35,8 @@
    "gap": 0.0,
    "state": "REPRODUCED",
    "note": "",
-   "blocker": ""
+   "blocker": "",
+   "cell": "T6/Buy and hold/k =1/AV"
   },
   {
    "name": "Buy-and-hold annualised sd",
@@ -46,7 +48,8 @@
    "gap": 0.0,
    "state": "REPRODUCED",
    "note": "",
-   "blocker": ""
+   "blocker": "",
+   "cell": "T6/Buy and hold/k =1/SD"
   },
   {
    "name": "Buy-and-hold monthly Sharpe",
@@ -58,7 +61,8 @@
    "gap": 0.002,
    "state": "REPRODUCED",
    "note": "",
-   "blocker": ""
+   "blocker": "",
+   "cell": "T6/Buy and hold/k =1/SR"
   },
   {
    "name": "tbl correlation with return",
@@ -70,7 +74,8 @@
    "gap": 0.002,
    "state": "REPRODUCED",
    "note": "",
-   "blocker": ""
+   "blocker": "",
+   "cell": "T1/Panel A: Between r and x/r/tbl"
   },
   {
    "name": "tbl correlation with sign",
@@ -82,19 +87,8 @@
    "gap": 0.002,
    "state": "REPRODUCED",
    "note": "",
-   "blocker": ""
-  },
-  {
-   "name": "3m and 6m momentum finish below $50",
-   "published": 50.0,
-   "observed": 47.7,
-   "tolerance": 10.0,
-   "units": "$",
-   "where": "Table 6",
-   "gap": 2.3,
-   "state": "REPRODUCED",
-   "note": "Paper states both finish below $50. Ours: 3m $40.49, 6m $47.70. Scored on the 6m leg, the closer of the two to the stated bound.",
-   "blocker": ""
+   "blocker": "",
+   "cell": "T1/Panel B: Between s , m , and x/s/tbl"
   },
   {
    "name": "12-month momentum benchmark",
@@ -106,7 +100,8 @@
    "gap": 10.81,
    "state": "MISSED",
    "note": "",
-   "blocker": ""
+   "blocker": "",
+   "cell": "T6/Momentum/12-month/k =1/TW"
   },
   {
    "name": "CSR terminal wealth",
@@ -118,7 +113,8 @@
    "gap": 21.69,
    "state": "MISSED",
    "note": "Ours beats the paper's CSR by 22% at k=3. But sweeping k shows why: the decomposition's advantage over CSR grows monotonically from $0 at k=1 to $113 at k=8. At the k=3 the paper reports, we see almost no gap; at k=6 we see $88. The mechanism reproduces, the location does not.",
-   "blocker": ""
+   "blocker": "",
+   "cell": "T6/CSR approach/k =3/TW"
   },
   {
    "name": "CSM terminal wealth at k=3",
@@ -130,7 +126,8 @@
    "gap": 59.35,
    "state": "MISSED",
    "note": "$122.33 at the paper's k=3. Sweeping k gives $104.62 at k=1 rising to $158.37 at k=6, so this single number is a 51% range depending on one specification choice. Our best k lands within 13% of the paper's headline, but not at the k they report.",
-   "blocker": ""
+   "blocker": "",
+   "cell": "T6/CSM approach/Baseline/k =3/TW"
   },
   {
    "name": "CSM Sharpe at k=3",
@@ -142,7 +139,8 @@
    "gap": 0.03,
    "state": "MISSED",
    "note": "",
-   "blocker": ""
+   "blocker": "",
+   "cell": "T6/CSM approach/Baseline/k =3/SR"
   },
   {
    "name": "Copula strategies terminal wealth",
@@ -154,7 +152,34 @@
    "gap": null,
    "state": "NOT_ATTEMPTED",
    "note": "Needs copula fitting. Buildable on the same data, not yet done.",
-   "blocker": ""
+   "blocker": "",
+   "cell": "T6/Copula-based approach/Gaussian/k =3/TW"
+  },
+  {
+   "name": "3-month momentum terminal wealth",
+   "published": 32.39,
+   "observed": 40.49,
+   "tolerance": 0.1,
+   "units": "$",
+   "where": "Table 6",
+   "gap": 8.1,
+   "state": "MISSED",
+   "note": "Previously scored REPRODUCED against a $50 bound taken from the prose rather than the printed value.",
+   "blocker": "",
+   "cell": "T6/Momentum/3-month/k =1/TW"
+  },
+  {
+   "name": "6-month momentum terminal wealth",
+   "published": 48.71,
+   "observed": 47.7,
+   "tolerance": 0.1,
+   "units": "$",
+   "where": "Table 6",
+   "gap": 1.01,
+   "state": "MISSED",
+   "note": "Previously scored REPRODUCED against a $50 bound taken from the prose rather than the printed value.",
+   "blocker": "",
+   "cell": "T6/Momentum/6-month/k =1/TW"
   }
  ]
 }

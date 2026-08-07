@@ -1,0 +1,227 @@
+{
+ "paper": "2606.04153",
+ "acceptance": {
+  "accepted": true,
+  "journal": "Journal of Banking and Finance",
+  "doi": "10.1016/j.jbankfin.2026.107716",
+  "evidence": "Accepted for publication in the Journal of Banking and Finance",
+  "journal_year": 2026
+ },
+ "numbers": 1794,
+ "checked": 13,
+ "reproduced": 6,
+ "coverage": 0.0072,
+ "exhibits_total": 23,
+ "exhibits_touched": 2,
+ "exhibits": [
+  {
+   "exhibit": "Table 1",
+   "page": 45,
+   "numbers": 64,
+   "checked": 2,
+   "reproduced": 2,
+   "needs_human": false,
+   "title": "Sample correlations"
+  },
+  {
+   "exhibit": "Table 2",
+   "page": 46,
+   "numbers": 0,
+   "checked": 0,
+   "reproduced": 0,
+   "needs_human": true,
+   "title": "Best subset selection based on AUC criterion"
+  },
+  {
+   "exhibit": "Table 3",
+   "page": 47,
+   "numbers": 160,
+   "checked": 0,
+   "reproduced": 0,
+   "needs_human": false,
+   "title": "Out-of-sample R2 values by subset size (k) and loss function"
+  },
+  {
+   "exhibit": "Table 4",
+   "page": 48,
+   "numbers": 176,
+   "checked": 0,
+   "reproduced": 0,
+   "needs_human": false,
+   "title": "Out-of-sample model performance comparison using MCS procedure with squared loss"
+  },
+  {
+   "exhibit": "Table 5",
+   "page": 49,
+   "numbers": 176,
+   "checked": 0,
+   "reproduced": 0,
+   "needs_human": false,
+   "title": "Out-of-sample model performance comparison using MCS procedure with absolute loss"
+  },
+  {
+   "exhibit": "Table 6",
+   "page": 50,
+   "numbers": 280,
+   "checked": 11,
+   "reproduced": 4,
+   "needs_human": false,
+   "title": "Out-of-sample performance statistics for the trading strategies for k = 1,2,3,7"
+  },
+  {
+   "exhibit": "Table 7",
+   "page": 51,
+   "numbers": 104,
+   "checked": 0,
+   "reproduced": 0,
+   "needs_human": false,
+   "title": "CER gains against historical average for γ = 5"
+  },
+  {
+   "exhibit": "Table 8",
+   "page": 52,
+   "numbers": 40,
+   "checked": 0,
+   "reproduced": 0,
+   "needs_human": false,
+   "title": "CER gains against CSM (Baseline) for γ = 5"
+  },
+  {
+   "exhibit": "Figure 1",
+   "page": 53,
+   "numbers": 0,
+   "checked": 0,
+   "reproduced": 0,
+   "needs_human": true,
+   "title": "Out-of-sample R2 as a function of the number of predictors (k)"
+  },
+  {
+   "exhibit": "Figure 2",
+   "page": 54,
+   "numbers": 0,
+   "checked": 0,
+   "reproduced": 0,
+   "needs_human": true,
+   "title": "Wealth growth for the CSM (Baseline, k = 3), buy-and-hold, and momentum"
+  },
+  {
+   "exhibit": "Figure 3",
+   "page": 55,
+   "numbers": 0,
+   "checked": 0,
+   "reproduced": 0,
+   "needs_human": true,
+   "title": "Wealth growth for the CSM (Baseline), copula-based, GARCH-M, CSR, and linear"
+  },
+  {
+   "exhibit": "Figure 4",
+   "page": 56,
+   "numbers": 0,
+   "checked": 0,
+   "reproduced": 0,
+   "needs_human": true,
+   "title": "Terminal wealth as a function of the number of predictors (k) for CSM (Baseline),"
+  },
+  {
+   "exhibit": "Table A1",
+   "page": 61,
+   "numbers": 0,
+   "checked": 0,
+   "reproduced": 0,
+   "needs_human": true,
+   "title": "Best subset selection based on MSE criterion"
+  },
+  {
+   "exhibit": "Table A2",
+   "page": 62,
+   "numbers": 160,
+   "checked": 0,
+   "reproduced": 0,
+   "needs_human": false,
+   "title": "Out-of-sample R2 values (in %) for different models, loss functions, and subset sizes (k)"
+  },
+  {
+   "exhibit": "Figure A1",
+   "page": 63,
+   "numbers": 0,
+   "checked": 0,
+   "reproduced": 0,
+   "needs_human": true,
+   "title": "Out-of-sample R2 as a function of the number of predictors (k): MSE-based"
+  },
+  {
+   "exhibit": "Table B1",
+   "page": 66,
+   "numbers": 280,
+   "checked": 0,
+   "reproduced": 0,
+   "needs_human": false,
+   "title": "Out-of-sample performance statistics for the trading strategies for k = 4,5,6,8"
+  },
+  {
+   "exhibit": "Table B2",
+   "page": 67,
+   "numbers": 104,
+   "checked": 0,
+   "reproduced": 0,
+   "needs_human": false,
+   "title": "CER gains against historical average for γ = 5"
+  },
+  {
+   "exhibit": "Table B3",
+   "page": 68,
+   "numbers": 40,
+   "checked": 0,
+   "reproduced": 0,
+   "needs_human": false,
+   "title": "CER gains against CSM (Baseline) for γ = 5"
+  },
+  {
+   "exhibit": "Table C1",
+   "page": 70,
+   "numbers": 140,
+   "checked": 0,
+   "reproduced": 0,
+   "needs_human": false,
+   "title": "Out-of-sample performance statistics for the trading strategies during crisis peri-"
+  },
+  {
+   "exhibit": "Figure C1",
+   "page": 71,
+   "numbers": 0,
+   "checked": 0,
+   "reproduced": 0,
+   "needs_human": true,
+   "title": "Wealth growth during the Global Financial Crisis: 3-month momentum, CSR,"
+  },
+  {
+   "exhibit": "Figure C2",
+   "page": 72,
+   "numbers": 0,
+   "checked": 0,
+   "reproduced": 0,
+   "needs_human": true,
+   "title": "Wealth growth during the COVID crisis period: 3-month momentum, CSM"
+  },
+  {
+   "exhibit": "Table D1",
+   "page": 75,
+   "numbers": 70,
+   "checked": 0,
+   "reproduced": 0,
+   "needs_human": false,
+   "title": "Out-of-sample R2 and economic performance across models"
+  },
+  {
+   "exhibit": "Figure D1",
+   "page": 76,
+   "numbers": 0,
+   "checked": 0,
+   "reproduced": 0,
+   "needs_human": true,
+   "title": "Wealth growth for CSM (Baseline), copula-based (Clayton, Gaussian), CSR, and"
+  }
+ ],
+ "unmapped_artifacts": [],
+ "failures": []
+}
