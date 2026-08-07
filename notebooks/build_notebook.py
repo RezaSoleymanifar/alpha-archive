@@ -214,6 +214,19 @@ CELLS = [
          "      f'   (paper: 887)')",
          "panel[PREDICTORS].corr().round(2)"),
 
+    md("## How to read this notebook",
+       "",
+       "Every exhibit appears twice. First the page as the paper printed it, "
+       "rendered straight from the PDF, then the same thing rebuilt from free data "
+       "in the cell below it. Nothing is paraphrased, so a disagreement is visible "
+       "rather than argued.",
+       "",
+       "![Table 6 as published](paper_figures/Table6.png)",
+       "",
+       "*The paper's Table 6. Note that MDD is a fraction, so 0.50 means a fifty per "
+       "cent drawdown, and that the momentum rows repeat across every k because "
+       "momentum does not depend on it.*"),
+
     md("### Table 1, reproduced",
        "",
        "The paper reports that the lagged bill rate carries the largest absolute "
@@ -231,12 +244,11 @@ CELLS = [
 
     md("## Table 6, reproduced",
        "",
-       "The paper's main exhibit. Same rows, same five columns: terminal wealth, "
-       "annualised return, annualised standard deviation, Sharpe ratio and maximum "
-       "drawdown, over June 1981 to December 2021 with 10bp charged on each switch.",
+       "Scroll back to the image above and read the k=3 panel against the table "
+       "below. Same rows, same five columns, same window, 10bp on each switch.",
        "",
-       "The `paper` columns are transcribed from the printed table. Blanks are "
-       "figures the paper does not report for that row."),
+       "Drawdown is shown as a fraction to match the paper, so 0.50 is a fifty per "
+       "cent fall."),
 
     code("import sys; sys.path.insert(0, '..')",
          "from alpha_archive.replications import decomp2026 as D",
@@ -249,11 +261,12 @@ CELLS = [
          "side = side[sorted(side.columns, key=lambda c: (c.split()[0], 'paper' in c))]",
          "side.round(2)"),
 
-    md("### Figure 4, reproduced",
+    md("### Figure 4, as published",
        "",
-       "Terminal wealth through time for each strategy, which is the figure the "
-       "paper uses to argue the decomposition is stable rather than lucky in one "
-       "sub-period."),
+       "![Figure 4 as published](paper_figures/Figure4.png)",
+       "",
+       "And rebuilt below. The paper uses this figure to argue the decomposition is "
+       "stable rather than lucky in one sub-period."),
 
     code("paths = D.wealth_paths(frame)",
          "fig, ax = plt.subplots(figsize=(9.5, 4.6))",

@@ -221,7 +221,9 @@ def summarise(returns: pd.Series, rf: pd.Series) -> dict[str, float]:
         "AV": round(float(returns.mean() * 12 * 100), 2),
         "SD": round(float(returns.std() * np.sqrt(12) * 100), 2),
         "SR": round(float(excess.mean() / excess.std()), 3),
-        "MDD": round(float(drawdown.min() * 100), 2),
+        # The paper prints MDD as a fraction: 0.50 means a fifty per cent
+        # fall. Reporting percent here made every drawdown look 100x off.
+        "MDD": round(float(-drawdown.min()), 2),
         # kept under the old names so nothing downstream breaks
         "terminal_wealth": round(float(wealth.iloc[-1]), 2),
         "ann_return_pct": round(float(returns.mean() * 12 * 100), 2),
@@ -253,10 +255,12 @@ def table6(frame: pd.DataFrame, k: int = SUBSET_K) -> pd.DataFrame:
 
 # What the paper prints, for the same rows. Transcribed, not computed.
 TABLE6_PAPER = {
-    "Buy-and-hold": {"TW": 104.63, "AV": 12.65, "SD": 15.00, "SR": 0.17},
-    "CSM (Baseline), k=3": {"TW": 181.68, "SR": 0.21},
-    "CSR, k=3": {"TW": 98.22},
-    "Momentum 12m": {"TW": 100.21, "SR": 0.20},
+    "Buy-and-hold":        {"TW": 104.63, "AV": 12.65, "SD": 15.00, "SR": 0.17, "MDD": 0.50},
+    "CSM (Baseline), k=3": {"TW": 181.68, "AV": 13.89, "SD": 14.13, "SR": 0.21, "MDD": 0.44},
+    "CSR, k=3":            {"TW": 98.22,  "AV": 12.39, "SD": 14.32, "SR": 0.18, "MDD": 0.44},
+    "Momentum 3m":         {"TW": 32.39,  "AV": 9.18,  "SD": 10.69, "SR": 0.15, "MDD": 0.23},
+    "Momentum 6m":         {"TW": 48.71,  "AV": 10.26, "SD": 11.30, "SR": 0.17, "MDD": 0.23},
+    "Momentum 12m":        {"TW": 100.21, "AV": 12.15, "SD": 12.15, "SR": 0.20, "MDD": 0.30},
 }
 
 
