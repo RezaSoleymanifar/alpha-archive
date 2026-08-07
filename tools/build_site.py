@@ -573,8 +573,14 @@ h1 em{font-style:italic;color:var(--accent)}
   margin:8px 0 0}
 
 /* ---------------------------------------------------------------- layout */
-.cols{display:grid;grid-template-columns:1fr;gap:34px;padding:20px 0 60px}
-@media(min-width:1080px){.cols{grid-template-columns:236px 1fr}}
+.cols{display:grid;grid-template-columns:1fr;gap:0;padding:20px 0 60px}
+/* The sidebar carries the divider itself, so the rule and the content beside
+   it sit a fixed distance apart instead of floating in a 34px grid gap. */
+@media(min-width:1080px){
+  .cols{grid-template-columns:261px 1fr}
+  .side{border-right:1px solid var(--line);padding-right:24px}
+  .cols>main{padding-left:24px}
+}
 .side h3{font-family:var(--mono);font-size:10.5px;letter-spacing:.13em;
   text-transform:uppercase;color:var(--dim);font-weight:400;margin:0 0 14px}
 .side .grp{margin-bottom:34px}
@@ -781,7 +787,6 @@ footer a{margin-right:18px;color:var(--soft)}
         </div>
       </div>
 
-      <p class="count" id="count"></p>
       <p class="note" id="note" hidden></p>
       <div id="list">__CARDS__</div>
       <p class="empty" id="empty" hidden>No papers match.</p>
@@ -806,7 +811,7 @@ footer a{margin-right:18px;color:var(--soft)}
 <script>
 var list = document.getElementById('list');
 var cards = [].slice.call(document.querySelectorAll('.card'));
-var q = document.getElementById('q'), count = document.getElementById('count'),
+var q = document.getElementById('q'),
     empty = document.getElementById('empty'), note = document.getElementById('note'),
     days = 0, sortBy = 'ready', codeOnly = false, oaOnly = false, tagFilter = '';
 var LABEL = {30: 'the last 30 days', 365: 'the last 12 months', 1826: 'the last 5 years',
@@ -850,10 +855,6 @@ function apply() {
     c.hidden = !(pass && hit);
     if (!c.hidden) { shown++; if (+c.dataset.cites > 0) cited++; }
   });
-  count.textContent = shown + (shown === 1 ? ' paper' : ' papers') + ' from ' +
-    LABEL[days] + ', ranked ' + HOW[sortBy] + (codeOnly ? ', with code' : '') +
-    (oaOnly ? ', open access' : '') +
-    (tagFilter ? ', tagged ' + tagFilter : '');
   empty.hidden = shown > 0;
   note.hidden = !(shown > 0 && cited === 0 && sortBy !== 'date');
   if (!note.hidden) {
