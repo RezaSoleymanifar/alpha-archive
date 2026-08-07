@@ -224,6 +224,54 @@ def detail(rec: dict) -> str:
             f"<h4>Sample limits</h4><ul>{caveats}</ul>")
 
 
+
+# Small marks for the rail badges, on one 16-unit grid so they sit at the same
+# optical weight beside their labels.
+BADGE_ICONS = {
+    "paper": '<path d="M4 1.5h5l3 3v10H4Z"/><path d="M9 1.5v3h3"/>',
+    "pdf": '<path d="M4 1.5h5l3 3v10H4Z"/><path d="M9 1.5v3h3"/><path d="M6 9.5h4"/>'
+           '<path d="M6 11.8h4"/>',
+    "calendar": '<rect x="2.5" y="3.5" width="11" height="11" rx="1.6"/>'
+                '<path d="M2.5 6.8h11"/><path d="M5.5 2v3"/><path d="M10.5 2v3"/>',
+    "cite": '<path d="M2 13.5h12"/><path d="M4 11l2.6-4 2.6 2L13 3.5"/>',
+    "spark": '<path d="M8 1.5 9.7 6l4.5 1.7L9.7 9.4 8 14l-1.7-4.6L1.8 7.7 6.3 6Z"/>',
+    "flask": '<path d="M6.4 2v4.2L3.2 12a1.3 1.3 0 0 0 1.1 2h7.4a1.3 1.3 0 0 0 1.1-2'
+             'L9.6 6.2V2"/><path d="M5.6 2h4.8"/>',
+    "check": '<circle cx="8" cy="8" r="6.2"/><path d="M5.4 8.2 7.2 10l3.4-3.6"/>',
+    "build": '<path d="M9.8 2.4a3.4 3.4 0 0 0 4 4.4l-6 6a1.7 1.7 0 1 1-2.4-2.4l6-6'
+             'a3.4 3.4 0 0 0-1.6-2Z"/>',
+    "github": None,   # drawn from its own path, below
+}
+
+GITHUB_MARK = ('<path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17'
+               '.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48'
+               '-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 '
+               '1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87'
+               '.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 '
+               '1.32-.27 2-.27s1.36.09 2 .27c1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92'
+               '.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73'
+               '.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.01 8.01 0 0 0 16 8'
+               'c0-4.42-3.58-8-8-8Z"/>')
+
+
+def bicon(name: str) -> str:
+    if name == "github":
+        return (f'<svg viewBox="0 0 16 16" width="13" height="13" fill="currentColor"'
+                f' aria-hidden="true">{GITHUB_MARK}</svg>')
+    return (f'<svg viewBox="0 0 16 16" width="13" height="13" fill="none" '
+            f'stroke="currentColor" stroke-width="1.4" stroke-linecap="round" '
+            f'stroke-linejoin="round" aria-hidden="true">{BADGE_ICONS[name]}</svg>')
+
+
+def badge(icon_name: str, text: str, *, href: str = "", cls: str = "") -> str:
+    """One rounded badge. A link when there is somewhere to go, a chip otherwise."""
+    inner = f'{bicon(icon_name)}<span>{html.escape(str(text))}</span>'
+    klass = f"bdg {cls}".strip()
+    if href:
+        return f'<a class="{klass}" href="{html.escape(href)}">{inner}</a>'
+    return f'<span class="{klass}">{inner}</span>'
+
+
 def tag_class(tag: str) -> str:
     """Stable colour per tag, so a reader learns the palette."""
     palette = ["t-green", "t-blue", "t-pink", "t-purple", "t-amber", "t-teal"]
@@ -263,36 +311,19 @@ def card(*, thumb_html: str, title: str, url: str, abstract: str, venue: str,
                f"{top_pct:.2f}%")
     rail = (
         f'<div class="rail">'
-        # Only numbers that exist. A top percentile computed from zero
-        # citations, a "quant appeal" score, an effort letter and an estimated
-        # reproducibility were all invented here, and a made-up number on a
-        # page about reproducibility is the worst possible place for one.
-        + (f'<div class="stat"><svg viewBox="0 0 24 24" width="15" height="15" '
-           f'fill="none" stroke="currentColor" stroke-width="1.8">'
-           f'<path d="M3 20h18M6 16l4-6 4 3 5-8"/></svg>'
-           f'<b>{citations:,}</b><span>citations</span></div>' if citations else '')
-        + (f'<div class="stat"><b>{influential:,}</b><span>influential</span></div>'
-           if influential else '')
-        + (f'<div class="stat"><b class="hot">t={e(spec_tstat)}</b>'
-           f'<span>paper claim</span></div>' if spec_tstat else '')
-        + (f'<div class="stat"><b>{e(date[:4])}</b><span>published</span></div>'
-           if date else '')
-        + f'<div class="stat"><b class="{cls}">{e(label)}</b><span>status</span></div>'
-        + (f'<div class="stat gh"><svg viewBox="0 0 16 16" width="15" height="15" '
-           f'fill="currentColor"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 '
-           f'5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49'
-           f'-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 '
-           f'1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2'
-           f'-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 '
-           f'.67-.21 2.2.82.64-.18 1.32-.27 2-.27s1.36.09 2 .27c1.53-1.04 2.2-.82 '
-           f'2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 '
-           f'3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46'
-           f'.55.38A8.01 8.01 0 0 0 16 8c0-4.42-3.58-8-8-8Z"/></svg>'
-           f'<b>code</b><span>implementation</span></div>' if body else '')
+        # Only numbers that exist, each as a badge rather than a bare figure.
+        # The paper and PDF links live here too: they are things you can open,
+        # which is what the right-hand column is for.
+        + (badge("cite", f"{citations:,} citations") if citations else '')
+        + (badge("spark", f"{influential:,} influential") if influential else '')
+        + (badge("flask", f"t = {e(spec_tstat)}", cls="hot") if spec_tstat else '')
+        + (badge("calendar", date[:4]) if date else '')
+        + badge("check" if cls == "ok" else "build", label, cls=cls)
+        + "".join(badge("github" if "code" in text.lower() or "github" in href
+                        else "pdf" if "pdf" in text.lower() else "paper",
+                        text, href=href)
+                  for text, href in actions if href)
         + '</div>')
-
-    links = "".join(f'<a class="act" href="{href}">{e(text)}</a>'
-                    for text, href in actions if href)
 
     return f"""
   <article class="card" data-status="{cls}" data-search="{e(search.lower())}"
@@ -310,7 +341,7 @@ def card(*, thumb_html: str, title: str, url: str, abstract: str, venue: str,
       {f'<p class="finding">{e(one_liner)}</p>' if one_liner else ''}
       <p class="abs">{e(abstract)}</p>
       {result}
-      <p class="tagrow">{tagrow}{links}</p>
+      <p class="tagrow">{tagrow}</p>
       {f'<details><summary>Full result</summary>{body}</details>' if body else ''}
       {f'<details class="spec"><summary>What a replication must match</summary>{spec}</details>' if spec else ''}
     </div>
@@ -686,9 +717,24 @@ details.spec .note{font-size:12px;color:var(--dim);margin-top:10px}
   border-radius:6px;padding:4px 10px;color:var(--soft);background:var(--card)}
 .act:hover{color:var(--ink);text-decoration:none}
 
-.rail{display:flex;flex-direction:row;gap:22px;align-self:start}
-@media(min-width:820px){.rail{flex-direction:column;gap:18px;border-left:1px solid var(--line);
-  padding-left:20px;height:100%}}
+.rail{display:flex;flex-direction:row;flex-wrap:wrap;gap:6px;align-self:start}
+@media(min-width:820px){.rail{flex-direction:column;align-items:stretch;gap:6px;
+  border-left:1px solid var(--line);padding-left:18px;height:100%}}
+.bdg{display:inline-flex;align-items:center;gap:7px;border:1px solid var(--line);
+  border-radius:7px;padding:5px 10px;background:var(--card);color:var(--soft);
+  font-family:var(--mono);font-size:11px;line-height:1.3;white-space:nowrap}
+.bdg svg{flex:none;color:var(--dim)}
+.bdg span{overflow:hidden;text-overflow:ellipsis}
+a.bdg:hover{color:var(--ink);border-color:#3a3833;text-decoration:none}
+a.bdg:hover svg{color:var(--ink)}
+.bdg.ok{color:var(--ok);border-color:rgba(127,214,162,.35)}
+.bdg.ok svg{color:var(--ok)}
+.bdg.warn{color:var(--warn);border-color:rgba(227,179,92,.35)}
+.bdg.warn svg{color:var(--warn)}
+.bdg.bad{color:var(--bad);border-color:rgba(224,139,128,.35)}
+.bdg.bad svg{color:var(--bad)}
+.bdg.none{color:var(--dim)}
+.bdg.hot{color:var(--ok);border-color:rgba(127,214,162,.35)}
 .stat{text-align:center;color:var(--soft)}
 .stat svg{margin:0 auto 4px;display:block;color:var(--dim)}
 .stat b{display:block;font-family:var(--mono);font-size:15px;font-weight:500;color:var(--ink)}
