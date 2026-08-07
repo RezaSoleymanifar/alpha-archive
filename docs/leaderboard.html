@@ -3,8 +3,8 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>A3T-GCN for FTSE100 Components Price Forecasting &middot; &alpha;-Archive</title>
-<meta name="description" content="We examine the predictive power of a novel hybrid A3T-GCN architecture for forecasting closing stock prices of FTSE100 constituents. The dataset comprises 79 companies and 375,329 daily observations from 2007 to 2024, with node features including technical indicators (RSI, MACD),">
+<title>Post-sample leaderboard &middot; &alpha;-Archive</title>
+<meta name="description" content="Published quantitative finance predictors scored out of sample.">
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='6' fill='%230d0d0d'/><text x='16' y='23' font-size='20' font-family='Georgia,serif' fill='%233ddc84' text-anchor='middle'>&#945;</text></svg>">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -109,26 +109,35 @@ footer{border-top:1px solid var(--line);padding:22px 0 40px;color:var(--dim);
 </head>
 <body>
 <nav class="topbar"><div class="wrap">
-  <a class="brand" href="../"><span class="a">&alpha;</span>-Archive</a>
-  <div class="nlinks"><a href="../leaderboard.html">Leaderboard</a><a href="../about.html">About</a></div>
+  <a class="brand" href="./"><span class="a">&alpha;</span>-Archive</a>
+  <div class="nlinks"><a href="../leaderboard.html">Leaderboard</a><a href="about.html">About</a></div>
   <div class="navright"><a class="pill" href="https://github.com/RezaSoleymanifar/alpha-archive/issues/new">Submit feedback</a></div>
 </div></nav>
 
 <div class="wrap">
-  <p class="crumb"><a href="../">&alpha;-Archive</a> / <span>2511-21873</span></p>
+  <p class="crumb"><a href="./">&alpha;-Archive</a> / <span>leaderboard</span></p>
   <header class="paper">
-    <h1>A3T-GCN for FTSE100 Components Price Forecasting</h1>
-    <p class="byline">A. L. Paredes &middot; 2025-11-26</p>
-    <div class="badges"><span class="st none">not attempted</span></div>
+    <h1>Post-sample leaderboard</h1>
+    <p class="byline">Every published predictor, run on the years its own paper never saw.</p>
+    <div class="badges"></div>
   </header>
 
-  <div class="cols">
-    <main><h2>Abstract</h2><p class="lede">We examine the predictive power of a novel hybrid A3T-GCN architecture for forecasting closing stock prices of FTSE100 constituents. The dataset comprises 79 companies and 375,329 daily observations from 2007 to 2024, with node features including technical indicators (RSI, MACD), normalized and log returns, and annualized log returns over multiple windows (ALR1W, ALR2W, ALR1M, ALR2M). Graphs are constructed based on sector classifications and correlations of returns or financial ratios. Our results show that the A3T-GCN model using annualized log-returns and shorter sequence lengths improves prediction accuracy while reducing computational requirements. Additionally, longer historical sequences yield only modest improvements, highlighting their importance for longer-term forecasts.</p><h2>Where this stands</h2><p class="lede">It cleared the three gates: it names a mechanism, it runs on data a stranger can fetch free, and it ends in a position rather than a proof. Nobody has run it yet.</p></main>
-    <aside><div class="panel"><h3>Run it</h3><div class="use">claude mcp add vintage -s user -- uvx vintage-mcp
-# then ask: replicate 2511-21873 and show the gap table<button class="copy">copy</button></div></div><div class="panel files"><h3>Files</h3><a href="https://arxiv.org/abs/2511.21873v1"><span class="k">paper</span><span class="v">PDF</span></a><span class="off"><span class="k">replication</span><span class="v">not written</span></span><span class="off"><span class="k">notebook</span><span class="v">not built</span></span></div><div class="panel"><h3>Index</h3><div class="kv"><span>citations</span><span>0</span></div><div class="kv"><span>published</span><span>2025-11-26</span></div><div class="kv"><span>source</span><span>arxiv</span></div></div></aside>
+  <div class="cols solo">
+    <main>
+<h2>What survived</h2>
+<p>Each predictor below was run only on the years <em>after</em> its own paper's
+sample ended. Reproducing a result in sample is already done, and doing it again
+proves nothing about whether the edge is still there. The post-sample window is
+a subtraction from the paper's own stated end year, so it is not a judgement
+call.</p>
+<p class="lede">Decay is the loss in t-statistic against the published one. A
+decay of 1.0 means nothing is left. Negative means it got stronger, which
+happens and is worth as much attention as the failures.</p>
+<table class="gap lead"><thead><tr><th>predictor</th><th>sample ends</th><th>years tested</th><th>claimed t</th><th>post t</th><th>decay</th><th>sharpe</th><th>verdict</th></tr></thead><tbody><tr><td>Mom12m<div class="sub2">Momentum (12 month)</div></td><td>1989</td><td>15.0</td><td>3.74</td><td>0.576</td><td class="bad">85%</td><td>0.139</td><td><span class="bdg bad"><span>fails</span></span></td></tr><tr><td>Mom6m<div class="sub2">Momentum (6 month)</div></td><td>1989</td><td>15.0</td><td>2.44</td><td>0.36</td><td class="bad">85%</td><td>0.087</td><td><span class="bdg bad"><span>fails</span></span></td></tr><tr><td>STreversal<div class="sub2">Short term reversal</div></td><td>1987</td><td>15.0</td><td>12.44</td><td>-0.915</td><td class="bad">107%</td><td>-0.218</td><td><span class="bdg bad"><span>fails</span></span></td></tr><tr><td>VolSD<div class="sub2">Volume Variance</div></td><td>1995</td><td>15.0</td><td>3.56</td><td>-2.921</td><td class="bad">182%</td><td>-0.727</td><td><span class="bdg bad"><span>fails</span></span></td></tr><tr><td>Beta<div class="sub2">CAPM beta</div></td><td>1968</td><td>15.0</td><td>2.57</td><td>-2.396</td><td class="bad">193%</td><td>-0.581</td><td><span class="bdg bad"><span>fails</span></span></td></tr><tr><td>IdioVol3F<div class="sub2">Idiosyncratic risk (3 factor)</div></td><td>2000</td><td>15.0</td><td>3.1</td><td>-3.28</td><td class="bad">206%</td><td>-0.827</td><td><span class="bdg bad"><span>fails</span></span></td></tr><tr><td>MaxRet<div class="sub2">Maximum return over month</div></td><td>2005</td><td>15.0</td><td>2.83</td><td>-3.222</td><td class="bad">214%</td><td>-0.809</td><td><span class="bdg bad"><span>fails</span></span></td></tr></tbody></table><h2>What is not here</h2><p class="lede">324 of the 331 predictors have no implementation yet, and 0 had too little price history inside their window to judge. They are counted rather than hidden: a leaderboard that shows only what ran is a leaderboard of what was easy.</p><h2>What this cannot tell you</h2><p class="lede">The universe is built from names listed today, so the companies that failed along the way are missing and every number here is flattered by their absence. Costs are charged at 10bp a side on turnover. The window is the paper's stated sample end, not its publication date, so some of these years were public knowledge before the paper appeared.</p></main>
+    <aside></aside>
   </div>
 
-  <footer>Every threshold on this page was written down before the run.</footer>
+  <footer></footer>
 </div>
 
 <script>

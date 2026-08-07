@@ -771,7 +771,7 @@ footer a{margin-right:18px;color:var(--soft)}
 <nav class="topbar">
   <div class="wrap">
     <a class="brand" href="./"><span class="a">&alpha;</span>-Archive</a>
-    <div class="nlinks"><a href="about.html">About</a></div>
+    <div class="nlinks"><a href="leaderboard.html">Leaderboard</a><a href="about.html">About</a></div>
     <div class="navright">
       <a class="pill" href="__REPO__/issues/new">Submit feedback</a>
       <div class="searchbox">
@@ -1051,6 +1051,11 @@ table.gap td{padding:8px 10px;border-bottom:1px solid var(--line);
   font-family:var(--mono);font-size:12.5px}
 table.gap td:first-child{font-family:var(--sans);color:var(--soft)}
 table.gap tr:last-child td{border-bottom:0}
+table.lead td.ok{color:var(--ok)}
+table.lead td.warn{color:var(--warn)}
+table.lead td.bad{color:var(--bad)}
+.sub2{font-family:var(--sans);font-size:11.5px;color:var(--dim);
+  margin-top:2px;max-width:30ch}
 .miss{color:var(--dim)}
 
 .panel{background:var(--card);border:1px solid var(--line);border-radius:10px;
@@ -1083,7 +1088,7 @@ footer{border-top:1px solid var(--line);padding:22px 0 40px;color:var(--dim);
 <body>
 <nav class="topbar"><div class="wrap">
   <a class="brand" href="../"><span class="a">&alpha;</span>-Archive</a>
-  <div class="nlinks"><a href="../about.html">About</a></div>
+  <div class="nlinks"><a href="../leaderboard.html">Leaderboard</a><a href="../about.html">About</a></div>
   <div class="navright"><a class="pill" href="__REPO__/issues/new">Submit feedback</a></div>
 </div></nav>
 
@@ -1435,6 +1440,97 @@ def build_about(n_papers: int, n_code: int) -> None:
         fh.write(page)
 
 
+# ---------------------------------------------- the post-sample leaderboard
+
+# Every published predictor scored on the years its own paper never saw. The
+# in-sample reproduction is Chen and Zimmermann's; this is the column they did
+# not fill. Sorted by what survived, because that is the question.
+
+LEADER_INTRO = """
+<h2>What survived</h2>
+<p>Each predictor below was run only on the years <em>after</em> its own paper's
+sample ended. Reproducing a result in sample is already done, and doing it again
+proves nothing about whether the edge is still there. The post-sample window is
+a subtraction from the paper's own stated end year, so it is not a judgement
+call.</p>
+<p class="lede">Decay is the loss in t-statistic against the published one. A
+decay of 1.0 means nothing is left. Negative means it got stronger, which
+happens and is worth as much attention as the failures.</p>
+"""
+
+
+def _pct(x: float | None) -> str:
+    return "n/a" if x is None else f"{x * 100:.0f}%"
+
+
+def build_leaderboard() -> tuple[int, int]:
+    """The post-sample table as its own page. Returns (ran, total)."""
+    # Read the stored result rather than importing the runner. The site build
+    # should render an artifact, not re-derive one, and the runner needs Vintage
+    # while this does not.
+    path = os.path.join(ROOT, "data", "postsample", "postsample.json")
+    if not os.path.exists(path):
+        return 0, 0
+    with open(path, encoding="utf-8") as fh:
+        records = json.load(fh).get("records", [])
+    if not records:
+        return 0, 0
+
+    ran = [r for r in records if r["status"] == "ran"]
+    ran.sort(key=lambda r: (r["decay"] if r["decay"] is not None else 9))
+
+    rows = ""
+    for r in ran:
+        cls = ("ok" if (r.get("decay") is not None and r["decay"] < 0.3) else
+               "warn" if (r.get("decay") is not None and r["decay"] < 0.7) else "bad")
+        rows += (
+            f'<tr><td>{html.escape(r["acronym"])}'
+            f'<div class="sub2">{html.escape(r["description"][:60])}</div></td>'
+            f'<td>{r.get("sample_end_year") or ""}</td>'
+            f'<td>{r.get("years_tested") or ""}</td>'
+            f'<td>{r.get("claimed_t") or ""}</td>'
+            f'<td>{r.get("post_t") if r.get("post_t") is not None else ""}</td>'
+            f'<td class="{cls}">{_pct(r.get("decay"))}</td>'
+            f'<td>{r.get("post_sharpe") if r.get("post_sharpe") is not None else ""}</td>'
+            f'<td><span class="bdg {"ok" if r.get("verdict") == "HOLDS" else "warn" if r.get("verdict") == "WEAKER" else "bad"}">'
+            f'<span>{html.escape(str(r.get("verdict") or "")).lower()}</span></span></td></tr>'
+        )
+
+    pending = sum(1 for r in records if r["status"] == "no_signal")
+    nodata = sum(1 for r in records if r["status"] == "no_data")
+
+    body = (
+        LEADER_INTRO
+        + '<table class="gap lead"><thead><tr><th>predictor</th><th>sample ends</th>'
+          '<th>years tested</th><th>claimed t</th><th>post t</th><th>decay</th>'
+          '<th>sharpe</th><th>verdict</th></tr></thead><tbody>'
+        + rows + '</tbody></table>'
+        + f'<h2>What is not here</h2><p class="lede">{pending:,} of the '
+          f'{len(records):,} predictors have no implementation yet, and {nodata} '
+          f'had too little price history inside their window to judge. They are '
+          f'counted rather than hidden: a leaderboard that shows only what ran '
+          f'is a leaderboard of what was easy.</p>'
+        + '<h2>What this cannot tell you</h2>'
+          '<p class="lede">The universe is built from names listed today, so the '
+          'companies that failed along the way are missing and every number here '
+          'is flattered by their absence. Costs are charged at 10bp a side on '
+          'turnover. The window is the paper\'s stated sample end, not its '
+          'publication date, so some of these years were public knowledge before '
+          'the paper appeared.</p>'
+    )
+    page = paper_page(
+        slug="leaderboard", title="Post-sample leaderboard",
+        byline="Every published predictor, run on the years its own paper never saw.",
+        badges="", body=body, aside="",
+        blurb="Published quantitative finance predictors scored out of sample.")
+    page = page.replace('href="../"', 'href="./"').replace('href="../about.html"',
+                                                           'href="about.html"')
+    with open(os.path.join(ROOT, "docs", "leaderboard.html"), "w",
+              encoding="utf-8", newline="\n") as fh:
+        fh.write(page)
+    return len(ran), len(records)
+
+
 def main() -> None:
     reps = load_replications()
     queue = load_queue()
@@ -1509,9 +1605,14 @@ def main() -> None:
     with open(os.path.join(out_dir, "index.html"), "w", encoding="utf-8", newline="\n") as fh:
         fh.write(page)
     build_about(len(cards), len(reps))
+    lead_ran, lead_total = build_leaderboard()
     print(f"wrote docs/index.html ({len(page):,} bytes), "
           f"{len(cards)} cards, {len(reps)} with results, "
-          f"{len(links)} paper pages")
+          f"{len(links)} paper pages, leaderboard {lead_ran}/{lead_total}")
+
+
+if __name__ == "__main__":
+    main()
 
 
 if __name__ == "__main__":
